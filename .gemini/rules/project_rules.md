@@ -40,3 +40,4 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
   - Sol üst başlıktan "Developed by" kaldırılmış kalmalıdır (yalnızca sol altta yer alır).
   - Üst filtre menüsü tek satır, kompakt ve yatay kaydırılabilir kalmalıdır.
   - Giriş ekranı (Intro) bekleme süresi 5 saniyedir (5000ms).
+

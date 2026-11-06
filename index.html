@@ -514,7 +514,7 @@
           <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
             TÜBİTAK Projesi
           </span>
-          <span class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 23 Küresel Durak</span>
+          <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 34 Küresel Durak</span>
         </div>
         <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
           Küresel Tarih ve Edebiyat Atlası
@@ -627,6 +627,70 @@
       </div>
     </div>
   </header>
+
+  <!-- 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRESİ (INTERACTIVE TIMELINE & CENTURY CONSOLE) -->
+  <div class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 z-25 pointer-events-auto max-w-[calc(100vw-1.5rem)] select-none">
+    <div class="glass-panel px-3 py-1.5 md:py-2 rounded-2xl flex items-center gap-2 border border-white/15 bg-slate-950/85 backdrop-blur-xl shadow-2xl">
+      
+      <!-- Başlık & Gösterge -->
+      <div class="flex items-center gap-1.5 shrink-0 border-r border-white/10 pr-2">
+        <div class="w-6 h-6 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 text-xs">
+          ⏳
+        </div>
+        <div class="hidden sm:block">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Zaman Tüneli</div>
+          <div id="timelineCurrentEraLabel" class="text-[9px] text-slate-400 font-medium">Tüm Çağlar</div>
+        </div>
+      </div>
+
+      <!-- Çağ Filtre Butonları (Pills) -->
+      <div class="flex items-center gap-1 overflow-x-auto custom-scroll max-w-[70vw] sm:max-w-none py-0.5" id="eraFilterGroup">
+        <button
+          type="button"
+          data-era="all"
+          class="era-btn active px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.3)] transition cursor-pointer whitespace-nowrap"
+        >
+          <span>Tüm Çağlar</span>
+        </button>
+        <button
+          type="button"
+          data-era="antik"
+          class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
+        >
+          <span>🏛️ Antik Çağ</span>
+        </button>
+        <button
+          type="button"
+          data-era="ortacag"
+          class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
+        >
+          <span>⚔️ Orta Çağ &amp; Vikingler</span>
+        </button>
+        <button
+          type="button"
+          data-era="ronesans"
+          class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
+        >
+          <span>🎭 Rönesans &amp; Aydınlanma</span>
+        </button>
+        <button
+          type="button"
+          data-era="yuzvil19"
+          class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
+        >
+          <span>📜 19. Yüzyıl Klasikleri</span>
+        </button>
+        <button
+          type="button"
+          data-era="modern"
+          class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
+        >
+          <span>🚀 20. Yy &amp; Modern Çağ</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- SOL ALT KÖŞE: ZARİF GELİŞTİRİCİ İMZASI (BÜYÜTÜLMÜŞ VE OKUNAKLI) -->
   <div class="fixed bottom-5 left-4 md:left-6 z-20 pointer-events-auto select-none">
@@ -1839,8 +1903,507 @@
           regionTag: "TİMBUKTU / MALİ"
         }),
         imageCaption: "Sahra kıyısında Timbuktu Sankore Medresesi ve Afrika'nın yüz binlerce yıllık el yazması kütüphaneleri."
+      },
+
+      // ==================== YENİ AVRUPA, İNGİLTERE & VİKİNG DURAKLARI (11 DURAK) ====================
+      {
+        id: "lindisfarne",
+        city: "Lindisfarne",
+        country: "İngiltere (Northumbria)",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 55.67,
+        lng: -1.79,
+        pinOffsetX: "8px",
+        pinOffsetY: "-6px",
+        labelShiftX: "14px",
+        era: "ortacag",
+        numericYear: 793,
+        year: "M.S. 793 (8 Haziran)",
+        title: "Lindisfarne Baskını ve Viking Çağının Başlangıcı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "⚔️",
+        description:
+          "8 Haziran 793'te İskandinav fiyortlarından gelen ahşap ejderha gemileri (Drakkar), Northumbria kıyısındaki Lindisfarne Kutsal Ada Manastırı'na ani ve kanlı bir baskın düzenledi. Bu olay, Avrupa tarihini üç asır boyunca sarsacak 'Viking Çağı'nın resmi başlangıcı kabul edilir. Anglo-Sakson vakanüvisleri bu günü 'Kuzeyin vahşi canavarlarının gazabı' olarak kaydetmiştir.",
+        quote:
+          "\"Daha önce Britanya topraklarında böylesi bir dehşet görülmemişti; putperest savaşçılar kutsal sunağın etrafındaki rahiplerin kanını döktü.\" — Anglo-Sakson Kroniği (793)",
+        figuresAndWorks: [
+          "Ragnarr Loðbrók Efsaneleri",
+          "Northumbria Keşişleri",
+          "Alcuin of York Mektupları",
+          "Lindisfarne İncilleri (El Yazması)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "LINDISFARNE BASKINI (793)",
+          subtitle: "Viking Çağının Şafağı ve İskandinav Ejderha Gemileri",
+          era: "M.S. 793",
+          primaryColor: "#0369a1",
+          secondaryColor: "#0f172a",
+          accentColor: "#38bdf8",
+          icon: "⚔️",
+          regionTag: "NORTHUMBRIA / İNGİLTERE"
+        }),
+        imageCaption: "Northumbria açıklarında Lindisfarne Kutsal Adası ve Viking Çağını başlatan tarihi kıyılar."
+      },
+      {
+        id: "york",
+        city: "York (Jórvík)",
+        country: "İngiltere",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 53.96,
+        lng: -1.08,
+        pinOffsetX: "8px",
+        pinOffsetY: "0px",
+        labelShiftX: "14px",
+        era: "ortacag",
+        numericYear: 866,
+        year: "M.S. 866 – 954",
+        title: "Viking Jórvík Krallığı ve Beowulf Destanı Eksenleri",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🛡️",
+        description:
+          "866 yılında Kemiksiz İvar (Ivar the Boneless) önderliğindeki Büyük Viking Ordusu (Great Heathen Army), antik Roma şehri Eboracum'u fethederek burayı Viking Jórvík Krallığı'nın başkenti ilan etti. Şehir, zengin İskandinav demirci atölyeleri ve kehribar ticaretinin merkezi olurken; canavarlarla savaşan İskandinav-Anglo Sakson ortak destanı Beowulf'un kahramanlık anlatıları bu topraklarda şekillendi.",
+        quote:
+          "\"Kader daima cesur olanın yanındadır; canavarlarla yüzleşmekten korkmayan savaşçının adı çağlar boyu yaşayacaktır.\" — Beowulf Destanı",
+        figuresAndWorks: [
+          "Kemiksiz İvar (Ivar the Boneless)",
+          "Kral Guthrum",
+          "Erik Bloodaxe (Kanlıbalta)",
+          "Beowulf Destanı & Jórvík Kehribarı"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "VİKİNG JÓRVÍK KRALLIĞI",
+          subtitle: "Büyük Viking Ordusu, Kemiksiz İvar ve Beowulf Çağı",
+          era: "M.S. 866 - 954",
+          primaryColor: "#854d0e",
+          secondaryColor: "#020617",
+          accentColor: "#eab308",
+          icon: "🛡️",
+          regionTag: "YORK / İNGİLTERE"
+        }),
+        imageCaption: "Tarihi York surları, Viking Jórvík ticaret yolları ve Orta Çağ mimarisi."
+      },
+      {
+        id: "stratford",
+        city: "Stratford-upon-Avon",
+        country: "İngiltere",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 52.19,
+        lng: -1.71,
+        pinOffsetX: "-10px",
+        pinOffsetY: "-4px",
+        labelShiftX: "-18px",
+        era: "ronesans",
+        numericYear: 1564,
+        year: "1564 – 1616",
+        title: "William Shakespeare ve İngiliz Rönesans Tiyatrosu",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🎭",
+        description:
+          "Avon Nehri kıyısındaki Stratford kasabası, dünya tiyatro ve edebiyat tarihinin en büyük dehası William Shakespeare'in doğup büyüdüğü ve son eserlerini kaleme aldığı yerdir. İnsan doğasının en derin hırslarını, trajedilerini ve aşkı Hamlet, Macbeth, Othello, Kral Lear ve Romeo ile Juliet şaheserlerinde işleyen ozan; İngiliz diline iki binden fazla yeni deyim kazandırmıştır.",
+        quote:
+          "\"Olmak ya da olmamak, işte bütün mesele bu! Zalim talihin sapanına ve oklarına katlanmak mı erdemdir, yoksa belalar denizine karşı silaha sarılmak mı?\" — William Shakespeare, Hamlet",
+        figuresAndWorks: [
+          "William Shakespeare",
+          "Hamlet & Macbeth",
+          "Romeo ve Juliet",
+          "154 Soneler Koleksiyonu & Globe Tiyatrosu"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "WILLIAM SHAKESPEARE",
+          subtitle: "Stratford-upon-Avon ve İngiliz Rönesans Tiyatrosu",
+          era: "1564 – 1616",
+          primaryColor: "#047857",
+          secondaryColor: "#022c22",
+          accentColor: "#34d399",
+          icon: "🎭",
+          regionTag: "STRATFORD / İNGİLTERE"
+        }),
+        imageCaption: "Stratford-upon-Avon, Shakespeare'in doğduğu tarihi ahşap malikane ve Avon Nehri kıyıları."
+      },
+      {
+        id: "edinburgh",
+        city: "Edinburgh",
+        country: "İskoçya (Birleşik Krallık)",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+        lat: 55.95,
+        lng: -3.19,
+        pinOffsetX: "-8px",
+        pinOffsetY: "0px",
+        labelShiftX: "-14px",
+        era: "yuzvil19",
+        numericYear: 1814,
+        year: "1814 – 1890",
+        title: "İskoç Aydınlanması, Sir Walter Scott ve Tarihi Roman",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🏰",
+        description:
+          "UNESCO'nun dünya üzerindeki ilk 'Edebiyat Şehri' unvanını verdiği Edinburgh; 18. yüzyılda David Hume ve Robert Burns ile 'Kuzeyin Atinası' olarak anıldı. Sir Walter Scott, 'Waverley' ve 'Ivanhoe' ile modern tarihi roman türünü bu şehirde icat ederken; Robert Louis Stevenson (Define Adası, Dr. Jekyll ve Mr. Hyde) ve Arthur Conan Doyle (Sherlock Holmes) Edinburgh'un sisli sokaklarından ilham aldı.",
+        quote:
+          "\"Taşlar ufalanır, kaleler yıkılır fakat kâğıda dökülmüş samimi bir hikâye zamanın dişlerine meydan okur.\" — Sir Walter Scott, Ivanhoe",
+        figuresAndWorks: [
+          "Sir Walter Scott (Ivanhoe & Waverley)",
+          "Sir Arthur Conan Doyle (Sherlock Holmes)",
+          "Robert Louis Stevenson (Define Adası)",
+          "Robert Burns (İskoç Milli Ozanı)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "EDINBURGH: EDEBİYATIN BAŞKENTİ",
+          subtitle: "İskoç Aydınlanması, Walter Scott ve Sherlock Holmes Mirası",
+          era: "18. & 19. YÜZYIL",
+          primaryColor: "#0f766e",
+          secondaryColor: "#134e4a",
+          accentColor: "#2dd4bf",
+          icon: "🏰",
+          regionTag: "EDINBURGH / İSKOÇYA"
+        }),
+        imageCaption: "Volkanik kayalıklar üzerindeki Edinburgh Kalesi ve tarihi Royal Mile sokakları."
+      },
+      {
+        id: "oxford",
+        city: "Oxford",
+        country: "İngiltere",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 51.75,
+        lng: -1.25,
+        pinOffsetX: "-6px",
+        pinOffsetY: "0px",
+        labelShiftX: "-16px",
+        era: "modern",
+        numericYear: 1937,
+        year: "1937 – 1954",
+        title: "Oxford Inklings: J.R.R. Tolkien ve Modern Fantastik Edebiyat",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "💍",
+        description:
+          "Antik kütüphaneleri ve gotik kuleleriyle ünlü Oxford Üniversitesi; Eski Nors ve Anglo-Sakson dilleri profesörü J.R.R. Tolkien'in Orta Dünya efsanesini (Hobbit, Yüzüklerin Efendisi, Silmarillion) yarattığı şehirdir. Tolkien ile C.S. Lewis (Narnia Günlükleri), 'The Inklings' edebiyat kulübünde haftalık toplanıp mitolojik anlatılarını birbirlerine okuyarak modern fantastik edebiyat türünü kurmuşlardır.",
+        quote:
+          "\"Altın olan her şey parlamaz, her gezgin yitirmemiştir yolunu; kökü derin olanı ayaz vurmaz, donmuş topraktan sürer yeni sürgün.\" — J.R.R. Tolkien, Yüzüklerin Efendisi",
+        figuresAndWorks: [
+          "J.R.R. Tolkien (Yüzüklerin Efendisi & Hobbit)",
+          "C.S. Lewis (Narnia Günlükleri)",
+          "Lewis Carroll (Alice Harikalar Diyarında)",
+          "Oxford Bodleian Kütüphanesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1580977276076-ae4b8c219b8e?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "OXFORD VE ORTA DÜNYA",
+          subtitle: "J.R.R. Tolkien, C.S. Lewis ve Modern Fantastik Edebiyat",
+          era: "1937 – 1954",
+          primaryColor: "#1e3a8a",
+          secondaryColor: "#0f172a",
+          accentColor: "#60a5fa",
+          icon: "💍",
+          regionTag: "OXFORD / İNGİLTERE"
+        }),
+        imageCaption: "Oxford Radcliffe Camera Kütüphanesi ve Orta Dünya mitolojisine ilham veren tarihi kolejler."
+      },
+      {
+        id: "oslo",
+        city: "Oslo (Viken Fiyordu)",
+        country: "Norveç",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇳🇴",
+        lat: 59.91,
+        lng: 10.75,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 890,
+        year: "M.S. 890 – 1220",
+        title: "Viking Gemi Mühendisliği ve İskandinav Sagaları (Edda)",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "⛵",
+        description:
+          "Oslo Fiyordu kıyılarında inşa edilen meşe gövdeli Oseberg ve Gokstad gemileri, Vikinglerin Atlas Okyanusu'nu aşarak İzlanda, Grönland ve Kuzey Amerika'ya (Vinland) ulaşmasını sağlayan denizcilik harikalarıydı. Bu keşif ve savaş ruhu, Snorri Sturluson'un kaleme aldığı İskandinav Krallar Tarihi (Heimskringla) ve kadim İskandinav tanrıları Odin, Thor ve Loki'yi anlatan Şiirsel Edda metinleriyle ölümsüzleşti.",
+        quote:
+          "\"Sığırlar ölür, akrabalar ölür, insanın kendisi de bir gün ölür; fakat iyi kazanılmış bir şeref ve ad asla ölmez.\" — Hávamál (Kadim Viking Bilgeliği / Şiirsel Edda)",
+        figuresAndWorks: [
+          "Snorri Sturluson (Heimskringla & Nesir Edda)",
+          "Kral Harald Fairhair (Güzel Saçlı Harald)",
+          "Oseberg & Gokstad Tarihi Viking Gemileri",
+          "Şiirsel Edda Manzumeleri"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "VİKİNG GEMİLERİ VE SAGALAR",
+          subtitle: "Oseberg Gemisi, Snorri Sturluson ve Şiirsel Edda",
+          era: "M.S. 890 - 1220",
+          primaryColor: "#0c4a6e",
+          secondaryColor: "#082f49",
+          accentColor: "#38bdf8",
+          icon: "⛵",
+          regionTag: "OSLO / NORVEÇ"
+        }),
+        imageCaption: "Norveç fiyortları, Viking Oseberg gemisinin kalıntıları ve İskandinav mitolojisi."
+      },
+      {
+        id: "uppsala",
+        city: "Uppsala",
+        country: "İsveç",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇸🇪",
+        lat: 59.85,
+        lng: 17.63,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 980,
+        year: "M.S. 980 – 1080",
+        title: "Büyük Pagan Viking Tapınağı ve Antik Rün Yazıtları",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "ᚱ",
+        description:
+          "Eski Uppsala (Gamla Uppsala), tüm İskandinav Viking dünyasının en kutsal pagan merkeziydi. Adam von Bremen'in kayıtlarına göre burada altın zincirlerle süslenmiş büyük bir tapınak yer alıyor, Odin, Thor ve Freyr onuruna kutsal şenlikler düzenleniyordu. Çevredeki yüzlerce granit rün taşı (runestones), Viking savaşçılarının Karadeniz ve Bizans'a (Miklagard) uzanan efsanevi seferlerini antik Futhark alfabesiyle taşa kazımıştır.",
+        quote:
+          "\"Thor bu rünleri korusun; denizleri aşan, kılıcıyla adını taşa yazdıran yiğit savaşçı burada ebedi huzur bulsun.\" — Uppsala Antik Rün Taşı Yazıtı",
+        figuresAndWorks: [
+          "Adam von Bremen (Gesta Hammaburgensis)",
+          "Kral Erik the Victorious (Muzaffer Erik)",
+          "Antik Futhark Rün Taşları Koleksiyonu",
+          "Gamla Uppsala Kraliyet Höyükleri"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1509356843151-3e7d96241e11?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "UPPSALA PAGAN TAPINAĞI",
+          subtitle: "Viking Rün Taşları, Odin-Thor Kültü ve Gamla Uppsala",
+          era: "M.S. 980 - 1080",
+          primaryColor: "#14532d",
+          secondaryColor: "#052e16",
+          accentColor: "#4ade80",
+          icon: "ᚱ",
+          regionTag: "UPPSALA / İSVEÇ"
+        }),
+        imageCaption: "Gamla Uppsala kraliyet höyükleri ve antik İskandinav rün taşları anıtları."
+      },
+      {
+        id: "roma",
+        city: "Roma",
+        country: "İtalya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇮🇹",
+        lat: 41.90,
+        lng: 12.49,
+        pinOffsetX: "0px",
+        pinOffsetY: "8px",
+        labelShiftX: "0px",
+        era: "antik",
+        numericYear: -44,
+        year: "M.Ö. 44 – M.S. 19",
+        title: "Roma İmparatorluğu'nun Doğuşu ve Vergilius'un Aeneis Destanı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏛️",
+        description:
+          "Yedi tepe üzerine kurulu ebedi şehir Roma; Jül Sezar'ın M.Ö. 44'te suikastı ve İmparator Augustus'un tahta çıkışıyla Akdeniz havzasını tek çatı altında birleştiren devasa bir imparatorluğa dönüştü. Şair Vergilius, Roma'nın Truva köklerini ve ilahi kaderini anlatan ölümsüz Aeneis Destanı'nı bu çağda kaleme alırken, Cicero hitabetiyle, Ovidius ise Metamorfozlar (Dönüşümler) ile mitolojiyi dünya edebiyatına armağan etti.",
+        quote:
+          "\"Roma! Hatırla ki senin görevin ulusları adaletle yönetmek, barış içinde yaşatmak ve yeryüzüne kanun getirmektir.\" — Vergilius, Aeneis Destanı",
+        figuresAndWorks: [
+          "Jül Sezar & İmparator Augustus",
+          "Vergilius (Aeneis Destanı)",
+          "Marcus Tullius Cicero (Hitabet ve Felsefe)",
+          "Ovidius (Dönüşümler / Metamorfozlar)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ROMA İMPARATORLUĞU VE AENEİS",
+          subtitle: "Jül Sezar, Augustus ve Vergilius'un Ebedi Şehri",
+          era: "M.Ö. 44 – M.S. 19",
+          primaryColor: "#831843",
+          secondaryColor: "#0f172a",
+          accentColor: "#f43f5e",
+          icon: "🏛️",
+          regionTag: "ROMA / İTALYA"
+        }),
+        imageCaption: "Roma Forumu, Kolezyum ve Antik Roma İmparatorluğu'nun anıtsal mermer sütunları."
+      },
+      {
+        id: "prag",
+        city: "Prag",
+        country: "Çekya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇨🇿",
+        lat: 50.07,
+        lng: 14.43,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1915,
+        year: "1915 – 1925",
+        title: "Franz Kafka, Gotik Prag ve Modernist Varoluşçuluk",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🪲",
+        description:
+          "Yüz Kuleli Şehir Prag; Charles Köprüsü'nün sisli heykelleri, eski Yahudi mahallesi ve dar simyacılar sokaklarıyla dünya edebiyatının en özgün yazarı Franz Kafka'nın ilham kaynağıdır. Kafka; 'Dönüşüm', 'Dava' ve 'Şato' eserlerinde modern bürokrasinin soğukluğunu, insanın yabancılaşmasını ve varoluşsal çaresizliği işleyerek dünya düşünce tarihine 'Kafkaesk' kavramını kazandırmıştır.",
+        quote:
+          "\"Gregor Samsa bir sabah huzursuz düşlerden uyandığında, kendini yatağında devasa bir böceğe dönüşmüş olarak buldu.\" — Franz Kafka, Dönüşüm",
+        figuresAndWorks: [
+          "Franz Kafka (Dönüşüm, Dava & Şato)",
+          "Max Brod (Kafka'nın Edebi Vasisi)",
+          "Rainer Maria Rilke",
+          "Jaroslav Hašek (Aslan Asker Şvayk)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "FRANZ KAFKA VE GOTİK PRAG",
+          subtitle: "Dönüşüm, Dava ve Modernist Edebiyatın Başyapıtları",
+          era: "1915 – 1925",
+          primaryColor: "#475569",
+          secondaryColor: "#020617",
+          accentColor: "#94a3b8",
+          icon: "🪲",
+          regionTag: "PRAG / ÇEKYA"
+        }),
+        imageCaption: "Prag Charles Köprüsü, Vltava Nehri ve gotik kulelerin sisli silüeti."
+      },
+      {
+        id: "amsterdam",
+        city: "Amsterdam",
+        country: "Hollanda",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇳🇱",
+        lat: 52.37,
+        lng: 4.89,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ronesans",
+        numericYear: 1670,
+        year: "1670 & 1942 – 1944",
+        title: "Spinoza'nın Aydınlanması ve Anne Frank'ın Hatıra Defteri",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "📖",
+        description:
+          "17. yüzyıl Altın Çağı'nda fikir ve matbaa özgürlüğünün merkezi olan Amsterdam, Baruch Spinoza'nın 'Etika' eseriyle rasyonalist felsefeyi temellendirdiği yerdir. II. Dünya Savaşı sırasında ise 13 yaşındaki Anne Frank, Nazi işgali altında saklandığı gizli tavan arasında tuttuğu günlüğüyle tüm dünyada insanlık onurunun, vicdanın ve özgürlük arzusunun en dokunaklı edebi belgesine imza atmıştır.",
+        quote:
+          "\"Tüm yaşananlara rağmen, insanların yüreğinde derin bir iyilik olduğuna hâlâ inanıyorum.\" — Anne Frank, Hatıra Defteri",
+        figuresAndWorks: [
+          "Baruch Spinoza (Etika & Teolojik-Politik İnceleme)",
+          "Anne Frank (Bir Genç Kızın Hatıra Defteri)",
+          "Desiderius Erasmus Mirası",
+          "Joost van den Vondel"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "AMSTERDAM: AKIL VE VİCDAN",
+          subtitle: "Spinoza'nın Etika'sı ve Anne Frank'ın Günlüğü",
+          era: "1670 & 1942",
+          primaryColor: "#c2410c",
+          secondaryColor: "#0f172a",
+          accentColor: "#fb923c",
+          icon: "📖",
+          regionTag: "AMSTERDAM / HOLLANDA"
+        }),
+        imageCaption: "Amsterdam tarihi kanal köprüleri ve 17. yüzyıl tuğla binaları."
+      },
+      {
+        id: "viyana",
+        city: "Viyana",
+        country: "Avusturya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇦🇹",
+        lat: 48.20,
+        lng: 16.37,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1900,
+        year: "1890 – 1942",
+        title: "Viyana Modernizmi, Stefan Zweig ve Dünün Dünyası",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "☕",
+        description:
+          "Tuna Nehri kıyısındaki Viyana; kafeleri, tiyatroları ve felsefi çevreleriyle 20. yüzyılın şafağında Avrupa zekasının zirvesiydi. Stefan Zweig, Avrupa hümanizmini ve Birinci Dünya Savaşı ile yok olan o görkemli barış çağını 'Dünün Dünyası' ve 'Satranç' başyapıtlarında ölümsüzleştirirken; Sigmund Freud insanın bilinçaltı dünyasını bu şehirde aydınlatmıştır.",
+        quote:
+          "\"İç huzurumuzu ancak bağımsız düşünce ve kültürün evrenselliğinde bulabiliriz; fanatizmin fırtınaları dinecek, insanlığın ortak aklı kalacaktır.\" — Stefan Zweig, Dünün Dünyası",
+        figuresAndWorks: [
+          "Stefan Zweig (Dünün Dünyası, Satranç & Bilinmeyen Bir Kadının Mektubu)",
+          "Sigmund Freud (Psikanaliz Ekolü)",
+          "Arthur Schnitzler",
+          "Robert Musil (Niteliksiz Adam)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "VİYANA MODERNİZMİ",
+          subtitle: "Stefan Zweig, Dünün Dünyası ve Avrupa Hümanizmi",
+          era: "1890 – 1942",
+          primaryColor: "#581c87",
+          secondaryColor: "#0f172a",
+          accentColor: "#c084fc",
+          icon: "☕",
+          regionTag: "VİYANA / AVUSTURYA"
+        }),
+        imageCaption: "Viyana Hofburg Sarayı, tarihi kafeler ve imperial Ringstraße bulvarı."
       }
     ]);
+
+    // 23 Eski Şehir İçin Otomatik Çağ ve Sayısal Yıl Haritası
+    const EXISTING_ERA_MAP = {
+      amasya: { era: "modern", numericYear: 1919 },
+      samsun: { era: "modern", numericYear: 1919 },
+      erzurum: { era: "modern", numericYear: 1919 },
+      sivas: { era: "modern", numericYear: 1919 },
+      ankara: { era: "modern", numericYear: 1920 },
+      istanbul: { era: "ronesans", numericYear: 1453 },
+      canakkale: { era: "modern", numericYear: 1915 },
+      londra: { era: "ronesans", numericYear: 1599 },
+      paris: { era: "ronesans", numericYear: 1789 },
+      floransa: { era: "ortacag", numericYear: 1321 },
+      weimar: { era: "ronesans", numericYear: 1775 },
+      atina: { era: "antik", numericYear: -430 },
+      madrid: { era: "ronesans", numericYear: 1605 },
+      stpetersburg: { era: "yuzvil19", numericYear: 1866 },
+      dublin: { era: "modern", numericYear: 1922 },
+      bagdat: { era: "ortacag", numericYear: 830 },
+      semerkant: { era: "ortacag", numericYear: 1420 },
+      kyoto: { era: "ortacag", numericYear: 1008 },
+      pekin: { era: "ronesans", numericYear: 1420 },
+      newyork: { era: "modern", numericYear: 1925 },
+      bogota: { era: "modern", numericYear: 1967 },
+      kahire: { era: "ortacag", numericYear: 970 },
+      timbuktu: { era: "ortacag", numericYear: 1327 }
+    };
+
+    // Tüm konumlara era ve numericYear özelliklerini tanımla
+    MASTER_LOCATIONS.forEach(loc => {
+      if (EXISTING_ERA_MAP[loc.id]) {
+        loc.era = loc.era || EXISTING_ERA_MAP[loc.id].era;
+        loc.numericYear = loc.numericYear || EXISTING_ERA_MAP[loc.id].numericYear;
+      }
+    });
 
     // SADECE "EDEBİYAT & AKIMLAR" SEÇİLDİĞİNDE ÇALIŞACAK KÜRESEL 3B ANİMASYONLU IŞIK YAYLARI
     // Yaylar artık koordinatla değil şehir ID'leriyle tanımlanır ve YALNIZCA iki ucu da
@@ -1848,9 +2411,15 @@
     const LITERATURE_ROUTES = Object.freeze([
       { from: "floransa", to: "madrid",       label: "Floransa Rönesansı (Dante) ➔ Madrid (Cervantes - Don Kişot)" },
       { from: "floransa", to: "londra",       label: "İtalyan Hümanizmi ➔ Londra (Shakespeare & Elizabeth Tiyatrosu)" },
+      { from: "stratford", to: "londra",      label: "Stratford (Shakespeare) ➔ Londra Globe Tiyatrosu" },
+      { from: "edinburgh", to: "londra",      label: "İskoç Aydınlanması (Sir Walter Scott) ➔ Londra Klasik Romanı" },
+      { from: "oxford",    to: "londra",      label: "Oxford (Tolkien & Lewis) ➔ Modern İngiliz Edebiyatı" },
       { from: "madrid",   to: "londra",       label: "İspanyol Altın Çağı ➔ İngiliz Romanı" },
       { from: "londra",   to: "weimar",       label: "Shakespeare ➔ Weimar (Goethe, Schiller & Sturm und Drang)" },
       { from: "londra",   to: "dublin",       label: "Londra ➔ Dublin (James Joyce - Ulysses & Modernizm)" },
+      { from: "amsterdam", to: "weimar",      label: "Amsterdam Aydınlanması (Spinoza) ➔ Weimar Klasisizmi (Goethe)" },
+      { from: "viyana",    to: "prag",        label: "Viyana Modernizmi (Stefan Zweig) ➔ Prag (Franz Kafka)" },
+      { from: "floransa",  to: "viyana",      label: "İtalyan Hümanizmi ➔ Orta Avrupa Kültür Havzası (Viyana)" },
       { from: "weimar",   to: "stpetersburg", label: "Alman Romantizmi ➔ St. Petersburg (Puşkin, Dostoyevski & Tolstoy)" },
       { from: "weimar",   to: "istanbul",     label: "Avrupa Edebi Akımları ➔ İstanbul (Tanzimat & Servet-i Fünun)" },
       { from: "istanbul", to: "sivas",        label: "İstanbul ➔ Sivas (Anadolu Halk Şiiri & Âşık Veysel)" },
@@ -1895,6 +2464,7 @@
     // ============================================================================
     let activeRegion = 'all';
     let activeCategory = 'all';
+    let activeEra = 'all';
     let searchQuery = '';
     let activeCityId = null;
     let isTilted3D = false;
@@ -2179,7 +2749,10 @@
         const categoryMatch =
           activeCategory === 'all' || item.category === activeCategory;
 
-        if (!regionMatch || !categoryMatch) return false;
+        const eraMatch =
+          activeEra === 'all' || item.era === activeEra;
+
+        if (!regionMatch || !categoryMatch || !eraMatch) return false;
         if (!q) return true;
 
         const searchableText = [
@@ -2212,6 +2785,16 @@
         world.arcsData(buildLiteratureArcs(filteredList));
       } else {
         world.arcsData([]);
+      }
+
+      // Üst sayaç rozetini güncelle
+      const counterBadge = document.getElementById('stopCounterBadge');
+      if (counterBadge) {
+        if (filteredList.length === MASTER_LOCATIONS.length) {
+          counterBadge.textContent = `• ${MASTER_LOCATIONS.length} Küresel Durak`;
+        } else {
+          counterBadge.textContent = `• ${filteredList.length} / ${MASTER_LOCATIONS.length} Durak`;
+        }
       }
     }
 
@@ -2308,7 +2891,20 @@
         </span>
       `;
 
-      badgesContainer.innerHTML = `${regionBadge}${categoryBadge}${yearBadge}`;
+      const eraLabels = {
+        antik: '🏛️ Antik Çağ',
+        ortacag: '⚔️ Orta Çağ & Vikingler',
+        ronesans: '🎭 Rönesans & Aydınlanma',
+        yuzvil19: '📜 19. Yüzyıl Klasikleri',
+        modern: '🚀 20. Yy & Modern Çağ'
+      };
+      const eraBadge = item.era && eraLabels[item.era] ? `
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-200 border border-amber-500/30">
+          ${eraLabels[item.era]}
+        </span>
+      ` : '';
+
+      badgesContainer.innerHTML = `${regionBadge}${categoryBadge}${eraBadge}${yearBadge}`;
 
       document.getElementById('drawerTitle').textContent = item.title;
       document.getElementById('drawerLocation').textContent = `${item.city}, ${item.country}`;
@@ -2487,7 +3083,57 @@
         });
       });
 
-      // 3. ARAMA ÇUBUĞU
+      // 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRELERİ
+      const eraDescriptions = {
+        all: "Tüm Çağlar (-500 ➔ 2026)",
+        antik: "🏛️ Antik Çağ (M.Ö. 500 – M.S. 500)",
+        ortacag: "⚔️ Orta Çağ & Viking Çağı (500 – 1450)",
+        ronesans: "🎭 Rönesans & Aydınlanma (1450 – 1800)",
+        yuzvil19: "📜 19. Yüzyıl Klasikleri (1800 – 1900)",
+        modern: "🚀 20. Yüzyıl & Modernizm (1900 – Günümüz)"
+      };
+
+      function updateEraButtonStyles() {
+        document.querySelectorAll('.era-btn').forEach(btn => {
+          const era = btn.dataset.era;
+          const isSelected = era === activeEra;
+          if (isSelected) {
+            btn.className =
+              'era-btn active px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.3)] transition cursor-pointer whitespace-nowrap';
+          } else {
+            btn.className =
+              'era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap';
+          }
+        });
+        const label = document.getElementById('timelineCurrentEraLabel');
+        if (label && eraDescriptions[activeEra]) {
+          label.textContent = eraDescriptions[activeEra];
+        }
+      }
+
+      document.querySelectorAll('.era-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeEra = btn.dataset.era;
+          updateEraButtonStyles();
+          renderFilteredMarkers();
+
+          // Seçilen çağa göre kamera odağı
+          if (world) {
+            if (activeEra === 'antik') {
+              world.pointOfView({ lat: 39.0, lng: 18.0, altitude: 1.6 }, 1400);
+            } else if (activeEra === 'ortacag') {
+              world.pointOfView({ lat: 54.0, lng: 5.0, altitude: 1.7 }, 1400);
+            } else if (activeEra === 'ronesans') {
+              world.pointOfView({ lat: 48.0, lng: 8.0, altitude: 1.65 }, 1400);
+            } else if (activeEra === 'yuzvil19') {
+              world.pointOfView({ lat: 56.0, lng: 15.0, altitude: 1.75 }, 1400);
+            }
+            setTimeout(updateZoomAndCompass, 1450);
+          }
+        });
+      });
+
+      // 4. ARAMA ÇUBUĞU
       const searchInput = document.getElementById('searchInput');
       const clearSearchBtn = document.getElementById('clearSearchBtn');
 
@@ -2564,10 +3210,12 @@
         closeDrawer();
         activeRegion = 'all';
         activeCategory = 'all';
+        activeEra = 'all';
         searchQuery = '';
         document.getElementById('searchInput').value = '';
         document.getElementById('clearSearchBtn').classList.add('hidden');
         updateFilterButtonStyles();
+        updateEraButtonStyles();
         renderFilteredMarkers();
         world.pointOfView({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
         setTimeout(updateZoomAndCompass, 1450);

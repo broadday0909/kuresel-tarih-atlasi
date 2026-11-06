@@ -45,3 +45,4 @@ Kullanıcı herhangi bir değişiklik, yeni şehir, edebi durak veya stil günce
 - **Sol Üst Başlık:** "TÜBİTAK Projesi • Küresel Tarih ve Edebiyat Atlası" yer alır; burada yinelenen isim imzası bulunmaz.
 - **Üst Menü:** Ekranı kapatmaması için tek satır, ultra kompakt ve yatay kaydırılabilir kalmalıdır.
 - **İntro Ekranı:** Açılış animasyonu ve altın çizgi süresi 5 saniyedir (5000ms).
+
