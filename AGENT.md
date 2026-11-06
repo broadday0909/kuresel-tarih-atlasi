@@ -7,7 +7,7 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 ## 🌍 Proje Genel Bilgileri
 - **Proje Adı:** Küresel Tarih ve Edebiyat Atlası (TÜBİTAK 3B Projesi)
 - **Akademik Danışman:** Öğr. Gör. Dr. Ayşegül Elçi
-- **Baş Geliştirici:** Bayram Akpamukçu
+- **Proje Yürütücüsü & Geliştirici:** Bayram Akpamukçu
 - **Destek / Katkı:** Sami Yusuf Maral
 - **Canlı Web Sitesi:** [https://bayramakpamukcu.site](https://bayramakpamukcu.site)
 - **GitHub Deposu:** [https://github.com/broadday0909/kuresel-tarih-atlasi.git](https://github.com/broadday0909/kuresel-tarih-atlasi.git)
