@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Küresel Tarih ve Edebiyat Atlası | World History & Literature 3D Atlas (TÜBİTAK)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js & Globe.gl (Ücretsiz, API Anahtarsız 3B Küre & Uzay Motoru) -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl@2.32.1/dist/globe.gl.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Cinzel"', 'serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: '#050508',
+            champagne: '#d4af37',
+            ivory: '#f8fafc',
+            history: {
+              DEFAULT: '#f59e0b',
+              light: '#fbbf24',
+              glow: 'rgba(245, 158, 11, 0.65)'
+            },
+            literature: {
+              DEFAULT: '#10b981',
+              light: '#2dd4bf',
+              glow: 'rgba(16, 185, 129, 0.65)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --pin-zoom-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #050508;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #f8fafc;
+    }
+
+    /* ==========================================================================
+       1. SİNEMATİK & PRESTİJLİ GİRİŞ EKRANI (OBSIDIAN BLACK, CHAMPAGNE GOLD, IVORY)
+       ========================================================================== */
+    #introOverlay {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.07) 0%, rgba(5, 5, 10, 0.78) 55%, rgba(5, 5, 8, 0.92) 100%),
+        rgba(5, 5, 10, 0.82);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      transition: opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1), transform 1.45s cubic-bezier(0.16, 1, 0.3, 1), filter 1.35s ease;
+    }
+
+    #introOverlay.intro-hidden {
+      opacity: 0;
+      transform: scale(1.16);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    /* Ağır Çekimde Ters Yönlere Dönen Altın Pusula / Usturlap Halkaları (SVG Celestial Rings) */
+    .celestial-ring-cw {
+      transform-origin: 500px 500px;
+      animation: celestialSpinCW 64s linear infinite;
+    }
+
+    .celestial-ring-ccw {
+      transform-origin: 500px 500px;
+      animation: celestialSpinCCW 82s linear infinite;
+    }
+
+    .celestial-ring-slow {
+      transform-origin: 500px 500px;
+      animation: celestialSpinCW 110s linear infinite;
+    }
+
+    @keyframes celestialSpinCW {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes celestialSpinCCW {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    /* Sinematik "Blur-to-Clear" ve "Letter-Spacing" Açılma Animasyonu */
+    .cinematic-title-reveal {
+      color: #f8fafc;
+      text-shadow: 0 0 42px rgba(212, 175, 55, 0.28), 0 12px 35px rgba(0, 0, 0, 0.9);
+      animation: blurToClearTitle 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes blurToClearTitle {
+      0% {
+        opacity: 0;
+        filter: blur(18px);
+        letter-spacing: 0.04em;
+        transform: translateY(14px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        letter-spacing: 0.16em;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .cinematic-fade-up {
+      opacity: 0;
+      animation: smoothFadeUp 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes smoothFadeUp {
+      0% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(16px);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0);
+      }
+    }
+
+    /* Fildişi Beyazı & Hafif Altın Yansımalı Baş Geliştirici İmzası */
+    .ivory-gold-signature {
+      background: linear-gradient(
+        110deg,
+        #f8fafc 0%,
+        #ffffff 32%,
+        #f3e5ab 50%,
+        #d4af37 64%,
+        #f8fafc 85%,
+        #ffffff 100%
+      );
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 32px rgba(212, 175, 55, 0.25);
+      animation: luxuryShimmer 5s linear infinite;
+    }
+
+    /* Şampanya Altını (Champagne Gold #d4af37) İsim Stili */
+    .champagne-gold-signature {
+      background: linear-gradient(
+        110deg,
+        #d4af37 0%,
+        #f5e6b3 35%,
+        #ffffff 50%,
+        #e5c158 70%,
+        #d4af37 100%
+      );
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 28px rgba(212, 175, 55, 0.32);
+      animation: luxuryShimmer 5s linear infinite reverse;
+    }
+
+    @keyframes luxuryShimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 220% center; }
+    }
+
+    /* En Altta 4 Saniye Boyunca Soldan Sağa Dolan Çok İnce Zarif Altın Çizgi */
+    .gold-bottom-progress-line {
+      width: 0%;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.25), #d4af37, #fff6d1, #d4af37);
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.85), 0 0 36px rgba(212, 175, 55, 0.45);
+      animation: fillGoldLine4s 4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    @keyframes fillGoldLine4s {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* Google Earth Style Glassmorphism */
+    .glass-panel {
+      background: rgba(9, 14, 28, 0.8);
+      backdrop-filter: blur(22px) saturate(185%);
+      -webkit-backdrop-filter: blur(22px) saturate(185%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .earth-ctrl-btn {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .earth-ctrl-btn:hover {
+      background: rgba(30, 41, 59, 0.98);
+      border-color: rgba(58, 153, 217, 0.55);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(58, 153, 217, 0.3);
+    }
+
+    .earth-ctrl-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.4);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.6);
+    }
+
+    /* 3D Globe Pulsing Pin Styles with Anti-Overlap Alignment */
+    .atlas-pin-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      pointer-events: auto;
+      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-100% + var(--pin-offset-y, 0px))) scale(var(--pin-zoom-scale, 1));
+      transform-origin: bottom center;
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.2s;
+    }
+
+    .atlas-pin-wrapper:hover {
+      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-108% + var(--pin-offset-y, 0px))) scale(calc(var(--pin-zoom-scale, 1) * 1.18));
+      z-index: 60 !important;
+    }
+
+    .atlas-pin-wrapper.active-pin {
+      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-114% + var(--pin-offset-y, 0px))) scale(calc(var(--pin-zoom-scale, 1) * 1.25));
+      z-index: 70 !important;
+    }
+
+    .pin-head {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+      box-shadow: 0 0 20px var(--pin-glow), inset 0 2px 4px rgba(255, 255, 255, 0.45);
+      border: 2px solid rgba(255, 255, 255, 0.94);
+      background: var(--pin-bg);
+      z-index: 2;
+    }
+
+    .pin-pulse {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid var(--pin-color);
+      opacity: 0.85;
+      animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+      pointer-events: none;
+    }
+
+    .pin-pulse-delayed {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1.5px solid var(--pin-second-color, var(--pin-color));
+      opacity: 0.65;
+      animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) 1.1s infinite;
+      pointer-events: none;
+    }
+
+    .pin-stem {
+      width: 2px;
+      height: 11px;
+      background: linear-gradient(to bottom, #ffffff, var(--pin-color), transparent);
+      margin-top: -1px;
+    }
+
+    .pin-label {
+      margin-top: 2px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #f8fafc;
+      background: rgba(8, 12, 24, 0.92);
+      border: 1px solid var(--pin-color);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 3.5px;
+      transform: translateX(var(--label-shift-x, 0px));
+    }
+
+    @keyframes pulseRing {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.95;
+      }
+      100% {
+        transform: scale(2.05);
+        opacity: 0;
+      }
+    }
+
+    /* Subtle Atmospheric Space Vignette */
+    .vignette-overlay {
+      background: radial-gradient(circle at center, transparent 62%, rgba(2, 6, 23, 0.68) 100%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="relative w-screen h-screen overflow-hidden select-none">
+
+  <!-- SİNEMATİK & PRESTİJLİ GİRİŞ EKRANI (OBSIDIAN BLACK, CHAMPAGNE GOLD & IVORY WHITE) -->
+  <div id="introOverlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+    
+    <!-- Ağır Çekimde Ters Yönlere Dönen Devasa Altın Pusula / Usturlap Halkaları (SVG Celestial Rings) -->
+    <div class="pointer-events-none fixed inset-0 flex items-center justify-center overflow-hidden">
+      <svg class="w-[820px] h-[820px] sm:w-[980px] sm:h-[980px] max-w-none opacity-95" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Dış Usturlap Derece Halkası (Saat Yönü) -->
+        <g class="celestial-ring-cw">
+          <circle cx="500" cy="500" r="450" stroke="rgba(212, 175, 55, 0.14)" stroke-width="1" />
+          <circle cx="500" cy="500" r="436" stroke="rgba(212, 175, 55, 0.18)" stroke-width="1" stroke-dasharray="3 12" />
+          <line x1="500" y1="30" x2="500" y2="68" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1.2" />
+          <line x1="500" y1="932" x2="500" y2="970" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1.2" />
+          <line x1="30" y1="500" x2="68" y2="500" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1.2" />
+          <line x1="932" y1="500" x2="970" y2="500" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1.2" />
+        </g>
+
+        <!-- Orta Göksel Pusula Halkası (Ters Yön) -->
+        <g class="celestial-ring-ccw">
+          <circle cx="500" cy="500" r="355" stroke="rgba(212, 175, 55, 0.16)" stroke-width="1.1" stroke-dasharray="18 8 4 8" />
+          <circle cx="500" cy="500" r="338" stroke="rgba(248, 250, 252, 0.07)" stroke-width="0.8" />
+          <polygon points="500,132 505,148 495,148" fill="rgba(212, 175, 55, 0.45)" />
+          <polygon points="500,868 505,852 495,852" fill="rgba(212, 175, 55, 0.45)" />
+          <polygon points="132,500 148,505 148,495" fill="rgba(212, 175, 55, 0.45)" />
+          <polygon points="868,500 852,505 852,495" fill="rgba(212, 175, 55, 0.45)" />
+        </g>
+
+        <!-- İç Ekvator ve Usturlap Geometri Halkası (Saat Yönü Yavaş) -->
+        <g class="celestial-ring-slow">
+          <circle cx="500" cy="500" r="260" stroke="rgba(212, 175, 55, 0.15)" stroke-width="1" />
+          <circle cx="500" cy="500" r="245" stroke="rgba(212, 175, 55, 0.12)" stroke-width="1" stroke-dasharray="2 8" />
+          <ellipse cx="500" cy="500" rx="260" ry="105" stroke="rgba(212, 175, 55, 0.11)" stroke-width="0.9" transform="rotate(28 500 500)" />
+          <ellipse cx="500" cy="500" rx="260" ry="105" stroke="rgba(212, 175, 55, 0.11)" stroke-width="0.9" transform="rotate(-28 500 500)" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- Merkez Sinematik Tipografi (Kutu İçine Hapsetmeden Doğrudan Merkezde) -->
+    <div class="relative z-10 max-w-5xl w-full px-4 flex flex-col items-center">
+      
+      <!-- Üst Prestij Etiketi -->
+      <div class="cinematic-fade-up flex items-center gap-3 mb-5" style="animation-delay: 0.1s;">
+        <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-r from-transparent to-[#d4af37]/70"></span>
+        <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.38em] text-[#d4af37]">
+          TÜBİTAK 3B DÜNYA KÜLTÜR MİRASI PROJESİ
+        </span>
+        <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent to-[#d4af37]/70"></span>
+      </div>
+
+      <!-- Sinematik Blur-to-Clear & Letter-Spacing Açılan Ana Başlık -->
+      <h1 class="font-display text-3xl sm:text-5xl md:text-6xl font-bold uppercase cinematic-title-reveal leading-tight">
+        KÜRESEL TARİH VE EDEBİYAT ATLASI
+      </h1>
+
+      <p class="cinematic-fade-up mt-3 text-xs sm:text-sm md:text-base text-slate-300/80 font-light tracking-[0.22em] uppercase" style="animation-delay: 0.35s;">
+        World History &amp; Literature 3D Interactive Atlas
+      </p>
+
+      <!-- Zarif Altın Ayırıcı Çizgi ve Pusula Yıldızı -->
+      <div class="cinematic-fade-up my-8 sm:my-10 flex items-center justify-center gap-4 w-full max-w-md" style="animation-delay: 0.55s;">
+        <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#d4af37]/75 to-[#d4af37]"></div>
+        <span class="text-[#d4af37] text-sm">✦</span>
+        <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#d4af37]/75 to-[#d4af37]"></div>
+      </div>
+
+      <!-- Çok Şık ve Büyük İmza Bölümü (Kutusuz, Ultra-Minimalist & Lüks) -->
+      <div class="cinematic-fade-up space-y-3 sm:space-y-4 text-center" style="animation-delay: 0.75s;">
+        <div class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] ivory-gold-signature leading-snug">
+          DEVELOPED BY BAYRAM AKPAMUKÇU
+        </div>
+
+        <div class="font-serif italic text-xl sm:text-2xl text-[#cbd5e1]/90 tracking-[0.12em]">
+          with the help of
+        </div>
+
+        <div class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] champagne-gold-signature leading-snug">
+          YUSUF MARAL &amp; YUSUF ÖZCAN
+        </div>
+      </div>
+
+      <!-- Haritaya Dal / Keşfet Butonu -->
+      <button
+        id="startExploreBtn"
+        type="button"
+        style="animation-delay: 1.05s;"
+        class="cinematic-fade-up mt-10 px-8 py-3 rounded-full bg-white/[0.04] hover:bg-[#d4af37]/15 border border-[#d4af37]/45 hover:border-[#d4af37] text-[#f8fafc] font-medium text-xs sm:text-sm tracking-[0.28em] uppercase flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.18)] hover:shadow-[0_0_45px_rgba(212,175,55,0.42)] transition-all duration-300 cursor-pointer"
+      >
+        <span>Haritayı Keşfet</span>
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#d4af37]"></i>
+      </button>
+    </div>
+
+    <!-- En Altta Çok İnce, Zarif Altın Çizgi (4 Saniye Boyunca Soldan Sağa Dolar) -->
+    <div class="fixed bottom-0 left-0 right-0 z-20 flex flex-col items-center">
+      <div class="w-full px-6 pb-2.5 flex items-center justify-between text-[10px] font-mono tracking-[0.25em] text-[#d4af37]/75 uppercase">
+        <span>3D EARTH ENGINE INITIALIZING</span>
+        <span id="introProgressText">0%</span>
+      </div>
+      <div class="w-full h-[2px] bg-white/5 overflow-hidden">
+        <div id="introProgressBar" class="h-full gold-bottom-progress-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 3B ULTRA HD FOTOGERÇEKÇİ KÜRE KONTEYNERİ -->
+  <div id="globeViz" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+  <!-- SİNEMATİK UZAY VİNYET KATMANI -->
+  <div class="vignette-overlay fixed inset-0 z-10"></div>
+
+  <!-- 2. GOOGLE EARTH TARZI ÜST BAR (GLASSMORPHISM) -->
+  <header class="fixed top-0 left-0 right-0 z-30 p-2.5 md:px-5 md:py-3 pointer-events-none flex flex-col 2xl:flex-row items-stretch 2xl:items-center justify-between gap-2.5">
+    
+    <!-- Sol: TÜBİTAK Proje Kimliği & Küresel Atlas Başlığı -->
+    <div class="glass-panel rounded-2xl px-4 py-2 pointer-events-auto flex items-center gap-3 shrink-0">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500/30 via-amber-500/20 to-emerald-500/30 border border-sky-400/40 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/10">
+        <i data-lucide="earth" class="w-5 h-5 text-sky-400"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            TÜBİTAK Projesi
+          </span>
+          <span class="text-[11px] text-sky-300/90 font-medium hidden sm:inline">• 23 Küresel Durak</span>
+        </div>
+        <h2 class="font-display text-sm sm:text-base font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent">
+          Küresel Tarih ve Edebiyat Atlası
+        </h2>
+        <div class="text-[10px] text-slate-400/80 tracking-wide mt-0.5 hidden sm:flex items-center gap-1.5 font-normal">
+          <span>Developed by <span class="text-slate-200 font-medium">Bayram Akpamukçu</span></span>
+          <span class="text-slate-600">•</span>
+          <span>with <span class="text-slate-200 font-medium">Yusuf Maral &amp; Yusuf Özcan</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sağ: Arama Çubuğu, Küresel Kıta Filtreleri ve Kategori Filtreleri -->
+    <div class="glass-panel rounded-2xl p-2 pointer-events-auto flex flex-wrap items-center gap-2">
+      
+      <!-- Arama Kutusu -->
+      <div class="relative flex items-center flex-1 sm:flex-initial min-w-[190px] sm:w-56">
+        <i data-lucide="search" class="w-4 h-4 text-sky-400 absolute left-3 pointer-events-none"></i>
+        <input
+          id="searchInput"
+          type="text"
+          autocomplete="off"
+          placeholder="Şehir, Tarih veya Eser Ara..."
+          class="w-full pl-9 pr-7 py-1.5 rounded-xl bg-slate-950/90 border border-white/15 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400/50 transition"
+        />
+        <button id="clearSearchBtn" type="button" class="hidden absolute right-2 text-slate-400 hover:text-white cursor-pointer">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div class="h-5 w-[1px] bg-white/10 hidden md:block"></div>
+
+      <!-- Küresel Kıta / Bölge Filtreleri ("Tümü" | "Türkiye" | "Avrupa" | "Asya & Orta Doğu" | "Amerika" | "Afrika") -->
+      <div class="flex flex-wrap items-center gap-1 bg-slate-950/65 p-1 rounded-xl border border-white/10" id="regionFilterGroup">
+        <button
+          type="button"
+          data-region="all"
+          class="region-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.45)] cursor-pointer"
+        >
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-sky-300"></i>
+          <span>Tümü</span>
+        </button>
+        <button
+          type="button"
+          data-region="turkiye"
+          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span>🇹🇷</span>
+          <span>Türkiye</span>
+        </button>
+        <button
+          type="button"
+          data-region="avrupa"
+          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span>🇪🇺</span>
+          <span>Avrupa</span>
+        </button>
+        <button
+          type="button"
+          data-region="asya"
+          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span>🌏</span>
+          <span>Asya &amp; Orta Doğu</span>
+        </button>
+        <button
+          type="button"
+          data-region="amerika"
+          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span>🌎</span>
+          <span>Amerika</span>
+        </button>
+        <button
+          type="button"
+          data-region="afrika"
+          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span>🌍</span>
+          <span>Afrika</span>
+        </button>
+      </div>
+
+      <div class="h-5 w-[1px] bg-white/10 hidden lg:block"></div>
+
+      <!-- Kategori Filtreleri ("Tüm Kategoriler", "Tarihi Olaylar", "Edebiyat & Akımlar") -->
+      <div class="flex items-center gap-1 bg-slate-950/65 p-1 rounded-xl border border-white/10" id="categoryFilterGroup">
+        <button
+          type="button"
+          data-category="all"
+          class="category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-white/20 text-white border border-white/50 shadow-[0_0_14px_rgba(255,255,255,0.25)] cursor-pointer"
+        >
+          <span class="w-2 h-2 rounded-full bg-gradient-to-r from-amber-400 to-teal-400"></span>
+          <span>Tüm Kategoriler</span>
+        </button>
+
+        <button
+          type="button"
+          data-category="tarih"
+          class="category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></span>
+          <span>Tarihi Olaylar</span>
+        </button>
+
+        <button
+          type="button"
+          data-category="edebiyat"
+          class="category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+        >
+          <span class="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_8px_#14b8a6]"></span>
+          <span>Edebiyat &amp; Akımlar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SOL ALT KÖŞE: GÖZE BATMAYAN ZARİF GELİŞTİRİCİ İMZASI -->
+  <div class="fixed bottom-5 left-3 md:left-5 z-20 pointer-events-auto select-none">
+    <div class="glass-panel px-3.5 py-1.5 rounded-xl border border-white/10 bg-slate-950/50 backdrop-blur-md flex items-center gap-2 text-[10.5px] text-slate-400/80 shadow-md hover:text-slate-200 transition-all">
+      <span class="w-1.5 h-1.5 rounded-full bg-amber-400/70 shrink-0"></span>
+      <span>Developed by <strong class="text-slate-200 font-medium">Bayram Akpamukçu</strong></span>
+      <span class="text-slate-600">•</span>
+      <span class="text-slate-400/80">with <strong class="text-slate-200 font-medium">Yusuf Maral &amp; Yusuf Özcan</strong></span>
+    </div>
+  </div>
+
+  <!-- SAĞ ALT KÖŞE: SADECE NAVİGASYON BUTONLARI (KOORDİNAT BÖLÜMÜ KALDIRILDI) -->
+  <div class="fixed bottom-5 right-3 md:right-5 z-30 flex flex-col items-center gap-1.5 pointer-events-auto">
+    <!-- Pusula / Kuzeye ve Küresel Görünüme Sıfırla -->
+    <button
+      id="compassResetBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-full flex items-center justify-center text-slate-200 shadow-xl group relative"
+      title="Pusulayı ve Kamerayı Küresel Görünüme Sıfırla"
+    >
+      <i data-lucide="compass" id="compassIcon" class="w-5 h-5 text-sky-400 transition-transform duration-300 group-hover:rotate-45"></i>
+      <span class="absolute -top-1 text-[8px] font-bold text-rose-400">N</span>
+    </button>
+
+    <!-- 3D / 2D Perspektif Butonu -->
+    <button
+      id="toggle3DViewBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-xl flex items-center justify-center text-xs font-extrabold tracking-tighter text-sky-300 shadow-xl"
+      title="3B Eğimli Kamera / Dik Yörünge Açısı Değiştir"
+    >
+      <span id="viewModeBadge">3D</span>
+    </button>
+
+    <!-- Otomatik Eksen Dönüşü (Auto-Rotate) -->
+    <button
+      id="toggleRotateBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-xl flex items-center justify-center text-slate-300 shadow-xl"
+      title="Dünya'nın Kendi Ekseninde Dönüşünü Aç/Kapat"
+    >
+      <i data-lucide="rotate-3d" class="w-4 h-4 text-emerald-400"></i>
+    </button>
+
+    <!-- Zoom (+) / (-) Kontrolleri -->
+    <div class="glass-panel rounded-xl overflow-hidden flex flex-col border border-white/15 shadow-xl">
+      <button
+        id="zoomInBtn"
+        type="button"
+        class="w-10 h-9 flex items-center justify-center text-slate-200 hover:bg-white/15 hover:text-white transition border-b border-white/10 cursor-pointer"
+        title="Yakınlaş (Zoom In)"
+      >
+        <i data-lucide="plus" class="w-4 h-4"></i>
+      </button>
+      <button
+        id="zoomOutBtn"
+        type="button"
+        class="w-10 h-9 flex items-center justify-center text-slate-200 hover:bg-white/15 hover:text-white transition cursor-pointer"
+        title="Uzaklaş (Zoom Out)"
+      >
+        <i data-lucide="minus" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- SAĞ DETAY PANELİ (SLIDE-OVER GLASSMORPHISM DRAWER) -->
+  <aside
+    id="detailDrawer"
+    class="fixed top-20 bottom-6 right-3 md:right-16 z-30 w-[calc(100vw-1.5rem)] sm:w-[430px] md:w-[465px] glass-panel rounded-3xl overflow-hidden flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-x-[130%] opacity-0 pointer-events-auto"
+  >
+    <!-- Drawer Üst Başlık: Etiketler, Başlık, Şehir/Ülke, Yıl -->
+    <div class="p-5 pb-3.5 border-b border-white/10 flex items-start justify-between gap-3 bg-gradient-to-b from-white/[0.05] to-transparent">
+      <div class="space-y-1.5">
+        <!-- Bölge, Kategori ve Yıl Rozetleri -->
+        <div class="flex flex-wrap items-center gap-1.5" id="drawerBadges"></div>
+
+        <!-- Olayın / Akımın Başlığı -->
+        <h2 id="drawerTitle" class="font-display text-lg sm:text-xl font-bold text-white leading-snug">
+          Olay / Edebi Akım Başlığı
+        </h2>
+
+        <!-- Şehir / Ülke -->
+        <div class="flex flex-wrap items-center gap-2 text-xs text-slate-300">
+          <span class="inline-flex items-center gap-1 font-semibold text-sky-300">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="drawerLocation">Şehir, Ülke</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Kapat Butonu -->
+      <button
+        id="closeDrawerBtn"
+        type="button"
+        class="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 transition shrink-0 cursor-pointer"
+        title="Detay Panelini Kapat"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Kaydırılabilir İçerik -->
+    <div class="flex-1 overflow-y-auto custom-scroll p-5 space-y-5">
+      
+      <!-- Yüksek Kaliteli AI Kapak Resmi Alanı -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="flex items-center gap-1.5 font-semibold text-sky-300">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+            Yapay Zeka (AI) Tarihsel &amp; Edebi Sahne Görseli
+          </span>
+          <span id="drawerYearBadge" class="font-mono text-[11px] text-amber-300 font-semibold">1919</span>
+        </div>
+
+        <div class="relative rounded-2xl overflow-hidden border border-white/15 bg-slate-950 aspect-[16/9] group shadow-2xl">
+          <img
+            id="drawerCoverImage"
+            src=""
+            alt="AI Kapak Görseli"
+            onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){ this.src = this.dataset.fallback; }"
+            class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent"></div>
+
+          <div class="absolute top-3 left-3 flex items-center gap-1.5">
+            <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-black/65 text-sky-300 border border-sky-400/30 backdrop-blur-md">
+              AI High-Res Art
+            </span>
+          </div>
+
+          <!-- Görsel Alt Açıklaması -->
+          <div class="absolute bottom-3 left-3.5 right-3.5">
+            <p id="drawerImageCaption" class="text-xs text-slate-100 font-medium leading-snug drop-shadow">
+              Görsel sahne açıklaması
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sesli Dinle (TTS) Öne Çıkan Aksiyon Butonu -->
+      <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-gradient-to-r from-sky-950/60 via-slate-900/80 to-emerald-950/50 border border-sky-500/30">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300">
+            <i data-lucide="headphones" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white">Sesli Akademik Rehber</div>
+            <div class="text-[11px] text-slate-400">Türkçe Web Speech AI Seslendirme</div>
+          </div>
+        </div>
+
+        <button
+          id="speakBtn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition shrink-0 cursor-pointer"
+        >
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+          <span id="speakBtnText">Sesli Dinle (TTS)</span>
+        </button>
+      </div>
+
+      <!-- Detaylı Akademik Açıklama -->
+      <div class="space-y-2.5">
+        <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          Akademik Tarihsel &amp; Edebi Analiz
+        </h3>
+        <p id="drawerDescription" class="text-base sm:text-lg text-slate-100 leading-relaxed font-normal">
+          Detaylı akademik açıklama metni...
+        </p>
+      </div>
+
+      <!-- Dönem Alıntısı / Edebi Manifesto -->
+      <div class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-teal-950/55 via-slate-900/75 to-amber-950/30 border border-teal-500/30 space-y-2">
+        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-300">
+          <i data-lucide="quote" class="w-4 h-4"></i>
+          <span>Tarihi Söz &amp; Edebi Alıntı</span>
+        </div>
+        <blockquote id="drawerQuote" class="text-base sm:text-lg italic text-teal-100/95 leading-relaxed border-l-2 border-teal-400 pl-3.5">
+          "Alıntı..."
+        </blockquote>
+      </div>
+
+      <!-- Önemli Şahsiyetler / Eserler Rozetleri -->
+      <div class="space-y-3">
+        <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+          <i data-lucide="award" class="w-4 h-4 text-emerald-400"></i>
+          Önemli Şahsiyetler &amp; Eserler
+        </h3>
+        <div id="drawerTags" class="flex flex-wrap gap-2.5"></div>
+      </div>
+
+    </div>
+
+    <!-- Drawer Alt Gezinme Barı -->
+    <div class="p-3.5 border-t border-white/10 bg-slate-950/75 flex items-center justify-between gap-2">
+      <button
+        id="prevCityBtn"
+        type="button"
+        class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer"
+      >
+        <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
+        <span>Önceki Nokta</span>
+      </button>
+
+      <span id="drawerStepIndicator" class="text-[11px] text-slate-400 font-mono">
+        Nokta 1 / 23
+      </span>
+
+      <button
+        id="nextCityBtn"
+        type="button"
+        class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer"
+      >
+        <span>Sonraki Nokta</span>
+        <i data-lucide="arrow-right" class="w-4 h-4 text-teal-400"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- UYGULAMA JAVASCRIPT KODU -->
+  <script>
+    // ============================================================================
+    // 1. YÜKSEK KALİTELİ AI KAPAK İLLÜSTRASYON ÜRETİCİSİ
+    // ============================================================================
+    function createAICoverIllustration({ title, subtitle, era, primaryColor, secondaryColor, accentColor, icon, regionTag }) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+        <defs>
+          <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#040814"/>
+            <stop offset="50%" stop-color="${primaryColor}"/>
+            <stop offset="100%" stop-color="${secondaryColor}"/>
+          </linearGradient>
+          <radialGradient id="sunGlow" cx="50%" cy="42%" r="48%">
+            <stop offset="0%" stop-color="${accentColor}" stop-opacity="0.5"/>
+            <stop offset="60%" stop-color="${accentColor}" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#040814" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="horizonGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="${accentColor}" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#020617" stop-opacity="0.96"/>
+          </linearGradient>
+          <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          </pattern>
+        </defs>
+
+        <rect width="960" height="540" fill="url(#skyGrad)"/>
+        <rect width="960" height="540" fill="url(#grid)"/>
+
+        <g fill="#ffffff" opacity="0.55">
+          <circle cx="110" cy="70" r="1.4"/><circle cx="240" cy="45" r="1"/><circle cx="380" cy="95" r="1.8"/>
+          <circle cx="590" cy="60" r="1.2"/><circle cx="740" cy="85" r="1.6"/><circle cx="860" cy="50" r="1.1"/>
+          <circle cx="160" cy="160" r="1"/><circle cx="810" cy="150" r="1.5"/><circle cx="480" cy="40" r="1.3"/>
+        </g>
+
+        <circle cx="480" cy="220" r="260" fill="url(#sunGlow)"/>
+
+        <path d="M0,430 L110,355 L215,390 L330,305 L445,365 L560,290 L690,360 L820,315 L960,380 L960,540 L0,540 Z" fill="#070d1f" opacity="0.65"/>
+        <path d="M0,465 L145,400 L290,435 L430,375 L595,430 L740,385 L875,425 L960,400 L960,540 L0,540 Z" fill="#030712" opacity="0.9"/>
+        <rect y="360" width="960" height="180" fill="url(#horizonGlow)"/>
+
+        <g transform="translate(480, 195)">
+          <circle cx="0" cy="0" r="76" fill="none" stroke="${accentColor}" stroke-width="1.5" stroke-dasharray="8 5" opacity="0.75"/>
+          <circle cx="0" cy="0" r="60" fill="rgba(4, 8, 20, 0.55)" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+          <circle cx="0" cy="0" r="46" fill="none" stroke="${accentColor}" stroke-width="0.8" opacity="0.45"/>
+        </g>
+
+        <text x="480" y="210" text-anchor="middle" font-size="44">${icon}</text>
+
+        <rect x="390" y="72" width="180" height="26" rx="13" fill="rgba(2,6,23,0.7)" stroke="rgba(255,255,255,0.2)"/>
+        <text x="480" y="89" text-anchor="middle" fill="${accentColor}" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="bold" letter-spacing="2">${era} • ${regionTag}</text>
+
+        <text x="480" y="328" text-anchor="middle" fill="#ffffff" font-family="Cinzel, Georgia, serif" font-size="27" font-weight="bold" letter-spacing="2">${title}</text>
+        <text x="480" y="360" text-anchor="middle" fill="#cbd5e1" font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="500">${subtitle}</text>
+        <line x1="380" y1="382" x2="580" y2="382" stroke="${accentColor}" stroke-width="1.5" stroke-opacity="0.6"/>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    // ============================================================================
+    // 2. SABİT ANA ŞEHİR DİZİSİ (MASTER_LOCATIONS) - 23 KÜRESEL TARİH & EDEBİYAT DURAĞI
+    // ============================================================================
+    const MASTER_LOCATIONS = Object.freeze([
+      // ==================== TÜRKİYE (7 DURAK) ====================
+      {
+        id: "amasya",
+        city: "Amasya",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 40.65,
+        lng: 35.83,
+        pinOffsetX: "0px",
+        pinOffsetY: "10px",
+        labelShiftX: "0px",
+        year: "22 Haziran 1919",
+        title: "Amasya Genelgesi (1919)",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "📜",
+        description:
+          "22 Haziran 1919'da Amasya Saraydüzü Kışlası'nda kaleme alınan Amasya Genelgesi, Milli Mücadele'nin resmi gerekçesi, yöntemi ve ihtilal beyannamesidir. İlk kez 'milletin bağımsızlığını yine milletin azim ve kararının kurtaracağı' ilan edilerek ulusal egemenliğe dayalı yeni Türk devletinin temeli atılmıştır.",
+        quote:
+          "\"Vatanın bütünlüğü, milletin bağımsızlığı tehlikededir. Milletin bağımsızlığını yine milletin azim ve kararı kurtaracaktır.\" — Amasya Genelgesi (Madde 1 & 3)",
+        figuresAndWorks: [
+          "Mustafa Kemal Atatürk",
+          "Cevat Abbas Gürer",
+          "Rauf Orbay & Ali Fuat Cebesoy",
+          "Refet Bele & Kazım Karabekir"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "AMASYA GENELGESİ (1919)",
+          subtitle: "Milli Mücadele'nin Yol Haritası ve Ulusal Egemenlik Çağrısı",
+          era: "22 HAZİRAN 1919",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#fbbf24",
+          icon: "📜",
+          regionTag: "AMASYA"
+        }),
+        imageCaption: "Yeşilırmak kıyısında yükselen tarihi Amasya ve ulusal egemenlik iradesinin doğuşu."
+      },
+      {
+        id: "samsun",
+        city: "Samsun",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 41.28,
+        lng: 36.33,
+        pinOffsetX: "6px",
+        pinOffsetY: "-22px",
+        labelShiftX: "4px",
+        year: "19 Mayıs 1919",
+        title: "19 Mayıs 1919 ve Milli Mücadele Edebiyatı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "⚓",
+        description:
+          "Mustafa Kemal Paşa'nın 19 Mayıs 1919'da Bandırma Vapuru ile Samsun'a çıkışı, Türk milletinin esarete karşı başlattığı Kurtuluş Savaşı'nın ilk kıvılcımıdır. Atatürk'ün 'Nutuk' eseriyle ölümsüzleşen bu tarihi adım; Dağlarca, Cahit Külebi ve Kemal Tahir gibi usta kalemlerin Milli Mücadele Edebiyatı eserlerine ilham kaynağı olmuştur.",
+        quote:
+          "\"1919 senesi Mayısının 19'uncu günü Samsun'a çıktım. Genel vaziyet ve manzara...\" — Mustafa Kemal Atatürk (Nutuk)",
+        figuresAndWorks: [
+          "Mustafa Kemal Atatürk (Nutuk)",
+          "Bandırma Vapuru (19 Mayıs 1919)",
+          "Fazıl Hüsnü Dağlarca (Samsun'dan Ankara'ya)",
+          "Kemal Tahir (Yorgun Savaşçı)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "19 MAYIS 1919 & MİLLİ MÜCADELE",
+          subtitle: "Bandırma Vapuru, Ulusal Diriliş ve Kurtuluş Edebiyatı",
+          era: "19 MAYIS 1919",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "⚓",
+          regionTag: "SAMSUN"
+        }),
+        imageCaption: "Karadeniz ufuklarından Samsun kıyılarına uzanan bağımsızlık rotası ve Milli Mücadele'nin ilk adımı."
+      },
+      {
+        id: "erzurum",
+        city: "Erzurum",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 39.90,
+        lng: 41.27,
+        pinOffsetX: "18px",
+        pinOffsetY: "0px",
+        labelShiftX: "8px",
+        year: "23 Temmuz 1919 & Klasik Dönem",
+        title: "Erzurum Kongresi ve Erzurumlu Emrah / Dede Korkut Mirası",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏔️",
+        description:
+          "23 Temmuz 1919'da toplanan Erzurum Kongresi, 'Milli sınırlar içinde vatan bir bütündür, parçalanamaz' ilkesiyle Misak-ı Milli'nin temelini atmış ve manda-himayeyi kesin olarak reddetmiştir. Aynı zamanda Dede Korkut Boyları ve Erzurumlu Emrah'ın koşmalarıyla Anadolu Türk destan ve âşık edebiyatının en gür kalelerinden biridir.",
+        quote:
+          "\"Milli sınırlar içinde vatan bir bütündür, birbirindenin ayrılmaz bir parçasıdır. Kuvâ-yi Milliye'yi âmil ve milli iradeyi hâkim kılmak esastır.\" — Erzurum Kongresi Kararları",
+        figuresAndWorks: [
+          "Erzurum Kongresi (23 Temmuz 1919)",
+          "Mustafa Kemal Atatürk & Kazım Karabekir",
+          "Dede Korkut Hikâyeleri Mirası",
+          "Erzurumlu Emrah & İbrahim Hakkı (Marifetname)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ERZURUM KONGRESİ & DESTAN MİRASI",
+          subtitle: "Misak-ı Milli'nin Temeli, Dede Korkut ve Erzurumlu Emrah",
+          era: "1919",
+          primaryColor: "#78350f",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "🏔️",
+          regionTag: "ERZURUM"
+        }),
+        imageCaption: "Palandöken eteklerinde toplanan Erzurum Kongresi ve kadim Dede Korkut destan coğrafyası."
+      },
+      {
+        id: "sivas",
+        city: "Sivas",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 39.74,
+        lng: 37.01,
+        pinOffsetX: "16px",
+        pinOffsetY: "20px",
+        labelShiftX: "10px",
+        year: "4 Eylül 1919 & 20. Yüzyıl",
+        title: "Sivas Kongresi ve Âşık Veysel Halk Ozanlığı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🪕",
+        description:
+          "4 Eylül 1919'da tüm ulusu temsil eden Sivas Kongresi ile Anadolu ve Rumeli Müdafaa-i Hukuk Cemiyetleri tek çatı altında birleştirilerek bağımsızlık mücadelesi ulusallaştırılmıştır. Sivas aynı zamanda Pir Sultan Abdal'dan Âşık Veysel Şatıroğlu'na uzanan Anadolu halk şiiri ve ozanlık geleneğinin kalbidir.",
+        quote:
+          "\"Uzun ince bir yoldayım, gidiyorum gündüz gece / Bilmiyorum ne haldeyim, gidiyorum gündüz gece.\" — Âşık Veysel Şatıroğlu",
+        figuresAndWorks: [
+          "Âşık Veysel (Dostlar Beni Hatırlasın & Kara Toprak)",
+          "Sivas Kongresi (4–11 Eylül 1919)",
+          "Pir Sultan Abdal & Ruhsati",
+          "İrade-i Milliye Gazetesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "SİVAS KONGRESİ & ÂŞIK VEYSEL",
+          subtitle: "Anadolu Halk Ozanlığı Geleneği ve Ulusal Birlik Kongresi",
+          era: "1919 – 1973",
+          primaryColor: "#065f46",
+          secondaryColor: "#111827",
+          accentColor: "#2dd4bf",
+          icon: "🪕",
+          regionTag: "SİVAS"
+        }),
+        imageCaption: "Sivas Kongre Binası ve Âşık Veysel'in sazında yankılanan Anadolu halk edebiyatı mirası."
+      },
+      {
+        id: "ankara",
+        city: "Ankara",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 39.93,
+        lng: 32.85,
+        pinOffsetX: "-16px",
+        pinOffsetY: "8px",
+        labelShiftX: "-6px",
+        year: "23 Nisan 1920 – 12 Mart 1921",
+        title: "TBMM Açılışı ve Mehmet Akif Ersoy / İstiklal Marşı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏛️",
+        description:
+          "23 Nisan 1920'de Ankara'da açılan TBMM, 'Hâkimiyet kayıtsız şartsız milletindir' ilkesiyle Kurtuluş Savaşı'nı yöneten gazi meclis olmuştur. Mehmet Akif Ersoy'un Taceddin Dergâhı'nda yazdığı İstiklal Marşı ile Halide Edib ve Yakup Kadri'nin romanları, bağımsızlık mücadelesinin edebi abideleri olarak tarihe geçmiştir.",
+        quote:
+          "\"Korkma, sönmez bu şafaklarda yüzen al sancak; / Sönmeden yurdumun üstünde tüten en son ocak.\" — Mehmet Akif Ersoy (İstiklal Marşı)",
+        figuresAndWorks: [
+          "Mehmet Akif Ersoy (İstiklal Marşı & Safahat)",
+          "Mustafa Kemal Atatürk (TBMM Açılışı)",
+          "Halide Edib Adıvar (Ateşten Gömlek)",
+          "Yakup Kadri Karaosmanoğlu (Yaban & Ankara)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1589561454226-796a8aa89b05?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "TBMM VE İSTİKLAL MARŞI",
+          subtitle: "Ulusal Egemenlik, Mehmet Akif Ersoy ve Milli Edebiyat Dönemi",
+          era: "1920 – 1921",
+          primaryColor: "#b45309",
+          secondaryColor: "#111827",
+          accentColor: "#f59e0b",
+          icon: "🏛️",
+          regionTag: "ANKARA"
+        }),
+        imageCaption: "Ankara'da Ulusal Egemenlik: TBMM'nin açılışı, İstiklal Marşı'nın kabulü ve Cumhuriyet'in doğuşu."
+      },
+      {
+        id: "istanbul",
+        city: "İstanbul",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 41.00,
+        lng: 28.97,
+        pinOffsetX: "-14px",
+        pinOffsetY: "-18px",
+        labelShiftX: "-8px",
+        year: "1453 – 19. Yüzyıl",
+        title: "İstanbul'un Fethi (1453), Divan Edebiyatı ve Servet-i Fünun",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🕌",
+        description:
+          "Fatih Sultan Mehmet'in 1453'te İstanbul'u fethiyle Orta Çağ kapanıp Yeni Çağ başlamış ve şehir dünya kültürünün başkenti haline gelmiştir. Bâkî, Nedim ve Şeyh Galip ile zirveye çıkan Divan şiiri; Tanzimat ve Servet-i Fünun dönemlerinde Tevfik Fikret, Halit Ziya Uşaklıgil ve Yahya Kemal ile modern Türk edebiyatına evrilmiştir.",
+        quote:
+          "\"Sana dün bir tepeden baktım aziz İstanbul! / Görmedim gezmediğim, sevmediğim hiçbir yer.\" — Yahya Kemal Beyatlı",
+        figuresAndWorks: [
+          "Fatih Sultan Mehmet (Avnî) & 1453 İstanbul'un Fethi",
+          "Bâkî, Nedim & Şeyh Galip (Hüsn ü Aşk)",
+          "Halit Ziya Uşaklıgil (Mavi ve Siyah) & Tevfik Fikret",
+          "Yahya Kemal Beyatlı & Ahmet Hamdi Tanpınar"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "İSTANBUL: FETİH VE EDEBİYAT",
+          subtitle: "1453 Fethi, Divan Şiiri, Servet-i Fünun ve Yahya Kemal",
+          era: "1453 – 1901",
+          primaryColor: "#065f46",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#2dd4bf",
+          icon: "🕌",
+          regionTag: "İSTANBUL"
+        }),
+        imageCaption: "Boğaziçi ve Tarihi Yarımada: 1453 Fethi'nden Divan ve Servet-i Fünun edebiyatına uzanan imparatorluk mirası."
+      },
+      {
+        id: "canakkale",
+        city: "Çanakkale",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 40.15,
+        lng: 26.41,
+        pinOffsetX: "-24px",
+        pinOffsetY: "14px",
+        labelShiftX: "-12px",
+        year: "MÖ 1200 & 18 Mart 1915",
+        title: "Çanakkale Destanı (1915) ve Troya (Homeros - İlyada)",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🛡️",
+        description:
+          "Çanakkale Boğazı, antik çağda Homeros'un 'İlyada' destanına konu olan Troya Savaşı'ndan 1915'teki 'Çanakkale Geçilmez' destanına kadar dünya tarihinin kırılma noktasıdır. Mehmetçik'in Conkbayırı ve Anafartalar'daki eşsiz direnişi hem dünya siyasetini değiştirmiş hem de Türk edebiyatında ölümsüz bir kahramanlık külliyatı doğurmuştur.",
+        quote:
+          "\"Şühedâ gövdesi, bir baksana, dağlar, taşlar... / O, rükû olmasa, dünyada eğilmez başlar!\" — Mehmet Akif Ersoy (Çanakkale Şehitlerine)",
+        figuresAndWorks: [
+          "18 Mart 1915 Çanakkale Zaferi & Anafartalar",
+          "Mustafa Kemal Atatürk & Seyit Onbaşı",
+          "Mehmet Akif Ersoy (Çanakkale Şehitlerine)",
+          "Homeros (İlyada Destanı & Antik Troya)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ÇANAKKALE DESTANI VE TROYA",
+          subtitle: "1915 Çanakkale Zaferi ve Homeros'un İlyada Destanı",
+          era: "MÖ 1200 & 1915",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "🛡️",
+          regionTag: "ÇANAKKALE"
+        }),
+        imageCaption: "Gelibolu Yarımadası ve Troya: Homeros'un İlyada'sından 1915 Çanakkale Şehitleri Destanı'na uzanan tarih."
+      },
+
+      // ==================== AVRUPA & RUSYA (8 DURAK) ====================
+      {
+        id: "londra",
+        city: "Londra",
+        country: "İngiltere",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 51.50,
+        lng: -0.12,
+        pinOffsetX: "6px",
+        pinOffsetY: "4px",
+        labelShiftX: "4px",
+        year: "1599 – 19. Yüzyıl",
+        title: "Shakespeare, Globe Tiyatrosu ve Viktorya Dönemi Romanı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "👑",
+        description:
+          "1599'da Thames kıyısında açılan Globe Tiyatrosu'nda William Shakespeare; 'Hamlet', 'Macbeth' ve 'Romeo ve Juliet' ile insan psikolojisini evrensel bir şiirsel dille sahneye taşımıştır. 19. yüzyılda ise Charles Dickens, Jane Austen ve Virginia Woolf ile Londra, Viktorya Dönemi ve modernist romanın küresel merkezi olmuştur.",
+        quote:
+          "\"Olmak ya da olmamak, işte bütün mesele bu! Düşüncemizin katlanması mı güzel zalim kaderin oklarına, yoksa karşı koyup son vermek mi?\" — William Shakespeare (Hamlet)",
+        figuresAndWorks: [
+          "William Shakespeare (Hamlet, Macbeth, Kral Lear)",
+          "The Globe Theatre (1599)",
+          "Charles Dickens (İki Şehrin Hikâyesi & Oliver Twist)",
+          "Virginia Woolf & Jane Austen"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "SHAKESPEARE & VİKTORYA ROMANI",
+          subtitle: "Globe Tiyatrosu, Charles Dickens ve İngiliz Edebiyatı",
+          era: "1599 – 1900",
+          primaryColor: "#115e59",
+          secondaryColor: "#0f172a",
+          accentColor: "#2dd4bf",
+          icon: "👑",
+          regionTag: "LONDRA"
+        }),
+        imageCaption: "Londra Thames Nehri kıyıları: Shakespeare'in Globe Tiyatrosu ve Viktorya Dönemi edebiyat mirası."
+      },
+      {
+        id: "paris",
+        city: "Paris",
+        country: "Fransa",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇫🇷",
+        lat: 48.85,
+        lng: 2.35,
+        pinOffsetX: "0px",
+        pinOffsetY: "6px",
+        labelShiftX: "0px",
+        year: "1789 ve 19. Yüzyıl",
+        title: "Fransız İhtilali (1789) ve Victor Hugo / Romantizm",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🗽",
+        description:
+          "1789 Fransız İhtilali; özgürlük, eşitlik ve insan hakları ilkeleriyle mutlak monarşileri sarsarak modern demokrasi çağını başlatmıştır. Bu büyük kırılma edebiyatta Romantizm ve Realizm akımlarını doğurmuş; Victor Hugo, Balzac ve Baudelaire ile Paris dünya edebiyatının entelektüel başkenti olmuştur.",
+        quote:
+          "\"Yeryüzünde cehalet ve sefalet bulundukça, bu tür kitaplar faydasız olmayacaktır. Romantizm, edebiyattaki liberalizmdir.\" — Victor Hugo (Sefiller)",
+        figuresAndWorks: [
+          "1789 Fransız İhtilali & İnsan Hakları Bildirisi",
+          "Victor Hugo (Sefiller & Notre-Dame'ın Kamburu)",
+          "Honoré de Balzac & Gustave Flaubert",
+          "Jean-Jacques Rousseau & Voltaire"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "1789 FRANSIZ İHTİLALİ & ROMANTİZM",
+          subtitle: "Özgürlük İdeali ve Victor Hugo'nun 'Sefiller' Destanı",
+          era: "1789",
+          primaryColor: "#92400e",
+          secondaryColor: "#1e3a8a",
+          accentColor: "#f59e0b",
+          icon: "🗽",
+          regionTag: "PARİS"
+        }),
+        imageCaption: "Paris ve Seine Nehri: 1789 Fransız İhtilali'nin özgürlük ideali ve Victor Hugo'nun Romantizm mirası."
+      },
+      {
+        id: "floransa",
+        city: "Floransa",
+        country: "İtalya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇮🇹",
+        lat: 43.76,
+        lng: 11.25,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "14. Yüzyıl (1300–1400)",
+        title: "Rönesans'ın Doğuşu ve Dante (İlahi Komedya)",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "⚜️",
+        description:
+          "Orta Çağ skolastik düşüncesini aşarak Rönesans ve Hümanizm akımının beşiği olan Floransa, insanı ve dünyevi deneyimi edebiyatın merkezine taşımıştır. Dante Alighieri'nin 'İlahi Komedya' destanı, Petrarca'nın soneleri ve Boccaccio'nun 'Decameron' hikâyeleri modern Avrupa edebiyatını başlatmıştır.",
+        quote:
+          "\"Yarı yolunda ömrümüzün, kendimi karanlık bir ormanda buldum; çünkü doğru yol yitmişti.\" — Dante Alighieri (İlahi Komedya)",
+        figuresAndWorks: [
+          "Dante Alighieri (İlahi Komedya)",
+          "Francesco Petrarca (Canzoniere & Hümanizm)",
+          "Giovanni Boccaccio (Decameron)",
+          "Niccolò Machiavelli & Medici Akademisi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1541370976299-4d24ebbc9077?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "RÖNESANS VE HÜMANİZM",
+          subtitle: "Dante Alighieri, Petrarca ve Floransa Kültür Devrimi",
+          era: "14. YÜZYIL",
+          primaryColor: "#064e3b",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#34d399",
+          icon: "⚜️",
+          regionTag: "FLORANSA"
+        }),
+        imageCaption: "Floransa Santa Maria del Fiore Kubbesi ve Arno Nehri: Dante ve Hümanizm devriminin başkenti."
+      },
+      {
+        id: "weimar",
+        city: "Weimar",
+        country: "Almanya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇩🇪",
+        lat: 50.97,
+        lng: 11.32,
+        pinOffsetX: "12px",
+        pinOffsetY: "-6px",
+        labelShiftX: "6px",
+        year: "1770–1832",
+        title: "Goethe, Schiller ve Sturm und Drang Akımı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "⚡",
+        description:
+          "Katı akılcılığa başkaldırı olarak doğan 'Sturm und Drang' (Fırtına ve Coşku) akımı, bireysel özgürlüğü ve coşkulu duyguları yüceltmiştir. Goethe'nin 'Genç Werther'in Acıları' ve 'Faust' başyapıtı ile Schiller'in tiyatroları, Avrupa Romantizmine öncülük ederek 'Weltliteratur' (Dünya Edebiyatı) kavramını doğurmuştur.",
+        quote:
+          "\"İnsan kalbi ne muammalı bir şey! Kendi içime dönüyorum ve orada koskoca bir dünya buluyorum.\" — J. W. von Goethe (Genç Werther'in Acıları)",
+        figuresAndWorks: [
+          "J. W. von Goethe (Faust & Genç Werther'in Acıları)",
+          "Friedrich Schiller (Haydutlar & Giyom Tell)",
+          "Johann Gottfried Herder",
+          "Weimar Klasisizmi & Weltliteratur"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "STURM UND DRANG AKIMI",
+          subtitle: "Goethe, Schiller ve Alman Edebiyatında Fırtına ve Coşku",
+          era: "1774 – 1832",
+          primaryColor: "#065f46",
+          secondaryColor: "#1e293b",
+          accentColor: "#10b981",
+          icon: "⚡",
+          regionTag: "WEIMAR"
+        }),
+        imageCaption: "Weimar Klasik Edebiyat Kütüphanesi: Goethe ve Schiller'in Fırtına ve Coşku (Sturm und Drang) mirası."
+      },
+      {
+        id: "atina",
+        city: "Atina",
+        country: "Yunanistan",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇷",
+        lat: 37.98,
+        lng: 23.72,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "MÖ 5. Yüzyıl (Antik Çağ)",
+        title: "Antik Yunan Felsefesi ve Tragedyası (Sofokles)",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🎭",
+        description:
+          "Demokrasinin, sistematik felsefenin ve dramatik tiyatronun doğduğu Atina, MÖ 5. yüzyılda insanlık düşüncesinin altın çağını yaşamıştır. Sokrates, Platon ve Aristoteles akıl ve poetika ilkelerini kurarken; Sofokles, Euripides ve Aiskhylos tragedyalarıyla kader ve adalet kavramlarını sahneye taşımıştır.",
+        quote:
+          "\"Sorgulanmamış bir hayat, yaşanmaya değer değildir.\" — Sokrates / Sofokles & Antik Atina Geleneği",
+        figuresAndWorks: [
+          "Sofokles (Kral Oidipus & Antigone)",
+          "Sokrates, Platon (Devlet) & Aristoteles (Poetika)",
+          "Homeros (İlyada & Odysseia)",
+          "Euripides & Aiskhylos"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1555993539-1732b0258235?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ANTİK YUNAN FELSEFESİ & TRAGEDYA",
+          subtitle: "Akropolis, Dionisos Tiyatrosu, Platon ve Sofokles",
+          era: "MÖ 5. YÜZYIL",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "🎭",
+          regionTag: "ATİNA"
+        }),
+        imageCaption: "Atina Akropolisi ve Dionisos Antik Tiyatrosu: Klasik felsefe, demokrasi ve tragedyanın doğduğu merkez."
+      },
+      {
+        id: "madrid",
+        city: "Madrid",
+        country: "İspanya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇪🇸",
+        lat: 40.41,
+        lng: -3.70,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "1605 (İspanyol Altın Çağı)",
+        title: "İspanyol Altın Çağı ve Cervantes (Don Kişot - Modern Romanın Doğuşu)",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🛡️",
+        description:
+          "İspanyol edebiyatının 'Siglo de Oro' (Altın Çağ) döneminde Miguel de Cervantes'in 1605'te yayımladığı 'Don Kişot' (Don Quixote), dünya edebiyat tarihinde modern romanın ilk başyapıtı kabul edilir. Hayal ile hakikat arasındaki çatışmayı ironik bir derinlikle işleyerek kendisinden sonraki tüm romancıları etkilemiştir.",
+        quote:
+          "\"Çok okuyan ve çok yürüyen insan, çok görür ve çok bilir. Özgürlük, uğruna hayatımızı tehlikeye atabileceğimiz en değerli nimettir.\" — Miguel de Cervantes (Don Kişot)",
+        figuresAndWorks: [
+          "Miguel de Cervantes (Don Kişot - 1605)",
+          "Lope de Vega & Calderón de la Barca",
+          "İspanyol Altın Çağı (Siglo de Oro)",
+          "Federico García Lorca"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "CERVANTES VE DON KİŞOT",
+          subtitle: "İspanyol Altın Çağı ve Modern Romanın Doğuşu (1605)",
+          era: "1605",
+          primaryColor: "#065f46",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#2dd4bf",
+          icon: "🛡️",
+          regionTag: "MADRİD"
+        }),
+        imageCaption: "Madrid ve La Mancha ufukları: Miguel de Cervantes'in Don Kişot eseriyle modern romanın doğuşu."
+      },
+      {
+        id: "stpetersburg",
+        city: "St. Petersburg",
+        country: "Rusya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇷🇺",
+        lat: 59.93,
+        lng: 30.33,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "19. Yüzyıl (1830–1880)",
+        title: "Rus Gerçekçiliği: Dostoyevski ve Tolstoy'un Başyapıtları",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "❄️",
+        description:
+          "19. yüzyıl Rus Gerçekçiliği (Realizm), St. Petersburg'un sisli bulvarlarında insan ruhunun en derin felsefi ve ahlaki sorgulamalarını edebiyata taşımıştır. Puşkin ve Gogol ile başlayan bu büyük gelenek; Dostoyevski'nin 'Suç ve Ceza' ile Tolstoy'un 'Savaş ve Barış' romanlarıyla dünya edebiyatının zirvesine ulaşmıştır.",
+        quote:
+          "\"Hepimiz Gogol'ün 'Palto'sundan çıktık. Acı ve keder, büyük bir bilincin ve derin bir yüreğin her zaman zorunlu şartıdır.\" — Fyodor Dostoyevski",
+        figuresAndWorks: [
+          "Fyodor Dostoyevski (Suç ve Ceza & Karamazov Kardeşler)",
+          "Lev Tolstoy (Savaş ve Barış & Anna Karenina)",
+          "Aleksandr Puşkin & Nikolay Gogol (Palto)",
+          "Anton Çehov & İvan Turgenyev"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1556610961-2fecc5927173?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "RUS GERÇEKÇİLİĞİ & ROMANI",
+          subtitle: "Dostoyevski, Tolstoy, Puşkin ve St. Petersburg Beyaz Geceleri",
+          era: "19. YÜZYIL",
+          primaryColor: "#115e59",
+          secondaryColor: "#0f172a",
+          accentColor: "#2dd4bf",
+          icon: "❄️",
+          regionTag: "ST. PETERSBURG"
+        }),
+        imageCaption: "St. Petersburg Neva Nehri kıyıları: Dostoyevski, Tolstoy ve 19. yüzyıl Rus edebiyatının başyapıtları."
+      },
+      {
+        id: "dublin",
+        city: "Dublin",
+        country: "İrlanda",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇮🇪",
+        lat: 53.34,
+        lng: -6.26,
+        pinOffsetX: "-16px",
+        pinOffsetY: "-10px",
+        labelShiftX: "-10px",
+        year: "19. ve 20. Yüzyıl (1922)",
+        title: "Modernist Edebiyatın Zirvesi: James Joyce (Ulysses) ve Oscar Wilde",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "☘️",
+        description:
+          "UNESCO Edebiyat Şehri Dublin, 'bilinç akışı' (stream of consciousness) tekniğiyle 20. yüzyıl modernist romanında devrim yaratan James Joyce'un 'Ulysses' eserinin geçtiği mekândır. Oscar Wilde, W. B. Yeats, Samuel Beckett ve Bernard Shaw gibi dev isimlerle dünya edebiyatına dört Nobel ödülü kazandırmıştır.",
+        quote:
+          "\"Hepimiz çukurdayız ama bazılarımız yıldızlara bakıyor.\" — Oscar Wilde / James Joyce & Dublin Edebiyat Geleneği",
+        figuresAndWorks: [
+          "James Joyce (Ulysses & Dublinliler)",
+          "Oscar Wilde (Dorian Gray'in Portresi)",
+          "William Butler Yeats & Samuel Beckett",
+          "George Bernard Shaw & Jonathan Swift"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1549918864-48ac978761a4?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "MODERNİZM: JAMES JOYCE & WILDE",
+          subtitle: "Ulysses, Bilinç Akışı Tekniği ve Dublin Edebiyat Mirası",
+          era: "1922",
+          primaryColor: "#065f46",
+          secondaryColor: "#0f172a",
+          accentColor: "#10b981",
+          icon: "☘️",
+          regionTag: "DUBLİN"
+        }),
+        imageCaption: "Dublin Trinity College Eski Kütüphanesi: James Joyce, Oscar Wilde ve modernist edebiyatın merkezi."
+      },
+
+      // ==================== ASYA & ORTA DOĞU (4 DURAK) ====================
+      {
+        id: "bagdat",
+        city: "Bağdat",
+        country: "Irak",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇮🇶",
+        lat: 33.31,
+        lng: 44.36,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "8. – 13. Yüzyıl (İslam Altın Çağı)",
+        title: "Beytü'l-Hikme (Bilgelik Evi), İslam Altın Çağı ve Binbir Gece Masalları",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🕌",
+        description:
+          "Abbasi Halifeliği döneminde Bağdat'ta kurulan Beytü'l-Hikme (Bilgelik Evi), antik Yunan, Hint ve Fars eserlerinin tercüme edilip geliştirildiği küresel bilim ve felsefe merkezi olmuştur. Harezmi cebiri kurarken, Şehrazat'ın anlattığı 'Binbir Gece Masalları' Doğu ve Batı edebiyatının anlatı geleneğini şekillendirmiştir.",
+        quote:
+          "\"Bir âlimin mürekkebi, şehidin kanından daha kutsaldır. Bilgelik müminin yitiğidir, nerede bulursa alır.\" — Beytü'l-Hikme Geleneği",
+        figuresAndWorks: [
+          "Beytü'l-Hikme (Bilgelik Evi Akademisi)",
+          "Binbir Gece Masalları (Şehrazat Anlatıları)",
+          "El-Harezmi (Cebir ve Algoritma) & El-Kindi",
+          "Harun Reşid & Memun Dönemi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BEYTÜ'L-HİKME VE BİNBİR GECE",
+          subtitle: "Bilgelik Evi, İslam Altın Çağı ve Doğu Anlatı Geleneği",
+          era: "9. YÜZYIL",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "🕌",
+          regionTag: "BAĞDAT"
+        }),
+        imageCaption: "Dicle kıyısında Bağdat Beytü'l-Hikme: İslam Altın Çağı bilginleri ve Binbir Gece Masalları'nın doğduğu şehir."
+      },
+      {
+        id: "semerkant",
+        city: "Semerkant",
+        country: "Özbekistan",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇺🇿",
+        lat: 39.65,
+        lng: 66.95,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "14. – 15. Yüzyıl (Timur Rönesansı)",
+        title: "İpek Yolu, Timur Rönesansı ve Uluğ Bey Rasathanesi",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🔭",
+        description:
+          "Tarihi İpek Yolu'nun kalbi olan Semerkant, Timur Rönesansı döneminde mimari, astronomi ve Çağatay Türk edebiyatının en parlak merkezi olmuştur. Hükümdar ve astronom Uluğ Bey'in kurduğu rasathanede Ali Kuşçu ile hazırlanan 'Zîc-i Uluğ Bey' yıldız kataloğu, modern astronomiye yüzyıllarca rehberlik etmiştir.",
+        quote:
+          "\"Dinler sis gibi dağılır, krallıklar yıkılır; fakat bilginlerin çalışmaları sonsuza dek baki kalır.\" — Uluğ Bey (Semerkant Rasathanesi)",
+        figuresAndWorks: [
+          "Uluğ Bey (Zîc-i Uluğ Bey Yıldız Kataloğu)",
+          "Ali Kuşçu & Kadızade-i Rumi",
+          "Ali Şir Nevâî (Muhakemetü'l-Lugateyn)",
+          "Registan Meydanı & Tarihi İpek Yolu"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1580655653885-65763b2597d0?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "SEMERKANT & ULUĞ BEY RASATHANESİ",
+          subtitle: "İpek Yolu, Timur Rönesansı, Ali Kuşçu ve Ali Şir Nevâî",
+          era: "15. YÜZYIL",
+          primaryColor: "#b45309",
+          secondaryColor: "#0f172a",
+          accentColor: "#fbbf24",
+          icon: "🔭",
+          regionTag: "SEMERKANT"
+        }),
+        imageCaption: "Semerkant Registan Meydanı ve Uluğ Bey Rasathanesi: İpek Yolu üzerinde Türk-İslam Rönesansı."
+      },
+      {
+        id: "kyoto",
+        city: "Kyoto",
+        country: "Japonya",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇯🇵",
+        lat: 35.01,
+        lng: 135.76,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "1008 (Heian Dönemi)",
+        title: "Heian Dönemi ve Dünyanın İlk Romanı: Genji'nin Hikâyesi (Murasaki Shikibu)",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🌸",
+        description:
+          "Japonya'nın imparatorluk başkenti Kyoto'da Heian Dönemi saray nedimesi Murasaki Shikibu tarafından 11. yüzyıl başında kaleme alınan 'Genji'nin Hikâyesi' (Genji Monogatari), dünya edebiyat tarihinin ilk psikolojik ve gerçekçi romanı kabul edilir. Doğa estetiği, haiku geleneği ve incelikli karakter analizleriyle benzersiz bir edebi zirvedir.",
+        quote:
+          "\"Geçip giden mevsimlerin güzelliğine duyulan o hüzünlü hayranlık (mono no aware), insan ruhunun en derin aynasıdır.\" — Murasaki Shikibu (Genji'nin Hikâyesi)",
+        figuresAndWorks: [
+          "Murasaki Shikibu (Genji'nin Hikâyesi - 1008)",
+          "Sei Shōnagon (Yastıkname)",
+          "Matsuo Bashō (Haiku Şiir Geleneği)",
+          "Yasunari Kawabata (Kyoto / Eski Başkent)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "GENJİ'NİN HİKÂYESİ (1008)",
+          subtitle: "Murasaki Shikibu, Heian Dönemi ve Dünyanın İlk Romanı",
+          era: "1008",
+          primaryColor: "#065f46",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#2dd4bf",
+          icon: "🌸",
+          regionTag: "KYOTO"
+        }),
+        imageCaption: "Kyoto Heian Tapınakları: Murasaki Shikibu'nun yazdığı dünyanın ilk romanı 'Genji'nin Hikâyesi'."
+      },
+      {
+        id: "pekin",
+        city: "Pekin / Xi'an",
+        country: "Çin",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇨🇳",
+        lat: 39.90,
+        lng: 116.40,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "MÖ 5. Yüzyıl – MS 9. Yüzyıl",
+        title: "Tang Hanedanlığı Şiiri (Li Bai) ve Kağıt/Matbaanın İcadı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏮",
+        description:
+          "Çin medeniyetinde Cai Lun'un kağıdı ve Bi Sheng'in hareketli harfli matbaayı icat etmesi, bilginin ve edebiyatın tüm dünyaya yayılmasını sağlayan en büyük tarihsel devrimdir. Tang Hanedanlığı döneminde ise Li Bai ve Du Fu, klasik Doğu şiirinin altın çağını başlatarak doğa, bilgelik ve insan ömrünü şiirleştirmiştir.",
+        quote:
+          "\"Başımı kaldırıp parlak aya bakıyorum, başımı eğip memleketimi düşünüyorum.\" — Li Bai (Sessiz Gece Düşüncesi)",
+        figuresAndWorks: [
+          "Kağıdın (Cai Lun) ve Matbaanın İcadı",
+          "Li Bai & Du Fu (Tang Hanedanlığı Şiiri)",
+          "Konfüçyüs (Konuşmalar) & Laozi (Tao Te Ching)",
+          "Sun Tzu (Savaş Sanatı)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "KAĞIDIN İCADI VE TANG ŞİİRİ",
+          subtitle: "Li Bai, Du Fu ve Bilginin Yayılmasını Sağlayan Matbaa Devrimi",
+          era: "MS 105 – 907",
+          primaryColor: "#92400e",
+          secondaryColor: "#111827",
+          accentColor: "#f59e0b",
+          icon: "🏮",
+          regionTag: "PEKİN / XI'AN"
+        }),
+        imageCaption: "Pekin ve Xi'an: Kağıt ile matbaanın icadı ve Tang Hanedanlığı şairleri Li Bai ile Du Fu'nun mirası."
+      },
+
+      // ==================== AMERİKA (2 DURAK) ====================
+      {
+        id: "newyork",
+        city: "New York / Boston",
+        country: "ABD",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇺🇸",
+        lat: 40.71,
+        lng: -74.00,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "1776 – 20. Yüzyıl",
+        title: "Amerikan Bağımsızlık Bildirgesi, Harlem Rönesansı ve Edgar Allan Poe",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🦅",
+        description:
+          "1776 Amerikan Bağımsızlık Bildirgesi ile yükselen özgürlük düşüncesi, New York ve Boston ekseninde modern Amerikan edebiyatını doğurmuştur. Edgar Allan Poe modern polisiye ve gotik öyküyü kurarken; Walt Whitman, Herman Melville ve 1920'lerde Langston Hughes öncülüğündeki Harlem Rönesansı dünya edebiyatına yeni bir soluk getirmiştir.",
+        quote:
+          "\"Gördüğümüz ve göründüğümüz her şey, bir düş içinde bir düşten ibarettir.\" — Edgar Allan Poe",
+        figuresAndWorks: [
+          "Edgar Allan Poe (Kuzgun & Morgue Sokağı Cinayetleri)",
+          "Walt Whitman (Çimen Yaprakları) & Herman Melville (Moby Dick)",
+          "Harlem Rönesansı (Langston Hughes)",
+          "1776 Amerikan Bağımsızlık Bildirgesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "AMERİKAN EDEBİYATI & POE",
+          subtitle: "Edgar Allan Poe, Walt Whitman ve Harlem Rönesansı",
+          era: "1776 – 1920",
+          primaryColor: "#115e59",
+          secondaryColor: "#0f172a",
+          accentColor: "#2dd4bf",
+          icon: "🦅",
+          regionTag: "NEW YORK / BOSTON"
+        }),
+        imageCaption: "New York ve Boston: Edgar Allan Poe, Amerikan edebiyatı klasikleri ve Harlem Rönesansı."
+      },
+      {
+        id: "bogota",
+        city: "Aracataca / Bogota",
+        country: "Kolombiya",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇨🇴",
+        lat: 4.71,
+        lng: -74.07,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "1967 (20. Yüzyıl)",
+        title: "Latin Amerika 'Büyülü Gerçekçilik' Akımı ve Gabriel García Márquez",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🦋",
+        description:
+          "Latin Amerika edebiyat patlamasının (El Boom) kalbi olan Kolombiya, Nobel ödüllü yazar Gabriel García Márquez'in doğduğu ve 'Büyülü Gerçekçilik' (Magical Realism) akımını dünyaya armağan ettiği coğrafyadır. 'Yüzyıllık Yalnızlık' romanındaki düşsel Macondo kasabası, kıtanın tarihini, yalnızlığını ve mitolojisini destanlaştırmıştır.",
+        quote:
+          "\"İnsanların doğdukları gün, annelerinin onları doğurduğu gün değildir; hayatın onları kendi kendilerini doğurmaya zorladığı gündür.\" — Gabriel García Márquez",
+        figuresAndWorks: [
+          "Gabriel García Márquez (Yüzyıllık Yalnızlık - 1967)",
+          "Kolera Günlerinde Aşk & Kırmızı Pazartesi",
+          "Büyülü Gerçekçilik (Magical Realism) Akımı",
+          "Jorge Luis Borges & Julio Cortázar"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BÜYÜLÜ GERÇEKÇİLİK & MÁRQUEZ",
+          subtitle: "Gabriel García Márquez ve Yüzyıllık Yalnızlık (Macondo)",
+          era: "1967",
+          primaryColor: "#065f46",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#34d399",
+          icon: "🦋",
+          regionTag: "KOLOMBİYA"
+        }),
+        imageCaption: "Kolombiya Aracataca ve Bogota: Gabriel García Márquez'in 'Yüzyıllık Yalnızlık' romanı ve Büyülü Gerçekçilik."
+      },
+
+      // ==================== AFRİKA (2 DURAK) ====================
+      {
+        id: "kahire",
+        city: "Kahire / İskenderiye",
+        country: "Mısır",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇪🇬",
+        lat: 31.20,
+        lng: 29.91,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "MÖ 3. Yüzyıl – 1988",
+        title: "Antik İskenderiye Kütüphanesi ve Necip Mahfuz Edebiyatı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏺",
+        description:
+          "Antik çağda yüz binlerce papirüs tomarıyla Akdeniz dünyasının en büyük bilgi tapınağı olan İskenderiye Kütüphanesi, Öklid, Arşimet ve Eratosthenes gibi bilginlere ev sahipliği yapmıştır. Modern dönemde ise Nobel Edebiyat Ödüllü Necip Mahfuz, 'Kahire Üçlemesi' ve 'Cebelavi Sokağının Çocukları' ile Mısır'ın binlerce yıllık ruhunu romanlaştırmıştır.",
+        quote:
+          "\"Bir insanın bilgeliği, yanıtlarından çok sorduğu soruların derinliğiyle ölçülür.\" — Necip Mahfuz (Nobel Edebiyat Ödülü, 1988)",
+        figuresAndWorks: [
+          "Antik İskenderiye Kütüphanesi & İskenderiye Feneri",
+          "Necip Mahfuz (Kahire Üçlemesi & Cebelavi Sokağının Çocukları)",
+          "Öklid, Eratosthenes & Hypatia",
+          "Taha Hüseyin"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "İSKENDERİYE KÜTÜPHANESİ & KAHİRE",
+          subtitle: "Antik Bilim Merkezi ve Nobel Ödüllü Necip Mahfuz Edebiyatı",
+          era: "MÖ 285 – 1988",
+          primaryColor: "#92400e",
+          secondaryColor: "#0f172a",
+          accentColor: "#f59e0b",
+          icon: "🏺",
+          regionTag: "MISIR"
+        }),
+        imageCaption: "Nil Deltası, Kahire ve İskenderiye: Antik dünyanın en büyük kütüphanesi ve Necip Mahfuz'un edebi mirası."
+      },
+      {
+        id: "timbuktu",
+        city: "Timbuktu",
+        country: "Mali",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇲🇱",
+        lat: 16.76,
+        lng: -3.00,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        year: "14. – 16. Yüzyıl",
+        title: "Sankore Medresesi ve Afrika'nın Tarihi El Yazmaları Mirası",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "📜",
+        description:
+          "Sahra Çölü'nün güney kapısındaki Timbuktu, Mali ve Songhay İmparatorlukları döneminde Sankore Üniversitesi ve yüz binlerce nadide el yazmasıyla Afrika'nın en büyük entelektüel merkezi olmuştur. Ahmed Baba gibi alimlerin astronomi, hukuk, tıp ve edebiyat alanında yazdığı Timbuktu El Yazmaları, Afrika yazılı kültür tarihinin hazinesidir.",
+        quote:
+          "\"Altın kuzeyden, gümüş güneyden gelir; fakat bilgelik ve kitapların hazinesi yalnızca Timbuktu'da bulunur.\" — Tarihi Batı Afrika Atasözü",
+        figuresAndWorks: [
+          "Sankore Medresesi / Üniversitesi",
+          "Timbuktu Tarihi El Yazmaları (700.000+ Belge)",
+          "Ahmed Baba el-Timbukti & Mansa Musa",
+          "Cinguereber ve Sidi Yahya Külliyeleri"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "TİMBUKTU EL YAZMALARI MİRASI",
+          subtitle: "Sankore Medresesi, Ahmed Baba ve Afrika'nın Bilgelik Hazinesi",
+          era: "14. – 16. YÜZYIL",
+          primaryColor: "#b45309",
+          secondaryColor: "#0f172a",
+          accentColor: "#fbbf24",
+          icon: "📜",
+          regionTag: "TİMBUKTU / MALİ"
+        }),
+        imageCaption: "Sahra kıyısında Timbuktu Sankore Medresesi ve Afrika'nın yüz binlerce yıllık el yazması kütüphaneleri."
+      }
+    ]);
+
+    // SADECE "EDEBİYAT & AKIMLAR" SEÇİLDİĞİNDE ÇALIŞACAK KÜRESEL 3B ANİMASYONLU IŞIK YAYLARI
+    // Yaylar artık koordinatla değil şehir ID'leriyle tanımlanır ve YALNIZCA iki ucu da
+    // "edebiyat" kategorisinde olan (haritada pini görünen) şehirler arasında çizilir.
+    const LITERATURE_ROUTES = Object.freeze([
+      { from: "floransa", to: "madrid",       label: "Floransa Rönesansı (Dante) ➔ Madrid (Cervantes - Don Kişot)" },
+      { from: "floransa", to: "londra",       label: "İtalyan Hümanizmi ➔ Londra (Shakespeare & Elizabeth Tiyatrosu)" },
+      { from: "madrid",   to: "londra",       label: "İspanyol Altın Çağı ➔ İngiliz Romanı" },
+      { from: "londra",   to: "weimar",       label: "Shakespeare ➔ Weimar (Goethe, Schiller & Sturm und Drang)" },
+      { from: "londra",   to: "dublin",       label: "Londra ➔ Dublin (James Joyce - Ulysses & Modernizm)" },
+      { from: "weimar",   to: "stpetersburg", label: "Alman Romantizmi ➔ St. Petersburg (Puşkin, Dostoyevski & Tolstoy)" },
+      { from: "weimar",   to: "istanbul",     label: "Avrupa Edebi Akımları ➔ İstanbul (Tanzimat & Servet-i Fünun)" },
+      { from: "istanbul", to: "sivas",        label: "İstanbul ➔ Sivas (Anadolu Halk Şiiri & Âşık Veysel)" },
+      { from: "kyoto",    to: "istanbul",     label: "Doğu Klasik Edebiyat Geleneği: Genji'nin Hikâyesi ➔ Divan Şiiri" },
+      { from: "dublin",   to: "newyork",      label: "Transatlantik Modernizm ➔ New York (Poe & Harlem Rönesansı)" },
+      { from: "newyork",  to: "bogota",       label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)" }
+    ]);
+
+    const ARC_COLORS = [
+      ["#2dd4bf", "#10b981"],
+      ["#10b981", "#38bdf8"],
+      ["#38bdf8", "#2dd4bf"],
+      ["#2dd4bf", "#34d399"]
+    ];
+
+    // Görünen (filtrelenmiş) şehirler listesine göre yalnızca geçerli edebiyat yaylarını üretir
+    function buildLiteratureArcs(visibleLocations) {
+      const visible = new Map(
+        visibleLocations
+          .filter(loc => loc.category === "edebiyat")
+          .map(loc => [loc.id, loc])
+      );
+
+      return LITERATURE_ROUTES
+        .filter(r => visible.has(r.from) && visible.has(r.to))
+        .map((r, i) => {
+          const a = visible.get(r.from);
+          const b = visible.get(r.to);
+          return {
+            startLat: a.lat,
+            startLng: a.lng,
+            endLat: b.lat,
+            endLng: b.lng,
+            label: r.label,
+            color: ARC_COLORS[i % ARC_COLORS.length]
+          };
+        });
+    }
+
+    // ============================================================================
+    // 3. UYGULAMA DURUMU (STATE) - BAĞIMSIZ FİLTRE DEĞİŞKENLERİ
+    // ============================================================================
+    let activeRegion = 'all';
+    let activeCategory = 'all';
+    let searchQuery = '';
+    let activeCityId = null;
+    let isTilted3D = false;
+    let isAutoRotating = false;
+    let world = null;
+    let cloudsMesh = null;
+    let isSpeaking = false;
+    let introDismissed = false;
+
+    // ============================================================================
+    // 4. ULTRA HD FOTOGERÇEKÇİ 3B KÜRE, BULUT KATMANI VE ATMOSFER
+    // Havadaki tüm çizgiler (arcs/paths/points/rings) kaldırıldı, sadece şehir pinleri var.
+    // ============================================================================
+    const DAY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg';
+    const BUMP_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png';
+    const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
+    const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
+    const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
+
+    function initGlobe() {
+      const container = document.getElementById('globeViz');
+
+      world = Globe({ antialias: true, alpha: false })(container)
+        .globeImageUrl(DAY_TEXTURE_ULTRA)
+        .bumpImageUrl(BUMP_TEXTURE_ULTRA)
+        .backgroundImageUrl(SKY_TEXTURE_ULTRA)
+        .showAtmosphere(true)
+        .atmosphereColor('#3a99d9')
+        .atmosphereAltitude(0.2)
+        // 3B Şehir Pinleri
+        .htmlElementsData([...MASTER_LOCATIONS])
+        .htmlLat(d => d.lat)
+        .htmlLng(d => d.lng)
+        .htmlAltitude(0.015)
+        .htmlElement(d => createPinElement(d))
+        // Sadece "Edebiyat & Akımlar" seçildiğinde aktifleşen 3B kavisli animasyonlu ışık yayları (Normalde boş [])
+        .arcsData([])
+        .arcStartLat(d => d.startLat)
+        .arcStartLng(d => d.startLng)
+        .arcEndLat(d => d.endLat)
+        .arcEndLng(d => d.endLng)
+        .arcColor(d => d.color)
+        .arcLabel(d => d.label)
+        .arcAltitudeAutoScale(0.34)
+        .arcStroke(0.65)
+        .arcDashLength(0.4)
+        .arcDashGap(0.2)
+        .arcDashAnimateTime(1800);
+
+      // KESKİN ULTRA HD RENDERER AYARI
+      const renderer = world.renderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      if (renderer.capabilities) {
+        const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+        const applySharpness = () => {
+          const mat = world.globeMaterial();
+          if (mat) {
+            if (mat.map) {
+              mat.map.anisotropy = maxAnisotropy;
+              mat.map.minFilter = THREE.LinearMipmapLinearFilter;
+              mat.map.magFilter = THREE.LinearFilter;
+              mat.map.needsUpdate = true;
+            }
+            if (mat.bumpMap) {
+              mat.bumpMap.anisotropy = maxAnisotropy;
+              mat.bumpMap.needsUpdate = true;
+            }
+          }
+        };
+        setTimeout(applySharpness, 600);
+        setTimeout(applySharpness, 1800);
+      }
+
+      // Küre Materyalini Fotogerçekçi Okyanus Parlaması ve Kabartma İçin Güçlendir
+      const globeMaterial = world.globeMaterial();
+      globeMaterial.bumpScale = 14;
+      globeMaterial.shininess = 18;
+      new THREE.TextureLoader().load(WATER_SPECULAR_TEX, specularTexture => {
+        globeMaterial.specularMap = specularTexture;
+        globeMaterial.specular = new THREE.Color('#1e3a8a');
+        globeMaterial.needsUpdate = true;
+      });
+
+      // Güçlü Güneş ve Atmosfer Işıklandırması
+      const scene = world.scene();
+      const ambientLight = scene.children.find(obj => obj.type === 'AmbientLight');
+      if (ambientLight) {
+        ambientLight.intensity = 1.25;
+      }
+      const directionalLight = scene.children.find(obj => obj.type === 'DirectionalLight');
+      if (directionalLight) {
+        directionalLight.intensity = 2.1;
+        directionalLight.position.set(1.5, 1.2, 1.2);
+      }
+
+      // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Clouds Layer)
+      const CLOUDS_ALT = 0.012;
+      const CLOUDS_ROTATION_SPEED = -0.006;
+
+      new THREE.TextureLoader().load(CLOUDS_TEXTURE_ULTRA, cloudsTexture => {
+        cloudsMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 96, 96),
+          new THREE.MeshPhongMaterial({
+            map: cloudsTexture,
+            transparent: true,
+            opacity: 0.36,
+            depthWrite: false
+          })
+        );
+        world.scene().add(cloudsMesh);
+      });
+
+      // GOOGLE EARTH TARZI SMOOTH TEKERLEK & KAMERA KAYMASI (INERTIA / DAMPING)
+      const controls = world.controls();
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.zoomSpeed = 0.7;
+      controls.rotateSpeed = 0.6;
+      controls.minDistance = 108;
+      controls.maxDistance = 550;
+      controls.autoRotate = false;
+      controls.autoRotateSpeed = 0.45;
+
+      // Fare tekerleği (scroll wheel) ile yakınlaşıp uzaklaşırken kazık gibi durmaması için pürüzsüz momentum (inertia) döngüsü
+      let wheelZoomVelocity = 0;
+      container.addEventListener(
+        'wheel',
+        e => {
+          e.preventDefault();
+          const delta = Math.sign(e.deltaY);
+          wheelZoomVelocity += delta * 0.024;
+          wheelZoomVelocity = Math.max(-0.12, Math.min(0.12, wheelZoomVelocity));
+        },
+        { passive: false }
+      );
+
+      (function animateGlobeScene() {
+        if (cloudsMesh) {
+          cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
+        }
+        if (Math.abs(wheelZoomVelocity) > 0.0004 && world) {
+          const pov = world.pointOfView();
+          if (pov) {
+            const nextAlt = Math.max(0.12, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
+            world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 0);
+            updateZoomAndCompass();
+          }
+          wheelZoomVelocity *= 0.88; // Google Earth tarzı yumuşak süzülerek yavaşlama
+        } else {
+          wheelZoomVelocity = 0;
+        }
+        if (controls && typeof controls.update === 'function') {
+          controls.update();
+        }
+        requestAnimationFrame(animateGlobeScene);
+      })();
+
+      controls.addEventListener('change', updateZoomAndCompass);
+
+      // Giriş ekranı açıkken arkadaki 3B Dünya küresi buzlu camın arkasından yavaşça dönerken silüet halinde görünsün
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.55;
+      world.pointOfView({ lat: 34.0, lng: 24.0, altitude: 2.85 }, 0);
+
+      window.addEventListener('resize', () => {
+        world.width(window.innerWidth);
+        world.height(window.innerHeight);
+        world.renderer().setPixelRatio(window.devicePixelRatio);
+      });
+    }
+
+    // Sinematik Giriş Ekranını Kapat ve Uzaydan Dünya'ya Kamera Dalışı Yap
+    function dismissIntroScreen() {
+      if (introDismissed) return;
+      introDismissed = true;
+
+      const overlay = document.getElementById('introOverlay');
+      if (overlay) {
+        overlay.classList.add('intro-hidden');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 1450);
+      }
+
+      if (world) {
+        world.controls().autoRotate = isAutoRotating;
+        world.pointOfView({ lat: 36.0, lng: 28.0, altitude: 1.85 }, 2200);
+        setTimeout(updateZoomAndCompass, 2250);
+      }
+    }
+
+    // Kamera yüksekliğine göre Pin ölçeğini ve Pusula açısını güncelle
+    function updateZoomAndCompass() {
+      if (!world) return;
+      const pov = world.pointOfView();
+      if (!pov) return;
+
+      let pinScale = 0.88;
+      if (pov.altitude < 0.55) {
+        pinScale = 0.66;
+      } else if (pov.altitude < 1.1) {
+        pinScale = 0.74;
+      } else if (pov.altitude < 1.7) {
+        pinScale = 0.82;
+      }
+      document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
+
+      const compassIcon = document.getElementById('compassIcon');
+      if (compassIcon) {
+        compassIcon.style.transform = `rotate(${(-pov.lng * 0.35).toFixed(1)}deg)`;
+      }
+    }
+
+    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın Sarısı, Edebiyat: Turkuaz/Zümrüt)
+    function createPinElement(item) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `atlas-pin-wrapper ${activeCityId === item.id ? 'active-pin' : ''}`;
+      wrapper.dataset.cityId = item.id;
+
+      let pinColor = '#f59e0b';
+      let pinSecondColor = '#fbbf24';
+      let pinBg = 'linear-gradient(135deg, #fbbf24, #d97706)';
+      let pinGlow = 'rgba(245, 158, 11, 0.85)';
+
+      if (item.category === 'edebiyat') {
+        pinColor = '#14b8a6';
+        pinSecondColor = '#10b981';
+        pinBg = 'linear-gradient(135deg, #2dd4bf, #059669)';
+        pinGlow = 'rgba(20, 184, 166, 0.85)';
+      }
+
+      wrapper.style.setProperty('--pin-color', pinColor);
+      wrapper.style.setProperty('--pin-second-color', pinSecondColor);
+      wrapper.style.setProperty('--pin-bg', pinBg);
+      wrapper.style.setProperty('--pin-glow', pinGlow);
+      wrapper.style.setProperty('--pin-offset-x', item.pinOffsetX || '0px');
+      wrapper.style.setProperty('--pin-offset-y', item.pinOffsetY || '0px');
+      wrapper.style.setProperty('--label-shift-x', item.labelShiftX || '0px');
+
+      const flag = item.flag || (item.region === 'turkiye' ? '🇹🇷' : '🌍');
+
+      wrapper.innerHTML = `
+        <div class="pin-head">
+          <div class="pin-pulse"></div>
+          <div class="pin-pulse-delayed"></div>
+          <span>${item.icon || '📍'}</span>
+        </div>
+        <div class="pin-stem"></div>
+        <div class="pin-label">
+          <span>${flag}</span>
+          <span>${item.city}</span>
+        </div>
+      `;
+
+      wrapper.addEventListener('click', e => {
+        e.stopPropagation();
+        selectCity(item.id);
+      });
+
+      return wrapper;
+    }
+
+    // ============================================================================
+    // 5. KESİN VE HATASIZ FİLTRELEME SİSTEMİ (HER ZAMAN MASTER_LOCATIONS ÜZERİNDEN)
+    // ============================================================================
+    function getFilteredLocations() {
+      const q = searchQuery.trim().toLocaleLowerCase('tr-TR');
+
+      return MASTER_LOCATIONS.filter(item => {
+        const regionMatch =
+          activeRegion === 'all' || item.region === activeRegion;
+
+        const categoryMatch =
+          activeCategory === 'all' || item.category === activeCategory;
+
+        if (!regionMatch || !categoryMatch) return false;
+        if (!q) return true;
+
+        const searchableText = [
+          item.city,
+          item.country,
+          item.regionLabel,
+          item.title,
+          item.year,
+          item.description,
+          item.quote,
+          ...(item.figuresAndWorks || [])
+        ]
+          .join(' ')
+          .toLocaleLowerCase('tr-TR');
+
+        return searchableText.includes(q);
+      });
+    }
+
+    function renderFilteredMarkers() {
+      if (!world) return;
+      const filteredList = getFilteredLocations().map(item => ({ ...item }));
+
+      // Globe.gl'nin iç DOM önbellek çakışmasını tamamen önlemek için önce boşaltıp anında taze listeyi veriyoruz
+      world.htmlElementsData([]);
+      world.htmlElementsData(filteredList);
+
+      // SADECE "Edebiyat & Akımlar" seçildiğinde, yalnızca haritada görünen edebiyat şehirleri arasında yay çiz
+      if (activeCategory === 'edebiyat') {
+        world.arcsData(buildLiteratureArcs(filteredList));
+      } else {
+        world.arcsData([]);
+      }
+    }
+
+    function updateFilterButtonStyles() {
+      // Bölge Butonları
+      document.querySelectorAll('.region-btn').forEach(btn => {
+        const isSelected = btn.dataset.region === activeRegion;
+        if (isSelected) {
+          btn.className =
+            'region-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.45)] cursor-pointer';
+        } else {
+          btn.className =
+            'region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer';
+        }
+      });
+
+      // Kategori Butonları
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        const cat = btn.dataset.category;
+        const isSelected = cat === activeCategory;
+
+        if (!isSelected) {
+          btn.className =
+            'category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer';
+          return;
+        }
+
+        if (cat === 'tarih') {
+          btn.className =
+            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_16px_rgba(245,158,11,0.55)] cursor-pointer';
+        } else if (cat === 'edebiyat') {
+          btn.className =
+            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_16px_rgba(20,184,166,0.55)] cursor-pointer';
+        } else {
+          btn.className =
+            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-white/20 text-white border border-white/50 shadow-[0_0_14px_rgba(255,255,255,0.28)] cursor-pointer';
+        }
+      });
+    }
+
+    // ============================================================================
+    // 6. ŞEHİR SEÇİMİ, FLY-TO KAMERA UÇUŞU VE DETAY PANELİ
+    // ============================================================================
+    function selectCity(cityId) {
+      const item = MASTER_LOCATIONS.find(d => d.id === cityId);
+      if (!item) return;
+
+      stopSpeech();
+      activeCityId = cityId;
+
+      document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
+        el.classList.toggle('active-pin', el.dataset.cityId === cityId);
+      });
+
+      const isMobile = window.innerWidth < 768;
+      const lngOffset = isMobile ? 0 : 2.5;
+      world.pointOfView(
+        {
+          lat: item.lat - 0.3,
+          lng: item.lng + lngOffset,
+          altitude: 0.38
+        },
+        1550
+      );
+
+      setTimeout(updateZoomAndCompass, 1600);
+      populateDrawer(item);
+      openDrawer();
+    }
+
+    function populateDrawer(item) {
+      const badgesContainer = document.getElementById('drawerBadges');
+
+      const regionBadge = `
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/35">
+          ${item.flag || '🌍'} ${item.regionLabel}
+        </span>
+      `;
+
+      const categoryBadge =
+        item.category === 'tarih'
+          ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+               <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+               Tarihi Olaylar
+             </span>`
+          : `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/40">
+               <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+               Edebiyat & Akımlar
+             </span>`;
+
+      const yearBadge = `
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/10 text-slate-200 border border-white/15">
+          📅 ${item.year}
+        </span>
+      `;
+
+      badgesContainer.innerHTML = `${regionBadge}${categoryBadge}${yearBadge}`;
+
+      document.getElementById('drawerTitle').textContent = item.title;
+      document.getElementById('drawerLocation').textContent = `${item.city}, ${item.country}`;
+      document.getElementById('drawerYearBadge').textContent = item.year;
+      document.getElementById('drawerDescription').textContent = item.description;
+      document.getElementById('drawerQuote').textContent = item.quote;
+
+      // Kapak Görseli (Garantili Yüksek Çözünürlüklü Görsel + onerror Yedek İllüstrasyon Koruması)
+      const coverImg = document.getElementById('drawerCoverImage');
+      coverImg.style.opacity = '0.35';
+      const fallbackSvg = item.fallbackImage || '';
+      coverImg.dataset.fallback = fallbackSvg;
+      coverImg.onerror = () => {
+        if (fallbackSvg && coverImg.src !== fallbackSvg) {
+          coverImg.src = fallbackSvg;
+        }
+        coverImg.style.opacity = '1';
+      };
+      coverImg.onload = () => {
+        coverImg.style.opacity = '1';
+      };
+      setTimeout(() => {
+        coverImg.src = item.coverImage || fallbackSvg;
+      }, 60);
+      document.getElementById('drawerImageCaption').textContent = item.imageCaption;
+
+      // Önemli Şahsiyetler / Eserler Rozetleri (Büyütülmüş Font ve Geniş Padding)
+      const tagsContainer = document.getElementById('drawerTags');
+      const dotColor = item.category === 'tarih' ? 'bg-amber-400' : 'bg-teal-400';
+      tagsContainer.innerHTML = (item.figuresAndWorks || [])
+        .map(
+          tag => `
+          <span class="px-4 py-2 rounded-xl text-sm sm:text-base font-medium bg-white/[0.08] hover:bg-white/[0.15] text-slate-100 border border-white/15 transition flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full ${dotColor} shrink-0"></span>
+            ${tag}
+          </span>`
+        )
+        .join('');
+
+      const filtered = getFilteredLocations();
+      const idx = filtered.findIndex(d => d.id === item.id);
+      document.getElementById('drawerStepIndicator').textContent =
+        idx !== -1 ? `Nokta ${idx + 1} / ${filtered.length}` : `Nokta 1 / ${filtered.length}`;
+    }
+
+    function openDrawer() {
+      const drawer = document.getElementById('detailDrawer');
+      drawer.classList.remove('translate-x-[130%]', 'opacity-0');
+      drawer.classList.add('translate-x-0', 'opacity-100');
+    }
+
+    function closeDrawer() {
+      stopSpeech();
+      const drawer = document.getElementById('detailDrawer');
+      drawer.classList.add('translate-x-[130%]', 'opacity-0');
+      drawer.classList.remove('translate-x-0', 'opacity-100');
+      activeCityId = null;
+
+      document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
+        el.classList.remove('active-pin');
+      });
+    }
+
+    // ============================================================================
+    // 7. TÜRKÇE SESLİ REHBER (TTS - WEB SPEECH SYNTHESIS API)
+    // ============================================================================
+    function toggleSpeech() {
+      if (isSpeaking) {
+        stopSpeech();
+        return;
+      }
+
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item || !('speechSynthesis' in window)) {
+        alert('Tarayıcınız Türkçe sesli okuma (TTS) özelliğini desteklemiyor.');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      const textToRead = `${item.city}, ${item.country}. ${item.title}. Dönem: ${item.year}. ${item.description}. Tarihi söz ve edebi alıntı: ${item.quote}`;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'tr-TR';
+      utterance.rate = 0.96;
+
+      utterance.onstart = () => {
+        isSpeaking = true;
+        const btn = document.getElementById('speakBtn');
+        btn.innerHTML = `
+          <i data-lucide="square" class="w-4 h-4 fill-current"></i>
+          <span id="speakBtnText">Okumayı Durdur</span>
+        `;
+        lucide.createIcons();
+      };
+
+      utterance.onend = () => stopSpeech();
+      utterance.onerror = () => stopSpeech();
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeech() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      isSpeaking = false;
+      const btn = document.getElementById('speakBtn');
+      if (btn) {
+        btn.innerHTML = `
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+          <span id="speakBtnText">Sesli Dinle (TTS)</span>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    // ============================================================================
+    // 8. ARAYÜZ ETKİLEŞİMLERİ
+    // ============================================================================
+    function setupUIEvents() {
+      // Sinematik Giriş Ekranı ("Haritayı Keşfet" butonu + Tam 4000ms (4 sn) Bekletme ve Canlı Yüzde Sayacı)
+      const startExploreBtn = document.getElementById('startExploreBtn');
+      const progressTextEl = document.getElementById('introProgressText');
+      const introStartTime = performance.now();
+      const INTRO_DURATION = 4000;
+
+      function updateIntroPercentage(now) {
+        if (introDismissed) return;
+        const elapsed = now - introStartTime;
+        const pct = Math.min(100, Math.round((elapsed / INTRO_DURATION) * 100));
+        if (progressTextEl) progressTextEl.textContent = `${pct}%`;
+
+        if (elapsed < INTRO_DURATION) {
+          requestAnimationFrame(updateIntroPercentage);
+        } else {
+          dismissIntroScreen();
+        }
+      }
+      requestAnimationFrame(updateIntroPercentage);
+
+      if (startExploreBtn) {
+        startExploreBtn.addEventListener('click', dismissIntroScreen);
+      }
+
+      // 1. KÜRESEL KITA / BÖLGE FİLTRELERİ (Tümü | Türkiye | Avrupa | Asya & Orta Doğu | Amerika | Afrika)
+      document.querySelectorAll('.region-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeRegion = btn.dataset.region;
+
+          updateFilterButtonStyles();
+          renderFilteredMarkers();
+
+          if (activeRegion === 'turkiye') {
+            world.pointOfView({ lat: 39.5, lng: 35.2, altitude: 1.25 }, 1500);
+          } else if (activeRegion === 'avrupa') {
+            world.pointOfView({ lat: 48.5, lng: 12.0, altitude: 1.65 }, 1500);
+          } else if (activeRegion === 'asya') {
+            world.pointOfView({ lat: 36.5, lng: 88.0, altitude: 1.95 }, 1500);
+          } else if (activeRegion === 'amerika') {
+            world.pointOfView({ lat: 22.0, lng: -74.0, altitude: 2.05 }, 1500);
+          } else if (activeRegion === 'afrika') {
+            world.pointOfView({ lat: 22.0, lng: 14.0, altitude: 1.9 }, 1500);
+          } else {
+            world.pointOfView({ lat: 34.0, lng: 25.0, altitude: 2.15 }, 1500);
+          }
+          setTimeout(updateZoomAndCompass, 1550);
+        });
+      });
+
+      // 2. KATEGORİ FİLTRELERİ (Tüm Kategoriler / Tarihi Olaylar / Edebiyat & Akımlar)
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.category;
+
+          updateFilterButtonStyles();
+          renderFilteredMarkers();
+        });
+      });
+
+      // 3. ARAMA ÇUBUĞU
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      searchInput.addEventListener('input', e => {
+        searchQuery = e.target.value;
+        clearSearchBtn.classList.toggle('hidden', !searchQuery);
+        renderFilteredMarkers();
+      });
+
+      searchInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          let matches = getFilteredLocations();
+
+          if (matches.length === 0 && searchQuery.trim()) {
+            activeRegion = 'all';
+            activeCategory = 'all';
+            updateFilterButtonStyles();
+            renderFilteredMarkers();
+            matches = getFilteredLocations();
+          }
+
+          if (matches.length > 0) {
+            selectCity(matches[0].id);
+          }
+        }
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        renderFilteredMarkers();
+        searchInput.focus();
+      });
+
+      // Drawer Kapatma & TTS
+      document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+      document.getElementById('speakBtn').addEventListener('click', toggleSpeech);
+
+      // Önceki / Sonraki Nokta
+      document.getElementById('prevCityBtn').addEventListener('click', () => {
+        const list = getFilteredLocations();
+        if (!list.length) return;
+        const idx = list.findIndex(d => d.id === activeCityId);
+        const prevIdx = (idx - 1 + list.length) % list.length;
+        selectCity(list[prevIdx].id);
+      });
+
+      document.getElementById('nextCityBtn').addEventListener('click', () => {
+        const list = getFilteredLocations();
+        if (!list.length) return;
+        const idx = list.findIndex(d => d.id === activeCityId);
+        const nextIdx = (idx + 1) % list.length;
+        selectCity(list[nextIdx].id);
+      });
+
+      // SAĞ ALT NAVİGASYON KONTROLLERİ
+      document.getElementById('zoomInBtn').addEventListener('click', () => {
+        const pov = world.pointOfView();
+        const nextAlt = Math.max(0.14, pov.altitude * 0.68);
+        world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
+        setTimeout(updateZoomAndCompass, 600);
+      });
+
+      document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        const pov = world.pointOfView();
+        const nextAlt = Math.min(3.0, pov.altitude * 1.42);
+        world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
+        setTimeout(updateZoomAndCompass, 600);
+      });
+
+      document.getElementById('compassResetBtn').addEventListener('click', () => {
+        closeDrawer();
+        activeRegion = 'all';
+        activeCategory = 'all';
+        searchQuery = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        updateFilterButtonStyles();
+        renderFilteredMarkers();
+        world.pointOfView({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
+        setTimeout(updateZoomAndCompass, 1450);
+      });
+
+      document.getElementById('toggle3DViewBtn').addEventListener('click', () => {
+        isTilted3D = !isTilted3D;
+        const pov = world.pointOfView();
+        const badge = document.getElementById('viewModeBadge');
+        if (isTilted3D) {
+          badge.textContent = '2D';
+          world.pointOfView(
+            { lat: Math.max(-65, pov.lat - 8), lng: pov.lng, altitude: Math.min(0.45, pov.altitude) },
+            900
+          );
+        } else {
+          badge.textContent = '3D';
+          world.pointOfView(
+            { lat: pov.lat + 8, lng: pov.lng, altitude: Math.max(0.85, pov.altitude) },
+            900
+          );
+        }
+        setTimeout(updateZoomAndCompass, 950);
+      });
+
+      document.getElementById('toggleRotateBtn').addEventListener('click', e => {
+        isAutoRotating = !isAutoRotating;
+        world.controls().autoRotate = isAutoRotating;
+        e.currentTarget.classList.toggle('border-emerald-400', isAutoRotating);
+        e.currentTarget.classList.toggle('bg-emerald-500/20', isAutoRotating);
+      });
+    }
+
+    // Uygulamayı Başlat
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initGlobe();
+      setupUIEvents();
+    });
+  </script>
+</body>
+</html>
