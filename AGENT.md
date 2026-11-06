@@ -8,7 +8,7 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 - **Proje Adı:** Küresel Tarih ve Edebiyat Atlası (TÜBİTAK 3B Projesi)
 - **Akademik Danışman:** Öğr. Gör. Dr. Ayşegül Elçi
 - **Baş Geliştirici:** Bayram Akpamukçu
-- **Destek / Katkı:** Sami Yusuf Maral & Yusuf Özcan
+- **Destek / Katkı:** Sami Yusuf Maral
 - **Canlı Web Sitesi:** [https://bayramakpamukcu.site](https://bayramakpamukcu.site)
 - **GitHub Deposu:** [https://github.com/broadday0909/kuresel-tarih-atlasi.git](https://github.com/broadday0909/kuresel-tarih-atlasi.git)
 - **Netlify Site Adı:** `peppy-cascaron-42fc19`
@@ -42,7 +42,7 @@ Kullanıcı herhangi bir değişiklik, yeni şehir, edebi durak veya stil günce
 ---
 
 ## 🎨 TASARIM VE İMZA STANDARTLARI
-- **Sol Üst Kutu Altı:** `Developed by Bayram Akpamukçu • with Sami Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
+- **Sol Üst Kutu Altı:** `Geliştirici: Bayram Akpamukçu • yardımlarıyla Sami Yusuf Maral` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
 - **Üst Menü:** Ekranı kapatmaması için tek satır, ultra kompakt ve yatay kaydırılabilir kalmalıdır.
 - **Zaman Tüneli:** Alt merkezde konumlanır.
 - **İntro Ekranı:** Otomatik geçiş YOKTUR; sayfa YALNIZCA kullanıcı "Haritayı Keşfet" butonuna tıkladığında açılır.
