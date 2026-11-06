@@ -471,61 +471,61 @@
   <!-- SİNEMATİK UZAY VİNYET KATMANI -->
   <div class="vignette-overlay fixed inset-0 z-10"></div>
 
-  <!-- 2. GOOGLE EARTH TARZI ÜST BAR (GLASSMORPHISM) -->
-  <header class="fixed top-0 left-0 right-0 z-30 p-2.5 md:px-5 md:py-3 pointer-events-none flex flex-col 2xl:flex-row items-stretch 2xl:items-center justify-between gap-2.5">
+  <!-- 2. GOOGLE EARTH TARZI ÜST BAR (GLASSMORPHISM - TEK SATIR VE ULTRA KOMPAKT) -->
+  <header class="fixed top-0 left-0 right-0 z-30 p-2 md:px-4 md:py-2 pointer-events-none flex flex-wrap lg:flex-nowrap items-center justify-between gap-2">
     
     <!-- Sol: TÜBİTAK Proje Kimliği & Küresel Atlas Başlığı -->
-    <div class="glass-panel rounded-2xl px-4 py-2 pointer-events-auto flex items-center gap-3 shrink-0">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500/30 via-amber-500/20 to-emerald-500/30 border border-sky-400/40 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/10">
-        <i data-lucide="earth" class="w-5 h-5 text-sky-400"></i>
+    <div class="glass-panel rounded-xl px-3 py-1.5 pointer-events-auto flex items-center gap-2.5 shrink-0 shadow-lg">
+      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-500/30 via-amber-500/20 to-emerald-500/30 border border-sky-400/40 flex items-center justify-center shrink-0 shadow-md">
+        <i data-lucide="earth" class="w-3.5 h-3.5 text-sky-400"></i>
       </div>
       <div>
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        <div class="flex items-center gap-1.5">
+          <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
             TÜBİTAK Projesi
           </span>
-          <span class="text-[11px] text-sky-300/90 font-medium hidden sm:inline">• 23 Küresel Durak</span>
+          <span class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 23 Küresel Durak</span>
         </div>
-        <h2 class="font-display text-sm sm:text-base font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent">
+        <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
           Küresel Tarih ve Edebiyat Atlası
         </h2>
       </div>
     </div>
 
-    <!-- Sağ: Arama Çubuğu, Küresel Kıta Filtreleri ve Kategori Filtreleri -->
-    <div class="glass-panel rounded-2xl p-2 pointer-events-auto flex flex-wrap items-center gap-2">
+    <!-- Sağ: Arama Çubuğu, Küresel Kıta Filtreleri ve Kategori Filtreleri (Tek İnce Satırda) -->
+    <div class="glass-panel rounded-xl p-1 pointer-events-auto flex items-center gap-1.5 max-w-full overflow-x-auto custom-scroll shrink-0">
       
       <!-- Arama Kutusu -->
-      <div class="relative flex items-center flex-1 sm:flex-initial min-w-[190px] sm:w-56">
-        <i data-lucide="search" class="w-4 h-4 text-sky-400 absolute left-3 pointer-events-none"></i>
+      <div class="relative flex items-center shrink-0 w-32 sm:w-40 md:w-48">
+        <i data-lucide="search" class="w-3.5 h-3.5 text-sky-400 absolute left-2.5 pointer-events-none"></i>
         <input
           id="searchInput"
           type="text"
           autocomplete="off"
-          placeholder="Şehir, Tarih veya Eser Ara..."
-          class="w-full pl-9 pr-7 py-1.5 rounded-xl bg-slate-950/90 border border-white/15 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400/50 transition"
+          placeholder="Şehir veya Eser Ara..."
+          class="w-full pl-8 pr-6 py-1 rounded-lg bg-slate-950/90 border border-white/15 text-[11px] text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 transition"
         />
-        <button id="clearSearchBtn" type="button" class="hidden absolute right-2 text-slate-400 hover:text-white cursor-pointer">
-          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        <button id="clearSearchBtn" type="button" class="hidden absolute right-1.5 text-slate-400 hover:text-white cursor-pointer">
+          <i data-lucide="x" class="w-3 h-3"></i>
         </button>
       </div>
 
-      <div class="h-5 w-[1px] bg-white/10 hidden md:block"></div>
+      <div class="h-4 w-[1px] bg-white/10 hidden sm:block shrink-0"></div>
 
       <!-- Küresel Kıta / Bölge Filtreleri ("Tümü" | "Türkiye" | "Avrupa" | "Asya & Orta Doğu" | "Amerika" | "Afrika") -->
-      <div class="flex flex-wrap items-center gap-1 bg-slate-950/65 p-1 rounded-xl border border-white/10" id="regionFilterGroup">
+      <div class="flex items-center gap-0.5 bg-slate-950/70 p-0.5 rounded-lg border border-white/10 shrink-0" id="regionFilterGroup">
         <button
           type="button"
           data-region="all"
-          class="region-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.45)] cursor-pointer"
+          class="region-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] cursor-pointer whitespace-nowrap"
         >
-          <i data-lucide="globe" class="w-3.5 h-3.5 text-sky-300"></i>
+          <i data-lucide="globe" class="w-3 h-3 text-sky-300"></i>
           <span>Tümü</span>
         </button>
         <button
           type="button"
           data-region="turkiye"
-          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🇹🇷</span>
           <span>Türkiye</span>
@@ -533,7 +533,7 @@
         <button
           type="button"
           data-region="avrupa"
-          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🇪🇺</span>
           <span>Avrupa</span>
@@ -541,15 +541,15 @@
         <button
           type="button"
           data-region="asya"
-          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌏</span>
-          <span>Asya &amp; Orta Doğu</span>
+          <span>Asya &amp; O. Doğu</span>
         </button>
         <button
           type="button"
           data-region="amerika"
-          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌎</span>
           <span>Amerika</span>
@@ -557,41 +557,41 @@
         <button
           type="button"
           data-region="afrika"
-          class="region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌍</span>
           <span>Afrika</span>
         </button>
       </div>
 
-      <div class="h-5 w-[1px] bg-white/10 hidden lg:block"></div>
+      <div class="h-4 w-[1px] bg-white/10 hidden md:block shrink-0"></div>
 
       <!-- Kategori Filtreleri ("Tüm Kategoriler", "Tarihi Olaylar", "Edebiyat & Akımlar") -->
-      <div class="flex items-center gap-1 bg-slate-950/65 p-1 rounded-xl border border-white/10" id="categoryFilterGroup">
+      <div class="flex items-center gap-0.5 bg-slate-950/70 p-0.5 rounded-lg border border-white/10 shrink-0" id="categoryFilterGroup">
         <button
           type="button"
           data-category="all"
-          class="category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-white/20 text-white border border-white/50 shadow-[0_0_14px_rgba(255,255,255,0.25)] cursor-pointer"
+          class="category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap"
         >
-          <span class="w-2 h-2 rounded-full bg-gradient-to-r from-amber-400 to-teal-400"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-amber-400 to-teal-400"></span>
           <span>Tüm Kategoriler</span>
         </button>
 
         <button
           type="button"
           data-category="tarih"
-          class="category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="category-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
-          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]"></span>
+          <span class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_6px_#f59e0b]"></span>
           <span>Tarihi Olaylar</span>
         </button>
 
         <button
           type="button"
           data-category="edebiyat"
-          class="category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer"
+          class="category-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
-          <span class="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_8px_#14b8a6]"></span>
+          <span class="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_6px_#14b8a6]"></span>
           <span>Edebiyat &amp; Akımlar</span>
         </button>
       </div>
@@ -2182,10 +2182,10 @@
         const isSelected = btn.dataset.region === activeRegion;
         if (isSelected) {
           btn.className =
-            'region-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.45)] cursor-pointer';
+            'region-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] cursor-pointer whitespace-nowrap';
         } else {
           btn.className =
-            'region-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer';
+            'region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
         }
       });
 
@@ -2196,19 +2196,19 @@
 
         if (!isSelected) {
           btn.className =
-            'category-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer';
+            'category-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
           return;
         }
 
         if (cat === 'tarih') {
           btn.className =
-            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_16px_rgba(245,158,11,0.55)] cursor-pointer';
+            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)] cursor-pointer whitespace-nowrap';
         } else if (cat === 'edebiyat') {
           btn.className =
-            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_16px_rgba(20,184,166,0.55)] cursor-pointer';
+            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_12px_rgba(20,184,166,0.5)] cursor-pointer whitespace-nowrap';
         } else {
           btn.className =
-            'category-btn active px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-white/20 text-white border border-white/50 shadow-[0_0_14px_rgba(255,255,255,0.28)] cursor-pointer';
+            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap';
         }
       });
     }
