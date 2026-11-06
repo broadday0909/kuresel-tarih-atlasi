@@ -524,11 +524,22 @@
       </div>
 
       <!-- Sol Üstteki Box'ın Hemen Altındaki Geliştirici İmzası -->
-      <div class="glass-panel px-3 py-1 rounded-xl border border-white/15 bg-slate-950/75 backdrop-blur-md flex items-center gap-2 text-[11px] sm:text-xs text-slate-300 shadow-md w-fit hover:text-white transition-all hover:border-[#d4af37]/40">
+      <div class="glass-panel px-2.5 sm:px-3 py-1 rounded-xl border border-white/15 bg-slate-950/75 backdrop-blur-md flex items-center gap-1.5 sm:gap-2 text-[10.5px] sm:text-xs text-slate-300 shadow-md w-fit hover:text-white transition-all hover:border-[#d4af37]/40 whitespace-nowrap">
         <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37] shadow-[0_0_6px_#d4af37] shrink-0"></span>
-        <span>Developed by <strong class="text-white font-bold tracking-wide">Bayram Akpamukçu</strong></span>
-        <span class="text-slate-500">•</span>
-        <span class="text-slate-300">with <strong class="text-amber-200/90 font-semibold tracking-wide">Sami Yusuf Maral &amp; Yusuf Özcan</strong></span>
+        
+        <!-- Mobilde Kısa Versiyon (Ekrana Tam Oturur, Taşma Yapmaz) -->
+        <span class="sm:hidden">
+          <strong class="text-white font-bold">Bayram A.</strong>
+          <span class="text-slate-500 mx-1">•</span>
+          <strong class="text-amber-200/90 font-medium">S. Y. Maral &amp; Y. Özcan</strong>
+        </span>
+
+        <!-- Masaüstünde Tam Uzun Versiyon -->
+        <span class="hidden sm:inline-flex items-center gap-1.5">
+          <span>Developed by <strong class="text-white font-bold tracking-wide">Bayram Akpamukçu</strong></span>
+          <span class="text-slate-500">•</span>
+          <span class="text-slate-300">with <strong class="text-amber-200/90 font-semibold tracking-wide">Sami Yusuf Maral &amp; Yusuf Özcan</strong></span>
+        </span>
       </div>
     </div>
 
