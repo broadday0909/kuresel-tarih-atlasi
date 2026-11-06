@@ -3,7 +3,7 @@
 ## 📌 Proje Kimliği ve Geliştiriciler
 - **Proje Adı:** Küresel Tarih ve Edebiyat Atlası (TÜBİTAK 3B Projesi)
 - **Baş Geliştirici:** Bayram Akpamukçu (`Bayram Akpamukcu`)
-- **Katkı Sağlayanlar:** Yusuf Maral & Yusuf Özcan
+- **Katkı Sağlayanlar:** Sami Yusuf Maral & Yusuf Özcan
 - **Canlı Yayın Domaini:** `https://bayramakpamukcu.site`
 - **GitHub Deposu:** `https://github.com/broadday0909/kuresel-tarih-atlasi.git`
 - **Netlify Projesi:** `peppy-cascaron-42fc19` (ID: `b9f993be-ae64-4e78-9245-c060dfe5f183`)
@@ -36,7 +36,7 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
   - Pin etiketlerinde mobilde `backdrop-filter: blur(...)` açılmamalıdır (katı renkli cam kullanılır).
   - Bulut katmanı poligon sayısı mobilde 48 segmentte tutulmalıdır.
 - **Tasarım Kuralları:**
-  - `Developed by Bayram Akpamukçu • with Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
+  - `Developed by Bayram Akpamukçu • with Sami Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
   - Üst filtre menüsü tek satır, kompakt ve yatay kaydırılabilir kalmalıdır.
   - Zaman Tüneli alt merkezde konumlanır.
   - Giriş ekranı (Intro) bekleme süresi 5 saniyedir (5000ms).
