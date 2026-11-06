@@ -515,7 +515,7 @@
             <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
               TÜBİTAK Projesi
             </span>
-            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 42 Küresel Durak</span>
+            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 50 Küresel Durak</span>
           </div>
           <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
             Küresel Tarih ve Edebiyat Atlası
@@ -984,7 +984,7 @@
     }
 
     // ============================================================================
-    // 2. SABİT ANA ŞEHİR DİZİSİ (MASTER_LOCATIONS) - 23 KÜRESEL TARİH & EDEBİYAT DURAĞI
+    // 2. SABİT ANA ŞEHİR DİZİSİ (MASTER_LOCATIONS) - 50 KÜRESEL TARİH & EDEBİYAT DURAĞI
     // ============================================================================
     const MASTER_LOCATIONS = Object.freeze([
       // ==================== TÜRKİYE (7 DURAK) ====================
@@ -2717,6 +2717,342 @@
           regionTag: "KARTACA / TUNUS"
         }),
         imageCaption: "Antik Kartaca kalıntıları, Byrsa Tepesi ve Tunus Körfezi manzarası."
+      },
+      {
+        id: "konya",
+        city: "Konya",
+        country: "Türkiye",
+        region: "turkiye",
+        regionLabel: "Türkiye",
+        flag: "🇹🇷",
+        lat: 37.87,
+        lng: 32.48,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1273,
+        year: "1207 – 1273",
+        title: "Anadolu Selçuklu Başkenti, Mevlânâ ve Tasavvuf Edebiyatı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🕊️",
+        description:
+          "Anadolu Selçuklu Devleti'nin payitahtı Konya; Şems-i Tebrîzî ile Mevlânâ Celâleddîn-i Rûmî'nin evrensel sevgi ve hoşgörü felsefesinin filizlendiği manevi merkezdir. 25.600 beyitlik 'Mesnevî-i Mânevî' ve 'Dîvân-ı Kebîr', Doğu ve Batı edebiyatında insan ruhunun arayışını anlatan en derin eserler arasında yer alır. Karatay ve İnce Minareli medreseleriyle Selçuklu taş işçiliğinin şaheseridir.",
+        quote:
+          "\"Gel, gel, ne olursan ol yine gel! İster kâfir, ister mecûsî, ister putperest ol yine gel... Bizim dergâhımız ümitsizlik dergâhı değildir.\" — Mevlânâ Celâleddîn-i Rûmî",
+        figuresAndWorks: [
+          "Mevlânâ Celâleddîn-i Rûmî (Mesnevî & Dîvân-ı Kebîr)",
+          "Şems-i Tebrîzî (Makâlât & Manevi Yoldaşlık)",
+          "Sultan Veled (Maârif & İbtidânâme)",
+          "Karatay Medresesi & İnce Minareli Taş İbadethanesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "KONYA: MEVLÂNÂ & TASAVVUF",
+          subtitle: "Mesnevî, Şems-i Tebrîzî ve Selçuklu Payitahtı",
+          era: "1207 – 1273",
+          primaryColor: "#0284c7",
+          secondaryColor: "#082f49",
+          accentColor: "#38bdf8",
+          icon: "🕊️",
+          regionTag: "KONYA / TÜRKİYE"
+        }),
+        imageCaption: "Mevlânâ Müzesi Kubbe-i Hadrâ, tarihi dergâh ve Selçuklu mimari mirası."
+      },
+      {
+        id: "buhara",
+        city: "Buhara",
+        country: "Özbekistan",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇺🇿",
+        lat: 39.77,
+        lng: 64.42,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 980,
+        year: "892 – 1037",
+        title: "İpek Yolu'nun Kubbesi, İbn-i Sînâ ve İslam Rönesansı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "📜",
+        description:
+          "İpek Yolu vahasının kadim başkenti Buhara; Samanîler ve Karahanlılar devrinde Doğu'nun bilim ve felsefe kubbesiydi. Tıbbın babası İbn-i Sînâ'nın (Avicenna) 'El-Kânûn fî't-Tıbb' (Tıbbın Kanunu) ve 'Kitâbü'ş-Şifâ' eserlerini yazdığı kütüphanelere ev sahipliği yaptı. 45 metrelik Kalan Minaresi ve mavi çinili medreseleriyle Orta Asya İslam Rönesansı'nın zirvesini temsil eder.",
+        quote:
+          "\"Tıp ilmi zor bir ilim değildir; bilakis tecrübe, akıl ve gözlemle insanın acısını dindirme sanatıdır.\" — İbn-i Sînâ (Avicenna), El-Kânûn fî't-Tıbb",
+        figuresAndWorks: [
+          "İbn-i Sînâ / Avicenna (El-Kânûn fî't-Tıbb & Şifâ)",
+          "İmam Buhârî (Sahîh-i Buhârî Hadis Külliyatı)",
+          "Rûdekî (Fars Edebiyatı ve Şiirinin Babası)",
+          "Po-i Kalan Külliyesi & Mir-i Arab Medresesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BUHARA: İBN-İ SÎNÂ & İPEK YOLU",
+          subtitle: "Tıbbın Kanunu, Po-i Kalan ve İslam Rönesansı",
+          era: "892 – 1037",
+          primaryColor: "#0d9488",
+          secondaryColor: "#134e4a",
+          accentColor: "#2dd4bf",
+          icon: "📜",
+          regionTag: "BUHARA / ÖZBEKİSTAN"
+        }),
+        imageCaption: "Tarihi Buhara Kalan Minaresi, Mir-i Arab Medresesi çinileri ve İpek Yolu meydanı."
+      },
+      {
+        id: "buenosaires",
+        city: "Buenos Aires",
+        country: "Arjantin",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇦🇷",
+        lat: -34.60,
+        lng: -58.38,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1944,
+        year: "1899 – 1986",
+        title: "Güneyin Edebi Labirenti, Jorge Luis Borges ve Büyülü Dünya",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "📚",
+        description:
+          "Rio de la Plata kıyısındaki Buenos Aires; Jorge Luis Borges'in 'Ficciones' (Kurgular) ve 'El Aleph' gibi metafizik başyapıtlarına ev sahipliği yapan dünya edebiyatının en sofistike labirentidir. Sonsuz aynalar, zaman labirentleri ve kütüphaneler felsefesiyle modern edebiyatı kökten değiştiren şehir; Julio Cortázar'ın 'Seksek' romanı ve tango kültürüyle Latin Amerika'nın edebi başkentidir.",
+        quote:
+          "\"Ben cenneti her zaman bir kütüphane olarak hayal etmişimdir; her kitabın içinde evrenin gizli aynası saklıdır.\" — Jorge Luis Borges, Ficciones",
+        figuresAndWorks: [
+          "Jorge Luis Borges (Ficciones, El Aleph, Kum Kitabı)",
+          "Julio Cortázar (Seksek / Rayuela)",
+          "Ernesto Sabato (Tünel / El Túnel)",
+          "El Ateneo Grand Splendid & San Telmo"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BUENOS AIRES: BORGES & LABİRENT",
+          subtitle: "Ficciones, El Aleph ve Sonsuz Kütüphaneler",
+          era: "1899 – 1986",
+          primaryColor: "#4338ca",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#818cf8",
+          icon: "📚",
+          regionTag: "BUENOS AIRES / ARJANTİN"
+        }),
+        imageCaption: "Buenos Aires tarihi 9 de Julio Caddesi, Obelisco ve San Telmo edebiyat sokakları."
+      },
+      {
+        id: "havana",
+        city: "Havana",
+        country: "Küba",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇨🇺",
+        lat: 23.11,
+        lng: -82.36,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1952,
+        year: "1939 – 1960",
+        title: "Karayiplerin İncisi, Hemingway ve Karayip Baroğu",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "⛵",
+        description:
+          "Karayip Denizi kıyısındaki kolonyal Havana; Ernest Hemingway'in 20 yıl boyunca yaşadığı Finca Vigía çiftliğinde yazdığı ve hem Pulitzer hem Nobel Edebiyat Ödülü kazandığı 'İhtiyar Adam ve Deniz' (The Old Man and the Sea) romanının kalbidir. Şehir aynı zamanda Alejo Carpentier'in Büyülü Gerçekçilik akımının köklerini tarif ettiği 'Karayip Baroğu' ve José Martí'nin bağımsızlık şiirleriyle taçlanmıştır.",
+        quote:
+          "\"İnsan yenilmek için yaratılmamıştır; bir adam yok edilebilir ama asla mağlup edilemez.\" — Ernest Hemingway, İhtiyar Adam ve Deniz",
+        figuresAndWorks: [
+          "Ernest Hemingway (İhtiyar Adam ve Deniz, Çanlar Kimin İçin Çalıyor)",
+          "Alejo Carpentier (Bu Dünyanın Krallığı & Büyülü Gerçekçilik)",
+          "José Martí (Küba Bağımsızlık Şiirleri & Versos Sencillos)",
+          "Finca Vigía & El Floridita Edebi Buluşma Noktası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1500759285222-a95626b934cb?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "HAVANA: HEMINGWAY & KARAYİPLER",
+          subtitle: "İhtiyar Adam ve Deniz, Alejo Carpentier ve Finca Vigía",
+          era: "1939 – 1960",
+          primaryColor: "#ea580c",
+          secondaryColor: "#7c2d12",
+          accentColor: "#fb923c",
+          icon: "⛵",
+          regionTag: "HAVANA / KÜBA"
+        }),
+        imageCaption: "Havana Malecón sahil yolu, tarihi kolonyal binalar ve klasik Karayip sokakları."
+      },
+      {
+        id: "riodejaneiro",
+        city: "Rio de Janeiro",
+        country: "Brezilya",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇧🇷",
+        lat: -22.90,
+        lng: -43.17,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "yuzvil19",
+        numericYear: 1899,
+        year: "1808 – 1899",
+        title: "Guanabara Körfezi, Machado de Assis ve Brezilya Edebiyatı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🌊",
+        description:
+          "1808'de Portekiz Kraliyet ailesinin taşınmasıyla Lizbon yerine imparatorluk başkentine dönüşen Rio; Latin Amerika'nın en büyük romancılarından Machado de Assis'in 'Dom Casmurro' ve 'Braz Cubas'ın Ölüm Sonrası Anıları' gibi başyapıtlarına sahne oldu. Derin psikolojik realizmi, hicvi ve Kraliyet Portekiz Okuma Odası (Real Gabinete) ile Güney Yarımküre'nin kültürel feneridir.",
+        quote:
+          "\"Gerçek zafer insanın kendi kusurlarını dürüstçe itiraf edebildiği andır; gerisi sadece dünyanın gürültüsüdür.\" — Machado de Assis, Dom Casmurro",
+        figuresAndWorks: [
+          "Machado de Assis (Dom Casmurro, Braz Cubas)",
+          "Clarice Lispector (Yıldızın Saati & Yabani Kalbin Yakınında)",
+          "Real Gabinete Português de Leitura (Kraliyet Kütüphanesi)",
+          "Corcovado & Guanabara Körfezi Tarihi Mirası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "RİO: MACHADO DE ASSIS & REALİZM",
+          subtitle: "Dom Casmurro, Kraliyet Kütüphanesi ve Guanabara",
+          era: "1808 – 1899",
+          primaryColor: "#059669",
+          secondaryColor: "#064e3b",
+          accentColor: "#34d399",
+          icon: "🌊",
+          regionTag: "RIO DE JANEIRO / BREZİLYA"
+        }),
+        imageCaption: "Rio de Janeiro Guanabara Körfezi, Kesmeşeker Dağı ve tarihi Copacabana silüeti."
+      },
+      {
+        id: "fes",
+        city: "Fes (Karaviyyîn)",
+        country: "Fas",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇲🇦",
+        lat: 34.03,
+        lng: -5.00,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1354,
+        year: "859 – 1354",
+        title: "Dünyanın En Eski Üniversitesi Karaviyyîn ve İbn Battûta",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🕌",
+        description:
+          "Fatıma el-Fihri tarafından 859'da kurulan ve UNESCO tarafından dünyanın kesintisiz eğitim veren en eski üniversitesi kabul edilen Karaviyyîn Camii ve Kütüphanesi; Endülüs ve Mağrip ilim havzasının kalbiydi. Dünya tarihinin en büyük seyyahı İbn Battûta 117.000 kilometre süren dünya seyahatini burada kaleme almış, 'Rıhletü İbn Battûta' ile Asya, Afrika ve Avrupa coğrafyalarını kaydetmiştir.",
+        quote:
+          "\"Seyahat etmek önce seni sözsüz bırakır, sonra da seni bir hikâye anlatıcısına dönüştürür.\" — İbn Battûta, Rıhle (Seyahatname)",
+        figuresAndWorks: [
+          "İbn Battûta (Tuhfetü'n-Nuzzâr / Rıhle Seyahatnamesi)",
+          "Fâtıma el-Fihrî (El-Karaviyyîn Üniversitesi Kurucusu, 859)",
+          "İbn Haldun & İbn Rüşd (Fes Bilim Havzası Müderrisleri)",
+          "Bou Inania Medresesi & Fes el-Bali Medinası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "FES: KARAVİYYÎN & İBN BATTÛTA",
+          subtitle: "Dünyanın En Eski Üniversitesi ve Büyük Rıhle",
+          era: "859 – 1354",
+          primaryColor: "#d97706",
+          secondaryColor: "#451a03",
+          accentColor: "#fbbf24",
+          icon: "🕌",
+          regionTag: "FES / FAS"
+        }),
+        imageCaption: "Tarihi Fes el-Bali Medinası, Bou Inania Medresesi Endülüs oyma taşları ve çarşıları."
+      },
+      {
+        id: "zanzibar",
+        city: "Zanzibar (Stone Town)",
+        country: "Tanzanya",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇹🇿",
+        lat: -6.16,
+        lng: 39.20,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 2021,
+        year: "1832 – 2021",
+        title: "Hint Okyanusu Baharat Yolu, Swahili Edebiyatı ve Abdulrazak Gurnah",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🏝️",
+        description:
+          "Hint Okyanusu'nun turkuaz sularındaki mercan adası Zanzibar; Afrika, Umman ve Hint medeniyetlerinin kaynaştığı Swahili kültürünün başkentidir. 2021 Nobel Edebiyat Ödülü'nü kazanan Abdulrazak Gurnah; 'Cennet' (Paradise) ve 'Kumdan Yürek' romanlarında sömürgeciliğin kültürel izlerini ve mültecilik trajedisini bu kadim liman üzerinden insanlığa aktarmıştır.",
+        quote:
+          "\"Sessizlik bazen söylenebilecek en gürültülü sözdür; ayrılık ise insanın hafızasında taşıdığı en ağır vatandır.\" — Abdulrazak Gurnah (Nobel Edebiyat Ödülü, 2021)",
+        figuresAndWorks: [
+          "Abdulrazak Gurnah (Cennet, Deniz Kenarında, Terkediş)",
+          "Seyyid Said (Umman ve Zanzibar Sultanlığı Başkenti)",
+          "Swahili Şiir ve Destan Geleneği (Utendi)",
+          "Taş Şehir (Stone Town) Oymalı Ahşap Kapıları"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ZANZİBAR: GURNAH & SWAHİLİ",
+          subtitle: "Cennet Romanı, Stone Town ve Hint Okyanusu Kültürü",
+          era: "1832 – 2021",
+          primaryColor: "#0284c7",
+          secondaryColor: "#0c4a6e",
+          accentColor: "#38bdf8",
+          icon: "🏝️",
+          regionTag: "ZANZİBAR / TANZANYA"
+        }),
+        imageCaption: "Zanzibar Taş Şehir (Stone Town) tarihi sahil kalesi, geleneksel dhow yelkenlileri."
+      },
+      {
+        id: "karakurum",
+        city: "Karakurum",
+        country: "Moğolistan",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇲🇳",
+        lat: 47.19,
+        lng: 102.82,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1220,
+        year: "1206 – 1240",
+        title: "Bozkırın Kalbi, Cengiz Han ve Moğolların Gizli Tarihi",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🐎",
+        description:
+          "Orhun Vadisi'nin kutsal bozkırında Ögeday Han tarafından kurulan Karakurum; Pasifik'ten Orta Avrupa'ya kadar uzanan Moğol İmparatorluğu'nun başkentiydi. 'Pax Mongolica' sayesinde Doğu ile Batı arasında İpek Yolu tüccarları, elçiler ve din adamları güvenle seyahat etti. 1240 tarihli 'Moğolların Gizli Tarihi' destanı, bozkır medeniyetinin ve Cengiz Han'ın hayatının en eski edebi belgesidir.",
+        quote:
+          "\"Gökyüzünde tek bir güneş, yeryüzünde tek bir han; birleşen oklar kırılmaz, dağılan sürüler ise kurda yem olur.\" — Moğolların Gizli Tarihi (1240)",
+        figuresAndWorks: [
+          "Cengiz Han (Büyük Yasa & Bozkır Birliği)",
+          "Ögeday Han (Karakurum Başkentinin İnşası)",
+          "Moğolların Gizli Tarihi Destanı (1240 Edebi Şaheseri)",
+          "Erdene Zuu Budist Manastırı & Efsanevi Gümüş Ağaç"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "KARAKURUM: CENGİZ HAN & BOZKIR",
+          subtitle: "Moğolların Gizli Tarihi, Pax Mongolica ve Orhun Vadisi",
+          era: "1206 – 1240",
+          primaryColor: "#b45309",
+          secondaryColor: "#451a03",
+          accentColor: "#f59e0b",
+          icon: "🐎",
+          regionTag: "KARAKURUM / MOĞOLİSTAN"
+        }),
+        imageCaption: "Orhun Vadisi sonsuz Moğol bozkırları, göçebe yurt çadırları ve tarihi Erdene Zuu."
       }
     ]);
 
@@ -2744,7 +3080,15 @@
       newyork: { era: "modern", numericYear: 1925 },
       bogota: { era: "modern", numericYear: 1967 },
       kahire: { era: "ortacag", numericYear: 970 },
-      timbuktu: { era: "ortacag", numericYear: 1327 }
+      timbuktu: { era: "ortacag", numericYear: 1327 },
+      konya: { era: "ortacag", numericYear: 1273 },
+      buhara: { era: "ortacag", numericYear: 980 },
+      buenosaires: { era: "modern", numericYear: 1944 },
+      havana: { era: "modern", numericYear: 1952 },
+      riodejaneiro: { era: "yuzvil19", numericYear: 1899 },
+      fes: { era: "ortacag", numericYear: 1354 },
+      zanzibar: { era: "modern", numericYear: 2021 },
+      karakurum: { era: "ortacag", numericYear: 1220 }
     };
 
     // Tüm konumlara era ve numericYear özelliklerini tanımla
@@ -2778,7 +3122,14 @@
       { from: "kyoto",    to: "istanbul",     label: "Doğu Klasik Edebiyat Geleneği: Genji'nin Hikâyesi ➔ Divan Şiiri" },
       { from: "dublin",   to: "newyork",      label: "Transatlantik Modernizm ➔ New York (Poe & Harlem Rönesansı)" },
       { from: "sanfrancisco", to: "newyork",  label: "Trans-Amerika Edebiyat Hattı: Beat Kuşağı ➔ Harlem & New York" },
-      { from: "newyork",  to: "bogota",       label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)" }
+      { from: "newyork",  to: "bogota",       label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)" },
+      { from: "konya", to: "istanbul",        label: "Mevlevî Tasavvuf Edebiyatı (Mevlânâ) ➔ Galata Mevlevihanesi & Divan Şiiri (İstanbul)" },
+      { from: "konya", to: "sivas",           label: "Anadolu İrfanı ve Tasavvuf: Mevlânâ ➔ Âşık Veysel & Halk Edebiyatı" },
+      { from: "newyork", to: "havana",        label: "Amerikan Edebiyatı ➔ Havana (Ernest Hemingway - İhtiyar Adam ve Deniz)" },
+      { from: "havana", to: "bogota",         label: "Karayip Edebiyat Havzası: Hemingway ➔ Gabriel García Márquez" },
+      { from: "bogota", to: "buenosaires",    label: "Latin Amerika Edebi Patlaması (Boom): Büyülü Gerçekçilik ➔ Jorge Luis Borges" },
+      { from: "buenosaires", to: "riodejaneiro", label: "Güney Amerika Edebi Diyaloğu: Jorge Luis Borges ➔ Machado de Assis" },
+      { from: "zanzibar", to: "londra",       label: "Post-Kolonyal Afrika Edebiyatı: Abdulrazak Gurnah (Swahili) ➔ Londra" }
     ]);
 
     const ARC_COLORS = [
