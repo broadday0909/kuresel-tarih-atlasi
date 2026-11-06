@@ -11,25 +11,23 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 - **Destek / Katkı:** Sami Yusuf Maral
 - **Özel Alan Adı:** [https://bayramakpamukcu.site](https://bayramakpamukcu.site) & [https://www.bayramakpamukcu.site](https://www.bayramakpamukcu.site)
 - **GitHub Deposu:** [https://github.com/broadday0909/kuresel-tarih-atlasi.git](https://github.com/broadday0909/kuresel-tarih-atlasi.git)
-- **Sınırsız Hosting (GitHub Pages):** [https://broadday0909.github.io/kuresel-tarih-atlasi/](https://broadday0909.github.io/kuresel-tarih-atlasi/)
-- **Yedek/Eski Netlify Site ID:** `b9f993be-ae64-4e78-9245-c060dfe5f183` (Kredi sınırına takıldığı için GitHub Pages birincil yayındır)
+- **Birincil & Sınırsız Hosting:** **GitHub Pages** ([https://broadday0909.github.io/kuresel-tarih-atlasi/](https://broadday0909.github.io/kuresel-tarih-atlasi/))
+- **Özel Alan Adı Entegrasyonu:** `bayramakpamukcu.site` ve `www.bayramakpamukcu.site` doğrudan GitHub Pages IP'lerine (`185.199.108.153` vb.) ve `broadday0909.github.io` CNAME'ine bağlıdır.
+- **İPTAL EDİLEN ESKİ PLATFORM (Netlify):** Netlify aylık 300 kredi sınırını aşıp 403 Forbidden hatası verdiği için sistem **tamamen terk edilmiş ve devre dışı bırakılmıştır**. Artık Netlify kullanılmaz, kredi/ücret derdi yoktur.
 
 ---
 
-## 🚀 OTOMATİK İŞ AKIŞI (HER PROMPTTA UYGULANACAK)
-Kullanıcı herhangi bir değişiklik, yeni şehir, edebi durak veya stil güncellemesi istediğinde:
-1. `index.html` dosyası güncellenir.
+## 🚀 OTOMATİK İŞ AKIŞI (HER DEĞİŞİKLİKTE UYGULANACAK)
+Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya stil güncellemesi istediğinde:
+1. `index.html` dosyası güncellenir ve JS sözdizimi doğrulanır.
 2. Yerel Git'e eklenip GitHub `main` dalına push edilir:
    ```powershell
    git add -A
    git commit -m "Aciklayici commit mesaji"
    git push origin main
    ```
-3. Netlify'a tek komutla otomatik üretim dağıtımı (production deploy) yapılır:
-   ```powershell
-   npx.cmd netlify deploy --prod --dir .
-   ```
-4. Kullanıcıya canlı linki (`https://bayramakpamukcu.site`) ile birlikte bilgi verilir.
+3. GitHub Pages otomatik olarak 20-30 saniye içinde derleyip yayına alır (ek bir deploy komutuna veya üçüncü parti servislere gerek yoktur; 100% ücretsiz ve kesintisizdir).
+4. GitHub Pages build durumu kontrol edilir ve kullanıcıya bilgi verilir (`https://bayramakpamukcu.site`).
 
 ---
 
