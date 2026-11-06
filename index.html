@@ -424,21 +424,6 @@
       background: radial-gradient(circle at center, transparent 62%, rgba(2, 6, 23, 0.68) 100%);
       pointer-events: none;
     }
-
-    /* Sesli Rehber Ekolayzır (Equalizer) Çubukları */
-    @keyframes ttsEqBounce {
-      0%, 100% { height: 4px; opacity: 0.6; }
-      50% { height: 15px; opacity: 1; }
-    }
-    .tts-eq-bar {
-      width: 3px;
-      border-radius: 999px;
-      background: currentColor;
-      animation: ttsEqBounce 0.75s ease-in-out infinite;
-    }
-    .tts-eq-bar:nth-child(2) { animation-delay: 0.18s; }
-    .tts-eq-bar:nth-child(3) { animation-delay: 0.36s; }
-    .tts-eq-bar:nth-child(4) { animation-delay: 0.12s; }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden select-none">
@@ -942,27 +927,6 @@
         </div>
       </div>
 
-      <!-- Sesli Dinle (Sade, Hızlı ve Akıcı Sesli Rehber) -->
-      <div class="flex items-center justify-between gap-3 p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-sky-950/60 via-slate-900/80 to-amber-950/40 border border-sky-500/30 shadow-lg">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
-            <i data-lucide="headphones" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div id="ttsGuideTitle" class="text-xs sm:text-sm font-bold text-white tracking-wide">Sesli Rehber</div>
-          </div>
-        </div>
-
-        <button
-          id="speakBtn"
-          type="button"
-          class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/25 transition shrink-0 cursor-pointer"
-        >
-          <i data-lucide="volume-2" class="w-4 h-4"></i>
-          <span id="speakBtnText">Sesli Dinle</span>
-        </button>
-      </div>
-
       <!-- Detaylı Akademik Açıklama -->
       <div class="space-y-2.5">
         <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
@@ -1050,16 +1014,6 @@
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <!-- Modal İçi Sesli Dinle Butonu -->
-          <button
-            id="figureModalSpeakBtn"
-            type="button"
-            class="px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 transition cursor-pointer"
-          >
-            <i data-lucide="volume-2" class="w-4 h-4"></i>
-            <span id="figureModalSpeakText">Sesli Dinle</span>
-          </button>
-
           <!-- Kapat Butonu -->
           <button
             id="closeFigureModalBtn"
@@ -4797,10 +4751,6 @@
         tipZoomOut: "Uzaklaş (Zoom Out)",
         closeDrawerTip: "Detay Panelini Kapat",
         drawerSceneHeader: "Yapay Zeka (AI) Tarihsel & Edebi Sahne Görseli",
-        ttsGuideTitle: "Sesli Rehber",
-        ttsListenBtn: "Sesli Dinle",
-        ttsStopBtn: "Durdur",
-        ttsNotSupported: "Tarayıcınız sesli okuma özelliğini desteklemiyor.",
         drawerAnalysisHeading: "Akademik Tarihsel & Edebi Analiz",
         drawerQuoteHeading: "Tarihi Söz & Edebi Alıntı",
         drawerFiguresHeading: "Önemli Şahsiyetler & Eserler",
@@ -4875,10 +4825,6 @@
         tipZoomOut: "Zoom Out",
         closeDrawerTip: "Close Detail Panel",
         drawerSceneHeader: "AI Historical & Literary Scene Illustration",
-        ttsGuideTitle: "Audio Guide",
-        ttsListenBtn: "Listen",
-        ttsStopBtn: "Stop",
-        ttsNotSupported: "Your browser does not support audio speech synthesis.",
         drawerAnalysisHeading: "Academic Historical & Literary Analysis",
         drawerQuoteHeading: "Historical Quote & Literary Excerpt",
         drawerFiguresHeading: "Key Figures & Works",
@@ -5465,234 +5411,8 @@
       });
     }
 
-    // ============================================================================
-    // 7. AKICI, ANINDA BAŞLAYAN VE BELGESEL TADINDA SESLİ REHBER MOTORU
-    // ============================================================================
-    let activeSpeechSessionId = 0;
-    let cachedBrowserVoices = [];
-
-    if ('speechSynthesis' in window) {
-      const loadVoices = () => {
-        try {
-          cachedBrowserVoices = window.speechSynthesis.getVoices() || [];
-        } catch (e) {}
-      };
-      loadVoices();
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
-
-    // Metni robotik telaffuzlardan kurtarıp doğal belgesel Türkçe/İngilizce akışına dönüştürür
-    function normalizeTextForFluidSpeech(rawText, lang) {
-      if (!rawText) return '';
-      let text = String(rawText);
-
-      if (lang === 'tr') {
-        // Çift dilli alıntılarda ("English..." — "Türkçe...") yalnızca Türkçe kısmı oku
-        if (text.includes(' — "')) {
-          const parts = text.split(' — ');
-          if (parts.length >= 2) {
-            text = parts.slice(1).join(' — ');
-          }
-        }
-        text = text
-          .replace(/M\.?Ö\.?\s*/gi, 'Milattan Önce ')
-          .replace(/M\.?S\.?\s*/gi, 'Milattan Sonra ')
-          .replace(/\bYy\.\b/gi, 'yüzyıl')
-          .replace(/\byy\.\b/g, 'yüzyıl')
-          .replace(/\bXXI\.\s*/g, 'yirmi birinci ')
-          .replace(/\bXX\.\s*/g, 'yirminci ')
-          .replace(/\bXIX\.\s*/g, 'on dokuzuncu ')
-          .replace(/\bXVIII\.\s*/g, 'on sekizinci ')
-          .replace(/\bXVII\.\s*/g, 'on yedinci ')
-          .replace(/\bXVI\.\s*/g, 'on altıncı ')
-          .replace(/\bXV\.\s*/g, 'on beşinci ')
-          .replace(/\bXIV\.\s*/g, 'on dördüncü ')
-          .replace(/\bXIII\.\s*/g, 'on üçüncü ')
-          .replace(/\bXII\.\s*/g, 'on ikinci ')
-          .replace(/\bXI\.\s*/g, 'on birinci ')
-          .replace(/\bX\.\s*/g, 'onuncu ')
-          .replace(/\bIX\.\s*/g, 'dokuzuncu ')
-          .replace(/(\d{3,4})\s*[–—-]\s*(\d{3,4})/g, '$1 ile $2 yılları arasındaki dönemde')
-          .replace(/\s*\/\s*/g, ', ')
-          .replace(/\s*&\s*/g, ' ve ')
-          .replace(/["“”«»]/g, '');
-      } else {
-        if (text.includes('" — "')) {
-          const parts = text.split(' — ');
-          if (parts.length >= 2) {
-            text = parts[0] + (parts[1].includes('—') ? ' — ' + parts[1].split('—').pop() : '');
-          }
-        }
-        text = text
-          .replace(/(\d{3,4})\s*[–—-]\s*(\d{3,4})/g, 'between $1 and $2')
-          .replace(/\s*\/\s*/g, ', ')
-          .replace(/\s*&\s*/g, ' and ')
-          .replace(/["“”«»]/g, '');
-      }
-
-      return text.replace(/\s+/g, ' ').trim();
-    }
-
-    // Tarayıcıdaki en pürüzsüz ve doğal ses profilini seçer (Chrome Google, Edge Natural/Online, Apple Siri/Yelda)
-    function getBestVoice(lang) {
-      const voices = cachedBrowserVoices.length ? cachedBrowserVoices : (('speechSynthesis' in window) ? window.speechSynthesis.getVoices() || [] : []);
-      const langPrefix = lang === 'en' ? 'en' : 'tr';
-      const matchingVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langPrefix));
-      if (!matchingVoices.length) return null;
-
-      return matchingVoices.sort((a, b) => {
-        const score = v => {
-          const n = (v.name || '').toLowerCase();
-          let s = 0;
-          if (n.includes('natural') || n.includes('neural') || n.includes('online')) s += 100;
-          if (n.includes('google')) s += 80;
-          if (n.includes('premium') || n.includes('enhanced')) s += 60;
-          if (n.includes('ahmet') || n.includes('emel') || n.includes('yelda') || n.includes('tolga') || n.includes('cem')) s += 40;
-          if (n.includes('ryan') || n.includes('sonia') || n.includes('guy') || n.includes('samantha')) s += 40;
-          return s;
-        };
-        return score(b) - score(a);
-      })[0];
-    }
-
-    function updateTtsButtonsUI(isPlaying, targetBtnId) {
-      const t = TRANSLATIONS[currentLang];
-      const buttons = [
-        { btnId: 'speakBtn', textId: 'speakBtnText' },
-        { btnId: 'figureModalSpeakBtn', textId: 'figureModalSpeakText' }
-      ];
-
-      buttons.forEach(({ btnId, textId }) => {
-        const btn = document.getElementById(btnId);
-        if (!btn) return;
-
-        if (isPlaying && btnId === targetBtnId) {
-          btn.innerHTML = `
-            <span class="inline-flex items-end gap-0.5 h-4 px-0.5 text-amber-300">
-              <span class="tts-eq-bar"></span>
-              <span class="tts-eq-bar"></span>
-              <span class="tts-eq-bar"></span>
-              <span class="tts-eq-bar"></span>
-            </span>
-            <span id="${textId}">${t.ttsStopBtn}</span>
-          `;
-        } else {
-          btn.innerHTML = `
-            <i data-lucide="volume-2" class="w-4 h-4"></i>
-            <span id="${textId}">${t.ttsListenBtn}</span>
-          `;
-        }
-      });
-      lucide.createIcons();
-    }
-
-    function startInstantNarration(rawText, targetBtnId) {
-      if (!('speechSynthesis' in window)) {
-        alert(TRANSLATIONS[currentLang].ttsNotSupported);
-        return;
-      }
-
-      if (isSpeaking) {
-        stopSpeech();
-        return;
-      }
-
-      stopSpeech();
-      const sessionId = ++activeSpeechSessionId;
-      isSpeaking = true;
-      updateTtsButtonsUI(true, targetBtnId);
-
-      const cleanText = normalizeTextForFluidSpeech(rawText, currentLang);
-      const voice = getBestVoice(currentLang);
-
-      // Cümleleri doğal nefes duraklarına bölerek okut (akıcı radyo/belgesel ritmi)
-      const segments = cleanText
-        .split(/(?<=[.!?…;:])\s+/)
-        .map(s => s.trim())
-        .filter(Boolean);
-
-      if (!segments.length) {
-        stopSpeech();
-        return;
-      }
-
-      let curIdx = 0;
-      function speakSegment() {
-        if (sessionId !== activeSpeechSessionId || !isSpeaking || curIdx >= segments.length) {
-          if (sessionId === activeSpeechSessionId) stopSpeech();
-          return;
-        }
-
-        const utterance = new SpeechSynthesisUtterance(segments[curIdx]);
-        utterance.lang = currentLang === 'en' ? 'en-GB' : 'tr-TR';
-        if (voice) utterance.voice = voice;
-        utterance.rate = 0.95; // Sakin, asil ve anlaşılır belgesel hızı
-        utterance.pitch = 0.99;
-
-        utterance.onend = () => {
-          curIdx++;
-          if (curIdx < segments.length && sessionId === activeSpeechSessionId && isSpeaking) {
-            // Cümleler arası insani doğal nefes payı (140ms)
-            setTimeout(speakSegment, 140);
-          } else if (sessionId === activeSpeechSessionId) {
-            stopSpeech();
-          }
-        };
-
-        utterance.onerror = () => {
-          if (sessionId === activeSpeechSessionId) stopSpeech();
-        };
-
-        window.speechSynthesis.speak(utterance);
-      }
-
-      speakSegment();
-    }
-
-    function toggleSpeech() {
-      if (isSpeaking) {
-        stopSpeech();
-        return;
-      }
-      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
-      if (!item) return;
-
-      const isEn = currentLang === 'en';
-      const city = (isEn && item.city_en) ? item.city_en : item.city;
-      const country = (isEn && item.country_en) ? item.country_en : item.country;
-      const title = (isEn && item.title_en) ? item.title_en : item.title;
-      const year = (isEn && item.year_en) ? item.year_en : item.year;
-      const desc = (isEn && item.description_en) ? item.description_en : item.description;
-      const quote = (isEn && item.quote_en) ? item.quote_en : item.quote;
-
-      // Belgesel tadında, akıcı ve güzel anlatım metni
-      let storytellingScript = '';
-      if (isEn) {
-        let cleanQuote = quote;
-        if (quote.includes(' — "')) cleanQuote = quote.split(' — ')[0];
-        cleanQuote = cleanQuote.replace(/^["']|["']$/g, '');
-        storytellingScript = `You are exploring ${city}, ${country}. In the era of ${year}, witnessing ${title}. ${desc}. A profound quote from this era: ${cleanQuote}.`;
-      } else {
-        let cleanQuote = quote;
-        if (quote.includes(' — "')) {
-          const parts = quote.split(' — ');
-          cleanQuote = parts.slice(1).join(' — ');
-        }
-        cleanQuote = cleanQuote.replace(/^["']|["']$/g, '');
-        storytellingScript = `${city}, ${country} durağındayız. ${year} döneminde, ${title} mirasını keşfediyoruz. ${desc}. Dönemin ruhunu ve hafızasını yansıtan tarihi söz: ${cleanQuote}.`;
-      }
-
-      startInstantNarration(storytellingScript, 'speakBtn');
-    }
-
-    function stopSpeech() {
-      activeSpeechSessionId++;
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      isSpeaking = false;
-      updateTtsButtonsUI(false, null);
-    }
+    // Sesli anlatıcı tamamen kaldırıldı
+    function stopSpeech() {}
 
     // ============================================================================
     // 7A. ŞAHSİYET & ESER DETAYLI ANSİKLOPEDİK OKUMA PENCERESİ (MODAL ENGINE)
@@ -6023,15 +5743,6 @@
       activeFigureModalState = null;
     }
 
-    function toggleFigureModalSpeech() {
-      if (isSpeaking) {
-        stopSpeech();
-        return;
-      }
-      if (!activeFigureModalState || !activeFigureModalState.currentSpeechText) return;
-      startInstantNarration(activeFigureModalState.currentSpeechText, 'figureModalSpeakBtn');
-    }
-
     // ============================================================================
     // 7B. DİNAMİK DİL DEĞİŞTİRİCİ (TR | EN) FONKSİYONU
     // ============================================================================
@@ -6119,7 +5830,6 @@
 
       // Drawer statik başlıklarını güncelle
       setElText('drawerSceneHeaderLabel', t.drawerSceneHeader);
-      setElText('ttsGuideTitle', t.ttsGuideTitle);
       setElText('drawerAnalysisHeading', t.drawerAnalysisHeading);
       setElText('drawerQuoteHeading', t.drawerQuoteHeading);
       setElText('drawerFiguresHeading', t.drawerFiguresHeading);
@@ -6307,17 +6017,14 @@
         searchInput.focus();
       });
 
-      // Drawer Kapatma & Sesli Rehber Dinleme
+      // Drawer Kapatma
       document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
-      document.getElementById('speakBtn').addEventListener('click', toggleSpeech);
 
       // Şahsiyet & Eser Detaylı Okuma Penceresi (Modal) Etkileşimleri
       const closeFigureModalBtn = document.getElementById('closeFigureModalBtn');
-      const figureModalSpeakBtn = document.getElementById('figureModalSpeakBtn');
       const figureModalOverlay = document.getElementById('figureModalOverlay');
 
       if (closeFigureModalBtn) closeFigureModalBtn.addEventListener('click', closeFigureModal);
-      if (figureModalSpeakBtn) figureModalSpeakBtn.addEventListener('click', toggleFigureModalSpeech);
       if (figureModalOverlay) {
         figureModalOverlay.addEventListener('click', e => {
           if (e.target === figureModalOverlay) closeFigureModal();
