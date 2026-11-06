@@ -282,25 +282,25 @@
 
     .pin-head {
       position: relative;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 8px;
       color: #fff;
-      box-shadow: 0 0 10px var(--pin-glow), inset 0 1px 2px rgba(255, 255, 255, 0.45);
-      border: 1.5px solid rgba(255, 255, 255, 0.94);
+      box-shadow: 0 0 8px var(--pin-glow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.95);
       background: var(--pin-bg);
       z-index: 2;
     }
 
     .pin-pulse {
       position: absolute;
-      inset: -3.5px;
+      inset: -2.5px;
       border-radius: 50%;
-      border: 1.5px solid var(--pin-color);
+      border: 1px solid var(--pin-color);
       opacity: 0.85;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
       pointer-events: none;
@@ -308,7 +308,7 @@
 
     .pin-pulse-delayed {
       position: absolute;
-      inset: -3.5px;
+      inset: -2.5px;
       border-radius: 50%;
       border: 1px solid var(--pin-second-color, var(--pin-color));
       opacity: 0.65;
@@ -317,24 +317,24 @@
     }
 
     .pin-stem {
-      width: 1.5px;
-      height: 6px;
+      width: 1px;
+      height: 4px;
       background: linear-gradient(to bottom, #ffffff, var(--pin-color), transparent);
       margin-top: -1px;
     }
 
     .pin-label {
       margin-top: 1px;
-      padding: 1px 5px;
+      padding: 1px 4.5px;
       border-radius: 999px;
-      font-size: 8.5px;
+      font-size: 7.5px;
       font-weight: 700;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.015em;
       white-space: nowrap;
       color: #f8fafc;
-      background: rgba(8, 12, 24, 0.92);
+      background: rgba(8, 12, 24, 0.94);
       border: 1px solid var(--pin-color);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
@@ -515,7 +515,7 @@
             <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
               TÜBİTAK Projesi
             </span>
-            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 34 Küresel Durak</span>
+            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 42 Küresel Durak</span>
           </div>
           <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
             Küresel Tarih ve Edebiyat Atlası
@@ -2379,6 +2379,344 @@
           regionTag: "VİYANA / AVUSTURYA"
         }),
         imageCaption: "Viyana Hofburg Sarayı, tarihi kafeler ve imperial Ringstraße bulvarı."
+      },
+
+      // ==================== YENİ KÜRESEL BOŞLUKLARI DOLDURAN STRATEJİK DURAKLAR (8 DURAK) ====================
+      {
+        id: "kudus",
+        city: "Kudüs (Jerusalem)",
+        country: "Filistin / Orta Doğu",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🕊️",
+        lat: 31.76,
+        lng: 35.21,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "antik",
+        numericYear: -1000,
+        year: "M.Ö. 10. Yy – 1187",
+        title: "Üç Kutsal Dinin Kesişim Noktası ve Selahaddin Eyyubi",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🕊️",
+        description:
+          "Zeytin Dağı ve bin yıllık taş surlarıyla Kudüs; Mescid-i Aksa, Kubbetü's-Sahra, Ağlama Duvarı ve Kutsal Kabir ile insanlık maneviyatının en kadim başkentidir. Kral Davud'un Mezmurları ve Hz. Süleyman'ın hikmet dolu mesellerinin yazıldığı şehir; Selahaddin Eyyubi'nin 1187 fethi ve adil barışıyla Doğu ve Batı tarihinde evrensel bir vicdan ve barış anıtına dönüşmüştür.",
+        quote:
+          "\"Kudüs sadece bir şehir değil; gökyüzünün yeryüzündeki yankısı ve insanlığın ortak hafızasıdır.\" — Selahaddin Eyyubi Kronikleri",
+        figuresAndWorks: [
+          "Selahaddin Eyyubi (1187 Barış ve Kudüs Fethi)",
+          "Kral Davud & Kral Süleyman Mezmurları",
+          "Mescid-i Aksa & Kubbetü's-Sahra",
+          "Nizar Kabbani (Kudüs Ağıtları)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1544971587-b842c56b921b?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "KUDÜS: EBEDİ ŞEHİR",
+          subtitle: "Selahaddin Eyyubi, Kubbetü's-Sahra ve Kadim Metinler",
+          era: "M.Ö. 10. YY – 1187",
+          primaryColor: "#ca8a04",
+          secondaryColor: "#0f172a",
+          accentColor: "#facc15",
+          icon: "🕊️",
+          regionTag: "KUDÜS / ORTA DOĞU"
+        }),
+        imageCaption: "Tarihi Kudüs surları, Kubbetü's-Sahra'nın altın kubbesi ve Mescid-i Aksa."
+      },
+      {
+        id: "siraz",
+        city: "Şiraz",
+        country: "İran",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇮🇷",
+        lat: 29.59,
+        lng: 52.58,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1258,
+        year: "1258 – 1390",
+        title: "Fars Şiirinin Zirvesi: Hâfız-ı Şirâzî ve Sâdi-i Şîrâzî",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🌹",
+        description:
+          "Gülleri, bülbülleri ve selvi ağaçlarıyla Fars kültürünün şiir başkenti Şiraz; dünya lirik edebiyatının iki devi Hâfız-ı Şirâzî ve Sâdi-i Şîrâzî'nin ebedi yurdudur. Sâdi'nin hikmet dolu 'Gülistan' ve 'Bostan'ı insanlık ahlakını temellendirirken; Hâfız'ın tasavvufi 'Divan'ı Goethe'nin Doğu-Batı Divanı'na ilham vererek Doğu hümanizmini dünyaya taşımıştır.",
+        quote:
+          "\"Âdemoğulları bir vücudun uzuvları gibidir; çünkü aynı cevherden yaratılmışlardır. Dünyanın bir köşesinde bir can incinse, öbür uzuvlar da acı duyar.\" — Sâdi-i Şîrâzî, Gülistan",
+        figuresAndWorks: [
+          "Hâfız-ı Şirâzî (Divan-ı Hâfız)",
+          "Sâdi-i Şîrâzî (Gülistan & Bostan)",
+          "İrem Bağları (Bagh-e Eram)",
+          "Kerim Han Zend Tarihi Mirası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1580193769210-b8d1c049a7d9?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ŞİRAZ: GÜL VE ŞİİR ŞEHRİ",
+          subtitle: "Hâfız, Sâdi-i Şîrâzî ve Fars Divan Edebiyatı",
+          era: "13. – 14. YÜZYIL",
+          primaryColor: "#be185d",
+          secondaryColor: "#0f172a",
+          accentColor: "#f472b6",
+          icon: "🌹",
+          regionTag: "ŞİRAZ / İRAN"
+        }),
+        imageCaption: "Şiraz Nasır el-Mülk Camii'nin renkli vitray ışıkları ve Hâfız Türbesi bahçeleri."
+      },
+      {
+        id: "varanasi",
+        city: "Varanasi (Ganj)",
+        country: "Hindistan",
+        region: "asya",
+        regionLabel: "Asya & Orta Doğu",
+        flag: "🇮🇳",
+        lat: 25.31,
+        lng: 82.97,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "antik",
+        numericYear: -500,
+        year: "M.Ö. 500 – 1913",
+        title: "Kutsal Ganj, Mahabharata Destanı ve Tagore",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🪷",
+        description:
+          "Sürekli yerleşilen en eski şehirlerden Varanasi; Ganj Nehri kıyısındaki basamakları (Ghats) ve Sanskrit felsefesiyle Doğu'nun manevi beşiğidir. 100.000 beyitlik Mahabharata ve Ramayana destanlarının doğduğu bu kültür havzası; 1913'te Nobel Edebiyat Ödülü'nü Asya'ya ilk kez kazandıran Rabindranath Tagore'un 'Gitanjali' ilahileriyle evrensel barış felsefesine dönüşmüştür.",
+        quote:
+          "\"Aklın korkusuz olduğu, başın dik tutulduğu, bilginin herkese açık olduğu o özgürlük cennetine uyandır milletimi Tanrım!\" — Rabindranath Tagore, Gitanjali (Nobel 1913)",
+        figuresAndWorks: [
+          "Rabindranath Tagore (Nobel Edebiyat Ödülü - Gitanjali)",
+          "Mahabharata Destanı & Bhagavad Gita",
+          "Ramayana Destanı (Valmiki)",
+          "Kabir & Tulsidas Şiirleri"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "VARANASİ: GANJ VE DESTANLAR",
+          subtitle: "Mahabharata, Sanskrit Geleneği ve Rabindranath Tagore",
+          era: "M.Ö. 500 – 1913",
+          primaryColor: "#ea580c",
+          secondaryColor: "#0f172a",
+          accentColor: "#fb923c",
+          icon: "🪷",
+          regionTag: "VARANASİ / HİNDİSTAN"
+        }),
+        imageCaption: "Ganj Nehri kıyısındaki tarihi Varanasi basamakları ve şafak vakti tapınakları."
+      },
+      {
+        id: "meksiko",
+        city: "Meksiko (Tenochtitlan)",
+        country: "Meksika",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇲🇽",
+        lat: 19.43,
+        lng: -99.13,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ronesans",
+        numericYear: 1325,
+        year: "1325 – 1990",
+        title: "Aztek Tenochtitlan Medeniyeti ve Octavio Paz",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "☀️",
+        description:
+          "Texcoco Gölü üzerinde 1325'te kurulan Tenochtitlan; Güneş Piramitleri ve yüzen bahçeleriyle (chinampas) Amerika kıtasının en gelişmiş uygarlığıydı. İspanyol fethinden sonra yerli ve Avrupa kültürünün kaynaştığı dev şehre dönüşen Meksiko; Nobel Edebiyat Ödüllü Octavio Paz'ın 'Yalnızlık Dolambacı' ve kadın bilgin Sor Juana'nın dizeleriyle Latin Amerika düşüncesinin başkenti olmuştur.",
+        quote:
+          "\"Yalnızlık insanın kendi köklerini arayışıdır; şiir ise karanlığın içinden fışkıran umudun ilk ışığıdır.\" — Octavio Paz (Nobel Edebiyat Ödülü, 1990)",
+        figuresAndWorks: [
+          "Aztek Hükümdarı Montezuma & Cuauhtémoc",
+          "Octavio Paz (Yalnızlık Dolambacı & Güneş Taşı)",
+          "Sor Juana Inés de la Cruz (Barok Edebiyat)",
+          "Templo Mayor & Aztek Güneş Takvimi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "AZTEK TENOCHTITLAN & MEKSİKO",
+          subtitle: "Güneş Piramitleri, Nahuatl Şiiri ve Octavio Paz",
+          era: "1325 – 1990",
+          primaryColor: "#dc2626",
+          secondaryColor: "#0f172a",
+          accentColor: "#f87171",
+          icon: "☀️",
+          regionTag: "MEKSİKO / MEKSİKA"
+        }),
+        imageCaption: "Meksiko tarihi merkezi, Aztek kalıntıları ve Metropolitan Katedrali."
+      },
+      {
+        id: "cusco",
+        city: "Cusco (Machu Picchu)",
+        country: "Peru",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇵🇪",
+        lat: -13.53,
+        lng: -71.96,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1438,
+        year: "1438 – 1533",
+        title: "İnka İmparatorluğu, Machu Picchu ve And Edebiyatı",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏔️",
+        description:
+          "And Dağları'nın 3400 metre yükseğindeki Cusco; devasa harçsız taş bloklarıyla depremlere meydan okuyan 'Güneşin Çocukları' İnka İmparatorluğu'nun kutsal başkentiydi. Sisli zirvelerdeki Machu Picchu kalesi ve Quechua dilindeki klasik dram 'Apu Ollantay', Güney Amerika yerli kültürünün eşsiz taş işçiliği ve mitolojik zenginliğini temsil eder.",
+        quote:
+          "\"Taşlar göğe doğru yükseldiğinde Güneş İnti halkını kutsar; adalet ve emekle yaşayan medeniyet dağların kalbinde sonsuza dek durur.\" — Kadim İnka Yazıtı & Ollantay",
+        figuresAndWorks: [
+          "İmparator Pachacuti (Machu Picchu İnşacısı)",
+          "Apu Ollantay (Klasik Quechua Tiyatro Destanı)",
+          "İnka Garcilaso de la Vega (Comentarios Reales)",
+          "Coricancha Güneş Tapınağı"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "İNKA CUSCO & MACHU PICCHU",
+          subtitle: "Güneş Şehri, And Dağları ve Quechua Mitolojisi",
+          era: "1438 – 1533",
+          primaryColor: "#059669",
+          secondaryColor: "#022c22",
+          accentColor: "#34d399",
+          icon: "🏔️",
+          regionTag: "CUSCO / PERU"
+        }),
+        imageCaption: "Bulutların üzerindeki Machu Picchu İnka kalesi ve kutsal And Dağları zirveleri."
+      },
+      {
+        id: "sanfrancisco",
+        city: "San Francisco",
+        country: "ABD (Kaliforniya)",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇺🇸",
+        lat: 37.77,
+        lng: -122.41,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1903,
+        year: "1849 – 1957",
+        title: "Pasifik Altına Hücum, Jack London ve Beat Kuşağı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🌉",
+        description:
+          "1849 Altına Hücum (Gold Rush) çılgınlığıyla doğan San Francisco; Pasifik'in sisli sularında Jack London'ın 'Vahşetin Çağrısı' ve 'Deniz Kurdu' romanlarına beşiklik etti. 1950'lerde City Lights Kitabevi etrafında toplanan Jack Kerouac (Yolda) ve Allen Ginsberg (Uluma), 'Beat Kuşağı' hareketini burada başlatıp modern Amerikan edebiyatına ve özgürlük arayışına yeni bir soluk kazandırdı.",
+        quote:
+          "\"Yaşamak için doğdum, sadece var olmak için değil; fırtınanın ortasında koşmak ve yolu iliklerime kadar hissetmek istedim.\" — Jack London, Vahşetin Çağrısı",
+        figuresAndWorks: [
+          "Jack London (Vahşetin Çağrısı, Martin Eden)",
+          "Jack Kerouac (Yolda / On the Road)",
+          "Allen Ginsberg (Uluma / Howl)",
+          "City Lights Kitabevi & Lawrence Ferlinghetti"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "SAN FRANCISCO: PASİFİK VE BEAT",
+          subtitle: "Jack London, Jack Kerouac ve Beat Kuşağı Hareketi",
+          era: "1903 – 1957",
+          primaryColor: "#0284c7",
+          secondaryColor: "#082f49",
+          accentColor: "#38bdf8",
+          icon: "🌉",
+          regionTag: "SAN FRANCISCO / ABD"
+        }),
+        imageCaption: "San Francisco Golden Gate Köprüsü, Pasifik Okyanusu kıyıları ve tarihi City Lights."
+      },
+      {
+        id: "capetown",
+        city: "Cape Town (Ümit Burnu)",
+        country: "Güney Afrika",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇿🇦",
+        lat: -33.92,
+        lng: 18.42,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1994,
+        year: "1488 – 1994",
+        title: "Ümit Burnu, Nelson Mandela ve Özgürlüğe Uzun Yürüyüş",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "⚓",
+        description:
+          "Masa Dağı'nın Atlas ve Hint okyanuslarıyla buluştuğu Cape Town; 1488'de Ümit Burnu'nun keşfiyle dünya denizcilik rotalarını değiştirdi. Robben Adası'nda 18 yıl olmak üzere 27 yıllık hapisliğe rağmen ırkçılık rejimine (Apartheid) karşı barışçıl zafer kazanan Nelson Mandela, 'Özgürlüğe Uzun Yürüyüş' ile insanlığa ilham verirken; Nobel Ödüllü J.M. Coetzee kentin edebi sesini dünyaya duyurmuştur.",
+        quote:
+          "\"Özgür olmak sadece zincirlerini kırmak değil; başkalarının özgürlüğünü yüceltecek ve saygı duyacak şekilde yaşamaktır.\" — Nelson Mandela",
+        figuresAndWorks: [
+          "Nelson Mandela (Özgürlüğe Uzun Yürüyüş)",
+          "J.M. Coetzee (Nobel Edebiyat Ödülü - Barbarları Beklerken)",
+          "Bartolomeu Dias & Ümit Burnu Denizcileri",
+          "Robben Adası Tarihi Cezaevi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "CAPE TOWN: ÜMİT BURNU & MANDELA",
+          subtitle: "Özgürlüğe Uzun Yürüyüş, Masa Dağı ve J.M. Coetzee",
+          era: "1488 – 1994",
+          primaryColor: "#0284c7",
+          secondaryColor: "#0f172a",
+          accentColor: "#0ea5e9",
+          icon: "⚓",
+          regionTag: "CAPE TOWN / GÜNEY AFRİKA"
+        }),
+        imageCaption: "Masa Dağı silüeti, Ümit Burnu kıyıları ve Cape Town tarihi limanları."
+      },
+      {
+        id: "kartaca",
+        city: "Kartaca (Carthage)",
+        country: "Tunus",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇹🇳",
+        lat: 36.85,
+        lng: 10.32,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "antik",
+        numericYear: -218,
+        year: "M.Ö. 814 – 1377",
+        title: "Hannibal Barca'nın Kartaca'sı ve İbn Haldun'un Mukaddime'si",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🐘",
+        description:
+          "Akdeniz'in en güçlü antik denizci devleti Kartaca; askeri deha Hannibal Barca'nın savaş filleriyle Alpleri aşıp Roma'ya meydan okuduğu Pön Savaşları'nın efsanevi başkentidir. Aynı topraklarda doğan büyük İslam düşünürü İbn Haldun ise 'Mukaddime' eseriyle tarih felsefesi ve sosyolojinin kurucusu olmuş, medeniyetlerin yükseliş ve çöküş yasalarını insanlık tarihine ilk kez bilimsel olarak armağan etmiştir.",
+        quote:
+          "\"Geçmiş geleceğe suyun suya benzediğinden daha çok benzer; adalet mülkün temeli, asabiyet ise toplumun direğidir.\" — İbn Haldun, Mukaddime",
+        figuresAndWorks: [
+          "Hannibal Barca (Pön Savaşları & Alp Geçişi)",
+          "İbn Haldun (Mukaddime & Tarih Felsefesi)",
+          "Antik Byrsa Tepesi ve Pön Limanları",
+          "Kraliçe Dido / Elyssa Efsanesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "KARTACA: HANNIBAL & İBN HALDUN",
+          subtitle: "Pön Savaşları, Mukaddime ve Akdeniz Medeniyeti",
+          era: "M.Ö. 218 – 1377",
+          primaryColor: "#9a3412",
+          secondaryColor: "#0f172a",
+          accentColor: "#ea580c",
+          icon: "🐘",
+          regionTag: "KARTACA / TUNUS"
+        }),
+        imageCaption: "Antik Kartaca kalıntıları, Byrsa Tepesi ve Tunus Körfezi manzarası."
       }
     ]);
 
@@ -2435,8 +2773,11 @@
       { from: "weimar",   to: "stpetersburg", label: "Alman Romantizmi ➔ St. Petersburg (Puşkin, Dostoyevski & Tolstoy)" },
       { from: "weimar",   to: "istanbul",     label: "Avrupa Edebi Akımları ➔ İstanbul (Tanzimat & Servet-i Fünun)" },
       { from: "istanbul", to: "sivas",        label: "İstanbul ➔ Sivas (Anadolu Halk Şiiri & Âşık Veysel)" },
+      { from: "siraz",    to: "istanbul",     label: "Fars Divan Edebiyatı (Hâfız & Sâdi) ➔ Osmanlı Divan Şiiri (İstanbul)" },
+      { from: "varanasi", to: "kyoto",        label: "Antik Hint Klasikleri (Mahabharata & Tagore) ➔ Doğu Asya (Kyoto)" },
       { from: "kyoto",    to: "istanbul",     label: "Doğu Klasik Edebiyat Geleneği: Genji'nin Hikâyesi ➔ Divan Şiiri" },
       { from: "dublin",   to: "newyork",      label: "Transatlantik Modernizm ➔ New York (Poe & Harlem Rönesansı)" },
+      { from: "sanfrancisco", to: "newyork",  label: "Trans-Amerika Edebiyat Hattı: Beat Kuşağı ➔ Harlem & New York" },
       { from: "newyork",  to: "bogota",       label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)" }
     ]);
 
@@ -2683,13 +3024,13 @@
       const pov = world.pointOfView();
       if (!pov) return;
 
-      let pinScale = 0.76;
+      let pinScale = 0.65;
       if (pov.altitude < 0.55) {
-        pinScale = 0.52;
+        pinScale = 0.44;
       } else if (pov.altitude < 1.1) {
-        pinScale = 0.60;
+        pinScale = 0.52;
       } else if (pov.altitude < 1.7) {
-        pinScale = 0.68;
+        pinScale = 0.58;
       }
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
 
