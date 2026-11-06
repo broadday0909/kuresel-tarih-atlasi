@@ -9,10 +9,10 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 - **Akademik Danışman:** Öğr. Gör. Dr. Ayşegül Elçi
 - **Proje Yürütücüsü & Geliştirici:** Bayram Akpamukçu
 - **Destek / Katkı:** Sami Yusuf Maral
-- **Canlı Web Sitesi:** [https://bayramakpamukcu.site](https://bayramakpamukcu.site)
+- **Özel Alan Adı:** [https://bayramakpamukcu.site](https://bayramakpamukcu.site) & [https://www.bayramakpamukcu.site](https://www.bayramakpamukcu.site)
 - **GitHub Deposu:** [https://github.com/broadday0909/kuresel-tarih-atlasi.git](https://github.com/broadday0909/kuresel-tarih-atlasi.git)
-- **Netlify Site Adı:** `peppy-cascaron-42fc19`
-- **Netlify Site ID:** `b9f993be-ae64-4e78-9245-c060dfe5f183`
+- **Sınırsız Hosting (GitHub Pages):** [https://broadday0909.github.io/kuresel-tarih-atlasi/](https://broadday0909.github.io/kuresel-tarih-atlasi/)
+- **Yedek/Eski Netlify Site ID:** `b9f993be-ae64-4e78-9245-c060dfe5f183` (Kredi sınırına takıldığı için GitHub Pages birincil yayındır)
 
 ---
 
