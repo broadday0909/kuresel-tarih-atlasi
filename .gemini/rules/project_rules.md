@@ -36,8 +36,8 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
   - Pin etiketlerinde mobilde `backdrop-filter: blur(...)` açılmamalıdır (katı renkli cam kullanılır).
   - Bulut katmanı poligon sayısı mobilde 48 segmentte tutulmalıdır.
 - **Tasarım Kuralları:**
-  - Sol alt rozet: `Developed by Bayram Akpamukçu • with Yusuf Maral & Yusuf Özcan` her zaman korunmalıdır.
-  - Sol üst başlıktan "Developed by" kaldırılmış kalmalıdır (yalnızca sol altta yer alır).
+  - `Developed by Bayram Akpamukçu • with Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
   - Üst filtre menüsü tek satır, kompakt ve yatay kaydırılabilir kalmalıdır.
+  - Zaman Tüneli alt merkezde konumlanır.
   - Giriş ekranı (Intro) bekleme süresi 5 saniyedir (5000ms).
 

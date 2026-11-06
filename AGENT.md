@@ -41,8 +41,8 @@ Kullanıcı herhangi bir değişiklik, yeni şehir, edebi durak veya stil günce
 ---
 
 ## 🎨 TASARIM VE İMZA STANDARTLARI
-- **Sol Alt Köşe:** `Developed by Bayram Akpamukçu • with Yusuf Maral & Yusuf Özcan` altın ışıklı rozeti daima bulunmalıdır.
-- **Sol Üst Başlık:** "TÜBİTAK Projesi • Küresel Tarih ve Edebiyat Atlası" yer alır; burada yinelenen isim imzası bulunmaz.
+- **Sol Üst Kutu Altı:** `Developed by Bayram Akpamukçu • with Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
 - **Üst Menü:** Ekranı kapatmaması için tek satır, ultra kompakt ve yatay kaydırılabilir kalmalıdır.
+- **Zaman Tüneli:** Alt merkezde konumlanır.
 - **İntro Ekranı:** Açılış animasyonu ve altın çizgi süresi 5 saniyedir (5000ms).
 
