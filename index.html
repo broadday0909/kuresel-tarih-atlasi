@@ -94,6 +94,14 @@
       pointer-events: none !important;
     }
 
+    /* 3B Küre ve Pin Katmanı İzolasyonu: Pinler asla Drawer, Üst Menü veya Butonların üstüne çıkamaz */
+    #globeViz,
+    #globeViz .scene-container {
+      position: relative !important;
+      z-index: 1 !important;
+      isolation: isolate !important;
+    }
+
     #introOverlay.intro-hidden {
       opacity: 0;
       transform: scale(1.16);
@@ -511,15 +519,15 @@
 
       </div>
 
-      <!-- Haritaya Dal / Keşfet Butonu -->
+      <!-- Haritaya Dal / Keşfet Butonu (Büyütülmüş & Prestijli Champagne Gold Buton) -->
       <button
         id="startExploreBtn"
         type="button"
         style="animation-delay: 1.05s;"
-        class="cinematic-fade-up mt-10 px-8 py-3 rounded-full bg-white/[0.04] hover:bg-[#d4af37]/15 border border-[#d4af37]/45 hover:border-[#d4af37] text-[#f8fafc] font-medium text-xs sm:text-sm tracking-[0.28em] uppercase flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.18)] hover:shadow-[0_0_45px_rgba(212,175,55,0.42)] transition-all duration-300 cursor-pointer"
+        class="cinematic-fade-up mt-10 px-10 sm:px-14 py-4 sm:py-5 rounded-full bg-gradient-to-r from-[#d4af37]/15 via-[#d4af37]/25 to-[#d4af37]/15 hover:from-[#d4af37]/25 hover:via-[#d4af37]/40 hover:to-[#d4af37]/25 border-2 border-[#d4af37]/75 hover:border-[#d4af37] text-[#f8fafc] font-display font-bold text-base sm:text-xl md:text-2xl tracking-[0.24em] uppercase flex items-center gap-3.5 sm:gap-4 shadow-[0_0_40px_rgba(212,175,55,0.32)] hover:shadow-[0_0_65px_rgba(212,175,55,0.62)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
       >
         <span id="startExploreBtnText">Haritayı Keşfet</span>
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#d4af37]"></i>
+        <i data-lucide="arrow-up-right" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#d4af37]"></i>
       </button>
     </div>
 
@@ -536,13 +544,13 @@
   </div>
 
   <!-- 1. 3B ULTRA HD FOTOGERÇEKÇİ KÜRE KONTEYNERİ -->
-  <div id="globeViz" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+  <div id="globeViz" class="relative z-[1] isolate w-full h-full cursor-grab active:cursor-grabbing"></div>
 
   <!-- SİNEMATİK UZAY VİNYET KATMANI -->
   <div class="vignette-overlay fixed inset-0 z-10"></div>
 
   <!-- 2. GOOGLE EARTH TARZI ÜST BAR (GLASSMORPHISM - TEK SATIR VE ULTRA KOMPAKT) -->
-  <header class="fixed top-0 left-0 right-0 z-30 p-2 md:px-4 md:py-2 pointer-events-none flex flex-wrap lg:flex-nowrap items-start justify-between gap-2">
+  <header class="fixed top-0 left-0 right-0 z-50 p-2 md:px-4 md:py-2 pointer-events-none flex flex-wrap lg:flex-nowrap items-start justify-between gap-2">
     
     <!-- Sol: TÜBİTAK Proje Kimliği & Küresel Atlas Başlığı + Hemen Altında Geliştirici İmzası -->
     <div class="flex flex-col gap-1.5 pointer-events-auto shrink-0">
@@ -727,7 +735,7 @@
   </header>
 
   <!-- 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRESİ (INTERACTIVE TIMELINE & CENTURY CONSOLE) -->
-  <div class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 z-25 pointer-events-auto max-w-[calc(100vw-1.5rem)] select-none">
+  <div class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-auto max-w-[calc(100vw-1.5rem)] select-none">
     <div class="glass-panel px-3 py-1.5 md:py-2 rounded-2xl flex items-center gap-2 border border-white/15 bg-slate-950/85 backdrop-blur-xl shadow-2xl">
       
       <!-- Başlık & Gösterge -->
@@ -792,7 +800,7 @@
 
 
   <!-- SAĞ ALT KÖŞE: SADECE NAVİGASYON BUTONLARI (KOORDİNAT BÖLÜMÜ KALDIRILDI) -->
-  <div class="fixed bottom-5 right-3 md:right-5 z-30 flex flex-col items-center gap-1.5 pointer-events-auto">
+  <div class="fixed bottom-5 right-3 md:right-5 z-40 flex flex-col items-center gap-1.5 pointer-events-auto">
     <!-- Pusula / Kuzeye ve Küresel Görünüme Sıfırla -->
     <button
       id="compassResetBtn"
@@ -848,7 +856,7 @@
   <!-- SAĞ DETAY PANELİ (SLIDE-OVER GLASSMORPHISM DRAWER) -->
   <aside
     id="detailDrawer"
-    class="fixed top-20 bottom-6 right-3 md:right-16 z-30 w-[calc(100vw-1.5rem)] sm:w-[430px] md:w-[465px] glass-panel rounded-3xl overflow-hidden flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-x-[130%] opacity-0 pointer-events-auto"
+    class="fixed top-20 bottom-6 right-3 md:right-16 z-[70] w-[calc(100vw-1.5rem)] sm:w-[430px] md:w-[465px] glass-panel rounded-3xl overflow-hidden flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-x-[130%] opacity-0 pointer-events-none"
   >
     <!-- Drawer Üst Başlık: Etiketler, Başlık, Şehir/Ülke, Yıl -->
     <div class="p-5 pb-3.5 border-b border-white/10 flex items-start justify-between gap-3 bg-gradient-to-b from-white/[0.05] to-transparent">
@@ -986,7 +994,7 @@
       </button>
 
       <span id="drawerStepIndicator" class="text-[11px] text-slate-400 font-mono">
-        Nokta 1 / 23
+        Nokta 1 / 65
       </span>
 
       <button
@@ -5258,15 +5266,15 @@
 
     function openDrawer() {
       const drawer = document.getElementById('detailDrawer');
-      drawer.classList.remove('translate-x-[130%]', 'opacity-0');
-      drawer.classList.add('translate-x-0', 'opacity-100');
+      drawer.classList.remove('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
+      drawer.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
     }
 
     function closeDrawer() {
       stopSpeech();
       const drawer = document.getElementById('detailDrawer');
-      drawer.classList.add('translate-x-[130%]', 'opacity-0');
-      drawer.classList.remove('translate-x-0', 'opacity-100');
+      drawer.classList.add('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
+      drawer.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
       activeCityId = null;
 
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
