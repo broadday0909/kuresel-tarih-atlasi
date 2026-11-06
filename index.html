@@ -555,7 +555,7 @@
             <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
               TÜBİTAK Projesi
             </span>
-            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 50 Küresel Durak</span>
+            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 60 Küresel Durak</span>
           </div>
           <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
             Küresel Tarih ve Edebiyat Atlası
@@ -1038,7 +1038,7 @@
     }
 
     // ============================================================================
-    // 2. SABİT ANA ŞEHİR DİZİSİ (MASTER_LOCATIONS) - 50 KÜRESEL TARİH & EDEBİYAT DURAĞI
+    // 2. SABİT ANA ŞEHİR DİZİSİ (MASTER_LOCATIONS) - 60 KÜRESEL TARİH & EDEBİYAT DURAĞI
     // ============================================================================
     const MASTER_LOCATIONS = Object.freeze([
       // ==================== TÜRKİYE (7 DURAK) ====================
@@ -3107,6 +3107,426 @@
           regionTag: "KARAKURUM / MOĞOLİSTAN"
         }),
         imageCaption: "Orhun Vadisi sonsuz Moğol bozkırları, göçebe yurt çadırları ve tarihi Erdene Zuu."
+      },
+      {
+        id: "delhi",
+        city: "Delhi (Agra)",
+        country: "Hindistan",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇮🇳",
+        lat: 28.61,
+        lng: 77.20,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ronesans",
+        numericYear: 1526,
+        year: "1526 – 1869",
+        title: "Babür İmparatorluğu, Mirza Galib ve Klasik Urdu Edebiyatı",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🕌",
+        description:
+          "Babür Şah'ın 'Babürnâme' ile kurduğu ve Şah Cihan'ın Tac Mahal ile ölümsüzleştirdiği Babür İmparatorluğu'nun başkenti Delhi; Fars ve Hint kültürlerinin senteziyle Urdu edebiyatının altın çağını yaşadı. Gazel sanatının en büyük ustası Mirza Esedullah Han Galib'in derin felsefi beyitleri ve Kızıl Kale meclisleri, Doğu şiirinin zirvesini oluşturur.",
+        quote:
+          "\"Aşk dediğin bir ateştir ki ne yakmaya gücün yeter ne de söndürmeye; her zerremiz bir kainat saklar içinde.\" — Mirza Galib, Divan",
+        figuresAndWorks: [
+          "Mirza Galib (Urdu ve Farsça Gazeller)",
+          "Babür Şah (Babürnâme Hatıratı)",
+          "Şah Cihan (Tac Mahal & Şahcihanabad)",
+          "Hümâyun Türbesi & Kızıl Kale"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "DELHİ: BABÜR & MİRZA GALİB",
+          subtitle: "Urdu Gazelleri, Babürnâme ve Tac Mahal",
+          era: "1526 – 1869",
+          primaryColor: "#b45309",
+          secondaryColor: "#451a03",
+          accentColor: "#f59e0b",
+          icon: "🕌",
+          regionTag: "DELHİ / HİNDİSTAN"
+        }),
+        imageCaption: "Delhi Hümâyun Türbesi Babür mimarisi, Kızıl Kale ve Tac Mahal ihtişamı."
+      },
+      {
+        id: "seul",
+        city: "Seul (Hanyang)",
+        country: "Güney Kore",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇰🇷",
+        lat: 37.56,
+        lng: 126.97,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1443,
+        year: "1392 – 1446",
+        title: "Joseon Hanedanlığı, Kral Sejong ve Hangul Alfabe Devrimi",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "📜",
+        description:
+          "Hanyang (bugünkü Seul) merkezli Joseon Hanedanlığı; Büyük Kral Sejong'un halkın okuryazar olabilmesi için 1443'te bizzat icat ettiği bilimsel Hangul alfabesiyle (Hunminjeongeum) insanlık tarihinin en büyük eğitim ve kültür devrimlerinden birine imza attı. Gyeongbokgung Sarayı ve klasik Sijo şiir geleneği, Kore yarımadasının kültürel kimliğini inşa etti.",
+        quote:
+          "\"Halkın sözleri göklerin sesidir; her harf insanın nefesi gibi tabii ve anlaşılır olmalıdır.\" — Kral Sejong, Hunminjeongeum (1446)",
+        figuresAndWorks: [
+          "Büyük Kral Sejong (Hangul Alfabesinin İcadı)",
+          "Hunminjeongeum (Doğru Sesler Kitabı)",
+          "Hwang Jin-i (Klasik Sijo Şairi)",
+          "Gyeongbokgung Sarayı & Changdeokgung"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "SEUL: KRAL SEJONG & HANGUL",
+          subtitle: "Hunminjeongeum, Gyeongbokgung ve Sijo Şiiri",
+          era: "1392 – 1446",
+          primaryColor: "#0284c7",
+          secondaryColor: "#082f49",
+          accentColor: "#38bdf8",
+          icon: "📜",
+          regionTag: "SEUL / GÜNEY KORE"
+        }),
+        imageCaption: "Tarihi Seul Gyeongbokgung Sarayı taht salonu ve Joseon Hanedanlığı mirası."
+      },
+      {
+        id: "angkor",
+        city: "Angkor (Siem Reap)",
+        country: "Kamboçya",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇰🇭",
+        lat: 13.41,
+        lng: 103.86,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1113,
+        year: "802 – 1431",
+        title: "Khmer İmparatorluğu, Angkor Wat ve Tanrı-Krallar Medeniyeti",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🛕",
+        description:
+          "Güneydoğu Asya'nın sık ormanları içinde II. Suryavarman tarafından inşa edilen Angkor Wat; 162 hektarlık alanıyla yeryüzünün en büyük dini taş anıt kompleksidir. Devasa su kanalları, hidrolik mühendisliği ve binlerce Apsara kabartmasıyla Khmer medeniyetinin mimari dehasını ve Hindu-Budist evren tasarımını (Meru Dağı) gökyüzüne taşımıştır.",
+        quote:
+          "\"Taşlar tanrıların dilini konuşur; gökyüzünün düzeni yeryüzündeki kanalların ve tapınakların ahenginde yansır.\" — Khmer Taş Yazıtları",
+        figuresAndWorks: [
+          "II. Suryavarman (Angkor Wat İnşacısı)",
+          "VII. Jayavarman (Bayon Tapınağı & Şefkat Yüzleri)",
+          "Angkor Thom ve Ta Prohm Külliyesi",
+          "Khmer Hidrolik ve Taş Mühendisliği"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "ANGKOR: KHMER & ANGKOR WAT",
+          subtitle: "Yeryüzünün En Büyük Dini Taşı ve Meru Dağı",
+          era: "802 – 1431",
+          primaryColor: "#059669",
+          secondaryColor: "#064e3b",
+          accentColor: "#34d399",
+          icon: "🛕",
+          regionTag: "ANGKOR / KAMBOÇYA"
+        }),
+        imageCaption: "Gündoğumunda Angkor Wat nilüfer göletleri, kuleleri ve Khmer taş heykelleri."
+      },
+      {
+        id: "turkistan",
+        city: "Türkistan (Yesi)",
+        country: "Kazakistan",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇰🇿",
+        lat: 43.30,
+        lng: 68.27,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1166,
+        year: "1093 – 1395",
+        title: "Pîr-i Türkistan Hoca Ahmed Yesevî ve Dîvân-ı Hikmet",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🕊️",
+        description:
+          "Kadim İpek Yolu üzerindeki Yesi (Türkistan); Orta Asya'dan Anadolu'ya uzanan Türk tasavvuf düşüncesinin kurucusu Hoca Ahmed Yesevî'nin türbesine ev sahipliği yapar. Sade Türkçe ile yazdığı 'Dîvân-ı Hikmet', Yunus Emre ve Mevlânâ'ya esin kaynağı olmuş; Emir Timur'un 1389'da inşa ettirdiği turkuaz kubbeli anıtsal türbe ise Bozkır mimarisinin tacıdır.",
+        quote:
+          "\"Garip, fakir, yetimleri sevindir; gönlü kırık biçarelere derman ol... Sevgiyle bakana cümle cihan bir olur.\" — Hoca Ahmed Yesevî, Dîvân-ı Hikmet",
+        figuresAndWorks: [
+          "Hoca Ahmed Yesevî (Pîr-i Türkistan & Dîvân-ı Hikmet)",
+          "Emir Timur (Hoca Ahmed Yesevi Külliyesi)",
+          "Yeseviyye Tasavvuf Ekolü",
+          "Otrar Kütüphanesi & Kadim Bozkır Yolu"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "TÜRKİSTAN: AHMED YESEVÎ",
+          subtitle: "Dîvân-ı Hikmet, Timur Türbesi ve Tasavvuf",
+          era: "1093 – 1395",
+          primaryColor: "#0284c7",
+          secondaryColor: "#0369a1",
+          accentColor: "#38bdf8",
+          icon: "🕊️",
+          regionTag: "TÜRKİSTAN / KAZAKİSTAN"
+        }),
+        imageCaption: "Hoca Ahmed Yesevî Türbesi çinili turkuaz kubbesi ve kadim İpek Yolu bozkırı."
+      },
+      {
+        id: "baykal",
+        city: "Baykal (İrkutsk)",
+        country: "Rusya (Sibirya)",
+        region: "asya",
+        regionLabel: "Asya & O. Doğu",
+        flag: "🇷🇺",
+        lat: 52.28,
+        lng: 104.30,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "yuzvil19",
+        numericYear: 1890,
+        year: "1661 – 1890",
+        title: "Sibirya'nın Mavi Gözü Baykal, Şamanizm ve Çehov'un Notları",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "❄️",
+        description:
+          "25 milyon yıllık yaşı ve 1642 metre derinliğiyle dünyanın en derin tatlı su gölü olan Baykal; Buryat Şamanizmi ve Olhon Adası efsaneleriyle Sibirya'nın kutsal denizidir. 1825 Dekabrist aydınlarının sürgün yeri olan 'Sibirya'nın Paris'i' İrkutsk ve Anton Çehov'un Sahalin seyahatnamesindeki derin gözlemleri, bu ıssız coğrafyayı dünya hafızasına kazımıştır.",
+        quote:
+          "\"Baykal bir göl değil, canlı bir ruhtur; suyuna baktığınızda zamanın öncesini ve insanın ne kadar küçük olduğunu anlarsınız.\" — Anton Çehov, Sibirya Seyahatnamesi",
+        figuresAndWorks: [
+          "Anton Çehov (Sibirya ve Sahalin Notları)",
+          "Olhon Adası ve Şaman Kayası Efsaneleri",
+          "Dekabrist Aydınlar ve İrkutsk Sürgünü",
+          "Trans-Sibirya Demiryolu Mirası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1551845041-63e8e76836ea?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BAYKAL: SİBİRYA & ÇEHOV",
+          subtitle: "Dünyanın En Derin Gölü, Şamanizm ve İrkutsk",
+          era: "1661 – 1890",
+          primaryColor: "#0284c7",
+          secondaryColor: "#0f172a",
+          accentColor: "#38bdf8",
+          icon: "❄️",
+          regionTag: "BAYKAL / SİBİRYA"
+        }),
+        imageCaption: "Baykal Gölü buz kristalleri, Olhon Adası Şaman Kayası ve sonsuz Sibirya ufku."
+      },
+      {
+        id: "moskova",
+        city: "Moskova",
+        country: "Rusya",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇷🇺",
+        lat: 55.75,
+        lng: 37.61,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "yuzvil19",
+        numericYear: 1869,
+        year: "1147 – 1940",
+        title: "Kremlin'in Gölgesinde Tolstoy, Savaş ve Barış ve Bulgakov",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🏰",
+        description:
+          "Moskova Nehri kıyısında 1147'de kurulan şehir; Lev Tolstoy'un 1812 Napolyon seferini anlattığı anıtsal romanı 'Savaş ve Barış'a sahne olmuştur. Kızıl Meydan, Bolşoy Tiyatrosu ve Mihail Bulgakov'un Sovyet bürokrasisini hicvettiği başyapıtı 'Usta ile Margarita'nın Patriark Göletleri, Moskova'yı dünya edebiyatının en dramatik başkentlerinden biri yapmıştır.",
+        quote:
+          "\"Bütün mutlu aileler birbirine benzer; her mutsuz ailenin ise kendine özgü bir mutsuzluğu vardır.\" — Lev Tolstoy, Anna Karenina",
+        figuresAndWorks: [
+          "Lev Tolstoy (Savaş ve Barış, Anna Karenina)",
+          "Mihail Bulgakov (Usta ile Margarita)",
+          "Boris Pasternak (Doktor Jivago - Nobel)",
+          "Kremlin Sarayı ve Aziz Vasil Katedrali"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1520106212299-d99c443e4568?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "MOSKOVA: TOLSTOY & KREMLİN",
+          subtitle: "Savaş ve Barış, Usta ile Margarita ve Kızıl Meydan",
+          era: "1147 – 1940",
+          primaryColor: "#dc2626",
+          secondaryColor: "#7f1d1d",
+          accentColor: "#f87171",
+          icon: "🏰",
+          regionTag: "MOSKOVA / RUSYA"
+        }),
+        imageCaption: "Moskova Kızıl Meydan, Aziz Vasil Katedrali kubbeleri ve tarihi Kremlin surları."
+      },
+      {
+        id: "aksum",
+        city: "Aksum (Lalibela)",
+        country: "Etiyopya",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇪🇹",
+        lat: 14.13,
+        lng: 38.72,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "antik",
+        numericYear: 330,
+        year: "M.Ö. 100 – 1200",
+        title: "Kebra Nagast, Aksum Krallığı ve Lalibela Kaya Kiliseleri",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "⛪",
+        description:
+          "Kızıldeniz ile Nil havzası arasındaki kadim Aksum İmparatorluğu; Saba Melikesi Belkıs ile Hz. Süleyman'ın oğlu Menelik efsanesini anlatan 'Kebra Nagast' (Kralların Zaferi) destanının beşiğidir. 12. yüzyılda Kral Lalibela tarafından tek parça volkanik tüf kayalardan oyularak inşa edilen 11 monolitik yeraltı kilisesi (Bet Giyorgis), Afrika Hristiyan mimarisinin mucizesidir.",
+        quote:
+          "\"Bilgelik altın ve gümüşten değerlidir; kayaları yontan inanç, zamanın akışına karşı dimdik ayakta kalır.\" — Kebra Nagast (Etiyopya Krallar Destanı)",
+        figuresAndWorks: [
+          "Kral Ezana & Kral Lalibela",
+          "Kebra Nagast (Ge'ez Dili Ulusal Destanı)",
+          "Bet Giyorgis (Yekpare Haç Biçimli Kaya Kilisesi)",
+          "Aksum Dev Granit Dikilitaşları (Obelisk)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "AKSUM: LALİBELA & KEBRA NAGAST",
+          subtitle: "Kaya Kiliseleri, Kadim Ge'ez ve Belkıs Efsanesi",
+          era: "M.Ö. 100 – 1200",
+          primaryColor: "#d97706",
+          secondaryColor: "#451a03",
+          accentColor: "#fbbf24",
+          icon: "⛪",
+          regionTag: "AKSUM / ETİYOPYA"
+        }),
+        imageCaption: "Lalibela Bet Giyorgis yekpare kaya kilisesi ve Aksum Dikilitaşı kalıntıları."
+      },
+      {
+        id: "lagos",
+        city: "İfe ve Lagos",
+        country: "Nijerya",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇳🇬",
+        lat: 6.52,
+        lng: 3.37,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1958,
+        year: "1100 – 1986",
+        title: "Yoruba Bronz Sanatı, Chinua Achebe ve Wole Soyinka",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🎭",
+        description:
+          "Kadim İfe Krallığı'nın kusursuz kayıp mum tekniği bronz heykellerinden doğan Nijerya kültürü; modern Afrika edebiyatının kurucusu Chinua Achebe'nin 'Parçalanma' (Things Fall Apart) romanıyla sömürgecilik öncesi Igbo medeniyetini dünyaya tanıttı. 1986'da Afrika'ya ilk Nobel Edebiyat Ödülü'nü kazandıran Wole Soyinka'nın dramatik tiyatro dili bu topraklarda yankılanır.",
+        quote:
+          "\"Aslanlar kendi tarihçilerine sahip olana kadar, av hikâyeleri hep avcıyı yüceltecektir.\" — Chinua Achebe, Parçalanma",
+        figuresAndWorks: [
+          "Chinua Achebe (Parçalanma / Things Fall Apart)",
+          "Wole Soyinka (Ölüm ve Kralın Atlısı - Nobel 1986)",
+          "Ben Okri (Aç Yol - Booker Ödülü)",
+          "Antik İfe & Benin Krallığı Bronz Heykelleri"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1577975882846-431adc8c2009?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "NİJERYA: ACHEBE & SOYINKA",
+          subtitle: "Parçalanma Romanı, Yoruba Sanatı ve Nobel Ödülü",
+          era: "1100 – 1986",
+          primaryColor: "#059669",
+          secondaryColor: "#064e3b",
+          accentColor: "#34d399",
+          icon: "🎭",
+          regionTag: "LAGOS / NİJERYA"
+        }),
+        imageCaption: "Gine Körfezi kıyısında Lagos, antik İfe bronzları ve modern Afrika edebiyat havzası."
+      },
+      {
+        id: "zimbabve",
+        city: "Büyük Zimbabve",
+        country: "Zimbabve",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇿🇼",
+        lat: -20.27,
+        lng: 30.93,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "ortacag",
+        numericYear: 1250,
+        year: "1100 – 1450",
+        title: "Şona Medeniyeti, Harçsız Granit Surlar ve Altın Ticareti",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🏛️",
+        description:
+          "Güney Afrika platosunda Şona halkının ataları tarafından harç kullanılmadan, sadece kusursuzca kesilmiş granit bloklarla inşa edilen Büyük Zimbabve (Great Zimbabwe); 18.000 kişilik nüfusuyla Sahraaltı Afrika'nın en anıtsal taş başkentiydi. Hint Okyanusu üzerinden Çin ve Pers tüccarlarıyla yürütülen altın ve fildişi ticareti ile Zimbabve Kuşu sabuntaşı oymaları krallığın ihtişamını belgeler.",
+        quote:
+          "\"Taşlar harçsız birleşir, halk ise adaletle yükselir; altın rüzgarla uçar ama geride bıraktığın şehir asırlarca konuşur.\" — Şona Atasözü ve Sözlü Geleneği",
+        figuresAndWorks: [
+          "Büyük Zimbabve Granit Kalesi & Konik Kule",
+          "Zimbabve Kuşu Sabuntaşı Kabartmaları",
+          "Mutapa ve Torwa Hanedanlıkları",
+          "Kadim Sofala Altın Ticaret Yolu"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BÜYÜK ZİMBABVE: ŞONA",
+          subtitle: "Harçsız Granit Surlar, Zimbabve Kuşu ve Altın Yolu",
+          era: "1100 – 1450",
+          primaryColor: "#ea580c",
+          secondaryColor: "#7c2d12",
+          accentColor: "#fb923c",
+          icon: "🏛️",
+          regionTag: "ZİMBABVE"
+        }),
+        imageCaption: "Büyük Zimbabve antik granit taş surları, Konik Kule ve Şona medeniyeti kalıntıları."
+      },
+      {
+        id: "madagaskar",
+        city: "Antananarivo",
+        country: "Madagaskar",
+        region: "afrika",
+        regionLabel: "Afrika",
+        flag: "🇲🇬",
+        lat: -18.87,
+        lng: 47.50,
+        pinOffsetX: "0px",
+        pinOffsetY: "0px",
+        labelShiftX: "0px",
+        era: "modern",
+        numericYear: 1895,
+        year: "1610 – 1960",
+        title: "Merina Krallığı, Rova Sarayı ve Malgaş Efsaneleri",
+        category: "tarih",
+        categoryLabel: "Tarihi Olaylar",
+        icon: "🌴",
+        description:
+          "Hint Okyanusu'nun biyoçeşitlilik cenneti Madagaskar'ın kalbinde bin metre yüksekliğe kurulan Antananarivo; Merina Krallığı'nın kutsal başkentiydi. Analamanga tepesindeki ahşap ve taş Rova Sarayı (Kraliçeler Sarayı), Malgaş sözlü edebiyatının en büyük destanı 'Ibonia' ve Afrika'nın ilk sembolist şairi Jean-Joseph Rabearivelo ile Hint Okyanusu ada kültürünün zirvesidir.",
+        quote:
+          "\"Söz su gibidir; döküldükten sonra geri toplanamaz ama toprağa düştüğünde hayat verir.\" — Malgaş Dainy Şiir Geleneği & Ibonia Destanı",
+        figuresAndWorks: [
+          "Kraliçe Ranavalona & Kral Andrianampoinimerina",
+          "Ibonia Destanı (Malgaş Epik Şiiri)",
+          "Jean-Joseph Rabearivelo (Çeviriler & Şiirler)",
+          "Rova Antananarivo Kraliçe Sarayı Külliyesi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "MADAGASKAR: MERİNA & ROVA",
+          subtitle: "Ibonia Destanı, Kraliçe Sarayı ve Hint Okyanusu",
+          era: "1610 – 1960",
+          primaryColor: "#10b981",
+          secondaryColor: "#064e3b",
+          accentColor: "#34d399",
+          icon: "🌴",
+          regionTag: "MADAGASKAR"
+        }),
+        imageCaption: "Antananarivo tarihi tepe silüeti, Rova Kraliçeler Sarayı ve Hint Okyanusu vadisi."
       }
     ]);
 
@@ -3142,7 +3562,17 @@
       riodejaneiro: { era: "yuzvil19", numericYear: 1899 },
       fes: { era: "ortacag", numericYear: 1354 },
       zanzibar: { era: "modern", numericYear: 2021 },
-      karakurum: { era: "ortacag", numericYear: 1220 }
+      karakurum: { era: "ortacag", numericYear: 1220 },
+      delhi: { era: "ronesans", numericYear: 1526 },
+      seul: { era: "ortacag", numericYear: 1443 },
+      angkor: { era: "ortacag", numericYear: 1113 },
+      turkistan: { era: "ortacag", numericYear: 1166 },
+      baykal: { era: "yuzvil19", numericYear: 1890 },
+      moskova: { era: "yuzvil19", numericYear: 1869 },
+      aksum: { era: "antik", numericYear: 330 },
+      lagos: { era: "modern", numericYear: 1958 },
+      zimbabve: { era: "ortacag", numericYear: 1250 },
+      madagaskar: { era: "modern", numericYear: 1895 }
     };
 
     // Tüm konumlara era ve numericYear özelliklerini tanımla
@@ -3183,7 +3613,14 @@
       { from: "havana", to: "bogota",         label: "Karayip Edebiyat Havzası: Hemingway ➔ Gabriel García Márquez" },
       { from: "bogota", to: "buenosaires",    label: "Latin Amerika Edebi Patlaması (Boom): Büyülü Gerçekçilik ➔ Jorge Luis Borges" },
       { from: "buenosaires", to: "riodejaneiro", label: "Güney Amerika Edebi Diyaloğu: Jorge Luis Borges ➔ Machado de Assis" },
-      { from: "zanzibar", to: "londra",       label: "Post-Kolonyal Afrika Edebiyatı: Abdulrazak Gurnah (Swahili) ➔ Londra" }
+      { from: "zanzibar", to: "londra",       label: "Post-Kolonyal Afrika Edebiyatı: Abdulrazak Gurnah (Swahili) ➔ Londra" },
+      { from: "delhi", to: "varanasi",        label: "Klasik Hint & Babür Edebiyatı: Mirza Galib ➔ Rabindranath Tagore" },
+      { from: "delhi", to: "siraz",           label: "Sabk-i Hindi (Hint-Fars Şiir Köprüsü): Babür Sarayı ➔ Fars Şiiri (Hâfız)" },
+      { from: "turkistan", to: "konya",       label: "Büyük Tasavvuf Yolu: Hoca Ahmed Yesevî (Hikmet) ➔ Mevlânâ Celâleddîn-i Rûmî" },
+      { from: "kyoto", to: "seul",            label: "Doğu Asya Edebi Havzası: Heian Klasikleri (Kyoto) ➔ Seul (Kral Sejong & Hangul)" },
+      { from: "moskova", to: "stpetersburg",  label: "Büyük Rus Romanı Ekseni: Tolstoy & Bulgakov ➔ Dostoyevski & Puşkin" },
+      { from: "lagos", to: "londra",          label: "Modern Afrika Edebiyatı: Chinua Achebe & Wole Soyinka ➔ Londra" },
+      { from: "lagos", to: "zanzibar",        label: "Pan-Afrika Edebi Diyaloğu: Batı Afrika ➔ Doğu Afrika Swahili Şiiri" }
     ]);
 
     const ARC_COLORS = [
