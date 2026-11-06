@@ -2,6 +2,7 @@
 
 ## 📌 Proje Kimliği ve Geliştiriciler
 - **Proje Adı:** Küresel Tarih ve Edebiyat Atlası (TÜBİTAK 3B Projesi)
+- **Akademik Danışman:** Öğr. Gör. Dr. Ayşegül Elçi
 - **Baş Geliştirici:** Bayram Akpamukçu (`Bayram Akpamukcu`)
 - **Katkı Sağlayanlar:** Sami Yusuf Maral & Yusuf Özcan
 - **Canlı Yayın Domaini:** `https://bayramakpamukcu.site`
