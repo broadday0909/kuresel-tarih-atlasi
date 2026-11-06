@@ -342,6 +342,28 @@
       transform: translateX(var(--label-shift-x, 0px));
     }
 
+    /* MOBİL VE DÜŞÜK GPU'LU CİHAZ OPTİMİZASYONLARI (KASMA VE ISINMAYI ÖNLEYİCİ) */
+    @media (max-width: 768px) {
+      .atlas-pin-wrapper {
+        will-change: transform;
+      }
+      .atlas-pin-wrapper .pin-pulse-delayed {
+        display: none !important; /* Mobilde fazladan animasyon yükünü kaldır */
+      }
+      .pin-pulse {
+        animation-duration: 3s !important;
+      }
+      .pin-head {
+        box-shadow: 0 0 10px var(--pin-glow) !important;
+      }
+      .pin-label {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(8, 12, 24, 0.95) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+      }
+    }
+
     @keyframes pulseRing {
       0% {
         transform: scale(0.85);
@@ -1886,8 +1908,13 @@
 
     function initGlobe() {
       const container = document.getElementById('globeViz');
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
-      world = Globe({ antialias: true, alpha: false })(container)
+      world = Globe({
+        antialias: !isMobileDevice,
+        alpha: false,
+        powerPreference: 'high-performance'
+      })(container)
         .globeImageUrl(DAY_TEXTURE_ULTRA)
         .bumpImageUrl(BUMP_TEXTURE_ULTRA)
         .backgroundImageUrl(SKY_TEXTURE_ULTRA)
@@ -1914,22 +1941,24 @@
         .arcDashGap(0.2)
         .arcDashAnimateTime(1800);
 
-      // KESKİN ULTRA HD RENDERER AYARI
+      // KESKİN VE MOBİLDE KASMAYI ÖNLEYEN DPR AYARI
       const renderer = world.renderer();
-      renderer.setPixelRatio(window.devicePixelRatio);
+      const targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.0);
+      renderer.setPixelRatio(targetDPR);
       if (renderer.capabilities) {
         const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
         const applySharpness = () => {
           const mat = world.globeMaterial();
           if (mat) {
+            const aniso = isMobileDevice ? Math.min(4, maxAnisotropy) : maxAnisotropy;
             if (mat.map) {
-              mat.map.anisotropy = maxAnisotropy;
+              mat.map.anisotropy = aniso;
               mat.map.minFilter = THREE.LinearMipmapLinearFilter;
               mat.map.magFilter = THREE.LinearFilter;
               mat.map.needsUpdate = true;
             }
             if (mat.bumpMap) {
-              mat.bumpMap.anisotropy = maxAnisotropy;
+              mat.bumpMap.anisotropy = aniso;
               mat.bumpMap.needsUpdate = true;
             }
           }
@@ -1960,13 +1989,14 @@
         directionalLight.position.set(1.5, 1.2, 1.2);
       }
 
-      // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Clouds Layer)
+      // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Clouds Layer - Mobilde Poligon Azaltılmış)
       const CLOUDS_ALT = 0.012;
       const CLOUDS_ROTATION_SPEED = -0.006;
 
       new THREE.TextureLoader().load(CLOUDS_TEXTURE_ULTRA, cloudsTexture => {
+        const cloudSegments = isMobileDevice ? 48 : 96;
         cloudsMesh = new THREE.Mesh(
-          new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 96, 96),
+          new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), cloudSegments, cloudSegments),
           new THREE.MeshPhongMaterial({
             map: cloudsTexture,
             transparent: true,
@@ -2032,7 +2062,8 @@
       window.addEventListener('resize', () => {
         world.width(window.innerWidth);
         world.height(window.innerHeight);
-        world.renderer().setPixelRatio(window.devicePixelRatio);
+        const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.5 : 2.0));
       });
     }
 
