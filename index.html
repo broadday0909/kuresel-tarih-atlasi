@@ -342,6 +342,14 @@
       transform: translateX(var(--label-shift-x, 0px));
     }
 
+    /* 3B KÜRE VE MOBİL DOKUNMATİK HASSASİYETİ (KASMA & GECİKME ÖNLEYİCİ) */
+    #globeViz, #globeViz canvas {
+      touch-action: none !important;
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+
     /* MOBİL VE DÜŞÜK GPU'LU CİHAZ OPTİMİZASYONLARI (KASMA VE ISINMAYI ÖNLEYİCİ) */
     @media (max-width: 768px) {
       .atlas-pin-wrapper {
