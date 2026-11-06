@@ -462,18 +462,18 @@
       <!-- Üst Prestij Etiketi -->
       <div class="cinematic-fade-up flex items-center gap-3 mb-5" style="animation-delay: 0.1s;">
         <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-r from-transparent to-[#d4af37]/70"></span>
-        <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.38em] text-[#d4af37]">
+        <span id="introTubitakBadge" class="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.38em] text-[#d4af37]">
           TÜBİTAK 3B DÜNYA KÜLTÜR MİRASI PROJESİ
         </span>
         <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent to-[#d4af37]/70"></span>
       </div>
 
       <!-- Sinematik Blur-to-Clear & Letter-Spacing Açılan Ana Başlık -->
-      <h1 class="font-display text-3xl sm:text-5xl md:text-6xl font-bold uppercase cinematic-title-reveal leading-tight">
+      <h1 id="introMainTitle" class="font-display text-3xl sm:text-5xl md:text-6xl font-bold uppercase cinematic-title-reveal leading-tight">
         KÜRESEL TARİH VE EDEBİYAT ATLASI
       </h1>
 
-      <p class="cinematic-fade-up mt-3 text-xs sm:text-sm md:text-base text-slate-300/80 font-light tracking-[0.22em] uppercase" style="animation-delay: 0.35s;">
+      <p id="introProjectSubtitle" class="cinematic-fade-up mt-3 text-xs sm:text-sm md:text-base text-slate-300/80 font-light tracking-[0.22em] uppercase" style="animation-delay: 0.35s;">
         World History &amp; Literature 3D Interactive Atlas
       </p>
 
@@ -488,19 +488,19 @@
       <div class="cinematic-fade-up space-y-3 sm:space-y-4 text-center max-w-4xl mx-auto px-4" style="animation-delay: 0.75s;">
         
         <!-- Akademik Danışman (Bayram Akpamukçu ile neredeyse aynı büyüklükte) -->
-        <div class="font-display text-xl sm:text-3xl md:text-[2.35rem] font-extrabold tracking-[0.12em] advisor-gold-signature leading-snug">
+        <div id="introAdvisorText" class="font-display text-xl sm:text-3xl md:text-[2.35rem] font-extrabold tracking-[0.12em] advisor-gold-signature leading-snug">
           Akademik Danışman: Öğr. Gör. Dr. Ayşegül Elçi
         </div>
 
         <div class="h-[1px] w-24 mx-auto bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent my-1"></div>
 
         <!-- Baş Geliştirici -->
-        <div class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] ivory-gold-signature leading-snug">
+        <div id="introLeadText" class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] ivory-gold-signature leading-snug">
           PROJE YÜRÜTÜCÜSÜ &amp; GELİŞTİRİCİ: BAYRAM AKPAMUKÇU
         </div>
 
         <!-- Büyütülmüş 'yardımlarıyla' İfadesi -->
-        <div class="font-serif italic text-xl sm:text-2xl md:text-3xl text-amber-100/90 tracking-[0.16em] pt-1">
+        <div id="introWithHelpText" class="font-serif italic text-xl sm:text-2xl md:text-3xl text-amber-100/90 tracking-[0.16em] pt-1">
           yardımlarıyla
         </div>
 
@@ -518,7 +518,7 @@
         style="animation-delay: 1.05s;"
         class="cinematic-fade-up mt-10 px-8 py-3 rounded-full bg-white/[0.04] hover:bg-[#d4af37]/15 border border-[#d4af37]/45 hover:border-[#d4af37] text-[#f8fafc] font-medium text-xs sm:text-sm tracking-[0.28em] uppercase flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.18)] hover:shadow-[0_0_45px_rgba(212,175,55,0.42)] transition-all duration-300 cursor-pointer"
       >
-        <span>Haritayı Keşfet</span>
+        <span id="startExploreBtnText">Haritayı Keşfet</span>
         <i data-lucide="arrow-up-right" class="w-4 h-4 text-[#d4af37]"></i>
       </button>
     </div>
@@ -552,12 +552,12 @@
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <span id="headerTubitakBadge" class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
               TÜBİTAK Projesi
             </span>
-            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 60 Küresel Durak</span>
+            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 65 Küresel Durak</span>
           </div>
-          <h2 class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
+          <h2 id="headerAtlasTitle" class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
             Küresel Tarih ve Edebiyat Atlası
           </h2>
         </div>
@@ -569,7 +569,7 @@
         <!-- 1. Satır: Akademik Danışman (Bayram ile aynı büyüklük ve güçlü vurgu) -->
         <div class="flex items-center gap-1.5 text-[10px] sm:text-[11px] whitespace-nowrap">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24] shrink-0"></span>
-          <span class="text-slate-400 font-normal"><span class="sm:hidden">Danışman:</span><span class="hidden sm:inline">Akademik Danışman:</span></span>
+          <span class="text-slate-400 font-normal"><span id="headerAdvisorShort" class="sm:hidden">Danışman:</span><span id="headerAdvisorFull" class="hidden sm:inline">Akademik Danışman:</span></span>
           <strong class="text-amber-200 font-bold tracking-wide">Öğr. Gör. Dr. Ayşegül Elçi</strong>
         </div>
 
@@ -581,16 +581,16 @@
           
           <!-- Mobilde Kısa Versiyon -->
           <span class="sm:hidden flex items-center gap-1">
-            <span>Yürütücü &amp; Geliştirici: <strong class="text-amber-200 font-bold">Bayram Akpamukçu</strong></span>
+            <span><span id="headerLeadShort">Yürütücü &amp; Geliştirici:</span> <strong class="text-amber-200 font-bold">Bayram Akpamukçu</strong></span>
             <span class="text-slate-500">•</span>
-            <span>yardımlarıyla <strong class="text-amber-200 font-bold">Sami Yusuf Maral</strong></span>
+            <span><span id="headerHelpShort">yardımlarıyla</span> <strong class="text-amber-200 font-bold">Sami Yusuf Maral</strong></span>
           </span>
 
           <!-- Masaüstünde Tam Versiyon -->
           <span class="hidden sm:inline-flex items-center gap-1.5">
-            <span>Proje Yürütücüsü &amp; Geliştirici: <strong class="text-amber-200 font-bold tracking-wide">Bayram Akpamukçu</strong></span>
+            <span><span id="headerLeadFull">Proje Yürütücüsü &amp; Geliştirici:</span> <strong class="text-amber-200 font-bold tracking-wide">Bayram Akpamukçu</strong></span>
             <span class="text-slate-500">•</span>
-            <span>yardımlarıyla <strong class="text-amber-200 font-bold tracking-wide">Sami Yusuf Maral</strong></span>
+            <span><span id="headerHelpFull">yardımlarıyla</span> <strong class="text-amber-200 font-bold tracking-wide">Sami Yusuf Maral</strong></span>
           </span>
         </div>
 
@@ -600,8 +600,31 @@
     <!-- Sağ: Arama Çubuğu, Küresel Kıta Filtreleri ve Kategori Filtreleri (Tek İnce Satırda - Kompakt ve Kusursuz Sığan Tasarım) -->
     <div class="glass-panel rounded-xl p-0.5 sm:p-1 pointer-events-auto flex items-center gap-1 sm:gap-1.5 max-w-full overflow-x-auto custom-scroll shrink-0">
       
+      <!-- Çift Dil Değiştirici Buton [ TR | EN ] (Glassmorphism & Champagne Gold) -->
+      <div class="flex items-center bg-slate-950/90 p-0.5 rounded-lg border border-[#d4af37]/40 shrink-0 shadow-[0_0_12px_rgba(212,175,55,0.15)]" id="langSwitchGroup" title="Dil Seçimi / Language Selection">
+        <button
+          type="button"
+          id="langBtnTr"
+          data-lang="tr"
+          class="lang-btn active px-1.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider transition-all duration-200 bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.3)] cursor-pointer"
+        >
+          TR
+        </button>
+        <span class="text-[9px] text-slate-500 px-0.5 select-none">|</span>
+        <button
+          type="button"
+          id="langBtnEn"
+          data-lang="en"
+          class="lang-btn px-1.5 py-0.5 rounded-md text-[10px] font-bold tracking-wider transition-all duration-200 text-slate-400 hover:text-white border border-transparent cursor-pointer"
+        >
+          EN
+        </button>
+      </div>
+
+      <div class="h-3.5 w-[1px] bg-white/10 hidden sm:block shrink-0"></div>
+
       <!-- Arama Kutusu (Kompakt: Sığma problemini çözer) -->
-      <div class="relative flex items-center shrink-0 w-24 sm:w-28 md:w-32 lg:w-36">
+      <div class="relative flex items-center shrink-0 w-20 sm:w-24 md:w-28 lg:w-32">
         <i data-lucide="search" class="w-3 h-3 text-sky-400 absolute left-2 pointer-events-none"></i>
         <input
           id="searchInput"
@@ -625,7 +648,7 @@
           class="region-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] cursor-pointer whitespace-nowrap"
         >
           <i data-lucide="globe" class="w-2.5 h-2.5 text-sky-300"></i>
-          <span>Tümü</span>
+          <span id="regLabelAll">Tümü</span>
         </button>
         <button
           type="button"
@@ -633,7 +656,7 @@
           class="region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🇹🇷</span>
-          <span>Türkiye</span>
+          <span id="regLabelTr">Türkiye</span>
         </button>
         <button
           type="button"
@@ -641,7 +664,7 @@
           class="region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🇪🇺</span>
-          <span>Avrupa</span>
+          <span id="regLabelEu">Avrupa</span>
         </button>
         <button
           type="button"
@@ -649,7 +672,7 @@
           class="region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌏</span>
-          <span>Asya<span class="hidden 2xl:inline"> &amp; O. Doğu</span></span>
+          <span><span id="regLabelAsia">Asya</span><span id="regLabelAsiaSub" class="hidden 2xl:inline"> &amp; O. Doğu</span></span>
         </button>
         <button
           type="button"
@@ -657,7 +680,7 @@
           class="region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌎</span>
-          <span>Amerika</span>
+          <span id="regLabelAm">Amerika</span>
         </button>
         <button
           type="button"
@@ -665,7 +688,7 @@
           class="region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span>🌍</span>
-          <span>Afrika</span>
+          <span id="regLabelAf">Afrika</span>
         </button>
       </div>
 
@@ -679,7 +702,7 @@
           class="category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap"
         >
           <span class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-amber-400 to-teal-400"></span>
-          <span><span class="hidden xl:inline">Tüm Kategoriler</span><span class="xl:hidden">Tümü</span></span>
+          <span><span id="catLabelAllFull" class="hidden xl:inline">Tüm Kategoriler</span><span id="catLabelAllShort" class="xl:hidden">Tümü</span></span>
         </button>
 
         <button
@@ -688,7 +711,7 @@
           class="category-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#f59e0b]"></span>
-          <span><span class="hidden xl:inline">Tarihi Olaylar</span><span class="xl:hidden">Tarih</span></span>
+          <span><span id="catLabelHistFull" class="hidden xl:inline">Tarihi Olaylar</span><span id="catLabelHistShort" class="xl:hidden">Tarih</span></span>
         </button>
 
         <button
@@ -697,7 +720,7 @@
           class="category-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
         >
           <span class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_6px_#14b8a6]"></span>
-          <span>Edebiyat &amp; Akımlar</span>
+          <span id="catLabelLit">Edebiyat &amp; Akımlar</span>
         </button>
       </div>
     </div>
@@ -713,7 +736,7 @@
           ⏳
         </div>
         <div class="hidden sm:block">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Zaman Tüneli</div>
+          <div id="timelineHeaderLabel" class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Zaman Tüneli</div>
           <div id="timelineCurrentEraLabel" class="text-[9px] text-slate-400 font-medium">Tüm Çağlar</div>
         </div>
       </div>
@@ -725,42 +748,42 @@
           data-era="all"
           class="era-btn active px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.3)] transition cursor-pointer whitespace-nowrap"
         >
-          <span>Tüm Çağlar</span>
+          <span id="eraBtnAll">Tüm Çağlar</span>
         </button>
         <button
           type="button"
           data-era="antik"
           class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
         >
-          <span>🏛️ Antik Çağ</span>
+          <span id="eraBtnAntik">🏛️ Antik Çağ</span>
         </button>
         <button
           type="button"
           data-era="ortacag"
           class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
         >
-          <span>⚔️ Orta Çağ &amp; Vikingler</span>
+          <span id="eraBtnOrtacag">⚔️ Orta Çağ &amp; Vikingler</span>
         </button>
         <button
           type="button"
           data-era="ronesans"
           class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
         >
-          <span>🎭 Rönesans &amp; Aydınlanma</span>
+          <span id="eraBtnRonesans">🎭 Rönesans &amp; Aydınlanma</span>
         </button>
         <button
           type="button"
           data-era="yuzvil19"
           class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
         >
-          <span>📜 19. Yüzyıl Klasikleri</span>
+          <span id="eraBtnYuzvil19">📜 19. Yüzyıl Klasikleri</span>
         </button>
         <button
           type="button"
           data-era="modern"
           class="era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap"
         >
-          <span>🚀 20. Yy &amp; Modern Çağ</span>
+          <span id="eraBtnModern">🚀 20. Yy &amp; Modern Çağ</span>
         </button>
       </div>
 
@@ -866,7 +889,7 @@
         <div class="flex items-center justify-between text-xs">
           <span class="flex items-center gap-1.5 font-semibold text-sky-300">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-            Yapay Zeka (AI) Tarihsel &amp; Edebi Sahne Görseli
+            <span id="drawerSceneHeaderLabel">Yapay Zeka (AI) Tarihsel &amp; Edebi Sahne Görseli</span>
           </span>
           <span id="drawerYearBadge" class="font-mono text-[11px] text-amber-300 font-semibold">1919</span>
         </div>
@@ -903,8 +926,8 @@
             <i data-lucide="headphones" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="text-xs font-bold text-white">Sesli Akademik Rehber</div>
-            <div class="text-[11px] text-slate-400">Türkçe Web Speech AI Seslendirme</div>
+            <div id="ttsGuideTitle" class="text-xs font-bold text-white">Sesli Akademik Rehber</div>
+            <div id="ttsGuideSubtitle" class="text-[11px] text-slate-400">Türkçe Web Speech AI Seslendirme</div>
           </div>
         </div>
 
@@ -922,7 +945,7 @@
       <div class="space-y-2.5">
         <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
           <i data-lucide="book-open" class="w-4 h-4"></i>
-          Akademik Tarihsel &amp; Edebi Analiz
+          <span id="drawerAnalysisHeading">Akademik Tarihsel &amp; Edebi Analiz</span>
         </h3>
         <p id="drawerDescription" class="text-base sm:text-lg text-slate-100 leading-relaxed font-normal">
           Detaylı akademik açıklama metni...
@@ -933,7 +956,7 @@
       <div class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-teal-950/55 via-slate-900/75 to-amber-950/30 border border-teal-500/30 space-y-2">
         <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-300">
           <i data-lucide="quote" class="w-4 h-4"></i>
-          <span>Tarihi Söz &amp; Edebi Alıntı</span>
+          <span id="drawerQuoteHeading">Tarihi Söz &amp; Edebi Alıntı</span>
         </div>
         <blockquote id="drawerQuote" class="text-base sm:text-lg italic text-teal-100/95 leading-relaxed border-l-2 border-teal-400 pl-3.5">
           "Alıntı..."
@@ -944,7 +967,7 @@
       <div class="space-y-3">
         <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
           <i data-lucide="award" class="w-4 h-4 text-emerald-400"></i>
-          Önemli Şahsiyetler &amp; Eserler
+          <span id="drawerFiguresHeading">Önemli Şahsiyetler &amp; Eserler</span>
         </h3>
         <div id="drawerTags" class="flex flex-wrap gap-2.5"></div>
       </div>
@@ -959,7 +982,7 @@
         class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer"
       >
         <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
-        <span>Önceki Nokta</span>
+        <span id="prevCityBtnText">Önceki Nokta</span>
       </button>
 
       <span id="drawerStepIndicator" class="text-[11px] text-slate-400 font-mono">
@@ -971,7 +994,7 @@
         type="button"
         class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer"
       >
-        <span>Sonraki Nokta</span>
+        <span id="nextCityBtnText">Sonraki Nokta</span>
         <i data-lucide="arrow-right" class="w-4 h-4 text-teal-400"></i>
       </button>
     </div>
@@ -1366,6 +1389,7 @@
       },
       {
         id: "paris",
+        secondaryCategory: "edebiyat",
         city: "Paris",
         country: "Fransa",
         region: "avrupa",
@@ -3527,6 +3551,263 @@
           regionTag: "MADAGASKAR"
         }),
         imageCaption: "Antananarivo tarihi tepe silüeti, Rova Kraliçeler Sarayı ve Hint Okyanusu vadisi."
+      },
+
+      // ==================== İNGİLİZ, İRLANDA VE AMERİKAN EDEBİYATI OMURGASI (5 YENİ STRATEJİK DURAK) ====================
+      {
+        id: "canterbury",
+        city: "Canterbury",
+        city_en: "Canterbury",
+        country: "İngiltere",
+        country_en: "England (UK)",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 51.28,
+        lng: 1.08,
+        pinOffsetX: "14px",
+        pinOffsetY: "10px",
+        labelShiftX: "12px",
+        era: "ortacag",
+        numericYear: 1387,
+        year: "1387 – 1400",
+        year_en: "1387 – 1400",
+        title: "Geoffrey Chaucer ve Canterbury Hikâyeleri (İngiliz Edebiyatının Doğuşu)",
+        title_en: "Geoffrey Chaucer & The Canterbury Tales (Dawn of English Literature)",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "⛪",
+        description:
+          "14. yüzyılın sonunda Geoffrey Chaucer tarafından kaleme alınan 'The Canterbury Tales' (Canterbury Hikâyeleri), Latince ve Anglo-Norman Fransızcasının saray hakimiyetini kırarak Orta İngilizceyi (Middle English) büyük bir edebi dil seviyesine yükseltmiştir. Londra'daki Tabard Hanı'ndan Canterbury Katedrali'ndeki Aziz Thomas Becket türbesine yürüyen şövalye, değirmenci, rahibe ve Bath'lı kadın gibi 30 farklı hacının yolda anlattığı hikâyeler; ortaçağ feodal toplumunun, kilise kurumunun ve insan doğasının eşsiz bir hiciv ve realizm panoramasıdır.",
+        description_en:
+          "Written by Geoffrey Chaucer at the close of the 14th century, 'The Canterbury Tales' elevated Middle English into a major literary language, breaking the dominance of Latin and Anglo-Norman French. Framing the pilgrimage of 30 diverse travelers—from the Knight and the Miller to the Wife of Bath—journeying from London's Tabard Inn to the shrine of Saint Thomas Becket at Canterbury Cathedral, the masterpiece offers an unmatched satirical and realistic panorama of medieval feudal society and human nature.",
+        quote:
+          "\"Whan that Aprill with his shoures soote / The droghte of March hath perced to the roote, / Thanne longen folk to goon on pilgrimages...\" (Nisan tatlı yağmurlarıyla Mart'ın kuraklığını köküne dek deldiğinde, insanlar hacca gitmek için yollara düşer.) — Geoffrey Chaucer (The Canterbury Tales / Canterbury Hikâyeleri)",
+        quote_en:
+          "\"Whan that Aprill with his shoures soote / The droghte of March hath perced to the roote, / Thanne longen folk to goon on pilgrimages...\" (Nisan tatlı yağmurlarıyla Mart'ın kuraklığını köküne dek deldiğinde, insanlar hacca gitmek için yollara düşer.) — Geoffrey Chaucer (The Canterbury Tales, General Prologue)",
+        figuresAndWorks: [
+          "Geoffrey Chaucer (The Canterbury Tales / Canterbury Hikâyeleri)",
+          "Orta İngilizce Edebi Devrimi (Middle English)",
+          "Canterbury Katedrali & Hac Rotası",
+          "Bath'lı Kadın ve Şövalye Hikâyeleri (Ortaçağ Hicvi)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1548625361-16800b328a79?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "CANTERBURY HİKÂYELERİ",
+          subtitle: "Geoffrey Chaucer, Hac Rotası ve İngiliz Edebiyatının Doğuşu",
+          era: "1387 – 1400",
+          primaryColor: "#0f766e",
+          secondaryColor: "#0f172a",
+          accentColor: "#2dd4bf",
+          icon: "⛪",
+          regionTag: "CANTERBURY / İNGİLTERE"
+        }),
+        imageCaption: "Canterbury Katedrali gotik kuleleri ve Geoffrey Chaucer'ın ortaçağ hac rotası.",
+        imageCaption_en: "Gothic towers of Canterbury Cathedral and Geoffrey Chaucer's medieval pilgrimage route."
+      },
+      {
+        id: "lakedistrict",
+        city: "Lake District (Göller Bölgesi)",
+        city_en: "Lake District",
+        country: "İngiltere",
+        country_en: "England (UK)",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 54.46,
+        lng: -3.08,
+        pinOffsetX: "-12px",
+        pinOffsetY: "-4px",
+        labelShiftX: "-12px",
+        era: "yuzvil19",
+        numericYear: 1798,
+        year: "1798 – 1850",
+        year_en: "1798 – 1850",
+        title: "William Wordsworth, Coleridge ve İngiliz Romantizmi (Lyrical Ballads)",
+        title_en: "William Wordsworth, Coleridge & English Romanticism (Lyrical Ballads)",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🏞️",
+        description:
+          "İngiltere'nin kuzeybatısındaki sisli gölleri ve sarp vadileriyle ünlü Göller Bölgesi (Lake District), William Wordsworth ve Samuel Taylor Coleridge'in 1798'de yayımladıkları 'Lyrical Ballads' (Lirik Baladlar) ile İngiliz Romantizmini başlattıkları coğrafyadır. Sanayi Devrimi'nin mekanikleşmesine karşı doğanın yüceliğini (sublime), sıradan insanın dilini ve içsel coşkuyu şiirin merkezine taşıyan 'Göl Şairleri' (Lake Poets), Grasmere'deki Dove Cottage'da modern doğa poetikasını kurmuşlardır.",
+        description_en:
+          "Famed for its misty fells and glacial lakes in northwest England, the Lake District is the birthplace of English Romanticism, inaugurated in 1798 by William Wordsworth and Samuel Taylor Coleridge with 'Lyrical Ballads'. Reacting against the mechanization of the Industrial Revolution, the 'Lake Poets' celebrated the sublime majesty of nature, ordinary human speech, and emotional interiority from Dove Cottage in Grasmere.",
+        quote:
+          "\"Poetry is the spontaneous overflow of powerful feelings: it takes its origin from emotion recollected in tranquillity. / I wandered lonely as a cloud...\" (Şiir, güçlü duyguların kendiliğinden taşmasıdır; kaynağını sükûnet içinde hatırlanan duygulardan alır. / Bir bulut gibi yapayalnız dolaştım...) — William Wordsworth (Lyrical Ballads)",
+        quote_en:
+          "\"Poetry is the spontaneous overflow of powerful feelings: it takes its origin from emotion recollected in tranquillity. / I wandered lonely as a cloud...\" (Şiir, güçlü duyguların kendiliğinden taşmasıdır; kaynağını sükûnet içinde hatırlanan duygulardan alır. / Bir bulut gibi yapayalnız dolaştım...) — William Wordsworth (Lyrical Ballads)",
+        figuresAndWorks: [
+          "William Wordsworth (Lyrical Ballads & The Prelude)",
+          "Samuel Taylor Coleridge (The Rime of the Ancient Mariner)",
+          "Göl Şairleri (Lake Poets) & Dove Cottage (Grasmere)",
+          "İngiliz Romantizmi ve Doğa Poetikası"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "LAKE DISTRICT & ROMANTİZM",
+          subtitle: "Wordsworth, Coleridge ve Lyrical Ballads Doğa Poetikası",
+          era: "1798 – 1850",
+          primaryColor: "#065f46",
+          secondaryColor: "#0f172a",
+          accentColor: "#34d399",
+          icon: "🏞️",
+          regionTag: "LAKE DISTRICT / İNGİLTERE"
+        }),
+        imageCaption: "Lake District (Göller Bölgesi) vadileri, Grasmere Gölü ve Wordsworth'ün doğa poetikası.",
+        imageCaption_en: "Valleys of the Lake District, Grasmere Lake, and Wordsworth's Romantic nature poetics."
+      },
+      {
+        id: "bath",
+        city: "Bath",
+        city_en: "Bath",
+        country: "İngiltere",
+        country_en: "England (UK)",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇬🇧",
+        lat: 51.38,
+        lng: -2.36,
+        pinOffsetX: "-14px",
+        pinOffsetY: "12px",
+        labelShiftX: "-14px",
+        era: "yuzvil19",
+        numericYear: 1813,
+        year: "1801 – 1817",
+        year_en: "1801 – 1817",
+        title: "Jane Austen, Gurur ve Önyargı ve İngiliz Taşra Realizmi",
+        title_en: "Jane Austen, Pride and Prejudice & English Regency Realism",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🖋️",
+        description:
+          "Antik Roma hamamları ve zarif Georgian/Regency mimarisiyle ünlü Bath şehri, Jane Austen'ın 1801-1806 yılları arasında yaşadığı ve İngiliz taşra sosyetesini keskin bir ironiyle gözlemlediği edebiyat merkezidir. 'Pride and Prejudice' (Gurur ve Önyargı) ile roman sanatına psikolojik derinlik ve serbest dolaylı anlatım kazandıran Austen; doğrudan Bath sokaklarında geçen 'Northanger Abbey' ve 'Persuasion' (İkna) eserleriyle 18.-19. yüzyıl İngiliz taşra toplumunu, sınıf ilişkilerini ve kadınların toplumsal konumunu realist bir ustalıkla ölümsüzleştirmiştir.",
+        description_en:
+          "Renowned for its ancient Roman baths and sweeping Georgian crescents, Bath was home to Jane Austen from 1801 to 1806 and served as the primary stage for 'Northanger Abbey' and 'Persuasion'. Alongside her masterpiece 'Pride and Prejudice', Austen pioneered free indirect discourse and razor-sharp social irony, capturing 18th- and 19th-century English provincial gentry, class dynamics, and realism with timeless elegance.",
+        quote:
+          "\"It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.\" (İyi bir servete sahip bekâr bir erkeğin, mutlaka bir eşe ihtiyacı olduğu evrensel olarak kabul edilmiş bir hakikattir.) — Jane Austen (Pride and Prejudice / Gurur ve Önyargı)",
+        quote_en:
+          "\"It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.\" (İyi bir servete sahip bekâr bir erkeğin, mutlaka bir eşe ihtiyacı olduğu evrensel olarak kabul edilmiş bir hakikattir.) — Jane Austen (Pride and Prejudice, 1813)",
+        figuresAndWorks: [
+          "Jane Austen (Pride and Prejudice / Gurur ve Önyargı)",
+          "Persuasion (İkna) & Northanger Abbey",
+          "18.-19. Yüzyıl İngiliz Taşra Realizmi ve İroni",
+          "Royal Crescent & Regency Dönemi Toplum Panoraması"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "BATH & JANE AUSTEN",
+          subtitle: "Gurur ve Önyargı, Persuasion ve İngiliz Taşra Realizmi",
+          era: "1801 – 1817",
+          primaryColor: "#115e59",
+          secondaryColor: "#1e1b4b",
+          accentColor: "#2dd4bf",
+          icon: "🖋️",
+          regionTag: "BATH / İNGİLTERE"
+        }),
+        imageCaption: "Bath Royal Crescent mimarisi ve Jane Austen'ın Regency dönemi İngiliz edebiyat mirası.",
+        imageCaption_en: "Bath's Royal Crescent architecture and Jane Austen's Regency-era literary heritage."
+      },
+      {
+        id: "concord",
+        city: "Concord (Massachusetts)",
+        city_en: "Concord, Massachusetts",
+        country: "ABD",
+        country_en: "USA",
+        region: "amerika",
+        regionLabel: "Amerika",
+        flag: "🇺🇸",
+        lat: 42.46,
+        lng: -71.35,
+        pinOffsetX: "12px",
+        pinOffsetY: "-10px",
+        labelShiftX: "10px",
+        era: "yuzvil19",
+        numericYear: 1854,
+        year: "1836 – 1854",
+        year_en: "1836 – 1854",
+        title: "Amerikan Transandantalizmi: Emerson, Thoreau (Walden) ve Hawthorne",
+        title_en: "American Transcendentalism: Emerson, Thoreau (Walden) & Hawthorne",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "🌲",
+        description:
+          "Massachusetts'teki tarihi Concord kasabası, 19. yüzyılda Amerikan edebiyatının Avrupa taklitçiliğinden sıyrılıp kendi felsefi kimliğini bulduğu 'Amerikan Rönesansı' ve Transandantalizm (Deneyüstücülük) akımının kalbidir. Ralph Waldo Emerson'un 'Nature' (Doğa) ve 'Self-Reliance' (Özgüven) denemeleriyle başlayan hareket; Henry David Thoreau'nun Walden Gölü kıyısında kendi elleriyle yaptığı kulübede sade yaşamı ve doğa felsefesini anlattığı 'Walden' ile 'Sivil İtaatsizlik' eserlerinde zirveye ulaşmış, Nathaniel Hawthorne ile Amerikan düşünce tarihini dönüştürmüştür.",
+        description_en:
+          "Historic Concord, Massachusetts, stood at the epicenter of the 19th-century American Literary Renaissance and Transcendentalism. Sparked by Ralph Waldo Emerson's essays 'Nature' and 'Self-Reliance', the movement found its quintessential expression at Walden Pond, where Henry David Thoreau lived in a hand-built cabin to write 'Walden' and 'Civil Disobedience', alongside fellow Concord writer Nathaniel Hawthorne.",
+        quote:
+          "\"I went to the woods because I wished to live deliberately, to front only the essential facts of life, and see if I could not learn what it had to teach...\" (Ormana gittim, çünkü bilinçli yaşamak, hayatın yalnızca temel gerçekleriyle yüzleşmek ve bana öğreteceklerini öğrenip öğrenemeyeceğimi görmek istedim.) — Henry David Thoreau (Walden)",
+        quote_en:
+          "\"I went to the woods because I wished to live deliberately, to front only the essential facts of life, and see if I could not learn what it had to teach...\" (Ormana gittim, çünkü bilinçli yaşamak, hayatın yalnızca temel gerçekleriyle yüzleşmek ve bana öğreteceklerini öğrenip öğrenemeyeceğimi görmek istedim.) — Henry David Thoreau (Walden, 1854)",
+        figuresAndWorks: [
+          "Henry David Thoreau (Walden & Sivil İtaatsizlik)",
+          "Ralph Waldo Emerson (Nature & Self-Reliance)",
+          "Nathaniel Hawthorne (The Scarlet Letter / Kızıl Damga)",
+          "Louisa May Alcott (Little Women / Küçük Kadınlar)"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "CONCORD & WALDEN GÖLÜ",
+          subtitle: "Emerson, Thoreau, Hawthorne ve Amerikan Transandantalizmi",
+          era: "1836 – 1854",
+          primaryColor: "#064e3b",
+          secondaryColor: "#0f172a",
+          accentColor: "#10b981",
+          icon: "🌲",
+          regionTag: "CONCORD / ABD"
+        }),
+        imageCaption: "Concord Walden Gölü ormanları: Thoreau, Emerson ve Amerikan Transandantalizminin doğa tapınağı.",
+        imageCaption_en: "Forests of Walden Pond in Concord: Sanctuary of Thoreau, Emerson, and American Transcendentalism."
+      },
+      {
+        id: "galway",
+        city: "Galway & Sligo",
+        city_en: "Galway & Sligo",
+        country: "İrlanda",
+        country_en: "Ireland",
+        region: "avrupa",
+        regionLabel: "Avrupa",
+        flag: "🇮🇪",
+        lat: 53.27,
+        lng: -9.05,
+        pinOffsetX: "-14px",
+        pinOffsetY: "0px",
+        labelShiftX: "-10px",
+        era: "modern",
+        numericYear: 1923,
+        year: "1889 – 1939",
+        year_en: "1889 – 1939",
+        title: "W.B. Yeats, Kelt Rönesansı ve Modernist İrlanda Şiiri",
+        title_en: "W.B. Yeats, The Celtic Revival & Modernist Irish Poetry",
+        category: "edebiyat",
+        categoryLabel: "Edebiyat & Akımlar",
+        icon: "☘️",
+        description:
+          "Atlas Okyanusu kıyısındaki vahşi doğasıyla Galway (Thoor Ballylee Kulesi ve Coole Park) ile Sligo (Ben Bulben ve Innisfree Adası), 1923 Nobel Edebiyat Ödülü sahibi William Butler Yeats'in şiirsel vatanıdır. Lady Augusta Gregory ve J.M. Synge ile birlikte 'Kelt Alacakaranlığı' (Celtic Twilight) ve İrlanda Edebi Rönesansı'na öncülük eden Yeats; kadim Kelt mitolojisini, peri folklorunu ve keskin modernist sembolizmi harmanlayarak 'The Second Coming' ve 'The Tower' ile 20. yüzyıl dünya şiirine yön vermiştir.",
+        description_en:
+          "Along Ireland's rugged Atlantic coast, Sligo (Lough Gill's Lake Isle of Innisfree and Ben Bulben) and Galway (Thoor Ballylee Tower and Coole Park) formed the spiritual landscape of 1923 Nobel Laureate William Butler Yeats. Spearheading the Irish Literary Revival (Celtic Twilight) alongside Lady Augusta Gregory and J.M. Synge, Yeats fused ancient Celtic mythology and folklore with high modernist symbolism in masterpieces such as 'The Second Coming' and 'The Tower'.",
+        quote:
+          "\"Turning and turning in the widening gyre / The falcon cannot hear the falconer; / Things fall apart; the centre cannot hold...\" (Genişleyen girdapta döne döne / Şahin artık şahincisini duyamıyor; / Her şey dağılıyor; merkez tutamıyor...) — William Butler Yeats (The Second Coming)",
+        quote_en:
+          "\"Turning and turning in the widening gyre / The falcon cannot hear the falconer; / Things fall apart; the centre cannot hold...\" (Genişleyen girdapta döne döne / Şahin artık şahincisini duyamıyor; / Her şey dağılıyor; merkez tutamıyor...) — William Butler Yeats (The Second Coming, 1919)",
+        figuresAndWorks: [
+          "William Butler Yeats (1923 Nobel Edebiyat Ödülü)",
+          "The Second Coming, The Tower & The Lake Isle of Innisfree",
+          "Lady Augusta Gregory & J.M. Synge (Kelt Rönesansı)",
+          "Thoor Ballylee Kulesi (Galway) & Sligo Kelt Mitolojisi"
+        ],
+        coverImage: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=1000&q=85",
+        fallbackImage: createAICoverIllustration({
+          title: "GALWAY & SLIGO: W.B. YEATS",
+          subtitle: "Kelt Rönesansı, Kelt Mitolojisi ve Modernist İrlanda Şiiri",
+          era: "1889 – 1939",
+          primaryColor: "#047857",
+          secondaryColor: "#022c22",
+          accentColor: "#34d399",
+          icon: "☘️",
+          regionTag: "GALWAY & SLIGO / İRLANDA"
+        }),
+        imageCaption: "Batı İrlanda'nın zümrüt kıyıları, Galway taş kuleleri ve W.B. Yeats'in Kelt Rönesansı.",
+        imageCaption_en: "Emerald coasts of Western Ireland, Galway stone towers, and W.B. Yeats's Celtic Revival."
       }
     ]);
 
@@ -3575,52 +3856,706 @@
       madagaskar: { era: "modern", numericYear: 1895 }
     };
 
-    // Tüm konumlara era ve numericYear özelliklerini tanımla
+    // ============================================================================
+    // 2B. ÇİFT DİL (TR | EN) VERİ SÖZLÜĞÜ - TÜM DURAKLAR İÇİN İNGİLİZCE ÇEVİRİLER
+    // ============================================================================
+    const LOCATIONS_EN_MAP = {
+      amasya: {
+        city_en: "Amasya", country_en: "Türkiye", year_en: "22 June 1919",
+        title_en: "The Amasya Circular (1919)",
+        description_en: "Drafted on June 22, 1919 at Saraydüzü Barracks in Amasya, the Amasya Circular served as the official revolutionary manifesto and roadmap for the Turkish War of Independence. Declaring for the first time that 'the independence of the nation shall be saved by the nation's own determination and resolve,' it laid the cornerstone for a new sovereign republic.",
+        quote_en: "\"The integrity of the homeland and the independence of the nation are in peril. The independence of the nation shall be saved by the nation's own determination and decision.\" — The Amasya Circular (Articles 1 & 3)",
+        imageCaption_en: "Historic Amasya along the Yeşilırmak River and the birth of national sovereignty."
+      },
+      samsun: {
+        city_en: "Samsun", country_en: "Türkiye", year_en: "19 May 1919",
+        title_en: "May 19, 1919 & National Struggle Literature",
+        description_en: "Mustafa Kemal Pasha's landing at Samsun aboard the SS Bandırma on May 19, 1919 ignited the first spark of the Turkish War of Independence. Immortalized in Atatürk's monumental 'Nutuk' (The Great Speech), this historic step inspired classic works of Turkish National Struggle literature by Fazıl Hüsnü Dağlarca, Cahit Külebi, and Kemal Tahir.",
+        quote_en: "\"On the nineteenth day of May in the year 1919, I landed in Samsun. The general situation and panorama...\" — Mustafa Kemal Atatürk (Nutuk)",
+        imageCaption_en: "The route of independence from the Black Sea horizons to Samsun: the first step of the National Struggle."
+      },
+      erzurum: {
+        city_en: "Erzurum", country_en: "Türkiye", year_en: "23 July 1919 & Classical Era",
+        title_en: "Erzurum Congress & Legacy of Book of Dede Korkut",
+        description_en: "Convened on July 23, 1919, the Erzurum Congress established the foundation of the National Pact (Misak-ı Milli) by proclaiming that 'the homeland within national borders is an indivisible whole' and unconditionally rejecting foreign mandates. Erzurum is also a stronghold of Anatolian Turkish epic and minstrel literature through the Book of Dede Korkut and Erzurumlu Emrah.",
+        quote_en: "\"The homeland within national borders is an indivisible whole. It is essential to make the National Forces effective and the national will sovereign.\" — Resolutions of the Erzurum Congress",
+        imageCaption_en: "The Erzurum Congress at the foothills of Mount Palandöken and the ancient epic landscape of Dede Korkut."
+      },
+      sivas: {
+        city_en: "Sivas", country_en: "Türkiye", year_en: "4 September 1919 & 20th Century",
+        title_en: "Sivas Congress & Âşık Veysel Minstrel Tradition",
+        description_en: "On September 4, 1919, the Sivas Congress united all Associations for the Defense of National Rights under a single roof, nationalizing the struggle for independence. Sivas is equally the beating heart of Anatolian folk poetry and bardic tradition, stretching from Pir Sultan Abdal to the immortal verses of Âşık Veysel Şatıroğlu.",
+        quote_en: "\"I am on a long and narrow road, walking day and night / I know not what state I am in, walking day and night.\" — Âşık Veysel Şatıroğlu",
+        imageCaption_en: "The historic Sivas Congress Building and the heritage of Anatolian folk poetry echoing in Âşık Veysel's saz."
+      },
+      ankara: {
+        city_en: "Ankara", country_en: "Türkiye", year_en: "23 April 1920 – 12 March 1921",
+        title_en: "Opening of the Grand National Assembly & Mehmet Akif Ersoy",
+        description_en: "Inaugurated in Ankara on April 23, 1920 under the principle 'Sovereignty unconditionally belongs to the nation,' the Grand National Assembly directed the War of Independence. The National Anthem (İstiklal Marşı) penned by Mehmet Akif Ersoy at Taceddin Lodge, alongside novels by Halide Edib and Yakup Kadri, stand as literary monuments of liberation.",
+        quote_en: "\"Fear not! For the crimson flag that proudly ripples in these dawns shall never fade, / Before the last hearth that smokes above my homeland is extinguished.\" — Mehmet Akif Ersoy (Turkish National Anthem)",
+        imageCaption_en: "National Sovereignty in Ankara: Opening of the Parliament, adoption of the National Anthem, and birth of the Republic."
+      },
+      istanbul: {
+        city_en: "Istanbul", country_en: "Türkiye", year_en: "1453 – 19th Century",
+        title_en: "Conquest of Istanbul (1453), Divan Poetry & Servet-i Fünun",
+        description_en: "Sultan Mehmed II's conquest of Constantinople in 1453 closed the Middle Ages, inaugurated the Early Modern Era, and elevated Istanbul into a global capital of culture. Classical Ottoman Divan poetry reached its zenith with Bâkî, Nedim, and Şeyh Galip, later evolving into modern Turkish literature through Tevfik Fikret, Halit Ziya Uşaklıgil, and Yahya Kemal.",
+        quote_en: "\"Yesterday I gazed upon you from a hill, beloved Istanbul! / Nowhere have I seen or walked that I did not love in you.\" — Yahya Kemal Beyatlı",
+        imageCaption_en: "The Bosphorus and Historic Peninsula: Imperial heritage from the 1453 Conquest to Divan and modern Turkish literature."
+      },
+      canakkale: {
+        city_en: "Çanakkale (Dardanelles)", country_en: "Türkiye", year_en: "1200 BC & 18 March 1915",
+        title_en: "The Gallipoli Epic (1915) & Ancient Troy (Homer's Iliad)",
+        description_en: "The Dardanelles Strait has been a pivot of world history from the Trojan War immortalized in Homer's 'Iliad' to the 1915 Gallipoli Campaign ('Çanakkale Shall Not Be Passed'). The legendary defense at Conkbayırı and Anafartalar altered the course of global history and gave birth to an immortal canon of heroic Turkish poetry.",
+        quote_en: "\"Behold the bodies of martyrs—mountains and stones... / Were it not for bowing in prayer, these heads would never bow on earth!\" — Mehmet Akif Ersoy (To the Martyrs of Çanakkale)",
+        imageCaption_en: "Gallipoli Peninsula and Ancient Troy: From Homer's Iliad to the 1915 Çanakkale Epic."
+      },
+      londra: {
+        city_en: "London", country_en: "England (UK)", year_en: "1599 – 19th Century",
+        title_en: "Shakespeare, The Globe Theatre & The Victorian Novel",
+        description_en: "At the Globe Theatre opened along the Thames in 1599, William Shakespeare brought human psychology to the universal stage through 'Hamlet', 'Macbeth', and 'King Lear'. In the 19th and 20th centuries, Charles Dickens, Jane Austen, and Virginia Woolf made London the global metropolis of the Victorian and Modernist novel.",
+        quote_en: "\"To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, or to take arms against a sea of troubles...\" — William Shakespeare (Hamlet)",
+        imageCaption_en: "Banks of the River Thames in London: Shakespeare's Globe Theatre and Victorian literary heritage."
+      },
+      paris: {
+        city_en: "Paris", country_en: "France", year_en: "1789 & 19th Century",
+        title_en: "The French Revolution (1789), Victor Hugo & French Realism",
+        description_en: "The 1789 French Revolution shook absolute monarchies with the ideals of liberty, equality, and human rights, ushering in the age of modern democracy. In literature, this upheaval gave rise to Romanticism, Realism, and Symbolism, establishing Paris as an intellectual capital through Victor Hugo, Honoré de Balzac, Gustave Flaubert, and Charles Baudelaire.",
+        quote_en: "\"So long as there shall exist, by virtue of law and custom, social condemnation... books of the nature of Les Misérables cannot be useless. Romanticism is liberalism in literature.\" — Victor Hugo (Les Misérables)",
+        imageCaption_en: "Paris and the River Seine: Liberty ideals of 1789 and the Romantic-Realist legacy of Victor Hugo and Balzac."
+      },
+      floransa: {
+        city_en: "Florence", country_en: "Italy", year_en: "14th Century (1300–1400)",
+        title_en: "Birth of the Renaissance & Dante Alighieri (Divine Comedy)",
+        description_en: "Transcending medieval scholasticism as the cradle of the Renaissance and Humanism, Florence placed human dignity and earthly experience at the center of art and literature. Dante Alighieri's 'Divine Comedy', Petrarch's sonnets, and Boccaccio's 'Decameron' ignited the dawn of modern European literature.",
+        quote_en: "\"Midway upon the journey of our life, I found myself within a forest dark, for the straightforward pathway had been lost.\" — Dante Alighieri (Inferno, Divine Comedy)",
+        imageCaption_en: "Florence Cathedral Dome and the Arno River: Capital of Dante and the Humanist revolution."
+      },
+      weimar: {
+        city_en: "Weimar", country_en: "Germany", year_en: "1770–1832",
+        title_en: "Goethe, Schiller & The Sturm und Drang Movement",
+        description_en: "Born as a rebellion against rigid rationalism, the 'Sturm und Drang' (Storm and Stress) movement exalted individual freedom and passionate emotion. Goethe's 'The Sorrows of Young Werther' and 'Faust', alongside Friedrich Schiller's dramas, pioneered European Romanticism and coined the concept of 'Weltliteratur' (World Literature).",
+        quote_en: "\"What a riddle is the human heart! I return into myself, and find a whole world there.\" — J. W. von Goethe (The Sorrows of Young Werther)",
+        imageCaption_en: "Duchess Anna Amalia Library in Weimar: Legacy of Goethe, Schiller, and Weimar Classicism."
+      },
+      atina: {
+        city_en: "Athens", country_en: "Greece", year_en: "5th Century BC (Classical Antiquity)",
+        title_en: "Ancient Greek Philosophy & Classical Tragedy (Sophocles)",
+        description_en: "As the birthplace of democracy, systematic philosophy, and dramatic theater, 5th-century BC Athens experienced a golden age of human thought. While Socrates, Plato, and Aristotle established the foundations of reason and poetics, Sophocles, Euripides, and Aeschylus brought fate, hubris, and justice to the tragic stage.",
+        quote_en: "\"The unexamined life is not worth living.\" — Socrates / Classical Athenian Philosophical Tradition",
+        imageCaption_en: "The Acropolis of Athens and Theatre of Dionysus: Cradle of classical philosophy, democracy, and tragedy."
+      },
+      madrid: {
+        city_en: "Madrid", country_en: "Spain", year_en: "1605 (Spanish Golden Age)",
+        title_en: "Spanish Golden Age & Cervantes (Don Quixote - Birth of the Modern Novel)",
+        description_en: "Published by Miguel de Cervantes in 1605 during Spain's 'Siglo de Oro' (Golden Age), 'Don Quixote' is universally acclaimed as the first modern novel in world literature. Exploring the tension between illusion and reality with profound irony, it shaped the trajectory of all subsequent fiction.",
+        quote_en: "\"He who reads much and walks much, sees much and knows much. Liberty is one of the most precious gifts that heaven has bestowed upon men.\" — Miguel de Cervantes (Don Quixote)",
+        imageCaption_en: "Madrid and the horizons of La Mancha: Birth of the modern novel with Cervantes's Don Quixote."
+      },
+      stpetersburg: {
+        city_en: "St. Petersburg", country_en: "Russia", year_en: "19th Century (1830–1880)",
+        title_en: "Russian Realism: Masterpieces of Dostoevsky & Tolstoy",
+        description_en: "Nineteenth-century Russian Realism turned the misty avenues of St. Petersburg into a laboratory of the human soul's deepest moral and philosophical questions. Initiated by Pushkin and Gogol, this monumental tradition reached its pinnacle with Fyodor Dostoevsky's 'Crime and Punishment' and Leo Tolstoy's 'War and Peace'.",
+        quote_en: "\"We all came out from under Gogol's 'Overcoat.' Pain and suffering are always inevitable for a large intelligence and a deep heart.\" — Fyodor Dostoevsky",
+        imageCaption_en: "Banks of the Neva River in St. Petersburg: Dostoevsky, Tolstoy, and 19th-century Russian masterpieces."
+      },
+      dublin: {
+        city_en: "Dublin", country_en: "Ireland", year_en: "19th & 20th Century (1922)",
+        title_en: "Apex of Literary Modernism: James Joyce (Ulysses) & Oscar Wilde",
+        description_en: "A UNESCO City of Literature, Dublin is the immortal setting of James Joyce's 'Ulysses', which revolutionized the 20th-century modernist novel through the stream-of-consciousness technique. With literary giants such as Oscar Wilde, W. B. Yeats, Samuel Beckett, and George Bernard Shaw, Dublin gifted four Nobel Prizes to world literature.",
+        quote_en: "\"We are all in the gutter, but some of us are looking at the stars.\" — Oscar Wilde / Dublin Literary Tradition",
+        imageCaption_en: "Trinity College Old Library in Dublin: Epicenter of James Joyce, Oscar Wilde, and literary modernism."
+      },
+      bagdat: {
+        city_en: "Baghdad", country_en: "Iraq", year_en: "8th – 13th Century (Islamic Golden Age)",
+        title_en: "House of Wisdom (Bayt al-Hikma) & One Thousand and One Nights",
+        description_en: "Founded in Baghdad during the Abbasid Caliphate, the House of Wisdom (Bayt al-Hikma) became the global center of science and philosophy where Greek, Indian, and Persian works were translated and expanded. While Al-Khwarizmi founded algebra, Scheherazade's 'One Thousand and One Nights' shaped the narrative imagination of both East and West.",
+        quote_en: "\"The ink of the scholar is more sacred than the blood of the martyr. Wisdom is the lost property of the believer.\" — Bayt al-Hikma Tradition",
+        imageCaption_en: "Baghdad's House of Wisdom on the Tigris: Scholars of the Golden Age and One Thousand and One Nights."
+      },
+      semerkant: {
+        city_en: "Samarkand", country_en: "Uzbekistan", year_en: "14th – 15th Century (Timurid Renaissance)",
+        title_en: "The Silk Road, Timurid Renaissance & Ulugh Beg Observatory",
+        description_en: "The jewel of the ancient Silk Road, Samarkand flourished during the Timurid Renaissance as a radiant center of architecture, astronomy, and Chagatai Turkic literature. At the observatory founded by astronomer-king Ulugh Beg alongside Ali Qushji, the 'Zij-i-Sultani' star catalog guided global astronomy for centuries.",
+        quote_en: "\"Religions dissipate like mist, kingdoms crumble; yet the works of scholars endure for eternity.\" — Ulugh Beg (Samarkand Observatory)",
+        imageCaption_en: "Registan Square and Ulugh Beg Observatory in Samarkand: The Timurid Renaissance along the Silk Road."
+      },
+      kyoto: {
+        city_en: "Kyoto", country_en: "Japan", year_en: "1008 (Heian Period)",
+        title_en: "Heian Period & The World's First Novel: The Tale of Genji (Murasaki Shikibu)",
+        description_en: "Written in early 11th-century imperial Kyoto by court lady Murasaki Shikibu, 'The Tale of Genji' (Genji Monogatari) is widely recognized as the world's first psychological and realistic novel. With its refined nature aesthetics, mono no aware sensitivity, and intricate character portraits, it stands as an unrivaled literary summit.",
+        quote_en: "\"That wistful sensitivity to the beauty of passing seasons (mono no aware) is the deepest mirror of the human soul.\" — Murasaki Shikibu (The Tale of Genji)",
+        imageCaption_en: "Heian shrines of Kyoto: Murasaki Shikibu's 'The Tale of Genji', the world's first novel."
+      },
+      pekin: {
+        city_en: "Beijing / Xi'an", country_en: "China", year_en: "5th Century BC – 9th Century AD",
+        title_en: "Tang Dynasty Poetry (Li Bai) & Invention of Paper and Printing",
+        description_en: "Cai Lun's invention of paper and Bi Sheng's movable-type printing in China sparked the greatest information revolution in human history, enabling literature to spread worldwide. During the Tang Dynasty, poets Li Bai and Du Fu inaugurated the golden age of classical Eastern poetry, celebrating nature, cosmos, and mortality.",
+        quote_en: "\"Raising my head, I gaze at the bright moon; bowing my head, I think of my distant homeland.\" — Li Bai (Quiet Night Thought)",
+        imageCaption_en: "Beijing and Xi'an: Invention of paper and printing, and the poetic legacy of Li Bai and Du Fu."
+      },
+      newyork: {
+        city_en: "New York / Boston", country_en: "USA", year_en: "1776 – 20th Century",
+        title_en: "American Declaration of Independence, Harlem Renaissance & Edgar Allan Poe",
+        description_en: "The ideals of liberty proclaimed in 1776 gave rise to modern American literature along the New York–Boston axis. While Edgar Allan Poe pioneered gothic fiction and the modern detective story, Walt Whitman, Herman Melville, and the 1920s Harlem Renaissance led by Langston Hughes transformed global literary expression.",
+        quote_en: "\"All that we see or seem is but a dream within a dream.\" — Edgar Allan Poe",
+        imageCaption_en: "New York and Boston: Edgar Allan Poe, American literary classics, and the Harlem Renaissance."
+      },
+      bogota: {
+        city_en: "Aracataca / Bogotá", country_en: "Colombia", year_en: "1967 (20th Century)",
+        title_en: "Latin American Magical Realism & Gabriel García Márquez",
+        description_en: "At the heart of the Latin American Literary Boom, Colombia is the homeland of Nobel Laureate Gabriel García Márquez, who gifted 'Magical Realism' to world literature. The mythical town of Macondo in 'One Hundred Years of Solitude' immortalized the history, solitude, and folklore of an entire continent.",
+        quote_en: "\"Human beings are not born once and for all on the day their mothers give birth to them, but life obliges them over and over again to give birth to themselves.\" — Gabriel García Márquez",
+        imageCaption_en: "Aracataca and Bogotá, Colombia: Gabriel García Márquez's 'One Hundred Years of Solitude' and Magical Realism."
+      },
+      kahire: {
+        city_en: "Cairo / Alexandria", country_en: "Egypt", year_en: "3rd Century BC – 1988",
+        title_en: "Ancient Library of Alexandria & Naguib Mahfouz",
+        description_en: "With hundreds of thousands of papyrus scrolls, the Ancient Library of Alexandria was the supreme temple of knowledge in the Mediterranean world, hosting Euclid, Archimedes, and Eratosthenes. In the modern era, Nobel Laureate Naguib Mahfouz chronicled Egypt's millennial soul in 'The Cairo Trilogy' and 'Children of Gebelawi'.",
+        quote_en: "\"You can tell whether a man is clever by his answers. You can tell whether a man is wise by his questions.\" — Naguib Mahfouz (Nobel Prize in Literature, 1988)",
+        imageCaption_en: "The Nile Delta, Cairo, and Alexandria: The great ancient library and Naguib Mahfouz's literary legacy."
+      },
+      timbuktu: {
+        city_en: "Timbuktu", country_en: "Mali", year_en: "14th – 16th Century",
+        title_en: "Sankore Madrasah & Timbuktu Manuscripts Heritage",
+        description_en: "At the southern gateway of the Sahara, Timbuktu flourished under the Mali and Songhai Empires as Africa's preeminent intellectual capital through Sankore University and hundreds of thousands of rare manuscripts. Scholars such as Ahmad Baba produced priceless treatises on astronomy, law, medicine, and literature.",
+        quote_en: "\"Salt comes from the north, gold from the south, and silver from the country of the white men, but the word of God and the treasures of wisdom are only to be found in Timbuktu.\" — Historic West African Proverb",
+        imageCaption_en: "Sankore Madrasah in Timbuktu and West Africa's historic manuscript libraries."
+      },
+      lindisfarne: {
+        city_en: "Lindisfarne", country_en: "England (Northumbria)", year_en: "AD 793 (8 June)",
+        title_en: "Raid on Lindisfarne & Dawn of the Viking Age",
+        description_en: "On June 8, 793, wooden dragon ships (Drakkars) from Scandinavian fjords launched a sudden raid on the Holy Island monastery of Lindisfarne off the Northumbrian coast. This event marks the official beginning of the Viking Age that reshaped European history for three centuries.",
+        quote_en: "\"Never before has such terror appeared in Britain as we have now suffered from a pagan race.\" — Anglo-Saxon Chronicle (793)",
+        imageCaption_en: "Holy Island of Lindisfarne off Northumbria: Historic shores where the Viking Age began."
+      },
+      york: {
+        city_en: "York (Jórvík)", country_en: "England (UK)", year_en: "AD 866 – 954",
+        title_en: "Viking Kingdom of Jórvík & The Beowulf Epic Axis",
+        description_en: "In 866, the Great Heathen Army led by Ivar the Boneless captured Roman Eboracum and proclaimed it the capital of the Viking Kingdom of Jórvík. While the city thrived as a hub of Norse craftsmanship and trade, the Anglo-Saxon and Scandinavian heroic epic 'Beowulf' took shape across these northern lands.",
+        quote_en: "\"Fate often saves an undoomed man when his courage is good.\" — Beowulf Epic",
+        imageCaption_en: "Historic city walls of York, Viking Jórvík trade routes, and medieval architecture."
+      },
+      stratford: {
+        city_en: "Stratford-upon-Avon", country_en: "England (UK)", year_en: "1564 – 1616",
+        title_en: "William Shakespeare & English Renaissance Theatre",
+        description_en: "Nestled on the banks of the River Avon, Stratford is the birthplace and final resting place of William Shakespeare, the supreme dramatist of world literature. Exploring ambition, tragedy, and love in 'Hamlet', 'Macbeth', 'Othello', 'King Lear', and 'Romeo and Juliet', the Bard coined over two thousand words and idioms in the English language.",
+        quote_en: "\"All the world's a stage, and all the men and women merely players; they have their exits and their entrances.\" — William Shakespeare",
+        imageCaption_en: "Stratford-upon-Avon: Shakespeare's historic timber-framed birthplace and banks of the River Avon."
+      },
+      edinburgh: {
+        city_en: "Edinburgh", country_en: "Scotland (UK)", year_en: "1814 – 1890",
+        title_en: "Scottish Enlightenment, Sir Walter Scott & The Historical Novel",
+        description_en: "Designated the world's first UNESCO City of Literature, Edinburgh became known as the 'Athens of the North' through David Hume and Robert Burns. Sir Walter Scott invented the modern historical novel here with 'Waverley' and 'Ivanhoe', while Robert Louis Stevenson and Arthur Conan Doyle drew timeless inspiration from its misty streets.",
+        quote_en: "\"Stones crumble and castles fall, yet an honest tale committed to paper defies the teeth of time.\" — Sir Walter Scott, Ivanhoe",
+        imageCaption_en: "Edinburgh Castle atop volcanic crags and the historic cobblestones of the Royal Mile."
+      },
+      oxford: {
+        city_en: "Oxford", country_en: "England (UK)", year_en: "1937 – 1954",
+        title_en: "The Oxford Inklings: J.R.R. Tolkien & Modern Fantasy Literature",
+        description_en: "Renowned for its Gothic spires and Bodleian Library, Oxford University is where Professor of Anglo-Saxon J.R.R. Tolkien forged the mythology of Middle-earth ('The Hobbit', 'The Lord of the Rings'). Meeting weekly with C.S. Lewis ('The Chronicles of Narnia') in 'The Inklings' literary group, they founded the genre of modern high fantasy.",
+        quote_en: "\"All that is gold does not glitter, not all those who wander are lost; the old that is strong does not wither, deep roots are not reached by the frost.\" — J.R.R. Tolkien, The Lord of the Rings",
+        imageCaption_en: "Oxford's Radcliffe Camera and historic colleges that inspired Middle-earth mythology."
+      },
+      oslo: {
+        city_en: "Oslo (Viken Fjord)", country_en: "Norway", year_en: "AD 890 – 1220",
+        title_en: "Viking Ship Engineering & Old Norse Sagas (The Eddas)",
+        description_en: "Built along the Oslo Fjord, the oak-hulled Oseberg and Gokstad longships were marvels of naval engineering that enabled Vikings to cross the Atlantic to Iceland, Greenland, and Vinland (North America). This spirit of exploration was immortalized in Snorri Sturluson's 'Heimskringla' and the 'Poetic Edda' myths of Odin, Thor, and Loki.",
+        quote_en: "\"Cattle die, kinsmen die, you yourself will also die; but the fair fame never dies of him who has earned it.\" — Hávamál (Poetic Edda)",
+        imageCaption_en: "Norwegian fjords, Viking Oseberg ship heritage, and Norse mythology."
+      },
+      uppsala: {
+        city_en: "Uppsala", country_en: "Sweden", year_en: "AD 980 – 1080",
+        title_en: "Great Viking Temple of Uppsala & Ancient Runestones",
+        description_en: "Old Uppsala (Gamla Uppsala) stood as the most sacred spiritual center of the Norse Viking world. Hundreds of surrounding granite runestones carved in the Younger Futhark alphabet commemorate Viking expeditions stretching across the Baltic and Black Seas to Constantinople (Miklagard).",
+        quote_en: "\"May Thor hallow these runes; may the valiant warrior who crossed the seas find eternal peace here.\" — Uppsala Runestone Inscription",
+        imageCaption_en: "Royal mounds of Gamla Uppsala and ancient Scandinavian runestone monuments."
+      },
+      roma: {
+        city_en: "Rome", country_en: "Italy", year_en: "44 BC – AD 19",
+        title_en: "Rise of the Roman Empire & Virgil's Aeneid Epic",
+        description_en: "Built upon seven hills, the Eternal City of Rome united the Mediterranean basin under Augustus following the assassination of Julius Caesar in 44 BC. During this Pax Romana, Virgil composed the immortal epic 'The Aeneid', Cicero perfected classical oratory, and Ovid gifted the 'Metamorphoses' to world literature.",
+        quote_en: "\"Remember, Roman, it is for you to rule the nations with your power, to crown peace with law, to spare the conquered, and to subdue the proud.\" — Virgil, The Aeneid",
+        imageCaption_en: "The Roman Forum, Colosseum, and monumental marble columns of Ancient Rome."
+      },
+      prag: {
+        city_en: "Prague", country_en: "Czechia", year_en: "1915 – 1925",
+        title_en: "Franz Kafka, Gothic Prague & Modernist Existentialism",
+        description_en: "With the misty statues of Charles Bridge and its ancient labyrinthine lanes, Prague inspired Franz Kafka, one of the most original voices in modern literature. In 'The Metamorphosis', 'The Trial', and 'The Castle', Kafka explored bureaucratic alienation and existential dread, giving the world the term 'Kafkaesque'.",
+        quote_en: "\"As Gregor Samsa awoke one morning from uneasy dreams he found himself transformed in his bed into a gigantic insect.\" — Franz Kafka, The Metamorphosis",
+        imageCaption_en: "Charles Bridge over the Vltava River and the misty Gothic spires of Prague."
+      },
+      amsterdam: {
+        city_en: "Amsterdam", country_en: "Netherlands", year_en: "1670 & 1942 – 1944",
+        title_en: "Spinoza's Enlightenment & The Diary of Anne Frank",
+        description_en: "A sanctuary of free thought and printing during the 17th-century Dutch Golden Age, Amsterdam is where Baruch Spinoza laid the foundations of rationalist philosophy in his 'Ethics'. During World War II, 13-year-old Anne Frank penned her diary in a secret annex, creating one of humanity's most moving testaments to conscience and hope.",
+        quote_en: "\"In spite of everything, I still believe that people are really good at heart.\" — Anne Frank, The Diary of a Young Girl",
+        imageCaption_en: "Historic canal bridges and 17th-century gable houses of Amsterdam."
+      },
+      viyana: {
+        city_en: "Vienna", country_en: "Austria", year_en: "1890 – 1942",
+        title_en: "Viennese Modernism, Stefan Zweig & The World of Yesterday",
+        description_en: "Along the Danube, turn-of-the-century Vienna was an intellectual crucible of literary coffeehouses, theater, and philosophy. Stefan Zweig immortalized European humanism in 'The World of Yesterday' and 'The Royal Game' (Chess Story), while Sigmund Freud mapped the human unconscious in this very city.",
+        quote_en: "\"Only in independent thought and the universality of culture can we find inner peace; the storms of fanaticism will subside, and humanity's shared reason will endure.\" — Stefan Zweig, The World of Yesterday",
+        imageCaption_en: "Hofburg Palace, historic literary cafés, and the imperial Ringstraße of Vienna."
+      },
+      kudus: {
+        city_en: "Jerusalem", country_en: "Palestine / Middle East", year_en: "10th C. BC – 1187",
+        title_en: "Crossroads of Three Sacred Faiths & Saladin (1187)",
+        description_en: "Crowned by the Mount of Olives and millennial stone walls, Jerusalem—home to Al-Aqsa Mosque, the Dome of the Rock, the Western Wall, and the Church of the Holy Sepulchre—is a spiritual capital of humanity. Saladin's chivalrous conquest and Peaceful Treaty of 1187 transformed the city into a universal monument of coexistence.",
+        quote_en: "\"Jerusalem is not merely a city; it is the echo of heaven upon earth and the shared memory of humankind.\" — Chronicles of Saladin",
+        imageCaption_en: "Ancient walls of Jerusalem, the golden Dome of the Rock, and Al-Aqsa Mosque."
+      },
+      siraz: {
+        city_en: "Shiraz", country_en: "Iran", year_en: "1258 – 1390",
+        title_en: "Pinnacle of Persian Poetry: Hafez & Saadi Shirazi",
+        description_en: "Celebrated for its nightingales, roses, and cypress gardens, Shiraz is the eternal home of two titans of world lyricism: Hafez and Saadi. While Saadi's 'Gulistan' (Rose Garden) and 'Bustan' established universal ethics, Hafez's mystical 'Divan' inspired Goethe's 'West-Eastern Divan' and bridged East and West.",
+        quote_en: "\"Human beings are members of a whole, in creation of one essence and soul. If one member is afflicted with pain, other members uneasy will remain.\" — Saadi Shirazi, Gulistan",
+        imageCaption_en: "Stained-glass light of Nasir al-Mulk Mosque and the Tomb of Hafez in Shiraz."
+      },
+      varanasi: {
+        city_en: "Varanasi (Ganges)", country_en: "India", year_en: "500 BC – 1913",
+        title_en: "The Sacred Ganges, The Mahabharata Epic & Tagore",
+        description_en: "One of the world's oldest continually inhabited cities, Varanasi is the spiritual cradle of Sanskrit philosophy and the ancient epics 'Mahabharata' and 'Ramayana'. In 1913, Rabindranath Tagore became Asia's first Nobel Laureate in Literature with 'Gitanjali', transforming this heritage into a universal philosophy of peace.",
+        quote_en: "\"Where the mind is without fear and the head is held high; where knowledge is free... Into that heaven of freedom, my Father, let my country awake.\" — Rabindranath Tagore, Gitanjali (Nobel 1913)",
+        imageCaption_en: "Historic ghats and dawn temples along the sacred Ganges River in Varanasi."
+      },
+      meksiko: {
+        city_en: "Mexico City (Tenochtitlan)", country_en: "Mexico", year_en: "1325 – 1990",
+        title_en: "Aztec Tenochtitlan Civilization & Octavio Paz",
+        description_en: "Founded on Lake Texcoco in 1325, Aztec Tenochtitlan was one of the most advanced metropolises of the Americas. Evolving into modern Mexico City where indigenous and European cultures fused, it became a beacon of Latin American thought through Baroque poet Sor Juana Inés de la Cruz and Nobel Laureate Octavio Paz ('The Labyrinth of Solitude').",
+        quote_en: "\"Solitude is the profoundest fact of the human condition; poetry is the first light of hope springing from within the dark.\" — Octavio Paz (Nobel Prize in Literature, 1990)",
+        imageCaption_en: "Historic center of Mexico City, Aztec Templo Mayor ruins, and the Metropolitan Cathedral."
+      },
+      cusco: {
+        city_en: "Cusco (Machu Picchu)", country_en: "Peru", year_en: "1438 – 1533",
+        title_en: "The Inca Empire, Machu Picchu & Andean Literature",
+        description_en: "Perched at 3,400 meters in the Andes, Cusco was the sacred capital of the Inca Empire ('Children of the Sun'), famed for its earthquake-resistant mortarless stonework. The cloud citadel of Machu Picchu and the classical Quechua drama 'Apu Ollantay' embody the monumental engineering and mythological depth of indigenous South America.",
+        quote_en: "\"When the stones rise toward the heavens, Inti the Sun blesses his people; a civilization built on justice and labor endures forever in the heart of the mountains.\" — Inca Tradition & Apu Ollantay",
+        imageCaption_en: "The Inca citadel of Machu Picchu above the clouds and sacred peaks of the Andes."
+      },
+      sanfrancisco: {
+        city_en: "San Francisco", country_en: "USA (California)", year_en: "1849 – 1957",
+        title_en: "California Gold Rush, Jack London & The Beat Generation",
+        description_en: "Born from the 1849 Gold Rush along the misty Pacific coast, San Francisco nurtured Jack London's 'The Call of the Wild' and 'The Sea-Wolf'. In the 1950s, Jack Kerouac ('On the Road') and Allen Ginsberg ('Howl') gathered around City Lights Bookstore to launch the Beat Generation, redefining modern American literature.",
+        quote_en: "\"The proper function of man is to live, not to exist. I shall not waste my days in trying to prolong them. I shall use my time.\" — Jack London",
+        imageCaption_en: "San Francisco's Golden Gate Bridge, Pacific coast, and historic City Lights Bookstore."
+      },
+      capetown: {
+        city_en: "Cape Town (Cape of Good Hope)", country_en: "South Africa", year_en: "1488 – 1994",
+        title_en: "Cape of Good Hope, Nelson Mandela & Long Walk to Freedom",
+        description_en: "Where Table Mountain meets the Atlantic and Indian Oceans, the 1488 rounding of the Cape of Good Hope transformed global maritime history. Emerging from 27 years of imprisonment on Robben Island to dismantle Apartheid peacefully, Nelson Mandela inspired humanity with 'Long Walk to Freedom', alongside Nobel Laureate J.M. Coetzee.",
+        quote_en: "\"For to be free is not merely to cast off one's chains, but to live in a way that respects and enhances the freedom of others.\" — Nelson Mandela, Long Walk to Freedom",
+        imageCaption_en: "Table Mountain silhouette, Cape of Good Hope cliffs, and historic harbors of Cape Town."
+      },
+      kartaca: {
+        city_en: "Carthage (Tunis)", country_en: "Tunisia", year_en: "814 BC – 1377",
+        title_en: "Hannibal Barca's Carthage & Ibn Khaldun's Muqaddimah",
+        description_en: "The supreme maritime power of the ancient western Mediterranean, Carthage was the legendary capital from which Hannibal Barca crossed the Alps to challenge Rome. Centuries later on this same soil, the great thinker Ibn Khaldun wrote the 'Muqaddimah' (1377), founding the sciences of sociology and philosophy of history.",
+        quote_en: "\"The past resembles the future more than one drop of water resembles another; justice is the foundation of civilization.\" — Ibn Khaldun, The Muqaddimah",
+        imageCaption_en: "Ancient ruins of Carthage, Byrsa Hill, and views over the Gulf of Tunis."
+      },
+      konya: {
+        city_en: "Konya", country_en: "Türkiye", year_en: "1207 – 1273",
+        title_en: "Seljuk Capital, Rumi (Mevlânâ) & Sufi Mystical Literature",
+        description_en: "Capital of the Anatolian Seljuk Sultanate, Konya is the spiritual sanctuary where Jalāl al-Dīn Muḥammad Rūmī (Mevlânâ) and Shams Tabrizi forged a universal philosophy of love and tolerance. Rumi's 25,600-couplet 'Masnavi' and 'Divan-i Kebir' remain among the most profound poetic explorations of the human soul.",
+        quote_en: "\"Come, come, whoever you are! Wanderer, worshipper, lover of leaving—it doesn't matter. Ours is not a caravan of despair.\" — Rumi (Mevlânâ Celâleddîn-i Rûmî)",
+        imageCaption_en: "The Green Dome (Kubbe-i Hadrâ) of the Mevlânâ Museum and Seljuk architectural heritage in Konya."
+      },
+      buhara: {
+        city_en: "Bukhara", country_en: "Uzbekistan", year_en: "892 – 1037",
+        title_en: "Dome of the Silk Road, Avicenna (Ibn Sina) & Islamic Renaissance",
+        description_en: "An ancient oasis capital of the Silk Road, Bukhara shone under the Samanids and Karakhanids as a beacon of science and philosophy. Here, Ibn Sina (Avicenna)—the father of early modern medicine—utilized royal libraries to compose 'The Canon of Medicine' (Al-Qanun fi al-Tibb) and 'The Book of Healing'.",
+        quote_en: "\"Medicine is the science by which we learn the various states of the human body, in health and when not in health, whereby health is preserved or restored.\" — Ibn Sina (Avicenna), The Canon of Medicine",
+        imageCaption_en: "Historic Kalon Minaret and turquoise-tiled Mir-i-Arab Madrasah in Bukhara."
+      },
+      buenosaires: {
+        city_en: "Buenos Aires", country_en: "Argentina", year_en: "1899 – 1986",
+        title_en: "Literary Labyrinth of the South: Jorge Luis Borges",
+        description_en: "Along the Río de la Plata, Buenos Aires is the metaphysical labyrinth that inspired Jorge Luis Borges's masterpieces 'Ficciones' and 'The Aleph'. With its philosophy of infinite libraries, mirrors, and forking paths—alongside Julio Cortázar's 'Hopscotch'—the city fundamentally reshaped 20th-century world fiction.",
+        quote_en: "\"I have always imagined that Paradise will be a kind of library.\" — Jorge Luis Borges",
+        imageCaption_en: "Historic avenues, literary cafés, and San Telmo streets of Buenos Aires."
+      },
+      havana: {
+        city_en: "Havana", country_en: "Cuba", year_en: "1939 – 1960",
+        title_en: "Pearl of the Caribbean, Ernest Hemingway & Caribbean Baroque",
+        description_en: "Colonial Havana on the Caribbean coast is the heart of Ernest Hemingway's 'The Old Man and the Sea', written at his Finca Vigía estate and honored with both the Pulitzer and Nobel Prizes. The city is equally crowned by Alejo Carpentier's 'Marvelous Real' (Lo Real Maravilloso) and José Martí's poetry of liberty.",
+        quote_en: "\"But man is not made for defeat. A man can be destroyed but not defeated.\" — Ernest Hemingway, The Old Man and the Sea",
+        imageCaption_en: "Havana's Malecón seawall, colonial plazas, and classic Caribbean architecture."
+      },
+      riodejaneiro: {
+        city_en: "Rio de Janeiro", country_en: "Brazil", year_en: "1808 – 1899",
+        title_en: "Guanabara Bay, Machado de Assis & Brazilian Literature",
+        description_en: "Transformed into an imperial capital in 1808 and home to the magnificent Royal Portuguese Cabinet of Reading, Rio de Janeiro was the stage for Machado de Assis, Latin America's pioneering master of psychological realism and irony in 'Dom Casmurro' and 'The Posthumous Memoirs of Brás Cubas'.",
+        quote_en: "\"True victory is the moment a person honestly confesses their own flaws; the rest is merely the noise of the world.\" — Machado de Assis, Dom Casmurro",
+        imageCaption_en: "Guanabara Bay, Sugarloaf Mountain, and the literary heritage of Rio de Janeiro."
+      },
+      fes: {
+        city_en: "Fez (Al-Qarawiyyin)", country_en: "Morocco", year_en: "859 – 1354",
+        title_en: "World's Oldest University Al-Qarawiyyin & Ibn Battuta",
+        description_en: "Founded by Fatima al-Fihri in 859 and recognized by UNESCO as the oldest continually operating university in the world, Al-Qarawiyyin in Fez was the intellectual heart of the Maghreb and Al-Andalus. Here, the legendary explorer Ibn Battuta dictated the 'Rihla', chronicling his 117,000-kilometer journey across Africa, Europe, and Asia.",
+        quote_en: "\"Traveling—it leaves you speechless, then turns you into a storyteller.\" — Ibn Battuta, The Rihla",
+        imageCaption_en: "Fez el-Bali Medina and intricate Andalusian-Moroccan carvings of Bou Inania Madrasah."
+      },
+      zanzibar: {
+        city_en: "Zanzibar (Stone Town)", country_en: "Tanzania", year_en: "1832 – 2021",
+        title_en: "Indian Ocean Spice Route, Swahili Literature & Abdulrazak Gurnah",
+        description_en: "A coral island in the turquoise Indian Ocean, Zanzibar is the historic capital of Swahili culture where African, Omani, and Indian civilizations converged. Winner of the 2021 Nobel Prize in Literature, Abdulrazak Gurnah illuminated colonial memory and displacement through this ancient port in 'Paradise' and 'By the Sea'.",
+        quote_en: "\"Silence is sometimes the loudest word that can be spoken; exile is the heaviest homeland carried in memory.\" — Abdulrazak Gurnah (Nobel Prize in Literature, 2021)",
+        imageCaption_en: "Historic Stone Town seafront fort and traditional dhow sails in Zanzibar."
+      },
+      karakurum: {
+        city_en: "Karakorum", country_en: "Mongolia", year_en: "1206 – 1240",
+        title_en: "Heart of the Steppe, Genghis Khan & Secret History of the Mongols",
+        description_en: "Founded in the sacred Orkhon Valley, Karakorum served as the imperial capital of the Mongol Empire stretching from the Pacific to Central Europe. Under the 'Pax Mongolica', Silk Road trade and diplomacy flourished, while the 1240 epic 'The Secret History of the Mongols' became the foundational literary monument of steppe civilization.",
+        quote_en: "\"One sun in the sky, one sovereign on earth; united arrows cannot be broken, while scattered flocks fall prey to the wolf.\" — The Secret History of the Mongols (1240)",
+        imageCaption_en: "Endless steppes of the Orkhon Valley and historic Erdene Zuu Monastery at Karakorum."
+      },
+      delhi: {
+        city_en: "Delhi (Agra)", country_en: "India", year_en: "1526 – 1869",
+        title_en: "The Mughal Empire, Mirza Ghalib & Classical Urdu Literature",
+        description_en: "Founded by Babur—author of the autobiographical 'Baburnama'—and immortalized by Shah Jahan's Taj Mahal, the Mughal capital of Delhi witnessed the golden age of Indo-Persian and Urdu literature. The philosophical ghazals of Mirza Asadullah Khan Ghalib recited at the Red Fort represent a pinnacle of Eastern poetry.",
+        quote_en: "\"Love is a fire that neither obeys your will to ignite nor to extinguish; every atom of our being conceals an entire universe.\" — Mirza Ghalib, Divan",
+        imageCaption_en: "Mughal architecture of Humayun's Tomb, the Red Fort in Delhi, and the Taj Mahal."
+      },
+      seul: {
+        city_en: "Seoul (Hanyang)", country_en: "South Korea", year_en: "1392 – 1446",
+        title_en: "Joseon Dynasty, King Sejong the Great & The Hangul Alphabet",
+        description_en: "Centered in Hanyang (modern Seoul), the Joseon Dynasty achieved one of history's greatest literacy revolutions in 1443 when King Sejong the Great personally created the scientific Hangul alphabet ('Hunminjeongeum') so all citizens could read and write, nurturing Korea's classical Sijo poetic tradition.",
+        quote_en: "\"The speech of the people is the voice of heaven; every letter should be as natural and clear as human breath.\" — King Sejong the Great, Hunminjeongeum (1446)",
+        imageCaption_en: "Gyeongbokgung Palace throne hall and the royal cultural heritage of Joseon in Seoul."
+      },
+      angkor: {
+        city_en: "Angkor (Siem Reap)", country_en: "Cambodia", year_en: "802 – 1431",
+        title_en: "The Khmer Empire, Angkor Wat & Civilization of the God-Kings",
+        description_en: "Built by King Suryavarman II amidst the jungles of Southeast Asia, Angkor Wat spans 162 hectares as the largest religious stone monument on Earth. With its vast hydraulic engineering, lotus towers, and thousands of bas-reliefs of Sanskrit epics, it embodies the architectural genius of the Khmer civilization.",
+        quote_en: "\"The stones speak the language of the gods; the order of the heavens is reflected in the harmony of canals and temples upon the earth.\" — Ancient Khmer Inscriptions",
+        imageCaption_en: "Lotus ponds, towers, and stone bas-reliefs of Angkor Wat at sunrise."
+      },
+      turkistan: {
+        city_en: "Turkistan (Yasi)", country_en: "Kazakhstan", year_en: "1093 – 1395",
+        title_en: "Khoja Ahmed Yasawi & Divan-i Hikmet (Book of Wisdom)",
+        description_en: "Along the ancient Silk Road, Yasi (Turkistan) is home to the monumental turquoise-domed mausoleum built by Timur in 1389 for Khoja Ahmed Yasawi, founder of Turkic Sufi mysticism. Composed in accessible Turkic verse, his 'Divan-i Hikmet' (Book of Wisdom) paved the spiritual path for Yunus Emre and Rumi.",
+        quote_en: "\"Bring joy to the stranger, the poor, and the orphan; heal the broken-hearted... To one who looks with love, the whole world becomes one.\" — Khoja Ahmed Yasawi, Divan-i Hikmet",
+        imageCaption_en: "Turquoise-tiled dome of the Mausoleum of Khoja Ahmed Yasawi on the Silk Road steppe."
+      },
+      baykal: {
+        city_en: "Lake Baikal (Irkutsk)", country_en: "Russia (Siberia)", year_en: "1661 – 1890",
+        title_en: "Baikal: Blue Eye of Siberia, Shamanism & Anton Chekhov's Notes",
+        description_en: "At 25 million years old and 1,642 meters deep, Lake Baikal is the world's deepest freshwater lake and the sacred sea of Buryat Shamanism. Nearby Irkutsk—the 'Paris of Siberia' shaped by exiled 1825 Decembrist intellectuals—and Anton Chekhov's evocative travelogues across Siberia etched this vast frontier into literary memory.",
+        quote_en: "\"Baikal is not merely a lake, it is a living spirit; gazing into its waters, one perceives eternity and the humbleness of man.\" — Anton Chekhov, From Siberia",
+        imageCaption_en: "Crystal ice of Lake Baikal, Shamanka Rock on Olkhon Island, and the Siberian horizon."
+      },
+      moskova: {
+        city_en: "Moscow", country_en: "Russia", year_en: "1147 – 1940",
+        title_en: "In the Shadow of the Kremlin: Tolstoy's War and Peace & Bulgakov",
+        description_en: "Founded along the Moskva River in 1147, Moscow forms the grand historical stage of Leo Tolstoy's epic 'War and Peace' during the 1812 Napoleonic campaign. From Red Square and the Bolshoi Theatre to Patriarch's Ponds—where Mikhail Bulgakov set his satirical masterpiece 'The Master and Margarita'—Moscow is a dramatic capital of world literature.",
+        quote_en: "\"All happy families are alike; each unhappy family is unhappy in its own way.\" — Leo Tolstoy, Anna Karenina",
+        imageCaption_en: "Moscow's Red Square, domes of St. Basil's Cathedral, and historic Kremlin walls."
+      },
+      aksum: {
+        city_en: "Aksum (Lalibela)", country_en: "Ethiopia", year_en: "100 BC – AD 1200",
+        title_en: "Kebra Nagast, Kingdom of Aksum & Lalibela Rock-Hewn Churches",
+        description_en: "Between the Red Sea and the Nile basin, the ancient Empire of Aksum gave birth to the Ge'ez royal epic 'Kebra Nagast' (The Glory of Kings). In the 12th century, King Lalibela carved 11 monolithic subterranean churches—most famously Bet Giyorgis—directly out of living volcanic rock, creating an architectural wonder of Africa.",
+        quote_en: "\"Wisdom is more precious than gold and silver; faith carved into living rock stands unshaken against the stream of time.\" — Kebra Nagast (Ethiopian Royal Epic)",
+        imageCaption_en: "Monolithic rock-hewn Church of St. George (Bet Giyorgis) in Lalibela and Aksumite obelisks."
+      },
+      lagos: {
+        city_en: "Ife & Lagos", country_en: "Nigeria", year_en: "1100 – 1986",
+        title_en: "Yoruba Bronze Art, Chinua Achebe & Wole Soyinka",
+        description_en: "Rooted in the lost-wax bronze masterpieces of the ancient Kingdom of Ife, Nigerian literary culture introduced pre-colonial Igbo civilization to the world through Chinua Achebe's foundational novel 'Things Fall Apart' (1958). In 1986, dramatist and poet Wole Soyinka became the first African laureate of the Nobel Prize in Literature.",
+        quote_en: "\"Until the lions have their own historians, the history of the hunt will always glorify the hunter.\" — Chinua Achebe",
+        imageCaption_en: "Lagos on the Gulf of Guinea, ancient Ife bronzes, and the powerhouse of modern African literature."
+      },
+      zimbabve: {
+        city_en: "Great Zimbabwe", country_en: "Zimbabwe", year_en: "1100 – 1450",
+        title_en: "Shona Civilization, Mortarless Granite Walls & Gold Trade",
+        description_en: "Constructed by the ancestors of the Shona people using finely dressed granite blocks without a single drop of mortar, Great Zimbabwe was the largest monumental stone capital of sub-Saharan Africa. Its Great Enclosure, Conical Tower, and soapstone Zimbabwe Birds testify to a thriving Indian Ocean gold and ivory trade network.",
+        quote_en: "\"Stones unite without mortar, and a people rises through justice; gold flies with the wind, but the city you leave behind speaks for centuries.\" — Shona Oral Tradition",
+        imageCaption_en: "Ancient mortarless granite walls and Conical Tower of Great Zimbabwe."
+      },
+      madagaskar: {
+        city_en: "Antananarivo", country_en: "Madagascar", year_en: "1610 – 1960",
+        title_en: "Merina Kingdom, Rova Palace & Malagasy Epic Tradition",
+        description_en: "Founded atop the thousand-meter highlands of Madagascar, Antananarivo was the sacred capital of the Merina Kingdom, crowned by the royal Rova Palace complex. It is the cradle of the great Malagasy oral epic 'Ibonia', the poetic dialogue art of Hainteny, and Jean-Joseph Rabearivelo, Africa's first modern symbolist poet.",
+        quote_en: "\"Words are like water: once spilled they cannot be gathered again, yet when they fall upon the earth they give life.\" — Malagasy Hainteny Poetic Tradition & Ibonia Epic",
+        imageCaption_en: "Historic highland skyline of Antananarivo and the Royal Rova Palace complex."
+      }
+    };
+
+    // Tüm konumlara era, numericYear ve İngilizce (EN) çeviri özelliklerini tanımla
     MASTER_LOCATIONS.forEach(loc => {
       if (EXISTING_ERA_MAP[loc.id]) {
         loc.era = loc.era || EXISTING_ERA_MAP[loc.id].era;
         loc.numericYear = loc.numericYear || EXISTING_ERA_MAP[loc.id].numericYear;
       }
+      if (LOCATIONS_EN_MAP[loc.id]) {
+        const enData = LOCATIONS_EN_MAP[loc.id];
+        loc.city_en = loc.city_en || enData.city_en;
+        loc.country_en = loc.country_en || enData.country_en;
+        loc.year_en = loc.year_en || enData.year_en;
+        loc.title_en = loc.title_en || enData.title_en;
+        loc.description_en = loc.description_en || enData.description_en;
+        loc.quote_en = loc.quote_en || enData.quote_en;
+        loc.imageCaption_en = loc.imageCaption_en || enData.imageCaption_en;
+      }
     });
 
     // SADECE "EDEBİYAT & AKIMLAR" SEÇİLDİĞİNDE ÇALIŞACAK KÜRESEL 3B ANİMASYONLU IŞIK YAYLARI
-    // Yaylar artık koordinatla değil şehir ID'leriyle tanımlanır ve YALNIZCA iki ucu da
-    // "edebiyat" kategorisinde olan (haritada pini görünen) şehirler arasında çizilir.
     const LITERATURE_ROUTES = Object.freeze([
-      { from: "floransa", to: "madrid",       label: "Floransa Rönesansı (Dante) ➔ Madrid (Cervantes - Don Kişot)" },
-      { from: "floransa", to: "londra",       label: "İtalyan Hümanizmi ➔ Londra (Shakespeare & Elizabeth Tiyatrosu)" },
-      { from: "stratford", to: "londra",      label: "Stratford (Shakespeare) ➔ Londra Globe Tiyatrosu" },
-      { from: "edinburgh", to: "londra",      label: "İskoç Aydınlanması (Sir Walter Scott) ➔ Londra Klasik Romanı" },
-      { from: "oxford",    to: "londra",      label: "Oxford (Tolkien & Lewis) ➔ Modern İngiliz Edebiyatı" },
-      { from: "madrid",   to: "londra",       label: "İspanyol Altın Çağı ➔ İngiliz Romanı" },
-      { from: "londra",   to: "weimar",       label: "Shakespeare ➔ Weimar (Goethe, Schiller & Sturm und Drang)" },
-      { from: "londra",   to: "dublin",       label: "Londra ➔ Dublin (James Joyce - Ulysses & Modernizm)" },
-      { from: "amsterdam", to: "weimar",      label: "Amsterdam Aydınlanması (Spinoza) ➔ Weimar Klasisizmi (Goethe)" },
-      { from: "viyana",    to: "prag",        label: "Viyana Modernizmi (Stefan Zweig) ➔ Prag (Franz Kafka)" },
-      { from: "floransa",  to: "viyana",      label: "İtalyan Hümanizmi ➔ Orta Avrupa Kültür Havzası (Viyana)" },
-      { from: "weimar",   to: "stpetersburg", label: "Alman Romantizmi ➔ St. Petersburg (Puşkin, Dostoyevski & Tolstoy)" },
-      { from: "weimar",   to: "istanbul",     label: "Avrupa Edebi Akımları ➔ İstanbul (Tanzimat & Servet-i Fünun)" },
-      { from: "istanbul", to: "sivas",        label: "İstanbul ➔ Sivas (Anadolu Halk Şiiri & Âşık Veysel)" },
-      { from: "siraz",    to: "istanbul",     label: "Fars Divan Edebiyatı (Hâfız & Sâdi) ➔ Osmanlı Divan Şiiri (İstanbul)" },
-      { from: "varanasi", to: "kyoto",        label: "Antik Hint Klasikleri (Mahabharata & Tagore) ➔ Doğu Asya (Kyoto)" },
-      { from: "kyoto",    to: "istanbul",     label: "Doğu Klasik Edebiyat Geleneği: Genji'nin Hikâyesi ➔ Divan Şiiri" },
-      { from: "dublin",   to: "newyork",      label: "Transatlantik Modernizm ➔ New York (Poe & Harlem Rönesansı)" },
-      { from: "sanfrancisco", to: "newyork",  label: "Trans-Amerika Edebiyat Hattı: Beat Kuşağı ➔ Harlem & New York" },
-      { from: "newyork",  to: "bogota",       label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)" },
-      { from: "konya", to: "istanbul",        label: "Mevlevî Tasavvuf Edebiyatı (Mevlânâ) ➔ Galata Mevlevihanesi & Divan Şiiri (İstanbul)" },
-      { from: "konya", to: "sivas",           label: "Anadolu İrfanı ve Tasavvuf: Mevlânâ ➔ Âşık Veysel & Halk Edebiyatı" },
-      { from: "newyork", to: "havana",        label: "Amerikan Edebiyatı ➔ Havana (Ernest Hemingway - İhtiyar Adam ve Deniz)" },
-      { from: "havana", to: "bogota",         label: "Karayip Edebiyat Havzası: Hemingway ➔ Gabriel García Márquez" },
-      { from: "bogota", to: "buenosaires",    label: "Latin Amerika Edebi Patlaması (Boom): Büyülü Gerçekçilik ➔ Jorge Luis Borges" },
-      { from: "buenosaires", to: "riodejaneiro", label: "Güney Amerika Edebi Diyaloğu: Jorge Luis Borges ➔ Machado de Assis" },
-      { from: "zanzibar", to: "londra",       label: "Post-Kolonyal Afrika Edebiyatı: Abdulrazak Gurnah (Swahili) ➔ Londra" },
-      { from: "delhi", to: "varanasi",        label: "Klasik Hint & Babür Edebiyatı: Mirza Galib ➔ Rabindranath Tagore" },
-      { from: "delhi", to: "siraz",           label: "Sabk-i Hindi (Hint-Fars Şiir Köprüsü): Babür Sarayı ➔ Fars Şiiri (Hâfız)" },
-      { from: "turkistan", to: "konya",       label: "Büyük Tasavvuf Yolu: Hoca Ahmed Yesevî (Hikmet) ➔ Mevlânâ Celâleddîn-i Rûmî" },
-      { from: "kyoto", to: "seul",            label: "Doğu Asya Edebi Havzası: Heian Klasikleri (Kyoto) ➔ Seul (Kral Sejong & Hangul)" },
-      { from: "moskova", to: "stpetersburg",  label: "Büyük Rus Romanı Ekseni: Tolstoy & Bulgakov ➔ Dostoyevski & Puşkin" },
-      { from: "lagos", to: "londra",          label: "Modern Afrika Edebiyatı: Chinua Achebe & Wole Soyinka ➔ Londra" },
-      { from: "lagos", to: "zanzibar",        label: "Pan-Afrika Edebi Diyaloğu: Batı Afrika ➔ Doğu Afrika Swahili Şiiri" }
+      // Yeni Eklenen Stratejik İngiliz, İrlanda, Avrupa, Afrika ve Amerikan Edebiyat Yayları
+      {
+        from: "floransa",
+        to: "canterbury",
+        label: "İtalyan Hümanizmi (Boccaccio) ➔ Geoffrey Chaucer (Canterbury Hikâyeleri)",
+        label_en: "Italian Humanism (Boccaccio) ➔ Geoffrey Chaucer (The Canterbury Tales)"
+      },
+      {
+        from: "weimar",
+        to: "lakedistrict",
+        label: "Alman Sturm und Drang & Romantizm ➔ İngiliz Göller Bölgesi Şairleri (Wordsworth)",
+        label_en: "German Sturm und Drang & Romanticism ➔ English Lake Poets (Wordsworth)"
+      },
+      {
+        from: "paris",
+        to: "londra",
+        label: "Fransız Realizmi & Sembolizmi ➔ Viktorya Romanı ve İngiliz Modernizmi",
+        label_en: "French Realism & Symbolism ➔ Victorian Novel & English Modernism"
+      },
+      {
+        from: "londra",
+        to: "lagos",
+        label: "Viktorya Edebi Kanonu ➔ Post-Kolonyal Afrika Romanı (Chinua Achebe)",
+        label_en: "Victorian Literary Canon ➔ Post-Colonial African Novel (Chinua Achebe)"
+      },
+      {
+        from: "londra",
+        to: "zanzibar",
+        label: "İngiliz Dili ve Edebiyatı Geleneği ➔ Abdulrazak Gurnah (Swahili & Kolonyal Hafıza)",
+        label_en: "English Literary Tradition ➔ Abdulrazak Gurnah (Swahili & Colonial Memory)"
+      },
+      {
+        from: "dublin",
+        to: "galway",
+        label: "Dublin Modernizmi (Joyce) ➔ İrlanda Edebi Rönesansı (W.B. Yeats)",
+        label_en: "Dublin Modernism (Joyce) ➔ Irish Literary Revival (W.B. Yeats)"
+      },
+      {
+        from: "canterbury",
+        to: "londra",
+        label: "Geoffrey Chaucer (Canterbury) ➔ Londra (Shakespeare & İngiliz Edebiyat Kanonu)",
+        label_en: "Geoffrey Chaucer (Canterbury) ➔ London (Shakespeare & English Literary Canon)"
+      },
+      {
+        from: "londra",
+        to: "bath",
+        label: "İngiliz Klasik Roman Geleneği ➔ Jane Austen (Bath & Taşra Realizmi)",
+        label_en: "English Classical Novel ➔ Jane Austen (Bath & Regency Realism)"
+      },
+      {
+        from: "lakedistrict",
+        to: "concord",
+        label: "İngiliz Doğa Romantizmi (Wordsworth) ➔ Amerikan Transandantalizmi (Emerson & Thoreau)",
+        label_en: "English Nature Romanticism (Wordsworth) ➔ American Transcendentalism (Emerson & Thoreau)"
+      },
+      {
+        from: "concord",
+        to: "newyork",
+        label: "Concord Transandantalizmi (Thoreau) ➔ Amerikan Rönesansı (New York)",
+        label_en: "Concord Transcendentalism (Thoreau) ➔ American Literary Renaissance (New York)"
+      },
+      // Mevcut Küresel Edebiyat Rotaları
+      {
+        from: "floransa",
+        to: "madrid",
+        label: "Floransa Rönesansı (Dante) ➔ Madrid (Cervantes - Don Kişot)",
+        label_en: "Florentine Renaissance (Dante) ➔ Madrid (Cervantes - Don Quixote)"
+      },
+      {
+        from: "floransa",
+        to: "londra",
+        label: "İtalyan Hümanizmi ➔ Londra (Shakespeare & Elizabeth Tiyatrosu)",
+        label_en: "Italian Humanism ➔ London (Shakespeare & Elizabethan Theatre)"
+      },
+      {
+        from: "stratford",
+        to: "londra",
+        label: "Stratford (Shakespeare) ➔ Londra Globe Tiyatrosu",
+        label_en: "Stratford (Shakespeare) ➔ London Globe Theatre"
+      },
+      {
+        from: "edinburgh",
+        to: "londra",
+        label: "İskoç Aydınlanması (Sir Walter Scott) ➔ Londra Klasik Romanı",
+        label_en: "Scottish Enlightenment (Sir Walter Scott) ➔ London Classical Novel"
+      },
+      {
+        from: "oxford",
+        to: "londra",
+        label: "Oxford (Tolkien & Lewis) ➔ Modern İngiliz Edebiyatı",
+        label_en: "Oxford (Tolkien & Lewis) ➔ Modern English Literature"
+      },
+      {
+        from: "madrid",
+        to: "londra",
+        label: "İspanyol Altın Çağı ➔ İngiliz Romanı",
+        label_en: "Spanish Golden Age ➔ The English Novel"
+      },
+      {
+        from: "londra",
+        to: "weimar",
+        label: "Shakespeare ➔ Weimar (Goethe, Schiller & Sturm und Drang)",
+        label_en: "Shakespeare ➔ Weimar (Goethe, Schiller & Sturm und Drang)"
+      },
+      {
+        from: "londra",
+        to: "dublin",
+        label: "Londra ➔ Dublin (James Joyce - Ulysses & Modernizm)",
+        label_en: "London ➔ Dublin (James Joyce - Ulysses & Modernism)"
+      },
+      {
+        from: "amsterdam",
+        to: "weimar",
+        label: "Amsterdam Aydınlanması (Spinoza) ➔ Weimar Klasisizmi (Goethe)",
+        label_en: "Amsterdam Enlightenment (Spinoza) ➔ Weimar Classicism (Goethe)"
+      },
+      {
+        from: "viyana",
+        to: "prag",
+        label: "Viyana Modernizmi (Stefan Zweig) ➔ Prag (Franz Kafka)",
+        label_en: "Viennese Modernism (Stefan Zweig) ➔ Prague (Franz Kafka)"
+      },
+      {
+        from: "floransa",
+        to: "viyana",
+        label: "İtalyan Hümanizmi ➔ Orta Avrupa Kültür Havzası (Viyana)",
+        label_en: "Italian Humanism ➔ Central European Cultural Basin (Vienna)"
+      },
+      {
+        from: "weimar",
+        to: "stpetersburg",
+        label: "Alman Romantizmi ➔ St. Petersburg (Puşkin, Dostoyevski & Tolstoy)",
+        label_en: "German Romanticism ➔ St. Petersburg (Pushkin, Dostoevsky & Tolstoy)"
+      },
+      {
+        from: "weimar",
+        to: "istanbul",
+        label: "Avrupa Edebi Akımları ➔ İstanbul (Tanzimat & Servet-i Fünun)",
+        label_en: "European Literary Movements ➔ Istanbul (Tanzimat & Servet-i Fünun)"
+      },
+      {
+        from: "istanbul",
+        to: "sivas",
+        label: "İstanbul ➔ Sivas (Anadolu Halk Şiiri & Âşık Veysel)",
+        label_en: "Istanbul ➔ Sivas (Anatolian Folk Poetry & Âşık Veysel)"
+      },
+      {
+        from: "siraz",
+        to: "istanbul",
+        label: "Fars Divan Edebiyatı (Hâfız & Sâdi) ➔ Osmanlı Divan Şiiri (İstanbul)",
+        label_en: "Persian Lyric Poetry (Hafez & Saadi) ➔ Ottoman Divan Poetry (Istanbul)"
+      },
+      {
+        from: "varanasi",
+        to: "kyoto",
+        label: "Antik Hint Klasikleri (Mahabharata & Tagore) ➔ Doğu Asya (Kyoto)",
+        label_en: "Ancient Indian Classics (Mahabharata & Tagore) ➔ East Asia (Kyoto)"
+      },
+      {
+        from: "kyoto",
+        to: "istanbul",
+        label: "Doğu Klasik Edebiyat Geleneği: Genji'nin Hikâyesi ➔ Divan Şiiri",
+        label_en: "Eastern Classical Tradition: The Tale of Genji ➔ Divan Poetry"
+      },
+      {
+        from: "dublin",
+        to: "newyork",
+        label: "Transatlantik Modernizm ➔ New York (Poe & Harlem Rönesansı)",
+        label_en: "Transatlantic Modernism ➔ New York (Poe & Harlem Renaissance)"
+      },
+      {
+        from: "sanfrancisco",
+        to: "newyork",
+        label: "Trans-Amerika Edebiyat Hattı: Beat Kuşağı ➔ Harlem & New York",
+        label_en: "Trans-American Literary Axis: Beat Generation ➔ Harlem & New York"
+      },
+      {
+        from: "newyork",
+        to: "bogota",
+        label: "Amerikan Edebiyatı ➔ Kolombiya (Márquez & Büyülü Gerçekçilik)",
+        label_en: "American Literature ➔ Colombia (Márquez & Magical Realism)"
+      },
+      {
+        from: "konya",
+        to: "istanbul",
+        label: "Mevlevî Tasavvuf Edebiyatı (Mevlânâ) ➔ Galata Mevlevihanesi & Divan Şiiri (İstanbul)",
+        label_en: "Sufi Literature (Rumi) ➔ Galata Mevlevi Lodge & Divan Poetry (Istanbul)"
+      },
+      {
+        from: "konya",
+        to: "sivas",
+        label: "Anadolu İrfanı ve Tasavvuf: Mevlânâ ➔ Âşık Veysel & Halk Edebiyatı",
+        label_en: "Anatolian Wisdom & Sufism: Rumi ➔ Âşık Veysel & Folk Literature"
+      },
+      {
+        from: "newyork",
+        to: "havana",
+        label: "Amerikan Edebiyatı ➔ Havana (Ernest Hemingway - İhtiyar Adam ve Deniz)",
+        label_en: "American Literature ➔ Havana (Ernest Hemingway - The Old Man and the Sea)"
+      },
+      {
+        from: "havana",
+        to: "bogota",
+        label: "Karayip Edebiyat Havzası: Hemingway ➔ Gabriel García Márquez",
+        label_en: "Caribbean Literary Basin: Hemingway ➔ Gabriel García Márquez"
+      },
+      {
+        from: "bogota",
+        to: "buenosaires",
+        label: "Latin Amerika Edebi Patlaması (Boom): Büyülü Gerçekçilik ➔ Jorge Luis Borges",
+        label_en: "Latin American Boom: Magical Realism ➔ Jorge Luis Borges"
+      },
+      {
+        from: "buenosaires",
+        to: "riodejaneiro",
+        label: "Güney Amerika Edebi Diyaloğu: Jorge Luis Borges ➔ Machado de Assis",
+        label_en: "South American Literary Dialogue: Jorge Luis Borges ➔ Machado de Assis"
+      },
+      {
+        from: "delhi",
+        to: "varanasi",
+        label: "Klasik Hint & Babür Edebiyatı: Mirza Galib ➔ Rabindranath Tagore",
+        label_en: "Classical Indian & Mughal Literature: Mirza Ghalib ➔ Rabindranath Tagore"
+      },
+      {
+        from: "delhi",
+        to: "siraz",
+        label: "Sabk-i Hindi (Hint-Fars Şiir Köprüsü): Babür Sarayı ➔ Fars Şiiri (Hâfız)",
+        label_en: "Indo-Persian Poetic Bridge (Sabk-i Hindi): Mughal Court ➔ Persian Poetry (Hafez)"
+      },
+      {
+        from: "turkistan",
+        to: "konya",
+        label: "Büyük Tasavvuf Yolu: Hoca Ahmed Yesevî (Hikmet) ➔ Mevlânâ Celâleddîn-i Rûmî",
+        label_en: "Great Sufi Path: Khoja Ahmed Yasawi ➔ Rumi (Mevlânâ)"
+      },
+      {
+        from: "kyoto",
+        to: "seul",
+        label: "Doğu Asya Edebi Havzası: Heian Klasikleri (Kyoto) ➔ Seul (Kral Sejong & Hangul)",
+        label_en: "East Asian Literary Basin: Heian Classics (Kyoto) ➔ Seoul (King Sejong & Hangul)"
+      },
+      {
+        from: "moskova",
+        to: "stpetersburg",
+        label: "Büyük Rus Romanı Ekseni: Tolstoy & Bulgakov ➔ Dostoyevski & Puşkin",
+        label_en: "Great Russian Novel Axis: Tolstoy & Bulgakov ➔ Dostoevsky & Pushkin"
+      },
+      {
+        from: "lagos",
+        to: "zanzibar",
+        label: "Pan-Afrika Edebi Diyaloğu: Batı Afrika ➔ Doğu Afrika Swahili Şiiri",
+        label_en: "Pan-African Literary Dialogue: West Africa ➔ East African Swahili Literature"
+      }
     ]);
 
     const ARC_COLORS = [
@@ -3630,33 +4565,10 @@
       ["#2dd4bf", "#34d399"]
     ];
 
-    // Görünen (filtrelenmiş) şehirler listesine göre yalnızca geçerli edebiyat yaylarını üretir
-    function buildLiteratureArcs(visibleLocations) {
-      const visible = new Map(
-        visibleLocations
-          .filter(loc => loc.category === "edebiyat")
-          .map(loc => [loc.id, loc])
-      );
-
-      return LITERATURE_ROUTES
-        .filter(r => visible.has(r.from) && visible.has(r.to))
-        .map((r, i) => {
-          const a = visible.get(r.from);
-          const b = visible.get(r.to);
-          return {
-            startLat: a.lat,
-            startLng: a.lng,
-            endLat: b.lat,
-            endLng: b.lng,
-            label: r.label,
-            color: ARC_COLORS[i % ARC_COLORS.length]
-          };
-        });
-    }
-
     // ============================================================================
-    // 3. UYGULAMA DURUMU (STATE) - BAĞIMSIZ FİLTRE DEĞİŞKENLERİ
+    // 3. UYGULAMA DURUMU (STATE) VE ÇİFT DİL SÖZLÜĞÜ (TRANSLATIONS)
     // ============================================================================
+    let currentLang = 'tr';
     let activeRegion = 'all';
     let activeCategory = 'all';
     let activeEra = 'all';
@@ -3668,6 +4580,174 @@
     let cloudsMesh = null;
     let isSpeaking = false;
     let introDismissed = false;
+
+    const TRANSLATIONS = Object.freeze({
+      tr: {
+        introProjectSubtitle: "TÜBİTAK 3B DÜNYA KÜLTÜR MİRASI PROJESİ",
+        introAdvisorText: "Akademik Danışman: Öğr. Gör. Dr. Ayşegül Elçi",
+        introLeadText: "PROJE YÜRÜTÜCÜSÜ & GELİŞTİRİCİ: BAYRAM AKPAMUKÇU",
+        introWithHelpText: "yardımlarıyla",
+        startExploreBtnText: "Haritayı Keşfet",
+        introReadyStatus: "3D ATLAS HAZIR • LÜTFEN BUTONA TIKLAYIN",
+        headerTubitakBadge: "TÜBİTAK Projesi",
+        headerAtlasTitle: "Küresel Tarih ve Edebiyat Atlası",
+        stopCounterAll: count => `• ${count} Küresel Durak`,
+        stopCounterFiltered: (f, total) => `• ${f} / ${total} Durak`,
+        headerAdvisorShort: "Danışman:",
+        headerAdvisorFull: "Akademik Danışman:",
+        headerLeadShort: "Yürütücü & Geliştirici:",
+        headerLeadFull: "Proje Yürütücüsü & Geliştirici:",
+        headerHelp: "yardımlarıyla",
+        searchPlaceholder: "Şehir / Eser...",
+        regAll: "Tümü",
+        regTr: "Türkiye",
+        regEu: "Avrupa",
+        regAsia: "Asya",
+        regAsiaSub: " & O. Doğu",
+        regAm: "Amerika",
+        regAf: "Afrika",
+        catAllFull: "Tüm Kategoriler",
+        catAllShort: "Tümü",
+        catHistFull: "Tarihi Olaylar",
+        catHistShort: "Tarih",
+        catLit: "Edebiyat & Akımlar",
+        timelineHeader: "Zaman Tüneli",
+        eraAll: "Tüm Çağlar",
+        eraAntik: "🏛️ Antik Çağ",
+        eraOrtacag: "⚔️ Orta Çağ & Vikingler",
+        eraRonesans: "🎭 Rönesans & Aydınlanma",
+        eraYuzvil19: "📜 19. Yüzyıl Klasikleri",
+        eraModern: "🚀 20. Yy & Modern Çağ",
+        eraDescriptions: {
+          all: "Tüm Çağlar (-500 ➔ 2026)",
+          antik: "🏛️ Antik Çağ (M.Ö. 500 – M.S. 500)",
+          ortacag: "⚔️ Orta Çağ & Viking Çağı (500 – 1450)",
+          ronesans: "🎭 Rönesans & Aydınlanma (1450 – 1800)",
+          yuzvil19: "📜 19. Yüzyıl Klasikleri (1800 – 1900)",
+          modern: "🚀 20. Yüzyıl & Modernizm (1900 – Günümüz)"
+        },
+        regionLabels: {
+          turkiye: "Türkiye",
+          avrupa: "Avrupa",
+          asya: "Asya & Orta Doğu",
+          amerika: "Amerika",
+          afrika: "Afrika"
+        },
+        tipCompass: "Pusulayı ve Kamerayı Küresel Görünüme Sıfırla",
+        tip3D: "3B Eğimli Kamera / Dik Yörünge Açısı Değiştir",
+        tipRotate: "Dünya'nın Kendi Ekseninde Dönüşünü Aç/Kapat",
+        tipZoomIn: "Yakınlaş (Zoom In)",
+        tipZoomOut: "Uzaklaş (Zoom Out)",
+        closeDrawerTip: "Detay Panelini Kapat",
+        drawerSceneHeader: "Yapay Zeka (AI) Tarihsel & Edebi Sahne Görseli",
+        ttsGuideTitle: "Sesli Akademik Rehber",
+        ttsGuideSubtitle: "Türkçe Web Speech AI Seslendirme",
+        ttsListenBtn: "Sesli Dinle (TTS)",
+        ttsStopBtn: "Okumayı Durdur",
+        ttsNotSupported: "Tarayıcınız sesli okuma (TTS) özelliğini desteklemiyor.",
+        drawerAnalysisHeading: "Akademik Tarihsel & Edebi Analiz",
+        drawerQuoteHeading: "Tarihi Söz & Edebi Alıntı",
+        drawerFiguresHeading: "Önemli Şahsiyetler & Eserler",
+        prevCityBtnText: "Önceki Nokta",
+        nextCityBtnText: "Sonraki Nokta",
+        stepIndicator: (idx, total) => `Nokta ${idx} / ${total}`
+      },
+      en: {
+        introProjectSubtitle: "TÜBİTAK 3D WORLD CULTURAL HERITAGE PROJECT",
+        introAdvisorText: "Academic Advisor: Lect. Dr. Ayşegül Elçi",
+        introLeadText: "PROJECT LEAD & DEVELOPER: BAYRAM AKPAMUKÇU",
+        introWithHelpText: "with the help of",
+        startExploreBtnText: "Explore the Atlas",
+        introReadyStatus: "3D ATLAS READY • CLICK BUTTON TO EXPLORE",
+        headerTubitakBadge: "TÜBİTAK Project",
+        headerAtlasTitle: "World History & Literature Atlas",
+        stopCounterAll: count => `• ${count} Global Stops`,
+        stopCounterFiltered: (f, total) => `• ${f} / ${total} Stops`,
+        headerAdvisorShort: "Advisor:",
+        headerAdvisorFull: "Academic Advisor:",
+        headerLeadShort: "Lead & Dev:",
+        headerLeadFull: "Project Lead & Developer:",
+        headerHelp: "with the help of",
+        searchPlaceholder: "City / Work...",
+        regAll: "All",
+        regTr: "Türkiye",
+        regEu: "Europe",
+        regAsia: "Asia",
+        regAsiaSub: " & M. East",
+        regAm: "Americas",
+        regAf: "Africa",
+        catAllFull: "All Categories",
+        catAllShort: "All",
+        catHistFull: "Historical Events",
+        catHistShort: "History",
+        catLit: "Literature & Movements",
+        timelineHeader: "Timeline",
+        eraAll: "All Eras",
+        eraAntik: "🏛️ Ancient Era",
+        eraOrtacag: "⚔️ Middle Ages & Vikings",
+        eraRonesans: "🎭 Renaissance & Enlightenment",
+        eraYuzvil19: "📜 19th Century Classics",
+        eraModern: "🚀 20th C. & Modern Era",
+        eraDescriptions: {
+          all: "All Eras (500 BC ➔ 2026)",
+          antik: "🏛️ Ancient Era (500 BC – AD 500)",
+          ortacag: "⚔️ Middle Ages & Viking Age (500 – 1450)",
+          ronesans: "🎭 Renaissance & Enlightenment (1450 – 1800)",
+          yuzvil19: "📜 19th Century Classics (1800 – 1900)",
+          modern: "🚀 20th Century & Modernism (1900 – Present)"
+        },
+        regionLabels: {
+          turkiye: "Türkiye",
+          avrupa: "Europe",
+          asya: "Asia & Middle East",
+          amerika: "Americas",
+          afrika: "Africa"
+        },
+        tipCompass: "Reset Compass & Camera to Global View",
+        tip3D: "Toggle 3D Tilted / 2D Orbit Camera View",
+        tipRotate: "Toggle Earth Auto-Rotation",
+        tipZoomIn: "Zoom In",
+        tipZoomOut: "Zoom Out",
+        closeDrawerTip: "Close Detail Panel",
+        drawerSceneHeader: "AI Historical & Literary Scene Illustration",
+        ttsGuideTitle: "Audio Academic Guide",
+        ttsGuideSubtitle: "English Web Speech AI Narration",
+        ttsListenBtn: "Listen (TTS)",
+        ttsStopBtn: "Stop Reading",
+        ttsNotSupported: "Your browser does not support Web Speech API (TTS).",
+        drawerAnalysisHeading: "Academic Historical & Literary Analysis",
+        drawerQuoteHeading: "Historical Quote & Literary Excerpt",
+        drawerFiguresHeading: "Key Figures & Works",
+        prevCityBtnText: "Previous Stop",
+        nextCityBtnText: "Next Stop",
+        stepIndicator: (idx, total) => `Stop ${idx} / ${total}`
+      }
+    });
+
+    // Görünen (filtrelenmiş) şehirler listesine göre yalnızca geçerli edebiyat yaylarını üretir
+    function buildLiteratureArcs(visibleLocations) {
+      const visible = new Map(
+        visibleLocations
+          .filter(loc => loc.category === "edebiyat" || loc.secondaryCategory === "edebiyat")
+          .map(loc => [loc.id, loc])
+      );
+
+      const isEn = currentLang === 'en';
+      return LITERATURE_ROUTES
+        .filter(r => visible.has(r.from) && visible.has(r.to))
+        .map((r, i) => {
+          const a = visible.get(r.from);
+          const b = visible.get(r.to);
+          return {
+            startLat: a.lat,
+            startLng: a.lng,
+            endLat: b.lat,
+            endLng: b.lng,
+            label: (isEn && r.label_en) ? r.label_en : r.label,
+            color: ARC_COLORS[i % ARC_COLORS.length]
+          };
+        });
+    }
 
     // ============================================================================
     // 4. ULTRA HD FOTOGERÇEKÇİ 3B KÜRE, BULUT KATMANI VE ATMOSFER
@@ -3901,7 +4981,8 @@
       let pinBg = 'linear-gradient(135deg, #fbbf24, #d97706)';
       let pinGlow = 'rgba(245, 158, 11, 0.85)';
 
-      if (item.category === 'edebiyat') {
+      const isLitPin = item.category === 'edebiyat' || (activeCategory === 'edebiyat' && item.secondaryCategory === 'edebiyat');
+      if (isLitPin) {
         pinColor = '#14b8a6';
         pinSecondColor = '#10b981';
         pinBg = 'linear-gradient(135deg, #2dd4bf, #059669)';
@@ -3917,6 +4998,7 @@
       wrapper.style.setProperty('--label-shift-x', item.labelShiftX || '0px');
 
       const flag = item.flag || (item.region === 'turkiye' ? '🇹🇷' : '🌍');
+      const displayCity = (currentLang === 'en' && item.city_en) ? item.city_en : item.city;
 
       wrapper.innerHTML = `
         <div class="pin-head">
@@ -3927,7 +5009,7 @@
         <div class="pin-stem"></div>
         <div class="pin-label">
           <span>${flag}</span>
-          <span>${item.city}</span>
+          <span>${displayCity}</span>
         </div>
       `;
 
@@ -3950,7 +5032,9 @@
           activeRegion === 'all' || item.region === activeRegion;
 
         const categoryMatch =
-          activeCategory === 'all' || item.category === activeCategory;
+          activeCategory === 'all' ||
+          item.category === activeCategory ||
+          item.secondaryCategory === activeCategory;
 
         const eraMatch =
           activeEra === 'all' || item.era === activeEra;
@@ -3960,12 +5044,17 @@
 
         const searchableText = [
           item.city,
+          item.city_en || '',
           item.country,
+          item.country_en || '',
           item.regionLabel,
           item.title,
+          item.title_en || '',
           item.year,
           item.description,
+          item.description_en || '',
           item.quote,
+          item.quote_en || '',
           ...(item.figuresAndWorks || [])
         ]
           .join(' ')
@@ -3980,8 +5069,10 @@
       const filteredList = getFilteredLocations().map(item => ({ ...item }));
 
       // Globe.gl'nin iç DOM önbellek çakışmasını tamamen önlemek için önce boşaltıp anında taze listeyi veriyoruz
-      world.htmlElementsData([]);
-      world.htmlElementsData(filteredList);
+      if (introDismissed) {
+        world.htmlElementsData([]);
+        world.htmlElementsData(filteredList);
+      }
 
       // SADECE "Edebiyat & Akımlar" seçildiğinde, yalnızca haritada görünen edebiyat şehirleri arasında yay çiz
       if (activeCategory === 'edebiyat') {
@@ -3992,11 +5083,12 @@
 
       // Üst sayaç rozetini güncelle
       const counterBadge = document.getElementById('stopCounterBadge');
+      const t = TRANSLATIONS[currentLang];
       if (counterBadge) {
         if (filteredList.length === MASTER_LOCATIONS.length) {
-          counterBadge.textContent = `• ${MASTER_LOCATIONS.length} Küresel Durak`;
+          counterBadge.textContent = t.stopCounterAll(MASTER_LOCATIONS.length);
         } else {
-          counterBadge.textContent = `• ${filteredList.length} / ${MASTER_LOCATIONS.length} Durak`;
+          counterBadge.textContent = t.stopCounterFiltered(filteredList.length, MASTER_LOCATIONS.length);
         }
       }
     }
@@ -4007,10 +5099,10 @@
         const isSelected = btn.dataset.region === activeRegion;
         if (isSelected) {
           btn.className =
-            'region-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] cursor-pointer whitespace-nowrap';
+            'region-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-sky-500/30 text-white border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.4)] cursor-pointer whitespace-nowrap';
         } else {
           btn.className =
-            'region-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
+            'region-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
         }
       });
 
@@ -4021,25 +5113,25 @@
 
         if (!isSelected) {
           btn.className =
-            'category-btn px-2 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
+            'category-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap';
           return;
         }
 
         if (cat === 'tarih') {
           btn.className =
-            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)] cursor-pointer whitespace-nowrap';
+            'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)] cursor-pointer whitespace-nowrap';
         } else if (cat === 'edebiyat') {
           btn.className =
-            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_12px_rgba(20,184,166,0.5)] cursor-pointer whitespace-nowrap';
+            'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_12px_rgba(20,184,166,0.5)] cursor-pointer whitespace-nowrap';
         } else {
           btn.className =
-            'category-btn active px-2 py-1 rounded-md text-[11px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap';
+            'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap';
         }
       });
     }
 
     // ============================================================================
-    // 6. ŞEHİR SEÇİMİ, FLY-TO KAMERA UÇUŞU VE DETAY PANELİ
+    // 6. ŞEHİR SEÇİMİ, FLY-TO KAMERA UÇUŞU VE ÇİFT DİLLİ DETAY PANELİ
     // ============================================================================
     function selectCity(cityId) {
       const item = MASTER_LOCATIONS.find(d => d.id === cityId);
@@ -4070,36 +5162,47 @@
 
     function populateDrawer(item) {
       const badgesContainer = document.getElementById('drawerBadges');
+      const isEn = currentLang === 'en';
+      const t = TRANSLATIONS[currentLang];
+
+      const displayRegion = (t.regionLabels && t.regionLabels[item.region]) ? t.regionLabels[item.region] : item.regionLabel;
+      const displayYear = (isEn && item.year_en) ? item.year_en : item.year;
+      const displayTitle = (isEn && item.title_en) ? item.title_en : item.title;
+      const displayCity = (isEn && item.city_en) ? item.city_en : item.city;
+      const displayCountry = (isEn && item.country_en) ? item.country_en : item.country;
+      const displayDesc = (isEn && item.description_en) ? item.description_en : item.description;
+      const displayQuote = (isEn && item.quote_en) ? item.quote_en : item.quote;
+      const displayCaption = (isEn && item.imageCaption_en) ? item.imageCaption_en : item.imageCaption;
 
       const regionBadge = `
         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/35">
-          ${item.flag || '🌍'} ${item.regionLabel}
+          ${item.flag || '🌍'} ${displayRegion}
         </span>
       `;
 
       const categoryBadge =
-        item.category === 'tarih'
+        item.category === 'tarih' && activeCategory !== 'edebiyat'
           ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-               Tarihi Olaylar
+               ${t.catHistFull}
              </span>`
           : `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/40">
                <span class="w-2 h-2 rounded-full bg-teal-400"></span>
-               Edebiyat & Akımlar
+               ${t.catLit}
              </span>`;
 
       const yearBadge = `
         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/10 text-slate-200 border border-white/15">
-          📅 ${item.year}
+          📅 ${displayYear}
         </span>
       `;
 
       const eraLabels = {
-        antik: '🏛️ Antik Çağ',
-        ortacag: '⚔️ Orta Çağ & Vikingler',
-        ronesans: '🎭 Rönesans & Aydınlanma',
-        yuzvil19: '📜 19. Yüzyıl Klasikleri',
-        modern: '🚀 20. Yy & Modern Çağ'
+        antik: t.eraAntik,
+        ortacag: t.eraOrtacag,
+        ronesans: t.eraRonesans,
+        yuzvil19: t.eraYuzvil19,
+        modern: t.eraModern
       };
       const eraBadge = item.era && eraLabels[item.era] ? `
         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-200 border border-amber-500/30">
@@ -4109,11 +5212,11 @@
 
       badgesContainer.innerHTML = `${regionBadge}${categoryBadge}${eraBadge}${yearBadge}`;
 
-      document.getElementById('drawerTitle').textContent = item.title;
-      document.getElementById('drawerLocation').textContent = `${item.city}, ${item.country}`;
-      document.getElementById('drawerYearBadge').textContent = item.year;
-      document.getElementById('drawerDescription').textContent = item.description;
-      document.getElementById('drawerQuote').textContent = item.quote;
+      document.getElementById('drawerTitle').textContent = displayTitle;
+      document.getElementById('drawerLocation').textContent = `${displayCity}, ${displayCountry}`;
+      document.getElementById('drawerYearBadge').textContent = displayYear;
+      document.getElementById('drawerDescription').textContent = displayDesc;
+      document.getElementById('drawerQuote').textContent = displayQuote;
 
       // Kapak Görseli (Garantili Yüksek Çözünürlüklü Görsel + onerror Yedek İllüstrasyon Koruması)
       const coverImg = document.getElementById('drawerCoverImage');
@@ -4132,11 +5235,11 @@
       setTimeout(() => {
         coverImg.src = item.coverImage || fallbackSvg;
       }, 60);
-      document.getElementById('drawerImageCaption').textContent = item.imageCaption;
+      document.getElementById('drawerImageCaption').textContent = displayCaption;
 
       // Önemli Şahsiyetler / Eserler Rozetleri (Büyütülmüş Font ve Geniş Padding)
       const tagsContainer = document.getElementById('drawerTags');
-      const dotColor = item.category === 'tarih' ? 'bg-amber-400' : 'bg-teal-400';
+      const dotColor = (item.category === 'tarih' && activeCategory !== 'edebiyat') ? 'bg-amber-400' : 'bg-teal-400';
       tagsContainer.innerHTML = (item.figuresAndWorks || [])
         .map(
           tag => `
@@ -4150,7 +5253,7 @@
       const filtered = getFilteredLocations();
       const idx = filtered.findIndex(d => d.id === item.id);
       document.getElementById('drawerStepIndicator').textContent =
-        idx !== -1 ? `Nokta ${idx + 1} / ${filtered.length}` : `Nokta 1 / ${filtered.length}`;
+        idx !== -1 ? t.stepIndicator(idx + 1, filtered.length) : t.stepIndicator(1, filtered.length);
     }
 
     function openDrawer() {
@@ -4172,7 +5275,7 @@
     }
 
     // ============================================================================
-    // 7. TÜRKÇE SESLİ REHBER (TTS - WEB SPEECH SYNTHESIS API)
+    // 7. ÇİFT DİLLİ SESLİ REHBER (TTS - WEB SPEECH SYNTHESIS API: tr-TR & en-GB)
     // ============================================================================
     function toggleSpeech() {
       if (isSpeaking) {
@@ -4181,15 +5284,27 @@
       }
 
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      const t = TRANSLATIONS[currentLang];
       if (!item || !('speechSynthesis' in window)) {
-        alert('Tarayıcınız Türkçe sesli okuma (TTS) özelliğini desteklemiyor.');
+        alert(t.ttsNotSupported);
         return;
       }
 
       window.speechSynthesis.cancel();
-      const textToRead = `${item.city}, ${item.country}. ${item.title}. Dönem: ${item.year}. ${item.description}. Tarihi söz ve edebi alıntı: ${item.quote}`;
+      const isEn = currentLang === 'en';
+      const city = (isEn && item.city_en) ? item.city_en : item.city;
+      const country = (isEn && item.country_en) ? item.country_en : item.country;
+      const title = (isEn && item.title_en) ? item.title_en : item.title;
+      const year = (isEn && item.year_en) ? item.year_en : item.year;
+      const desc = (isEn && item.description_en) ? item.description_en : item.description;
+      const quote = (isEn && item.quote_en) ? item.quote_en : item.quote;
+
+      const textToRead = isEn
+        ? `${city}, ${country}. ${title}. Era: ${year}. ${desc}. Historical quote and literary excerpt: ${quote}`
+        : `${city}, ${country}. ${title}. Dönem: ${year}. ${desc}. Tarihi söz ve edebi alıntı: ${quote}`;
+
       const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.lang = 'tr-TR';
+      utterance.lang = isEn ? 'en-GB' : 'tr-TR';
       utterance.rate = 0.96;
 
       utterance.onstart = () => {
@@ -4197,7 +5312,7 @@
         const btn = document.getElementById('speakBtn');
         btn.innerHTML = `
           <i data-lucide="square" class="w-4 h-4 fill-current"></i>
-          <span id="speakBtnText">Okumayı Durdur</span>
+          <span id="speakBtnText">${TRANSLATIONS[currentLang].ttsStopBtn}</span>
         `;
         lucide.createIcons();
       };
@@ -4215,11 +5330,122 @@
       isSpeaking = false;
       const btn = document.getElementById('speakBtn');
       if (btn) {
+        const t = TRANSLATIONS[currentLang];
         btn.innerHTML = `
           <i data-lucide="volume-2" class="w-4 h-4"></i>
-          <span id="speakBtnText">Sesli Dinle (TTS)</span>
+          <span id="speakBtnText">${t.ttsListenBtn}</span>
         `;
         lucide.createIcons();
+      }
+    }
+
+    // ============================================================================
+    // 7B. DİNAMİK DİL DEĞİŞTİRİCİ (TR | EN) FONKSİYONU
+    // ============================================================================
+    function setLanguage(lang) {
+      if (lang !== 'tr' && lang !== 'en') return;
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      const t = TRANSLATIONS[lang];
+
+      // Dil butonlarının aktif stilini güncelle
+      const trBtn = document.getElementById('langBtnTr');
+      const enBtn = document.getElementById('langBtnEn');
+      if (trBtn && enBtn) {
+        if (lang === 'tr') {
+          trBtn.className = 'lang-btn active px-1.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider transition-all duration-200 bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.3)] cursor-pointer';
+          enBtn.className = 'lang-btn px-1.5 py-0.5 rounded-md text-[10px] font-bold tracking-wider transition-all duration-200 text-slate-400 hover:text-white border border-transparent cursor-pointer';
+        } else {
+          enBtn.className = 'lang-btn active px-1.5 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider transition-all duration-200 bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.3)] cursor-pointer';
+          trBtn.className = 'lang-btn px-1.5 py-0.5 rounded-md text-[10px] font-bold tracking-wider transition-all duration-200 text-slate-400 hover:text-white border border-transparent cursor-pointer';
+        }
+      }
+
+      // Statik metinleri güncelle
+      const setElText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      setElText('introProjectSubtitle', t.introProjectSubtitle);
+      setElText('introAdvisorText', t.introAdvisorText);
+      setElText('introLeadText', t.introLeadText);
+      setElText('introWithHelpText', t.introWithHelpText);
+      setElText('startExploreBtnText', t.startExploreBtnText);
+
+      setElText('headerTubitakBadge', t.headerTubitakBadge);
+      setElText('headerAtlasTitle', t.headerAtlasTitle);
+      setElText('headerAdvisorShort', t.headerAdvisorShort);
+      setElText('headerAdvisorFull', t.headerAdvisorFull);
+      setElText('headerLeadShort', t.headerLeadShort);
+      setElText('headerLeadFull', t.headerLeadFull);
+      setElText('headerHelpShort', t.headerHelp);
+      setElText('headerHelpFull', t.headerHelp);
+
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+      setElText('regLabelAll', t.regAll);
+      setElText('regLabelTr', t.regTr);
+      setElText('regLabelEu', t.regEu);
+      setElText('regLabelAsia', t.regAsia);
+      setElText('regLabelAsiaSub', t.regAsiaSub);
+      setElText('regLabelAm', t.regAm);
+      setElText('regLabelAf', t.regAf);
+
+      setElText('catLabelAllFull', t.catAllFull);
+      setElText('catLabelAllShort', t.catAllShort);
+      setElText('catLabelHistFull', t.catHistFull);
+      setElText('catLabelHistShort', t.catHistShort);
+      setElText('catLabelLit', t.catLit);
+
+      setElText('timelineHeaderLabel', t.timelineHeader);
+      setElText('eraBtnAll', t.eraAll);
+      setElText('eraBtnAntik', t.eraAntik);
+      setElText('eraBtnOrtacag', t.eraOrtacag);
+      setElText('eraBtnRonesans', t.eraRonesans);
+      setElText('eraBtnYuzvil19', t.eraYuzvil19);
+      setElText('eraBtnModern', t.eraModern);
+
+      const eraLabel = document.getElementById('timelineCurrentEraLabel');
+      if (eraLabel && t.eraDescriptions[activeEra]) {
+        eraLabel.textContent = t.eraDescriptions[activeEra];
+      }
+
+      // Navigasyon ipuçlarını (tooltips) güncelle
+      const setElTitle = (id, titleText) => {
+        const el = document.getElementById(id);
+        if (el) el.title = titleText;
+      };
+      setElTitle('compassResetBtn', t.tipCompass);
+      setElTitle('toggle3DViewBtn', t.tip3D);
+      setElTitle('toggleRotateBtn', t.tipRotate);
+      setElTitle('zoomInBtn', t.tipZoomIn);
+      setElTitle('zoomOutBtn', t.tipZoomOut);
+      setElTitle('closeDrawerBtn', t.closeDrawerTip);
+
+      // Drawer statik başlıklarını güncelle
+      setElText('drawerSceneHeaderLabel', t.drawerSceneHeader);
+      setElText('ttsGuideTitle', t.ttsGuideTitle);
+      setElText('ttsGuideSubtitle', t.ttsGuideSubtitle);
+      setElText('drawerAnalysisHeading', t.drawerAnalysisHeading);
+      setElText('drawerQuoteHeading', t.drawerQuoteHeading);
+      setElText('drawerFiguresHeading', t.drawerFiguresHeading);
+      setElText('prevCityBtnText', t.prevCityBtnText);
+      setElText('nextCityBtnText', t.nextCityBtnText);
+
+      // Eğer sesli okuma açıksa durdur ve buton metnini yeni dile göre güncelle
+      stopSpeech();
+
+      // Haritadaki pin etiketlerini ve yayları yeni dile göre tazele
+      renderFilteredMarkers();
+
+      // Eğer detay çekmecesi (drawer) açıksa, seçili şehrin içeriğini yeni dilde anında güncelle
+      if (activeCityId) {
+        const currentItem = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+        if (currentItem) {
+          populateDrawer(currentItem);
+        }
       }
     }
 
@@ -4227,6 +5453,12 @@
     // 8. ARAYÜZ ETKİLEŞİMLERİ
     // ============================================================================
     function setupUIEvents() {
+      // Dil Değiştirici Butonlar (TR | EN)
+      const langBtnTr = document.getElementById('langBtnTr');
+      const langBtnEn = document.getElementById('langBtnEn');
+      if (langBtnTr) langBtnTr.addEventListener('click', () => setLanguage('tr'));
+      if (langBtnEn) langBtnEn.addEventListener('click', () => setLanguage('en'));
+
       // Sinematik Giriş Ekranı: YALNIZCA "Haritayı Keşfet" Butonuna Basıldığında Geçiş Yapar (Otomatik Geçiş Kesinlikle Yoktur)
       const startExploreBtn = document.getElementById('startExploreBtn');
       const progressTextEl = document.getElementById('introProgressText');
@@ -4245,7 +5477,7 @@
         } else {
           // %100 dolduğunda sistem hazır mesajı verir, ASLA otomatik geçiş yapmaz; buton tıklamasını bekler!
           if (introStatusLabel) {
-            introStatusLabel.textContent = '3D ATLAS READY • LÜTFEN BUTONA TIKLAYIN';
+            introStatusLabel.textContent = TRANSLATIONS[currentLang].introReadyStatus;
           }
           if (startExploreBtn) {
             startExploreBtn.classList.add('ring-2', 'ring-[#d4af37]/70', 'shadow-[0_0_50px_rgba(212,175,55,0.5)]');
@@ -4295,15 +5527,6 @@
       });
 
       // 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRELERİ
-      const eraDescriptions = {
-        all: "Tüm Çağlar (-500 ➔ 2026)",
-        antik: "🏛️ Antik Çağ (M.Ö. 500 – M.S. 500)",
-        ortacag: "⚔️ Orta Çağ & Viking Çağı (500 – 1450)",
-        ronesans: "🎭 Rönesans & Aydınlanma (1450 – 1800)",
-        yuzvil19: "📜 19. Yüzyıl Klasikleri (1800 – 1900)",
-        modern: "🚀 20. Yüzyıl & Modernizm (1900 – Günümüz)"
-      };
-
       function updateEraButtonStyles() {
         document.querySelectorAll('.era-btn').forEach(btn => {
           const era = btn.dataset.era;
@@ -4317,8 +5540,9 @@
           }
         });
         const label = document.getElementById('timelineCurrentEraLabel');
-        if (label && eraDescriptions[activeEra]) {
-          label.textContent = eraDescriptions[activeEra];
+        const eraDescs = TRANSLATIONS[currentLang].eraDescriptions;
+        if (label && eraDescs && eraDescs[activeEra]) {
+          label.textContent = eraDescs[activeEra];
         }
       }
 
