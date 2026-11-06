@@ -40,5 +40,5 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
   - `Developed by Bayram Akpamukçu • with Sami Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
   - Üst filtre menüsü tek satır, kompakt ve yatay kaydırılabilir kalmalıdır.
   - Zaman Tüneli alt merkezde konumlanır.
-  - Giriş ekranı (Intro) bekleme süresi 5 saniyedir (5000ms).
+  - Giriş ekranı (Intro) otomatik geçiş YAPMAZ; YALNIZCA kullanıcı "Haritayı Keşfet" butonuna tıkladığında haritaya geçilir.
 

@@ -45,5 +45,5 @@ Kullanıcı herhangi bir değişiklik, yeni şehir, edebi durak veya stil günce
 - **Sol Üst Kutu Altı:** `Developed by Bayram Akpamukçu • with Sami Yusuf Maral & Yusuf Özcan` rozeti, Zaman Tüneli'ni kapatmaması için sol üst başlık kutusunun hemen altında yer alır.
 - **Üst Menü:** Ekranı kapatmaması için tek satır, ultra kompakt ve yatay kaydırılabilir kalmalıdır.
 - **Zaman Tüneli:** Alt merkezde konumlanır.
-- **İntro Ekranı:** Açılış animasyonu ve altın çizgi süresi 5 saniyedir (5000ms).
+- **İntro Ekranı:** Otomatik geçiş YOKTUR; sayfa YALNIZCA kullanıcı "Haritayı Keşfet" butonuna tıkladığında açılır.
 
