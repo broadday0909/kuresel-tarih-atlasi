@@ -282,25 +282,25 @@
 
     .pin-head {
       position: relative;
-      width: 32px;
-      height: 32px;
+      width: 25px;
+      height: 25px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 11px;
       color: #fff;
-      box-shadow: 0 0 20px var(--pin-glow), inset 0 2px 4px rgba(255, 255, 255, 0.45);
-      border: 2px solid rgba(255, 255, 255, 0.94);
+      box-shadow: 0 0 14px var(--pin-glow), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+      border: 1.5px solid rgba(255, 255, 255, 0.94);
       background: var(--pin-bg);
       z-index: 2;
     }
 
     .pin-pulse {
       position: absolute;
-      inset: -6px;
+      inset: -4px;
       border-radius: 50%;
-      border: 2px solid var(--pin-color);
+      border: 1.5px solid var(--pin-color);
       opacity: 0.85;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
       pointer-events: none;
@@ -308,37 +308,37 @@
 
     .pin-pulse-delayed {
       position: absolute;
-      inset: -6px;
+      inset: -4px;
       border-radius: 50%;
-      border: 1.5px solid var(--pin-second-color, var(--pin-color));
+      border: 1px solid var(--pin-second-color, var(--pin-color));
       opacity: 0.65;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) 1.1s infinite;
       pointer-events: none;
     }
 
     .pin-stem {
-      width: 2px;
-      height: 11px;
+      width: 1.5px;
+      height: 8px;
       background: linear-gradient(to bottom, #ffffff, var(--pin-color), transparent);
       margin-top: -1px;
     }
 
     .pin-label {
-      margin-top: 2px;
-      padding: 2px 8px;
+      margin-top: 1.5px;
+      padding: 1.5px 6px;
       border-radius: 999px;
-      font-size: 10.5px;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.02em;
       white-space: nowrap;
       color: #f8fafc;
       background: rgba(8, 12, 24, 0.92);
       border: 1px solid var(--pin-color);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
-      gap: 3.5px;
+      gap: 2.5px;
       transform: translateX(var(--label-shift-x, 0px));
     }
 
@@ -2683,13 +2683,13 @@
       const pov = world.pointOfView();
       if (!pov) return;
 
-      let pinScale = 0.88;
+      let pinScale = 0.82;
       if (pov.altitude < 0.55) {
-        pinScale = 0.66;
+        pinScale = 0.58;
       } else if (pov.altitude < 1.1) {
-        pinScale = 0.74;
+        pinScale = 0.66;
       } else if (pov.altitude < 1.7) {
-        pinScale = 0.82;
+        pinScale = 0.74;
       }
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
 
