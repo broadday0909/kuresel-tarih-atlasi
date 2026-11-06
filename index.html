@@ -424,6 +424,21 @@
       background: radial-gradient(circle at center, transparent 62%, rgba(2, 6, 23, 0.68) 100%);
       pointer-events: none;
     }
+
+    /* Sesli Rehber Ekolayzır (Equalizer) Çubukları */
+    @keyframes ttsEqBounce {
+      0%, 100% { height: 4px; opacity: 0.6; }
+      50% { height: 15px; opacity: 1; }
+    }
+    .tts-eq-bar {
+      width: 3px;
+      border-radius: 999px;
+      background: currentColor;
+      animation: ttsEqBounce 0.75s ease-in-out infinite;
+    }
+    .tts-eq-bar:nth-child(2) { animation-delay: 0.18s; }
+    .tts-eq-bar:nth-child(3) { animation-delay: 0.36s; }
+    .tts-eq-bar:nth-child(4) { animation-delay: 0.12s; }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden select-none">
@@ -927,26 +942,50 @@
         </div>
       </div>
 
-      <!-- Sesli Dinle (TTS) Öne Çıkan Aksiyon Butonu -->
-      <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-gradient-to-r from-sky-950/60 via-slate-900/80 to-emerald-950/50 border border-sky-500/30">
+      <!-- Sesli Dinle (Doğal Neural Sesli Rehber) Öne Çıkan Aksiyon Kutusu -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-sky-950/65 via-slate-900/85 to-emerald-950/55 border border-sky-500/35 shadow-lg">
         <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300">
-            <i data-lucide="headphones" class="w-4 h-4"></i>
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+            <i data-lucide="mic" class="w-4 h-4"></i>
           </div>
           <div>
-            <div id="ttsGuideTitle" class="text-xs font-bold text-white">Sesli Akademik Rehber</div>
-            <div id="ttsGuideSubtitle" class="text-[11px] text-slate-400">Türkçe Web Speech AI Seslendirme</div>
+            <div id="ttsGuideTitle" class="text-xs font-bold text-white flex items-center gap-1.5">
+              <span>Akıcı Sesli Akademik Rehber</span>
+            </div>
+            <div id="ttsGuideSubtitle" class="text-[11px] text-amber-200/80">Doğal Stüdyo Neural Seslendirme (Ahmet / Emel)</div>
           </div>
         </div>
 
-        <button
-          id="speakBtn"
-          type="button"
-          class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition shrink-0 cursor-pointer"
-        >
-          <i data-lucide="volume-2" class="w-4 h-4"></i>
-          <span id="speakBtnText">Sesli Dinle (TTS)</span>
-        </button>
+        <div class="flex items-center justify-end gap-2 shrink-0">
+          <!-- Ses Tonu Seçici (Erkek / Kadın Neural Ses) -->
+          <div class="flex items-center bg-slate-950/90 p-0.5 rounded-xl border border-white/15 text-[10px]">
+            <button
+              type="button"
+              id="voiceMaleBtn"
+              class="px-2 py-1 rounded-lg font-bold transition bg-amber-500/25 text-amber-200 border border-amber-400/50 cursor-pointer"
+              title="Erkek Belgesel Sesi (Ahmet / Ryan Neural)"
+            >
+              🎙️ <span id="voiceMaleLabel">Ahmet</span>
+            </button>
+            <button
+              type="button"
+              id="voiceFemaleBtn"
+              class="px-2 py-1 rounded-lg font-semibold transition text-slate-400 hover:text-white border border-transparent cursor-pointer"
+              title="Kadın Akademik Ses (Emel / Sonia Neural)"
+            >
+              🎙️ <span id="voiceFemaleLabel">Emel</span>
+            </button>
+          </div>
+
+          <button
+            id="speakBtn"
+            type="button"
+            class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 transition shrink-0 cursor-pointer"
+          >
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span id="speakBtnText">Sesli Dinle</span>
+          </button>
+        </div>
       </div>
 
       <!-- Detaylı Akademik Açıklama -->
@@ -971,13 +1010,19 @@
         </blockquote>
       </div>
 
-      <!-- Önemli Şahsiyetler / Eserler Rozetleri -->
+      <!-- Önemli Şahsiyetler / Eserler Rozetleri (Tıklanabilir Ansiklopedik Kartlar) -->
       <div class="space-y-3">
-        <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-          <i data-lucide="award" class="w-4 h-4 text-emerald-400"></i>
-          <span id="drawerFiguresHeading">Önemli Şahsiyetler &amp; Eserler</span>
-        </h3>
-        <div id="drawerTags" class="flex flex-wrap gap-2.5"></div>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="award" class="w-4 h-4 text-emerald-400"></i>
+            <span id="drawerFiguresHeading">Önemli Şahsiyetler &amp; Eserler</span>
+          </h3>
+          <span id="drawerFiguresHint" class="text-[11px] font-medium text-amber-300/90 bg-amber-500/10 border border-amber-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <i data-lucide="mouse-pointer-click" class="w-3 h-3 text-amber-400"></i>
+            <span id="drawerFiguresHintText">Okumak için üzerine tıklayın</span>
+          </span>
+        </div>
+        <div id="drawerTags" class="flex flex-col sm:flex-wrap sm:flex-row gap-2.5"></div>
       </div>
 
     </div>
@@ -1007,6 +1052,135 @@
       </button>
     </div>
   </aside>
+
+  <!-- 4. ŞAHSİYET & ESER DETAYLI ANSİKLOPEDİK OKUMA PENCERESİ (MODAL WINDOW) -->
+  <div
+    id="figureModalOverlay"
+    class="fixed inset-0 z-[120] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div
+      id="figureModalDialog"
+      class="glass-panel w-full max-w-3xl max-h-[90vh] rounded-3xl border border-[#d4af37]/45 shadow-[0_25px_80px_rgba(0,0,0,0.92),0_0_40px_rgba(212,175,55,0.18)] flex flex-col overflow-hidden transform scale-95 transition-all duration-300"
+    >
+      <!-- Modal Üst Başlık -->
+      <div class="p-4 sm:p-6 pb-4 border-b border-white/10 bg-gradient-to-r from-amber-500/[0.08] via-slate-900/60 to-teal-500/[0.08] flex items-start justify-between gap-3">
+        <div class="space-y-1.5 min-w-0">
+          <div class="flex flex-wrap items-center gap-2" id="figureModalBadges"></div>
+          <h2 id="figureModalTitle" class="font-display text-lg sm:text-2xl font-bold text-white leading-snug">
+            Şahsiyet &amp; Eser Başlığı
+          </h2>
+          <p id="figureModalSubtitle" class="text-xs sm:text-sm text-amber-200/85 font-medium">
+            Ansiklopedik Biyografi, Eser Analizi ve Dönem Ruhu
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Modal İçi Sesli Dinle Butonu -->
+          <button
+            id="figureModalSpeakBtn"
+            type="button"
+            class="px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 transition cursor-pointer"
+          >
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span id="figureModalSpeakText">Sesli Dinle</span>
+          </button>
+
+          <!-- Kapat Butonu -->
+          <button
+            id="closeFigureModalBtn"
+            type="button"
+            class="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/15 transition cursor-pointer"
+            title="Pencereyi Kapat (ESC)"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Alt Konu / Eser Sekmeleri (Eğer Etikette Parantez İçi Eserler Varsa Otomatik Çıkar) -->
+      <div id="figureSubTopicContainer" class="hidden px-4 sm:px-6 py-2.5 bg-slate-950/75 border-b border-white/10 flex flex-wrap items-center gap-1.5">
+        <span id="figureSubTopicLabel" class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1">İnceleme Seçimi:</span>
+        <div id="figureSubTopicTabs" class="flex flex-wrap items-center gap-1.5"></div>
+      </div>
+
+      <!-- Modal Kaydırılabilir Okuma İçeriği -->
+      <div id="figureModalScrollArea" class="flex-1 overflow-y-auto custom-scroll p-4 sm:p-6 space-y-5">
+        <!-- Portre / Görsel + Özet Bilgi Kartı -->
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch bg-white/[0.03] border border-white/10 rounded-2xl p-4">
+          <div class="w-full sm:w-44 h-48 sm:h-auto rounded-xl overflow-hidden border border-[#d4af37]/35 bg-slate-950 shrink-0 relative shadow-lg">
+            <img
+              id="figureModalImage"
+              src=""
+              alt="Şahsiyet veya Eser Görseli"
+              class="w-full h-full object-cover object-top transition-opacity duration-500"
+            />
+            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-2">
+              <span id="figureModalImgBadge" class="text-[10px] font-semibold text-amber-300 uppercase tracking-wider">Arşiv &amp; Portre</span>
+            </div>
+          </div>
+
+          <div class="flex-1 flex flex-col justify-between space-y-3">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400">
+                <i data-lucide="scroll-text" class="w-4 h-4"></i>
+                <span id="figureModalSummaryHeading">Kimdir / Nedir &amp; Tarihsel Önemi</span>
+              </div>
+              <p id="figureModalLeadParagraph" class="text-sm sm:text-base text-slate-100 leading-relaxed font-medium">
+                Yükleniyor...
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+              <span id="figureModalEraInfo" class="flex items-center gap-1.5 text-sky-300 font-medium"></span>
+              <a
+                id="figureModalWikiLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 text-amber-300 hover:text-amber-200 font-semibold underline underline-offset-4"
+              >
+                <span id="figureModalWikiLinkText">Ansiklopedik Kaynak (Wikipedia)</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detaylı Ansiklopedik Biyografi & Eser Okuma Bölümü -->
+        <div class="space-y-3 bg-slate-950/50 border border-white/10 rounded-2xl p-4 sm:p-5">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
+              <i data-lucide="book-open-check" class="w-4 h-4"></i>
+              <span id="figureModalBioHeading">Detaylı Biyografi, Eser &amp; Fikir İncelemesi</span>
+            </h3>
+            <span id="figureModalLoadingBadge" class="hidden text-[11px] text-amber-300 animate-pulse font-medium">
+              Ansiklopedik veri zenginleştiriliyor...
+            </span>
+          </div>
+          <div id="figureModalBioContent" class="space-y-3.5 text-sm sm:text-base text-slate-200 leading-relaxed"></div>
+        </div>
+
+        <!-- Şehir, Dönem ve Edebi / Tarihi Akım Bağlamı -->
+        <div class="space-y-2.5 bg-gradient-to-br from-amber-950/30 via-slate-900/70 to-teal-950/30 border border-[#d4af37]/30 rounded-2xl p-4 sm:p-5">
+          <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+            <span id="figureModalContextHeading">Dönem Ruhu ve Küresel Atlas Bağlamı</span>
+          </h3>
+          <p id="figureModalContextText" class="text-sm sm:text-base text-slate-200 leading-relaxed"></p>
+          <blockquote id="figureModalQuoteBox" class="mt-3 text-sm sm:text-base italic text-teal-100/95 border-l-2 border-[#d4af37] pl-3.5 py-1"></blockquote>
+        </div>
+      </div>
+
+      <!-- Modal Alt Bar: Aynı Şehirdeki Diğer Şahsiyetler & Eserler Arasında Hızlı Geçiş -->
+      <div class="p-3.5 sm:px-6 bg-slate-950/90 border-t border-white/10 flex flex-col gap-2">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-[#d4af37]"></i>
+          <span id="figureModalOtherLabel">Bu Duraktaki Tüm Şahsiyetler &amp; Eserler (Hızlı Geçiş):</span>
+        </div>
+        <div id="figureModalSiblingList" class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- UYGULAMA JAVASCRIPT KODU -->
   <script>
@@ -4648,14 +4822,26 @@
         tipZoomOut: "Uzaklaş (Zoom Out)",
         closeDrawerTip: "Detay Panelini Kapat",
         drawerSceneHeader: "Yapay Zeka (AI) Tarihsel & Edebi Sahne Görseli",
-        ttsGuideTitle: "Sesli Akademik Rehber",
-        ttsGuideSubtitle: "Türkçe Web Speech AI Seslendirme",
-        ttsListenBtn: "Sesli Dinle (TTS)",
+        ttsGuideTitle: "Akıcı Sesli Akademik Rehber",
+        ttsGuideSubtitle: "Doğal Stüdyo Neural Seslendirme (Ahmet / Emel)",
+        ttsListenBtn: "Sesli Dinle",
+        ttsPreparingBtn: "Ses Hazırlanıyor...",
         ttsStopBtn: "Okumayı Durdur",
-        ttsNotSupported: "Tarayıcınız sesli okuma (TTS) özelliğini desteklemiyor.",
+        ttsNotSupported: "Tarayıcınız sesli okuma özelliğini desteklemiyor.",
+        voiceMaleName: "Ahmet",
+        voiceFemaleName: "Emel",
         drawerAnalysisHeading: "Akademik Tarihsel & Edebi Analiz",
         drawerQuoteHeading: "Tarihi Söz & Edebi Alıntı",
         drawerFiguresHeading: "Önemli Şahsiyetler & Eserler",
+        drawerFiguresHintText: "Okumak için üzerine tıklayın",
+        readBadgeText: "Oku",
+        figureModalSubtitle: "Ansiklopedik Biyografi, Eser Analizi ve Dönem Ruhu",
+        figureSubTopicLabel: "İnceleme Seçimi:",
+        figureSummaryHeading: "Kimdir / Nedir & Tarihsel Önemi",
+        figureWikiLinkText: "Tam Ansiklopedi Kaynağı (Wikipedia)",
+        figureBioHeading: "Detaylı Biyografi, Eser & Fikir İncelemesi",
+        figureContextHeading: "Dönem Ruhu ve Küresel Atlas Bağlamı",
+        figureOtherLabel: "Bu Duraktaki Tüm Şahsiyetler & Eserler (Hızlı Geçiş):",
         prevCityBtnText: "Önceki Nokta",
         nextCityBtnText: "Sonraki Nokta",
         stepIndicator: (idx, total) => `Nokta ${idx} / ${total}`
@@ -4718,14 +4904,26 @@
         tipZoomOut: "Zoom Out",
         closeDrawerTip: "Close Detail Panel",
         drawerSceneHeader: "AI Historical & Literary Scene Illustration",
-        ttsGuideTitle: "Audio Academic Guide",
-        ttsGuideSubtitle: "English Web Speech AI Narration",
-        ttsListenBtn: "Listen (TTS)",
+        ttsGuideTitle: "Fluid Audio Academic Guide",
+        ttsGuideSubtitle: "Studio-Grade Natural Neural Narration (Ryan / Sonia)",
+        ttsListenBtn: "Listen",
+        ttsPreparingBtn: "Preparing Audio...",
         ttsStopBtn: "Stop Reading",
-        ttsNotSupported: "Your browser does not support Web Speech API (TTS).",
+        ttsNotSupported: "Your browser does not support audio narration.",
+        voiceMaleName: "Ryan",
+        voiceFemaleName: "Sonia",
         drawerAnalysisHeading: "Academic Historical & Literary Analysis",
         drawerQuoteHeading: "Historical Quote & Literary Excerpt",
         drawerFiguresHeading: "Key Figures & Works",
+        drawerFiguresHintText: "Click any item to read in detail",
+        readBadgeText: "Read",
+        figureModalSubtitle: "Encyclopedic Biography, Work Analysis & Spirit of the Era",
+        figureSubTopicLabel: "Select Topic:",
+        figureSummaryHeading: "Who / What & Historical Significance",
+        figureWikiLinkText: "Full Encyclopedia Source (Wikipedia)",
+        figureBioHeading: "Detailed Biography, Work & Intellectual Analysis",
+        figureContextHeading: "Spirit of the Era & Global Atlas Context",
+        figureOtherLabel: "All Figures & Works at This Stop (Quick Switch):",
         prevCityBtnText: "Previous Stop",
         nextCityBtnText: "Next Stop",
         stepIndicator: (idx, total) => `Stop ${idx} / ${total}`
@@ -5245,18 +5443,36 @@
       }, 60);
       document.getElementById('drawerImageCaption').textContent = displayCaption;
 
-      // Önemli Şahsiyetler / Eserler Rozetleri (Büyütülmüş Font ve Geniş Padding)
+      // Önemli Şahsiyetler / Eserler Rozetleri (Tıklanabilir İnteraktif Okuma Kartları)
       const tagsContainer = document.getElementById('drawerTags');
       const dotColor = (item.category === 'tarih' && activeCategory !== 'edebiyat') ? 'bg-amber-400' : 'bg-teal-400';
       tagsContainer.innerHTML = (item.figuresAndWorks || [])
         .map(
-          tag => `
-          <span class="px-4 py-2 rounded-xl text-sm sm:text-base font-medium bg-white/[0.08] hover:bg-white/[0.15] text-slate-100 border border-white/15 transition flex items-center gap-2 shadow-sm">
-            <span class="w-2 h-2 rounded-full ${dotColor} shrink-0"></span>
-            ${tag}
-          </span>`
+          (tag, i) => `
+          <button
+            type="button"
+            data-figure-index="${i}"
+            class="figure-tag-btn group w-full sm:w-auto text-left px-4 py-2.5 rounded-xl text-sm sm:text-base font-medium bg-white/[0.08] hover:bg-amber-500/20 text-slate-100 hover:text-white border border-white/15 hover:border-[#d4af37]/65 transition-all duration-200 flex items-center justify-between gap-3 shadow-sm hover:shadow-[0_0_22px_rgba(212,175,55,0.28)] cursor-pointer"
+          >
+            <span class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full ${dotColor} shrink-0 group-hover:scale-125 transition-transform"></span>
+              <span>${tag}</span>
+            </span>
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#d4af37] bg-[#d4af37]/12 group-hover:bg-[#d4af37]/25 px-2.5 py-0.5 rounded-lg border border-[#d4af37]/35 shrink-0 transition">
+              <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+              <span>${t.readBadgeText}</span>
+            </span>
+          </button>`
         )
         .join('');
+
+      tagsContainer.querySelectorAll('.figure-tag-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const figIdx = parseInt(btn.dataset.figureIndex, 10);
+          openFigureModal(item, figIdx);
+        });
+      });
+      lucide.createIcons();
 
       const filtered = getFilteredLocations();
       const idx = filtered.findIndex(d => d.id === item.id);
@@ -5283,22 +5499,304 @@
     }
 
     // ============================================================================
-    // 7. ÇİFT DİLLİ SESLİ REHBER (TTS - WEB SPEECH SYNTHESIS API: tr-TR & en-GB)
+    // 7. STÜDYO KALİTESİNDE DOĞAL NEURAL SESLİ REHBER (EDGE NEURAL TTS + AKICI FALLBACK)
     // ============================================================================
-    function toggleSpeech() {
+    let selectedVoiceGender = 'male'; // 'male' (Ahmet / Ryan) | 'female' (Emel / Sonia)
+    let currentNeuralAudio = null;
+    let activeSpeechSessionId = 0;
+    const neuralAudioCache = new Map();
+    let cachedBrowserVoices = [];
+
+    if ('speechSynthesis' in window) {
+      const loadVoices = () => {
+        cachedBrowserVoices = window.speechSynthesis.getVoices() || [];
+      };
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function setVoiceGender(gender) {
+      selectedVoiceGender = gender === 'female' ? 'female' : 'male';
+      const maleBtn = document.getElementById('voiceMaleBtn');
+      const femaleBtn = document.getElementById('voiceFemaleBtn');
+      if (maleBtn && femaleBtn) {
+        if (selectedVoiceGender === 'male') {
+          maleBtn.className = 'px-2 py-1 rounded-lg font-bold transition bg-amber-500/25 text-amber-200 border border-amber-400/50 cursor-pointer';
+          femaleBtn.className = 'px-2 py-1 rounded-lg font-semibold transition text-slate-400 hover:text-white border border-transparent cursor-pointer';
+        } else {
+          femaleBtn.className = 'px-2 py-1 rounded-lg font-bold transition bg-amber-500/25 text-amber-200 border border-amber-400/50 cursor-pointer';
+          maleBtn.className = 'px-2 py-1 rounded-lg font-semibold transition text-slate-400 hover:text-white border border-transparent cursor-pointer';
+        }
+      }
+      if (isSpeaking) {
+        stopSpeech();
+      }
+    }
+
+    // Metni robotik okumalardan kurtarıp doğal belgesel Türkçesine/İngilizcesine dönüştürür
+    function normalizeTextForFluidSpeech(rawText, lang) {
+      if (!rawText) return '';
+      let text = String(rawText);
+
+      if (lang === 'tr') {
+        // Çift dilli alıntılarda ("English..." — "Türkçe...") yalnızca Türkçe kısmı oku
+        if (text.includes(' — "')) {
+          const parts = text.split(' — ');
+          if (parts.length >= 2) {
+            text = parts.slice(1).join(' — ');
+          }
+        }
+        text = text
+          .replace(/M\.?Ö\.?\s*/gi, 'Milattan Önce ')
+          .replace(/M\.?S\.?\s*/gi, 'Milattan Sonra ')
+          .replace(/\bYy\.\b/gi, 'Yüzyıl')
+          .replace(/\byy\.\b/g, 'yüzyıl')
+          .replace(/\bXXI\.\s*/g, 'Yirmi birinci ')
+          .replace(/\bXX\.\s*/g, 'Yirminci ')
+          .replace(/\bXIX\.\s*/g, 'On dokuzuncu ')
+          .replace(/\bXVIII\.\s*/g, 'On sekizinci ')
+          .replace(/\bXVII\.\s*/g, 'On yedinci ')
+          .replace(/\bXVI\.\s*/g, 'On altıncı ')
+          .replace(/\bXV\.\s*/g, 'On beşinci ')
+          .replace(/\bXIV\.\s*/g, 'On dördüncü ')
+          .replace(/\bXIII\.\s*/g, 'On üçüncü ')
+          .replace(/\bXII\.\s*/g, 'On ikinci ')
+          .replace(/\bXI\.\s*/g, 'On birinci ')
+          .replace(/\bX\.\s*/g, 'Onuncu ')
+          .replace(/\bIX\.\s*/g, 'Dokuzuncu ')
+          .replace(/\bVIII\.\s*/g, 'Sekizinci ')
+          .replace(/\bVII\.\s*/g, 'Yedinci ')
+          .replace(/\bVI\.\s*/g, 'Altıncı ')
+          .replace(/\bV\.\s*/g, 'Beşinci ')
+          .replace(/\bIV\.\s*/g, 'Dördüncü ')
+          .replace(/\bIII\.\s*/g, 'Üçüncü ')
+          .replace(/\bII\.\s*/g, 'İkinci ')
+          .replace(/\bI\.\s*/g, 'Birinci ')
+          .replace(/(\d{3,4})\s*[–—-]\s*(\d{3,4})/g, '$1 ile $2 yılları arası')
+          .replace(/\s*\/\s*/g, ', ')
+          .replace(/\s*&\s*/g, ' ve ')
+          .replace(/["“”«»]/g, '');
+      } else {
+        // İngilizce modda çift dilli alıntılarda yalnızca İngilizce kısmı oku
+        if (text.includes('" — "')) {
+          const parts = text.split(' — ');
+          if (parts.length >= 2) {
+            text = parts[0] + (parts[1].includes('—') ? ' — ' + parts[1].split('—').pop() : '');
+          }
+        }
+        text = text
+          .replace(/(\d{3,4})\s*[–—-]\s*(\d{3,4})/g, 'from $1 to $2')
+          .replace(/\s*\/\s*/g, ', ')
+          .replace(/\s*&\s*/g, ' and ')
+          .replace(/["“”«»]/g, '');
+      }
+
+      return text.replace(/\s+/g, ' ').trim();
+    }
+
+    function updateTtsButtonsUI(state, targetBtnId) {
+      const t = TRANSLATIONS[currentLang];
+      const buttons = [
+        { btnId: 'speakBtn', textId: 'speakBtnText' },
+        { btnId: 'figureModalSpeakBtn', textId: 'figureModalSpeakText' }
+      ];
+
+      buttons.forEach(({ btnId, textId }) => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+
+        if (state === 'loading' && btnId === targetBtnId) {
+          btn.innerHTML = `
+            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+            <span id="${textId}">${t.ttsPreparingBtn}</span>
+          `;
+        } else if (state === 'playing' && btnId === targetBtnId) {
+          btn.innerHTML = `
+            <span class="inline-flex items-end gap-0.5 h-4 px-0.5">
+              <span class="tts-eq-bar"></span>
+              <span class="tts-eq-bar"></span>
+              <span class="tts-eq-bar"></span>
+              <span class="tts-eq-bar"></span>
+            </span>
+            <span id="${textId}">${t.ttsStopBtn}</span>
+          `;
+        } else {
+          btn.innerHTML = `
+            <i data-lucide="volume-2" class="w-4 h-4"></i>
+            <span id="${textId}">${t.ttsListenBtn}</span>
+          `;
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // Microsoft Edge Neural TTS (Ahmet / Emel / Ryan / Sonia) bulut motoru
+    async function fetchEdgeNeuralAudioUrl(cleanText, voiceName) {
+      const cacheKey = `${voiceName}::${cleanText}`;
+      if (neuralAudioCache.has(cacheKey)) {
+        return neuralAudioCache.get(cacheKey);
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6500);
+
+      try {
+        const callRes = await fetch('https://innoai-edge-tts-text-to-speech.hf.space/gradio_api/call/tts_interface', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: [cleanText, voiceName, 0, 0] }),
+          signal: controller.signal
+        });
+        if (!callRes.ok) throw new Error('Edge TTS init failed');
+        const { event_id } = await callRes.json();
+        if (!event_id) throw new Error('Missing event_id');
+
+        const streamRes = await fetch(`https://innoai-edge-tts-text-to-speech.hf.space/gradio_api/call/tts_interface/${event_id}`, {
+          signal: controller.signal
+        });
+        if (!streamRes.ok) throw new Error('Edge TTS stream failed');
+        const sseText = await streamRes.text();
+        clearTimeout(timeoutId);
+
+        const dataLine = sseText
+          .split('\n')
+          .find(line => line.startsWith('data: ') && line.includes('"url"'));
+        if (!dataLine) throw new Error('No audio url in SSE');
+
+        const parsed = JSON.parse(dataLine.slice(6));
+        const audioUrl = parsed && parsed[0] && parsed[0].url;
+        if (!audioUrl) throw new Error('Empty audio url');
+
+        neuralAudioCache.set(cacheKey, audioUrl);
+        return audioUrl;
+      } catch (err) {
+        clearTimeout(timeoutId);
+        throw err;
+      }
+    }
+
+    // Cihaz içi en doğal sesi seçip cümle cümle nefes payı bırakarak okuyan akıcı yedek motor
+    function playFluidBrowserFallback(cleanText, lang, sessionId, targetBtnId) {
+      if (!('speechSynthesis' in window)) {
+        stopSpeech();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const voices = cachedBrowserVoices.length ? cachedBrowserVoices : (window.speechSynthesis.getVoices() || []);
+      const langPrefix = lang === 'en' ? 'en' : 'tr';
+      const matchingVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langPrefix));
+
+      // Öncelik: Natural / Neural / Online / Enhanced / Yelda / Ahmet / Emel
+      const preferredVoice = matchingVoices.sort((a, b) => {
+        const score = v => {
+          const n = (v.name || '').toLowerCase();
+          let s = 0;
+          if (n.includes('natural') || n.includes('neural') || n.includes('online')) s += 50;
+          if (n.includes('enhanced') || n.includes('premium')) s += 35;
+          if (selectedVoiceGender === 'male' && (n.includes('ahmet') || n.includes('tolga') || n.includes('cem') || n.includes('ryan') || n.includes('guy') || n.includes('daniel'))) s += 20;
+          if (selectedVoiceGender === 'female' && (n.includes('emel') || n.includes('yelda') || n.includes('sonia') || n.includes('samantha') || n.includes('libby'))) s += 20;
+          return s;
+        };
+        return score(b) - score(a);
+      })[0];
+
+      const sentences = cleanText
+        .split(/(?<=[.!?…])\s+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      if (!sentences.length) {
+        stopSpeech();
+        return;
+      }
+
+      isSpeaking = true;
+      updateTtsButtonsUI('playing', targetBtnId);
+
+      let idx = 0;
+      function speakNextSentence() {
+        if (sessionId !== activeSpeechSessionId || !isSpeaking || idx >= sentences.length) {
+          if (sessionId === activeSpeechSessionId) stopSpeech();
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(sentences[idx]);
+        u.lang = lang === 'en' ? 'en-GB' : 'tr-TR';
+        if (preferredVoice) u.voice = preferredVoice;
+        u.rate = 1.01;
+        u.pitch = selectedVoiceGender === 'male' ? 0.96 : 1.02;
+
+        u.onend = () => {
+          idx++;
+          if (idx < sentences.length && sessionId === activeSpeechSessionId && isSpeaking) {
+            setTimeout(speakNextSentence, 190);
+          } else if (sessionId === activeSpeechSessionId) {
+            stopSpeech();
+          }
+        };
+        u.onerror = () => {
+          if (sessionId === activeSpeechSessionId) stopSpeech();
+        };
+        window.speechSynthesis.speak(u);
+      }
+
+      speakNextSentence();
+    }
+
+    async function startFluidNarration(rawText, targetBtnId) {
       if (isSpeaking) {
         stopSpeech();
         return;
       }
 
-      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
-      const t = TRANSLATIONS[currentLang];
-      if (!item || !('speechSynthesis' in window)) {
-        alert(t.ttsNotSupported);
+      stopSpeech();
+      const sessionId = ++activeSpeechSessionId;
+      isSpeaking = true;
+      updateTtsButtonsUI('loading', targetBtnId);
+
+      const isEn = currentLang === 'en';
+      const cleanText = normalizeTextForFluidSpeech(rawText, currentLang);
+      const voiceName = isEn
+        ? (selectedVoiceGender === 'female' ? 'en-GB-SoniaNeural - en-GB (Female)' : 'en-GB-RyanNeural - en-GB (Male)')
+        : (selectedVoiceGender === 'female' ? 'tr-TR-EmelNeural - tr-TR (Female)' : 'tr-TR-AhmetNeural - tr-TR (Male)');
+
+      try {
+        const audioUrl = await fetchEdgeNeuralAudioUrl(cleanText, voiceName);
+        if (sessionId !== activeSpeechSessionId || !isSpeaking) return;
+
+        const audio = new Audio(audioUrl);
+        currentNeuralAudio = audio;
+        audio.playbackRate = 1.02;
+
+        audio.onplay = () => {
+          if (sessionId === activeSpeechSessionId) {
+            updateTtsButtonsUI('playing', targetBtnId);
+          }
+        };
+        audio.onended = () => {
+          if (sessionId === activeSpeechSessionId) stopSpeech();
+        };
+        audio.onerror = () => {
+          if (sessionId === activeSpeechSessionId) {
+            playFluidBrowserFallback(cleanText, currentLang, sessionId, targetBtnId);
+          }
+        };
+
+        await audio.play();
+      } catch (err) {
+        if (sessionId === activeSpeechSessionId && isSpeaking) {
+          playFluidBrowserFallback(cleanText, currentLang, sessionId, targetBtnId);
+        }
+      }
+    }
+
+    function toggleSpeech() {
+      if (isSpeaking) {
+        stopSpeech();
         return;
       }
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item) return;
 
-      window.speechSynthesis.cancel();
       const isEn = currentLang === 'en';
       const city = (isEn && item.city_en) ? item.city_en : item.city;
       const country = (isEn && item.country_en) ? item.country_en : item.country;
@@ -5307,44 +5805,365 @@
       const desc = (isEn && item.description_en) ? item.description_en : item.description;
       const quote = (isEn && item.quote_en) ? item.quote_en : item.quote;
 
-      const textToRead = isEn
-        ? `${city}, ${country}. ${title}. Era: ${year}. ${desc}. Historical quote and literary excerpt: ${quote}`
-        : `${city}, ${country}. ${title}. Dönem: ${year}. ${desc}. Tarihi söz ve edebi alıntı: ${quote}`;
+      const rawScript = isEn
+        ? `${city}, ${country}. ${title}. Era: ${year}. ${desc}. Notable quote: ${quote}`
+        : `${city}, ${country}. ${title}. Dönem: ${year}. ${desc}. Dönemin tarihi ve edebi sözü: ${quote}`;
 
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.lang = isEn ? 'en-GB' : 'tr-TR';
-      utterance.rate = 0.96;
-
-      utterance.onstart = () => {
-        isSpeaking = true;
-        const btn = document.getElementById('speakBtn');
-        btn.innerHTML = `
-          <i data-lucide="square" class="w-4 h-4 fill-current"></i>
-          <span id="speakBtnText">${TRANSLATIONS[currentLang].ttsStopBtn}</span>
-        `;
-        lucide.createIcons();
-      };
-
-      utterance.onend = () => stopSpeech();
-      utterance.onerror = () => stopSpeech();
-
-      window.speechSynthesis.speak(utterance);
+      startFluidNarration(rawScript, 'speakBtn');
     }
 
     function stopSpeech() {
+      activeSpeechSessionId++;
+      if (currentNeuralAudio) {
+        try {
+          currentNeuralAudio.pause();
+          currentNeuralAudio.src = '';
+        } catch (e) {}
+        currentNeuralAudio = null;
+      }
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
       isSpeaking = false;
-      const btn = document.getElementById('speakBtn');
-      if (btn) {
-        const t = TRANSLATIONS[currentLang];
-        btn.innerHTML = `
-          <i data-lucide="volume-2" class="w-4 h-4"></i>
-          <span id="speakBtnText">${t.ttsListenBtn}</span>
-        `;
-        lucide.createIcons();
+      updateTtsButtonsUI('idle', null);
+    }
+
+    // ============================================================================
+    // 7A. ŞAHSİYET & ESER DETAYLI ANSİKLOPEDİK OKUMA PENCERESİ (MODAL ENGINE)
+    // ============================================================================
+    let activeFigureModalState = null;
+    const wikiSummaryCache = new Map();
+
+    // Etiket metnini ana şahsiyet ve parantez içindeki alt eserlere ayırır
+    function parseFigureTagTopics(tagStr, cityItem) {
+      const raw = String(tagStr || '').trim();
+      const parenMatch = raw.match(/^([^(]+)\(([^)]+)\)/);
+      if (!parenMatch) {
+        return [
+          {
+            label: raw,
+            searchQuery: raw,
+            isWork: false,
+            parentAuthor: null
+          }
+        ];
       }
+
+      const mainName = parenMatch[1].trim();
+      const insideParen = parenMatch[2].trim();
+      const topics = [
+        {
+          label: mainName,
+          searchQuery: mainName,
+          isWork: false,
+          parentAuthor: null
+        }
+      ];
+
+      // Parantez içi yıl veya kısa tarih değilse (örn. MÖ 1259, MS 325 değilse) alt sekme olarak ekle
+      const isDateOnly = /^(M\.?Ö\.?|M\.?S\.?|BC|AD|\d{3,4})/i.test(insideParen) && insideParen.length < 18;
+      if (!isDateOnly) {
+        const subItems = insideParen
+          .split(/[,&/]+/)
+          .map(s => s.trim())
+          .filter(s => s.length > 2 && !/^\d+$/.test(s));
+
+        subItems.forEach(sub => {
+          topics.push({
+            label: sub,
+            searchQuery: `${sub} ${mainName}`,
+            cleanSubQuery: sub,
+            isWork: true,
+            parentAuthor: mainName
+          });
+        });
+      }
+
+      return topics;
+    }
+
+    // Seçilen şahsiyet/eser için zengin yerleşik akademik inceleme metni üretir (Çevrimdışı ve Anlık Garantili)
+    function buildCuratedFigureDossier(cityItem, fullTag, topicObj, lang) {
+      const isEn = lang === 'en';
+      const city = (isEn && cityItem.city_en) ? cityItem.city_en : cityItem.city;
+      const country = (isEn && cityItem.country_en) ? cityItem.country_en : cityItem.country;
+      const year = (isEn && cityItem.year_en) ? cityItem.year_en : cityItem.year;
+      const stopTitle = (isEn && cityItem.title_en) ? cityItem.title_en : cityItem.title;
+      const stopDesc = (isEn && cityItem.description_en) ? cityItem.description_en : cityItem.description;
+      const stopQuote = (isEn && cityItem.quote_en) ? cityItem.quote_en : cityItem.quote;
+      const contemporaries = (cityItem.figuresAndWorks || []).filter(t => t !== fullTag);
+
+      if (isEn) {
+        const lead = topicObj.isWork
+          ? `"${topicObj.label}" is one of the defining masterpieces and intellectual cornerstones associated with ${topicObj.parentAuthor} during the ${year} era in ${city}, ${country}.`
+          : `${topicObj.label} stands as a pivotal historical and cultural figure of ${city}, ${country} (${year}), playing a central role in "${stopTitle}".`;
+
+        const paragraphs = [
+          topicObj.isWork
+            ? `Created within the intellectual and cultural atmosphere of ${city}, "${topicObj.label}" by ${topicObj.parentAuthor} reflects the aesthetic, philosophical, and social transformations of the ${year} period. Within the broader trajectory of ${stopTitle}, this work crystalizes the tensions, ideals, and human experiences that defined its generation.`
+            : `Active during the ${year} era, ${topicObj.label} shaped the historical and literary destiny of ${city}, ${country}. As a primary force in "${stopTitle}", their legacy bridges local cultural heritage with universal human thought.`,
+          stopDesc,
+          contemporaries.length
+            ? `In the cultural ecosystem of ${city}, ${topicObj.label} shares historical resonance with other major figures and milestones of this stop, including ${contemporaries.join(', ')}.`
+            : `This milestone remains one of the foundational pillars of the World History & Literature Atlas.`
+        ];
+
+        const contextText = `Within the ${city} (${country}) stop of the TÜBİTAK 3D World Cultural Heritage Atlas, ${fullTag} represents the intellectual spirit of ${year} under the theme "${stopTitle}".`;
+        return { lead, paragraphs, contextText, quote: stopQuote };
+      } else {
+        const lead = topicObj.isWork
+          ? `"${topicObj.label}", ${city} (${country}) durağının ${year} dönemindeki entelektüel ve edebi birikimi içinde ${topicObj.parentAuthor} ile özdeşleşen en önemli başyapıt ve kavramlardan biridir.`
+          : `${topicObj.label}, ${city} (${country}) coğrafyasında ${year} döneminde yükselen "${stopTitle}" sürecinin en belirleyici tarihsel ve edebi şahsiyetlerinden biridir.`;
+
+        const paragraphs = [
+          topicObj.isWork
+            ? `${topicObj.parentAuthor} tarafından kaleme alınan veya geliştirilen "${topicObj.label}", ${city} şehrinin ${year} yıllarındaki toplumsal, felsefi ve estetik dönüşümünü doğrudan yansıtır. "${stopTitle}" bağlamında değerlendirildiğinde bu eser, çağının insanlık durumunu, düşünsel kırılmalarını ve estetik arayışlarını evrensel bir boyuta taşımıştır.`
+            : `${year} döneminin tarihsel ve kültürel ikliminde öne çıkan ${topicObj.label}, ${city} merkezli gelişmelerin dünya tarihine ve edebiyat kanonuna kazandırılmasında kilit rol oynamıştır. "${stopTitle}" başlığı altında şekillenen bu miras, hem kendi döneminin ruhunu kurmuş hem de sonraki kuşakların düşünce dünyasını derinden etkilemiştir.`,
+          stopDesc,
+          contemporaries.length
+            ? `${city} durağının tarihsel ve edebi dokusu içinde ${topicObj.label}; aynı dönemin diğer önemli isim ve eserleri olan ${contemporaries.join(', ')} ile birlikte bütüncül bir kültür havzası oluşturur.`
+            : `Bu şahsiyet ve eser, Küresel Tarih ve Edebiyat Atlası'nın en temel referans noktalarından birini temsil etmektedir.`
+        ];
+
+        const contextText = `TÜBİTAK 3B Küresel Tarih ve Edebiyat Atlası'nın ${city}, ${country} (${year}) durağında yer alan "${fullTag}", dönemin "${stopTitle}" kimliğini doğrudan temsil eden ana unsurdur.`;
+        return { lead, paragraphs, contextText, quote: stopQuote };
+      }
+    }
+
+    // Wikipedia MediaWiki API üzerinden gerçek portre görseli ve çok paragraflı ansiklopedik metin çeker
+    async function fetchWikipediaArticle(topicObj, lang) {
+      const wikiLang = lang === 'en' ? 'en' : 'tr';
+      const cacheKey = `${wikiLang}::${topicObj.searchQuery}`;
+      if (wikiSummaryCache.has(cacheKey)) {
+        return wikiSummaryCache.get(cacheKey);
+      }
+
+      const queriesToTry = [topicObj.searchQuery];
+      if (topicObj.cleanSubQuery && topicObj.cleanSubQuery !== topicObj.searchQuery) {
+        queriesToTry.push(topicObj.cleanSubQuery);
+      }
+
+      for (const q of queriesToTry) {
+        try {
+          const apiUrl = `https://${wikiLang}.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=1&prop=extracts|pageimages&exchars=2800&explaintext=1&pithumbsize=600&origin=*`;
+          const res = await fetch(apiUrl);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const pages = data && data.query && data.query.pages ? Object.values(data.query.pages) : [];
+          if (!pages.length) continue;
+
+          const page = pages[0];
+          const extract = (page.extract || '').trim();
+          if (extract.length < 80) continue;
+
+          const result = {
+            title: page.title,
+            extract,
+            thumbnail: page.thumbnail ? page.thumbnail.source : null,
+            url: `https://${wikiLang}.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`
+          };
+          wikiSummaryCache.set(cacheKey, result);
+          return result;
+        } catch (e) {
+          // Devam et
+        }
+      }
+      return null;
+    }
+
+    async function renderFigureTopicInModal(cityItem, figIndex, topicIndex) {
+      const fullTag = (cityItem.figuresAndWorks || [])[figIndex] || '';
+      const topics = parseFigureTagTopics(fullTag, cityItem);
+      const selectedTopic = topics[topicIndex] || topics[0];
+      const t = TRANSLATIONS[currentLang];
+      const isEn = currentLang === 'en';
+
+      activeFigureModalState = { cityItem, figIndex, topicIndex, currentSpeechText: '' };
+
+      // Üst Rozetler
+      const displayCity = (isEn && cityItem.city_en) ? cityItem.city_en : cityItem.city;
+      const displayCountry = (isEn && cityItem.country_en) ? cityItem.country_en : cityItem.country;
+      const displayYear = (isEn && cityItem.year_en) ? cityItem.year_en : cityItem.year;
+
+      document.getElementById('figureModalBadges').innerHTML = `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-200 border border-amber-400/40">
+          ${cityItem.flag || '🌍'} ${displayCity}, ${displayCountry}
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/10 text-slate-200 border border-white/15">
+          📅 ${displayYear}
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-teal-500/20 text-teal-200 border border-teal-400/40">
+          ${selectedTopic.isWork ? (isEn ? '📕 Masterpiece / Concept' : '📕 Eser / Kavram İncelemesi') : (isEn ? '👤 Historical / Literary Figure' : '👤 Şahsiyet & Biyografi')}
+        </span>
+      `;
+
+      document.getElementById('figureModalTitle').textContent = selectedTopic.label;
+      document.getElementById('figureModalSubtitle').textContent = fullTag;
+      document.getElementById('figureSubTopicLabel').textContent = t.figureSubTopicLabel;
+      document.getElementById('figureModalSummaryHeading').textContent = t.figureSummaryHeading;
+      document.getElementById('figureModalWikiLinkText').textContent = t.figureWikiLinkText;
+      document.getElementById('figureModalBioHeading').textContent = t.figureBioHeading;
+      document.getElementById('figureModalContextHeading').textContent = t.figureContextHeading;
+      document.getElementById('figureModalOtherLabel').textContent = t.figureOtherLabel;
+
+      // Alt Konu / Eser Sekmeleri (Eğer parantez içinde birden fazla eser/kavram varsa göster)
+      const subTopicContainer = document.getElementById('figureSubTopicContainer');
+      const subTopicTabs = document.getElementById('figureSubTopicTabs');
+      if (topics.length > 1) {
+        subTopicContainer.classList.remove('hidden');
+        subTopicTabs.innerHTML = topics
+          .map((tp, idx) => {
+            const active = idx === topicIndex;
+            return `
+              <button
+                type="button"
+                data-subtopic-idx="${idx}"
+                class="subtopic-tab-btn px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  active
+                    ? 'bg-amber-500/30 text-amber-200 border border-amber-400/70 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                    : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10'
+                }"
+              >
+                <span>${tp.isWork ? '📕' : '👤'}</span>
+                <span>${tp.label}</span>
+              </button>
+            `;
+          })
+          .join('');
+
+        subTopicTabs.querySelectorAll('.subtopic-tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            stopSpeech();
+            renderFigureTopicInModal(cityItem, figIndex, parseInt(btn.dataset.subtopicIdx, 10));
+          });
+        });
+      } else {
+        subTopicContainer.classList.add('hidden');
+        subTopicTabs.innerHTML = '';
+      }
+
+      // Yerleşik Akademik Dosyayı Anında Yükle (0ms gecikme)
+      const dossier = buildCuratedFigureDossier(cityItem, fullTag, selectedTopic, currentLang);
+      const modalImg = document.getElementById('figureModalImage');
+      modalImg.src = cityItem.coverImage || cityItem.fallbackImage || '';
+      document.getElementById('figureModalImgBadge').textContent = isEn ? 'Historical Archive' : 'Tarihsel Arşiv';
+      document.getElementById('figureModalLeadParagraph').textContent = dossier.lead;
+      document.getElementById('figureModalEraInfo').textContent = `${displayCity} • ${displayYear}`;
+
+      const wikiLang = isEn ? 'en' : 'tr';
+      const wikiLink = document.getElementById('figureModalWikiLink');
+      wikiLink.href = `https://${wikiLang}.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(selectedTopic.searchQuery)}`;
+
+      const bioContentEl = document.getElementById('figureModalBioContent');
+      bioContentEl.innerHTML = dossier.paragraphs
+        .map(p => `<p class="leading-relaxed">${p}</p>`)
+        .join('');
+
+      document.getElementById('figureModalContextText').textContent = dossier.contextText;
+      document.getElementById('figureModalQuoteBox').textContent = dossier.quote;
+
+      activeFigureModalState.currentSpeechText = `${selectedTopic.label}. ${dossier.lead} ${dossier.paragraphs.join(' ')}`;
+
+      // Alt Bar: Aynı Duraktaki Diğer Şahsiyetler Hızlı Geçiş
+      const siblingList = document.getElementById('figureModalSiblingList');
+      siblingList.innerHTML = (cityItem.figuresAndWorks || [])
+        .map((sibTag, sIdx) => {
+          const isCurrent = sIdx === figIndex;
+          return `
+            <button
+              type="button"
+              data-sibling-idx="${sIdx}"
+              class="sibling-fig-btn px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition shrink-0 cursor-pointer ${
+                isCurrent
+                  ? 'bg-teal-500/30 text-teal-200 border border-teal-400/70 shadow-[0_0_10px_rgba(20,184,166,0.3)]'
+                  : 'bg-white/5 hover:bg-white/12 text-slate-300 border border-white/10'
+              }"
+            >
+              ${sibTag}
+            </button>
+          `;
+        })
+        .join('');
+
+      siblingList.querySelectorAll('.sibling-fig-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          stopSpeech();
+          renderFigureTopicInModal(cityItem, parseInt(btn.dataset.siblingIdx, 10), 0);
+        });
+      });
+
+      lucide.createIcons();
+
+      // Şimdi Wikipedia API'den canlı portre ve genişletilmiş ansiklopedik biyografiyi çek
+      const loadingBadge = document.getElementById('figureModalLoadingBadge');
+      loadingBadge.classList.remove('hidden');
+
+      const wikiData = await fetchWikipediaArticle(selectedTopic, currentLang);
+      loadingBadge.classList.add('hidden');
+
+      // Kullanıcı bu sırada başka bir sekmeye geçmediyse Wikipedia verisini entegre et
+      if (
+        wikiData &&
+        activeFigureModalState &&
+        activeFigureModalState.cityItem.id === cityItem.id &&
+        activeFigureModalState.figIndex === figIndex &&
+        activeFigureModalState.topicIndex === topicIndex
+      ) {
+        if (wikiData.thumbnail) {
+          modalImg.src = wikiData.thumbnail;
+          document.getElementById('figureModalImgBadge').textContent = wikiData.title;
+        }
+        wikiLink.href = wikiData.url;
+
+        const cleanParas = wikiData.extract
+          .split(/\n+/)
+          .map(line => line.trim())
+          .filter(line => line.length > 45 && !line.startsWith('=='));
+
+        if (cleanParas.length > 0) {
+          document.getElementById('figureModalLeadParagraph').textContent = cleanParas[0];
+          const remainingWikiParas = cleanParas.slice(1, 5);
+          const allParas = [...remainingWikiParas, ...dossier.paragraphs];
+          bioContentEl.innerHTML = allParas
+            .map(p => `<p class="leading-relaxed">${p}</p>`)
+            .join('');
+          activeFigureModalState.currentSpeechText = `${selectedTopic.label}. ${cleanParas.slice(0, 3).join(' ')} ${dossier.contextText}`;
+        }
+      }
+    }
+
+    function openFigureModal(cityItem, figIndex = 0) {
+      stopSpeech();
+      const overlay = document.getElementById('figureModalOverlay');
+      const dialog = document.getElementById('figureModalDialog');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100', 'pointer-events-auto');
+      dialog.classList.remove('scale-95');
+      dialog.classList.add('scale-100');
+
+      renderFigureTopicInModal(cityItem, figIndex, 0);
+    }
+
+    function closeFigureModal() {
+      stopSpeech();
+      const overlay = document.getElementById('figureModalOverlay');
+      const dialog = document.getElementById('figureModalDialog');
+      if (overlay && dialog) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        dialog.classList.add('scale-95');
+        dialog.classList.remove('scale-100');
+      }
+      activeFigureModalState = null;
+    }
+
+    function toggleFigureModalSpeech() {
+      if (isSpeaking) {
+        stopSpeech();
+        return;
+      }
+      if (!activeFigureModalState || !activeFigureModalState.currentSpeechText) return;
+      startFluidNarration(activeFigureModalState.currentSpeechText, 'figureModalSpeakBtn');
     }
 
     // ============================================================================
@@ -5436,9 +6255,12 @@
       setElText('drawerSceneHeaderLabel', t.drawerSceneHeader);
       setElText('ttsGuideTitle', t.ttsGuideTitle);
       setElText('ttsGuideSubtitle', t.ttsGuideSubtitle);
+      setElText('voiceMaleLabel', t.voiceMaleName);
+      setElText('voiceFemaleLabel', t.voiceFemaleName);
       setElText('drawerAnalysisHeading', t.drawerAnalysisHeading);
       setElText('drawerQuoteHeading', t.drawerQuoteHeading);
       setElText('drawerFiguresHeading', t.drawerFiguresHeading);
+      setElText('drawerFiguresHintText', t.drawerFiguresHintText);
       setElText('prevCityBtnText', t.prevCityBtnText);
       setElText('nextCityBtnText', t.nextCityBtnText);
 
@@ -5454,6 +6276,15 @@
         if (currentItem) {
           populateDrawer(currentItem);
         }
+      }
+
+      // Eğer Şahsiyet/Eser okuma modalı açıksa onu da yeni dilde güncelle
+      if (activeFigureModalState) {
+        renderFigureTopicInModal(
+          activeFigureModalState.cityItem,
+          activeFigureModalState.figIndex,
+          activeFigureModalState.topicIndex
+        );
       }
     }
 
@@ -5613,9 +6444,32 @@
         searchInput.focus();
       });
 
-      // Drawer Kapatma & TTS
+      // Drawer Kapatma, Ses Tonu Seçimi & Neural TTS
       document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
       document.getElementById('speakBtn').addEventListener('click', toggleSpeech);
+
+      const voiceMaleBtn = document.getElementById('voiceMaleBtn');
+      const voiceFemaleBtn = document.getElementById('voiceFemaleBtn');
+      if (voiceMaleBtn) voiceMaleBtn.addEventListener('click', () => setVoiceGender('male'));
+      if (voiceFemaleBtn) voiceFemaleBtn.addEventListener('click', () => setVoiceGender('female'));
+
+      // Şahsiyet & Eser Detaylı Okuma Penceresi (Modal) Etkileşimleri
+      const closeFigureModalBtn = document.getElementById('closeFigureModalBtn');
+      const figureModalSpeakBtn = document.getElementById('figureModalSpeakBtn');
+      const figureModalOverlay = document.getElementById('figureModalOverlay');
+
+      if (closeFigureModalBtn) closeFigureModalBtn.addEventListener('click', closeFigureModal);
+      if (figureModalSpeakBtn) figureModalSpeakBtn.addEventListener('click', toggleFigureModalSpeech);
+      if (figureModalOverlay) {
+        figureModalOverlay.addEventListener('click', e => {
+          if (e.target === figureModalOverlay) closeFigureModal();
+        });
+      }
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && activeFigureModalState) {
+          closeFigureModal();
+        }
+      });
 
       // Önceki / Sonraki Nokta
       document.getElementById('prevCityBtn').addEventListener('click', () => {
