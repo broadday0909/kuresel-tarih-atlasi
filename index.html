@@ -434,39 +434,40 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform-origin: 50% calc(100% - 3px);
-      transform: translate(-50%, calc(-100% + 3px)) scale(var(--pin-zoom-scale, 0.85));
+      transform-origin: 50% calc(100% - 2.5px);
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(var(--tac-zoom-scale, 0.92));
       pointer-events: auto;
       cursor: pointer;
       z-index: 65;
       will-change: transform;
     }
     .tactical-point-wrapper:hover {
-      transform: translate(-50%, calc(-100% + 3px)) scale(calc(var(--pin-zoom-scale, 0.85) * 1.15));
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(calc(var(--tac-zoom-scale, 0.92) * 1.08));
       z-index: 160;
     }
     .tactical-point-badge {
-      padding: 3.5px 8.5px;
+      padding: 2px 7px;
       border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
       white-space: nowrap;
       color: #fef2f2;
       background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96));
-      border: 1.5px solid var(--tac-color, #ef4444);
-      box-shadow: 0 0 14px var(--tac-glow, rgba(239, 68, 68, 0.85));
+      border: 1.2px solid var(--tac-color, #ef4444);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 10px var(--tac-glow, rgba(239, 68, 68, 0.6));
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      max-width: 240px;
     }
     .tactical-point-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 999px;
-      margin-top: 2px;
+      margin-top: 1.5px;
       background: var(--tac-color, #ef4444);
-      box-shadow: 0 0 8px var(--tac-color, #ef4444);
+      box-shadow: 0 0 6px var(--tac-color, #ef4444);
     }
 
     /* 3B ÜLKE SAVAŞLARI AĞAÇ DALLARI ALT BAŞLIK ROZETLERİ (3D TREE-BRANCH WAR NODES) */
@@ -478,7 +479,7 @@
       flex-direction: column;
       align-items: center;
       transform-origin: 50% calc(100% - 2.5px);
-      transform: translate(-50%, calc(-100% + 2.5px)) scale(var(--pin-zoom-scale, 0.85));
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(var(--tac-zoom-scale, 0.90));
       pointer-events: auto;
       cursor: pointer;
       z-index: 62;
@@ -486,13 +487,13 @@
     }
     .war-branch-wrapper:hover,
     .war-branch-wrapper.active-war-branch {
-      transform: translate(-50%, calc(-100% + 2.5px)) scale(calc(var(--pin-zoom-scale, 0.85) * 1.18));
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(calc(var(--tac-zoom-scale, 0.90) * 1.08));
       z-index: 165;
     }
     .war-branch-badge {
-      padding: 2.5px 7.5px;
-      border-radius: 8px;
-      font-size: 9.5px;
+      padding: 2px 6.5px;
+      border-radius: 7px;
+      font-size: 8.5px;
       font-weight: 800;
       letter-spacing: 0.015em;
       white-space: nowrap;
@@ -502,7 +503,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 8px rgba(244, 63, 94, 0.35);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3.5px;
     }
     .war-branch-wrapper.active-war-branch .war-branch-badge {
       color: #fef08a;
@@ -514,7 +515,7 @@
       color: #fbbf24;
       font-family: monospace;
       font-weight: 900;
-      font-size: 8.5px;
+      font-size: 8px;
     }
     .war-branch-dot {
       width: 4.5px;
@@ -5889,11 +5890,14 @@
       const pov = world.pointOfView();
       if (!pov) return;
 
-      // Uzaktayken (altitude >= 1.8) 0.75 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 2.35'e kadar tam merkezinden pürüzsüz ve yerinde büyür
+      // Şehir pinleri uzaktayken 0.78, en yakınlaşınca en fazla 1.22 katına çıkar (asla devasa boyuta ulaşmaz)
       const clampedAlt = Math.max(0.0035, Math.min(2.0, pov.altitude));
-      const zoomProgress = Math.pow(1 - (clampedAlt - 0.0035) / 1.9965, 1.25);
-      const pinScale = 0.75 + zoomProgress * 1.60;
+      const zoomProgress = Math.pow(1 - (clampedAlt - 0.0035) / 1.9965, 1.2);
+      const pinScale = 0.78 + zoomProgress * 0.44;
+      // Taktik savaş işaretçileri ve savaş ağaçları ise derli toplu ve sabit kalır (0.86 - 1.02)
+      const tacScale = 0.86 + zoomProgress * 0.16;
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(3));
+      document.documentElement.style.setProperty('--tac-zoom-scale', tacScale.toFixed(3));
 
       // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
       updateGoogleEarthSurfaceTiles(pov);
@@ -7715,11 +7719,11 @@
       const wLng = selectedWar.lng;
       const b = parseWarBelligerents(selectedWar);
 
-      // İki taraf birbirinden uzak/ayrık dursun
-      const side1Lat = wLat - 0.28;
-      const side1Lng = wLng - 0.45;
-      const side2Lat = wLat + 0.28;
-      const side2Lng = wLng + 0.45;
+      // İki taraf birbirinden ferah ve belirgin mesafede dursun (asla üst üste binmez)
+      const side1Lat = wLat - 0.42;
+      const side1Lng = wLng - 0.70;
+      const side2Lat = wLat + 0.42;
+      const side2Lng = wLng + 0.70;
 
       const buildSeparatedBattleMarkers = () => [
         {
@@ -7732,17 +7736,6 @@
           tacColor: '#ef4444',
           tacGlow: 'rgba(239, 68, 68, 0.85)',
           tone: 'attack'
-        },
-        {
-          lat: wLat,
-          lng: wLng,
-          icon: '⚔️',
-          label: (currentLang === 'en' && selectedWar.short_en) ? selectedWar.short_en : selectedWar.short_tr,
-          label_tr: selectedWar.short_tr,
-          label_en: selectedWar.short_en,
-          tacColor: '#f43f5e',
-          tacGlow: 'rgba(244, 63, 94, 0.95)',
-          tone: 'clash'
         },
         {
           lat: side2Lat,
