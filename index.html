@@ -378,97 +378,43 @@
       transform: translateX(var(--label-shift-x, 0px));
     }
 
-    /* 3B TAKTİK SAVAŞ TARAFLARI VE ORTA ÇİFT KILIÇ SAVAŞ SİMGESİ (3D BATTLEFIELD MARKERS) */
+    /* 3B TAKTİK SAVAŞ VE CEPHE İŞARETÇİLERİ (3D BATTLEFIELD MARKERS) */
     .tactical-point-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translate(-50%, -50%) scale(1);
+      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.55));
       pointer-events: auto;
       cursor: pointer;
-      z-index: 145;
+      z-index: 65;
       transition: transform 0.25s ease;
     }
     .tactical-point-wrapper:hover {
-      transform: translate(-50%, -54%) scale(1.08);
-      z-index: 175;
+      transform: translate(-50%, -56%) scale(calc(var(--pin-zoom-scale, 0.55) * 1.18));
+      z-index: 160;
     }
     .tactical-point-badge {
-      padding: 6px 14px;
+      padding: 2px 6.5px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 8.5px;
       font-weight: 800;
       letter-spacing: 0.02em;
       white-space: nowrap;
-      color: #ffffff;
-      background: linear-gradient(135deg, rgba(127, 29, 29, 0.96), rgba(15, 23, 42, 0.98));
-      border: 2px solid var(--tac-color, #ef4444);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.85), 0 0 16px var(--tac-glow, rgba(239, 68, 68, 0.8));
+      color: #fef2f2;
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(15, 23, 42, 0.96));
+      border: 1.2px solid var(--tac-color, #ef4444);
+      box-shadow: 0 0 12px var(--tac-glow, rgba(239, 68, 68, 0.75));
       display: flex;
       align-items: center;
-      gap: 6px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      gap: 3.5px;
     }
     .tactical-point-dot {
-      width: 9px;
-      height: 9px;
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-      margin-top: 4px;
+      margin-top: 2px;
       background: var(--tac-color, #ef4444);
-      border: 1.5px solid #ffffff;
-      box-shadow: 0 0 10px var(--tac-color, #ef4444);
-    }
-
-    /* Trail'in Tam Ortasında Duran Çift Kılıç (⚔️) Savaş Meydanı Simgesi */
-    .battle-center-sword-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
-      cursor: pointer;
-      z-index: 155;
-      transition: transform 0.25s ease;
-    }
-    .battle-center-sword-wrapper:hover {
-      transform: translate(-50%, -50%) scale(1.14);
-      z-index: 180;
-    }
-    .battle-center-sword-circle {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background: radial-gradient(circle, rgba(225, 29, 72, 0.96) 0%, rgba(15, 23, 42, 0.98) 100%);
-      border: 2.2px solid #fbbf24;
-      box-shadow: 0 0 22px rgba(244, 63, 94, 0.9), 0 0 12px rgba(251, 191, 36, 0.75), inset 0 0 8px rgba(251, 191, 36, 0.4);
-      animation: swordClashPulse 1.8s ease-in-out infinite;
-    }
-    .battle-center-sword-year {
-      margin-top: 3px;
-      padding: 1.5px 7px;
-      border-radius: 999px;
-      font-size: 10.5px;
-      font-weight: 900;
-      font-family: monospace;
-      color: #fef08a;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(251, 191, 36, 0.75);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
-      white-space: nowrap;
-    }
-    @keyframes swordClashPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 20px rgba(244, 63, 94, 0.85), 0 0 10px rgba(251, 191, 36, 0.7);
-      }
-      50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 30px rgba(244, 63, 94, 1), 0 0 18px rgba(251, 191, 36, 0.95);
-      }
+      box-shadow: 0 0 8px var(--tac-color, #ef4444);
     }
 
     /* 3B ÜLKE SAVAŞLARI AĞAÇ DALLARI ALT BAŞLIK ROZETLERİ (3D TREE-BRANCH WAR NODES) */
@@ -5633,25 +5579,6 @@
         return branchEl;
       }
 
-      if (item.isBattleCenterSword) {
-        const swordEl = document.createElement('div');
-        swordEl.className = 'battle-center-sword-wrapper';
-        const yearBadge = item.warYear ? `<div class="battle-center-sword-year">${item.warYear}</div>` : '';
-        swordEl.innerHTML = `
-          <div class="battle-center-sword-circle" title="${item.label || 'Savaş Meydanı'}">
-            <span>⚔️</span>
-          </div>
-          ${yearBadge}
-        `;
-        swordEl.addEventListener('click', e => {
-          e.stopPropagation();
-          if (typeof item.phaseIndex === 'number' && activeCityId) {
-            selectBattlePhase(item.phaseIndex, true);
-          }
-        });
-        return swordEl;
-      }
-
       if (item.isTacticalMarker) {
         const tacEl = document.createElement('div');
         tacEl.className = 'tactical-point-wrapper';
@@ -7360,36 +7287,29 @@
       });
     }
 
-    // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir (İki taraf ayrık durur, tam ortada çift kılıç ⚔️ savaş simgesi yer alır)
+    // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir (İki taraf birbirinden ayrık durur)
     function buildPhasesForSelectedWar(item, selectedWar) {
       const wLat = selectedWar.lat;
       const wLng = selectedWar.lng;
       const b = parseWarBelligerents(selectedWar);
 
-      // İki tarafı savaş merkezinin (wLat, wLng) sol-alt ve sağ-üst yakasına genişçe ayır, tam ortada (wLat, wLng) çift kılıç (⚔️) simgesi dursun
-      const side1Lat = wLat - 0.34;
-      const side1Lng = wLng - 0.56;
-      const side2Lat = wLat + 0.34;
-      const side2Lng = wLng + 0.56;
+      // İki taraf birbirinden uzak/ayrık dursun
+      const side1Lat = wLat - 0.28;
+      const side1Lng = wLng - 0.45;
+      const side2Lat = wLat + 0.28;
+      const side2Lng = wLng + 0.45;
 
       const buildSeparatedBattleMarkers = () => [
         {
           lat: side1Lat,
           lng: side1Lng,
-          icon: '🚩',
+          icon: '⚔️',
           label: b.side1_tr,
           label_tr: b.side1_tr,
           label_en: b.side1_en,
           tacColor: '#ef4444',
-          tacGlow: 'rgba(239, 68, 68, 0.88)',
+          tacGlow: 'rgba(239, 68, 68, 0.85)',
           tone: 'attack'
-        },
-        {
-          lat: wLat,
-          lng: wLng,
-          isBattleCenterSword: true,
-          warYear: selectedWar.year,
-          label: `${selectedWar.short_tr} (${b.full_tr})`
         },
         {
           lat: side2Lat,
@@ -7399,7 +7319,7 @@
           label_tr: b.side2_tr,
           label_en: b.side2_en,
           tacColor: '#f59e0b',
-          tacGlow: 'rgba(245, 158, 11, 0.88)',
+          tacGlow: 'rgba(245, 158, 11, 0.85)',
           tone: 'defense'
         }
       ];
