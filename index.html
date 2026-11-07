@@ -293,27 +293,54 @@
       background: rgba(148, 163, 184, 0.6);
     }
 
-    /* 3D Globe Pulsing Pin Styles with Anti-Overlap Alignment */
+    /* 3D Globe Pulsing Pin Styles — Sıfır Kayma (Zero-Drift) Tam Koordinat Merkezli Mimari */
+    .pin-anchor-root {
+      width: 0 !important;
+      height: 0 !important;
+      overflow: visible !important;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    .pin-anchor-root:hover,
+    .pin-anchor-root.active-anchor {
+      z-index: 9999 !important;
+    }
+
     .atlas-pin-wrapper {
-      position: relative;
+      position: absolute;
+      left: 0;
+      top: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       cursor: pointer;
       pointer-events: auto;
-      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-100% + var(--pin-offset-y, 0px))) scale(var(--pin-zoom-scale, 1));
-      transform-origin: bottom center;
-      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.2s;
+      transform-origin: 50% 7.5px;
+      transform: translate(-50%, -7.5px) scale(var(--pin-zoom-scale, 1));
+      will-change: transform;
     }
 
     .atlas-pin-wrapper:hover {
-      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-108% + var(--pin-offset-y, 0px))) scale(calc(var(--pin-zoom-scale, 1) * 1.18));
+      transform: translate(-50%, -7.5px) scale(calc(var(--pin-zoom-scale, 1) * 1.18));
       z-index: 60 !important;
     }
 
     .atlas-pin-wrapper.active-pin {
-      transform: translate(calc(-50% + var(--pin-offset-x, 0px)), calc(-114% + var(--pin-offset-y, 0px))) scale(calc(var(--pin-zoom-scale, 1) * 1.25));
+      transform: translate(-50%, -7.5px) scale(calc(var(--pin-zoom-scale, 1) * 1.25));
       z-index: 70 !important;
+    }
+
+    .atlas-pin-wrapper.active-pin .pin-head {
+      border-color: #fef08a;
+      box-shadow: 0 0 16px #fbbf24, 0 0 28px var(--pin-glow), inset 0 1px 2px #ffffff;
+    }
+
+    .atlas-pin-wrapper.active-pin .pin-label {
+      border-color: #fde047;
+      background: rgba(15, 23, 42, 0.98);
+      color: #fef9c3;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 12px rgba(251, 191, 36, 0.45);
     }
 
     .pin-head {
@@ -375,22 +402,25 @@
       display: flex;
       align-items: center;
       gap: 2px;
-      transform: translateX(var(--label-shift-x, 0px));
     }
 
     /* 3B TAKTİK SAVAŞ VE CEPHE İŞARETÇİLERİ (3D BATTLEFIELD MARKERS) */
     .tactical-point-wrapper {
+      position: absolute;
+      left: 0;
+      top: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.55));
+      transform-origin: 50% 50%;
+      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.85));
       pointer-events: auto;
       cursor: pointer;
       z-index: 65;
-      transition: transform 0.25s ease;
+      will-change: transform;
     }
     .tactical-point-wrapper:hover {
-      transform: translate(-50%, -56%) scale(calc(var(--pin-zoom-scale, 0.55) * 1.18));
+      transform: translate(-50%, -50%) scale(calc(var(--pin-zoom-scale, 0.85) * 1.15));
       z-index: 160;
     }
     .tactical-point-badge {
@@ -419,18 +449,22 @@
 
     /* 3B ÜLKE SAVAŞLARI AĞAÇ DALLARI ALT BAŞLIK ROZETLERİ (3D TREE-BRANCH WAR NODES) */
     .war-branch-wrapper {
+      position: absolute;
+      left: 0;
+      top: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.52));
+      transform-origin: 50% 50%;
+      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.85));
       pointer-events: auto;
       cursor: pointer;
       z-index: 62;
-      transition: transform 0.22s ease, filter 0.22s ease;
+      will-change: transform;
     }
     .war-branch-wrapper:hover,
     .war-branch-wrapper.active-war-branch {
-      transform: translate(-50%, -56%) scale(calc(var(--pin-zoom-scale, 0.52) * 1.22));
+      transform: translate(-50%, -50%) scale(calc(var(--pin-zoom-scale, 0.85) * 1.18));
       z-index: 165;
     }
     .war-branch-badge {
@@ -1126,14 +1160,24 @@
                 <span>⚔️ 3B Taktik Savaş &amp; Harekat Simülasyonu</span>
               </h3>
             </div>
-            <button
-              id="battleSimPlayBtn"
-              type="button"
-              class="px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold tracking-wide bg-gradient-to-r from-rose-600 via-amber-600 to-rose-600 hover:from-rose-500 hover:to-amber-500 text-white border border-amber-300/50 shadow-[0_0_16px_rgba(244,63,94,0.45)] flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <span id="battleSimPlayIcon">▶️</span>
-              <span id="battleSimPlayText">3B Harekatı Canlandır</span>
-            </button>
+            <div class="flex items-center gap-1.5">
+              <button
+                id="battleSimPlayBtn"
+                type="button"
+                class="px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold tracking-wide bg-gradient-to-r from-rose-600 via-amber-600 to-rose-600 hover:from-rose-500 hover:to-amber-500 text-white border border-amber-300/50 shadow-[0_0_16px_rgba(244,63,94,0.45)] flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <span id="battleSimPlayIcon">▶️</span>
+                <span id="battleSimPlayText">3B Harekatı Canlandır</span>
+              </button>
+              <button
+                id="closeWarDetailBtn"
+                type="button"
+                title="Savaşı Kapat ve Şehre Dön"
+                class="px-2 py-1.5 rounded-xl text-[11px] font-bold bg-white/5 hover:bg-rose-500/25 text-slate-300 hover:text-white border border-white/15 hover:border-rose-400/50 transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           <!-- 3 Aşamalı Taktik Evre Seçici Butonlar -->
@@ -5314,11 +5358,14 @@
     const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
 
     // Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada/Bölge İsimleri) 3B Küresel Yüzey Karo Motoru
+    // Karolar ve 3B HTML İkonlar TAM OLARAK aynı yüzey yüksekliğinde (SURFACE_OVERLAY_ALT = 0.0004) tutularak yakınlaştırmada 3B paralaks kayması %100 sıfırlanır.
+    const SURFACE_OVERLAY_ALT = 0.0004;
     let googleEarthTileGroup = null;
     const googleEarthTileCache = new Map();
     const googleEarthTextureLoader = new THREE.TextureLoader();
     googleEarthTextureLoader.setCrossOrigin('anonymous');
     let lastTileUpdateSignature = '';
+    let lastTrackedPov = { lat: null, lng: null, alt: null };
 
     function latLngToSlippyTile(lat, lng, z) {
       const n = Math.pow(2, z);
@@ -5339,17 +5386,17 @@
     }
 
     function getOrCreateGoogleEarthTileMesh(z, x, y) {
-      const key = `${z}/${x}/${y}`;
+      const tileLang = (typeof currentLang === 'string' && currentLang === 'en') ? 'en' : 'tr';
+      const key = `${tileLang}:${z}/${x}/${y}`;
       if (googleEarthTileCache.has(key)) {
         return googleEarthTileCache.get(key);
       }
 
       const n = Math.pow(2, z);
-      const GRID = 8;
+      const GRID = z <= 6 ? 12 : 8;
       const positions = [];
       const uvs = [];
       const indices = [];
-      const tileAlt = 0.0005 + z * 0.00012;
 
       for (let j = 0; j <= GRID; j++) {
         const v = j / GRID;
@@ -5357,7 +5404,7 @@
         for (let i = 0; i <= GRID; i++) {
           const u = i / GRID;
           const lng = ((x + u) / n) * 360 - 180;
-          const c = world.getCoords(lat, lng, tileAlt);
+          const c = world.getCoords(lat, lng, SURFACE_OVERLAY_ALT);
           positions.push(c.x, c.y, c.z);
           uvs.push(u, 1 - v);
         }
@@ -5386,8 +5433,8 @@
         depthTest: true,
         depthWrite: false,
         polygonOffset: true,
-        polygonOffsetFactor: -z,
-        polygonOffsetUnits: -1
+        polygonOffsetFactor: -(z * 2 + 4),
+        polygonOffsetUnits: -(z + 2)
       });
 
       const mesh = new THREE.Mesh(geom, mat);
@@ -5396,7 +5443,7 @@
       mesh.userData = { key, z, x, y, loaded: false, wanted: true };
 
       const serverIdx = (x + y) & 3;
-      const tileUrl = `https://mt${serverIdx}.google.com/vt/lyrs=y&hl=tr&x=${x}&y=${y}&z=${z}`;
+      const tileUrl = `https://mt${serverIdx}.google.com/vt/lyrs=y&hl=${tileLang}&x=${x}&y=${y}&z=${z}`;
 
       googleEarthTextureLoader.load(
         tileUrl,
@@ -5443,7 +5490,7 @@
       googleEarthTileCache.set(key, mesh);
 
       // Önbellek boyutunu dengede tut (En eski görünmeyen karoları temizle)
-      if (googleEarthTileCache.size > 380) {
+      if (googleEarthTileCache.size > 420) {
         for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
           if (!oldMesh.userData.wanted) {
             if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
@@ -5453,7 +5500,7 @@
               oldMesh.material.dispose();
             }
             googleEarthTileCache.delete(oldKey);
-            if (googleEarthTileCache.size <= 290) break;
+            if (googleEarthTileCache.size <= 310) break;
           }
         }
       }
@@ -5510,8 +5557,9 @@
         targetZ = 5;
       }
 
+      const tileLang = (typeof currentLang === 'string' && currentLang === 'en') ? 'en' : 'tr';
       const centerTile = latLngToSlippyTile(pov.lat, pov.lng, targetZ);
-      const sig = `${targetZ}:${centerTile.x}:${centerTile.y}`;
+      const sig = `${tileLang}:${targetZ}:${centerTile.x}:${centerTile.y}`;
       if (sig === lastTileUpdateSignature) return;
       lastTileUpdateSignature = sig;
 
@@ -5564,13 +5612,14 @@
         .showAtmosphere(true)
         .atmosphereColor('#3a99d9')
         .atmosphereAltitude(isMobileDevice ? 0.14 : 0.2)
-        // 3B Şehir Pinleri (Giriş ekranında bomboş başlar, intro bitince yüklenir)
+        // 3B Şehir Pinleri: Google Earth yüzey karolarıyla birebir aynı yükseklikte (SURFACE_OVERLAY_ALT = 0.0004) ve 0ms gecikmeyle sabitlenir
         .htmlElementsData([])
         .htmlLat(d => d.lat)
         .htmlLng(d => d.lng)
-        .htmlAltitude(0.015)
+        .htmlAltitude(SURFACE_OVERLAY_ALT)
+        .htmlTransitionDuration(0)
         .htmlElement(d => createPinElement(d))
-        // "Edebiyat & Akımlar", "Savaşlar" veya 3B Ülke Savaşları Ağacı seçildiğinde aktifleşen ince & zarif 3B animasyonlu ışık izleri (trails)
+        // "Edebiyat & Akımlar" veya tıklanan bir savaşın ince & zarif 3B animasyonlu ışık izleri (trails)
         .arcsData([])
         .arcStartLat(d => d.startLat)
         .arcStartLng(d => d.startLng)
@@ -5583,11 +5632,11 @@
         .arcDashLength(d => d.dashLength || 0.22)
         .arcDashGap(d => d.dashGap || 0.13)
         .arcDashAnimateTime(d => d.animateTime || 4200)
-        // 3B Taktik Savaş & Tarihsel Çarpışma Şok Dalgaları (Seçilen şehirde 3B darbe halkaları)
+        // 3B Taktik Savaş & Tarihsel Çarpışma Şok Dalgaları (Yüzeye tam yapışık 3B darbe halkaları)
         .ringsData([])
         .ringLat(d => d.lat)
         .ringLng(d => d.lng)
-        .ringAltitude(0.0025)
+        .ringAltitude(SURFACE_OVERLAY_ALT + 0.0002)
         .ringColor(d => d.color || ['rgba(239, 68, 68, 0.95)', 'rgba(239, 68, 68, 0)'])
         .ringMaxRadius(d => d.maxR || 0.85)
         .ringPropagationSpeed(d => d.speed || 0.32)
@@ -5628,7 +5677,7 @@
       // Küre Materyalini Sadece Masaüstünde Fotogerçekçi Okyanus Parlaması, Kabartma ve Bulut Katmanı İle Güçlendir
       if (!isMobileDevice) {
         const globeMaterial = world.globeMaterial();
-        globeMaterial.bumpScale = 14;
+        globeMaterial.bumpScale = 6;
         globeMaterial.shininess = 18;
         new THREE.TextureLoader().load(WATER_SPECULAR_TEX, specularTexture => {
           globeMaterial.specularMap = specularTexture;
@@ -5673,55 +5722,37 @@
         });
       }
 
-      // GOOGLE EARTH TARZI SMOOTH TEKERLEK & KAMERA KAYMASI (INERTIA / DAMPING)
+      // GOOGLE EARTH TARZI PÜRÜZSÜZ YAKINLAŞMA VE DÖNÜŞ KONTROLLERİ (Çakışan çift tekerlek dinleyicisi kaldırıldı)
       const controls = world.controls();
       controls.enableDamping = true;
-      controls.dampingFactor = isMobileDevice ? 0.08 : 0.06;
-      controls.zoomSpeed = 0.7;
-      controls.rotateSpeed = isMobileDevice ? 0.75 : 0.6;
-      controls.minDistance = 101.2;
-      controls.maxDistance = 550;
+      controls.dampingFactor = isMobileDevice ? 0.08 : 0.07;
+      controls.dynamicDampingFactor = isMobileDevice ? 0.14 : 0.11;
+      controls.zoomSpeed = 0.85;
+      controls.rotateSpeed = isMobileDevice ? 0.75 : 0.62;
+      controls.minDistance = 100.8;
+      controls.maxDistance = 520;
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0.45;
 
-      // Fare tekerleği (scroll wheel) ile yakınlaşıp uzaklaşırken kazık gibi durmaması için pürüzsüz momentum (inertia) döngüsü
-      let wheelZoomVelocity = 0;
-      if (!isMobileDevice) {
-        container.addEventListener(
-          'wheel',
-          e => {
-            e.preventDefault();
-            const delta = Math.sign(e.deltaY);
-            wheelZoomVelocity += delta * 0.024;
-            wheelZoomVelocity = Math.max(-0.12, Math.min(0.12, wheelZoomVelocity));
-          },
-          { passive: false }
-        );
-
-        (function animateGlobeScene() {
-          if (cloudsMesh) {
-            cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
-          }
-          if (Math.abs(wheelZoomVelocity) > 0.0004 && world) {
-            const pov = world.pointOfView();
-            if (pov) {
-              const nextAlt = Math.max(0.012, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
-              world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 0);
+      // Hem masaüstü hem mobilde kamera uçuşları (fly-to) ve yakınlaşma sırasında karoları + ikon ölçeğini 60 FPS gerçek zamanlı güncelle
+      (function animateGlobeScene() {
+        if (cloudsMesh) {
+          cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
+        }
+        if (world) {
+          const pov = world.pointOfView();
+          if (pov) {
+            const latDiff = lastTrackedPov.lat === null ? 1 : Math.abs(pov.lat - lastTrackedPov.lat);
+            const lngDiff = lastTrackedPov.lng === null ? 1 : Math.abs(pov.lng - lastTrackedPov.lng);
+            const altDiff = lastTrackedPov.alt === null ? 1 : Math.abs(pov.altitude - lastTrackedPov.alt);
+            if (latDiff > 0.0005 || lngDiff > 0.0005 || altDiff > 0.0003) {
+              lastTrackedPov = { lat: pov.lat, lng: pov.lng, alt: pov.altitude };
               updateZoomAndCompass();
             }
-            wheelZoomVelocity *= 0.88; // Google Earth tarzı yumuşak süzülerek yavaşlama
-          } else {
-            wheelZoomVelocity = 0;
           }
-          if (world) {
-            updateGoogleEarthSurfaceTiles(world.pointOfView());
-          }
-          if (controls && typeof controls.update === 'function') {
-            controls.update();
-          }
-          requestAnimationFrame(animateGlobeScene);
-        })();
-      }
+        }
+        requestAnimationFrame(animateGlobeScene);
+      })();
 
       controls.addEventListener('change', updateZoomAndCompass);
 
@@ -5735,6 +5766,8 @@
         world.height(window.innerHeight);
         const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
         world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.0 : 2.0));
+        lastTileUpdateSignature = '';
+        updateZoomAndCompass();
       });
     }
 
@@ -5766,17 +5799,17 @@
       }
     }
 
-    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle (Yakınlaştıkça şehir/ülke ikonları pürüzsüzce büyür)
+    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle (Yakınlaştıkça şehir/ülke ikonları yerinde büyür, asla kaymaz)
     function updateZoomAndCompass() {
       if (!world) return;
       const pov = world.pointOfView();
       if (!pov) return;
 
-      // Uzaktayken (altitude >= 1.8) 0.65 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 1.65'e kadar kademeli büyür
-      const clampedAlt = Math.max(0.02, Math.min(2.0, pov.altitude));
-      const zoomProgress = Math.pow(1 - (clampedAlt - 0.02) / 1.98, 1.35);
-      const pinScale = 0.65 + zoomProgress * 1.0;
-      document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
+      // Uzaktayken (altitude >= 1.8) 0.70 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 1.55'e kadar tam merkezinden pürüzsüz büyür
+      const clampedAlt = Math.max(0.01, Math.min(2.0, pov.altitude));
+      const zoomProgress = Math.pow(1 - (clampedAlt - 0.01) / 1.99, 1.35);
+      const pinScale = 0.70 + zoomProgress * 0.85;
+      document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(3));
 
       // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
       updateGoogleEarthSurfaceTiles(pov);
@@ -5793,9 +5826,14 @@
       }
     }
 
-    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın, Edebiyat: Turkuaz, Savaş Dalı: Ağaç Dalı Alt Başlığı, Taktik Birim: Saha Rozeti)
+    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu
+    // CSS2DRenderer'ın root elementin style.transform özelliğini ezmesini önlemek için 0x0 boyutlu .pin-anchor-root konteyneri döndürülür.
     function createPinElement(item) {
+      const anchorRoot = document.createElement('div');
+      anchorRoot.className = 'pin-anchor-root';
+
       if (item.isWarBranchNode) {
+        if (item.isActiveBranch) anchorRoot.classList.add('active-anchor');
         const branchEl = document.createElement('div');
         branchEl.className = `war-branch-wrapper ${item.isActiveBranch ? 'active-war-branch' : ''}`;
         const labelText = (currentLang === 'en' && item.shortTitle_en) ? item.shortTitle_en : item.shortTitle_tr;
@@ -5814,10 +5852,12 @@
             selectCountryWarBranch(item.warIndex, true);
           }
         });
-        return branchEl;
+        anchorRoot.appendChild(branchEl);
+        return anchorRoot;
       }
 
       if (item.isTacticalMarker) {
+        anchorRoot.classList.add('active-anchor');
         const tacEl = document.createElement('div');
         tacEl.className = 'tactical-point-wrapper';
         const tacColor = item.tacColor || (item.tone === 'defense' ? '#fbbf24' : '#ef4444');
@@ -5840,11 +5880,18 @@
             selectBattlePhase(item.phaseIndex, true);
           }
         });
-        return tacEl;
+        anchorRoot.appendChild(tacEl);
+        return anchorRoot;
       }
 
+      const isActiveCity = activeCityId === item.id;
+      if (isActiveCity) {
+        anchorRoot.classList.add('active-anchor');
+      }
+      anchorRoot.dataset.cityId = item.id;
+
       const wrapper = document.createElement('div');
-      wrapper.className = `atlas-pin-wrapper ${activeCityId === item.id ? 'active-pin' : ''}`;
+      wrapper.className = `atlas-pin-wrapper ${isActiveCity ? 'active-pin' : ''}`;
       wrapper.dataset.cityId = item.id;
 
       let pinColor = '#f59e0b';
@@ -5869,9 +5916,6 @@
       wrapper.style.setProperty('--pin-second-color', pinSecondColor);
       wrapper.style.setProperty('--pin-bg', pinBg);
       wrapper.style.setProperty('--pin-glow', pinGlow);
-      wrapper.style.setProperty('--pin-offset-x', item.pinOffsetX || '0px');
-      wrapper.style.setProperty('--pin-offset-y', item.pinOffsetY || '0px');
-      wrapper.style.setProperty('--label-shift-x', item.labelShiftX || '0px');
 
       const flag = item.flag || (item.region === 'turkiye' ? '🇹🇷' : '🌍');
       const displayCity = (currentLang === 'en' && item.city_en) ? item.city_en : item.city;
@@ -5894,7 +5938,8 @@
         selectCity(item.id);
       });
 
-      return wrapper;
+      anchorRoot.appendChild(wrapper);
+      return anchorRoot;
     }
 
     // ============================================================================
@@ -7805,20 +7850,47 @@
       }));
       world.htmlElementsData([...filteredList, ...branchNodes, ...tacticalMarkers]);
 
-      // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) çok daha yakından scope'la (altitude: 0.15)
+      // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) enlem açısına duyarlı kusursuz ortalama ile scope'la (altitude: 0.14)
       if (flyCamera) {
         const isMobile = window.innerWidth < 768;
-        const lngOffset = isMobile ? 0 : 0.72;
+        const targetLat = phase.focusLat || selectedWar.lat;
+        const targetLng = phase.focusLng || selectedWar.lng;
+        const cosLat = Math.max(0.5, Math.cos((Math.abs(targetLat) * Math.PI) / 180));
+        const lngOffset = isMobile ? 0 : 0.38 / cosLat;
         world.pointOfView(
           {
-            lat: (phase.focusLat || selectedWar.lat) - 0.06,
-            lng: (phase.focusLng || selectedWar.lng) + lngOffset,
-            altitude: 0.15
+            lat: targetLat,
+            lng: targetLng + lngOffset,
+            altitude: 0.14
           },
-          1250
+          1200
         );
-        setTimeout(updateZoomAndCompass, 1300);
+        setTimeout(updateZoomAndCompass, 1250);
       }
+    }
+
+    function closeSelectedWarDetail() {
+      stopBattleSimulation();
+      activeCountryWarIndex = -1;
+      activeBattlePhaseIndex = 0;
+      if (!activeCityId || !world) return;
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item) return;
+      updateCityWarViewOnGlobeAndDrawer(item);
+      if (typeof selectGallerySlide === 'function') {
+        selectGallerySlide(activeGallerySlideIndex);
+      }
+      const isMobile = window.innerWidth < 768;
+      const cosLat = Math.max(0.5, Math.cos((Math.abs(item.lat) * Math.PI) / 180));
+      const lngOffset = isMobile ? 0 : 0.85 / cosLat;
+      world.pointOfView(
+        {
+          lat: item.lat,
+          lng: item.lng + lngOffset,
+          altitude: 0.30
+        },
+        1100
+      );
     }
 
     function stopBattleSimulation() {
@@ -7877,21 +7949,27 @@
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.toggle('active-pin', el.dataset.cityId === cityId);
       });
+      document.querySelectorAll('.pin-anchor-root').forEach(el => {
+        if (el.dataset.cityId) {
+          el.classList.toggle('active-anchor', el.dataset.cityId === cityId);
+        }
+      });
 
-      // Şehre tıklandığında daha yakına (altitude: 0.34) odaklan
+      // Şehre tıklandığında enlem açısına göre dengelenmiş kusursuz ortalama ile odaklan (altitude: 0.30)
       const isMobile = window.innerWidth < 768;
-      const lngOffset = isMobile ? 0 : 2.15;
+      const cosLat = Math.max(0.5, Math.cos((Math.abs(item.lat) * Math.PI) / 180));
+      const lngOffset = isMobile ? 0 : 0.85 / cosLat;
       world.pointOfView(
         {
-          lat: item.lat - 0.22,
+          lat: item.lat,
           lng: item.lng + lngOffset,
-          altitude: 0.34
+          altitude: 0.30
         },
-        1550
+        1450
       );
 
-      setTimeout(updateZoomAndCompass, 550);
-      setTimeout(updateZoomAndCompass, 1600);
+      setTimeout(updateZoomAndCompass, 500);
+      setTimeout(updateZoomAndCompass, 1500);
       populateDrawer(item);
       updateCityWarViewOnGlobeAndDrawer(item);
       openDrawer();
@@ -8447,6 +8525,7 @@
       drawer.classList.add('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
       drawer.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
       activeCityId = null;
+      activeCountryWarIndex = -1;
 
       if (world) {
         world.ringsData([]);
@@ -8455,6 +8534,9 @@
 
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.remove('active-pin');
+      });
+      document.querySelectorAll('.pin-anchor-root').forEach(el => {
+        el.classList.remove('active-anchor');
       });
     }
 
@@ -9128,6 +9210,11 @@
         battleSimPlayBtn.addEventListener('click', toggleBattleSimulationPlay);
       }
 
+      const closeWarDetailBtn = document.getElementById('closeWarDetailBtn');
+      if (closeWarDetailBtn) {
+        closeWarDetailBtn.addEventListener('click', closeSelectedWarDetail);
+      }
+
       document.querySelectorAll('.battle-phase-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           stopBattleSimulation();
@@ -9136,7 +9223,7 @@
         });
       });
 
-      // Şahsiyet & Eser Detaylı Okuma Penceresi (Modal) Etkileşimleri
+      // Şahsiyet & Eser Detaylı Okuma Penceresi (Modal) ve Klavye Kısayolları Etkileşimleri
       const closeFigureModalBtn = document.getElementById('closeFigureModalBtn');
       const figureModalOverlay = document.getElementById('figureModalOverlay');
 
@@ -9147,8 +9234,33 @@
         });
       }
       window.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && activeFigureModalState) {
-          closeFigureModal();
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+        if (e.key === 'Escape') {
+          if (isImageLightboxOpen) {
+            closeImageLightbox();
+          } else if (activeFigureModalState) {
+            closeFigureModal();
+          } else if (activeCountryWarIndex >= 0) {
+            closeSelectedWarDetail();
+          } else if (activeCityId) {
+            closeDrawer();
+          }
+          return;
+        }
+        if (activeCityId && !isImageLightboxOpen && !activeFigureModalState) {
+          if (e.key === 'ArrowLeft') {
+            const list = getFilteredLocations();
+            if (!list.length) return;
+            const idx = list.findIndex(d => d.id === activeCityId);
+            const prevIdx = (idx - 1 + list.length) % list.length;
+            selectCity(list[prevIdx].id);
+          } else if (e.key === 'ArrowRight') {
+            const list = getFilteredLocations();
+            if (!list.length) return;
+            const idx = list.findIndex(d => d.id === activeCityId);
+            const nextIdx = (idx + 1) % list.length;
+            selectCity(list[nextIdx].id);
+          }
         }
       });
 
