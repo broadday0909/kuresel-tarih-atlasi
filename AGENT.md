@@ -13,6 +13,7 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 - **GitHub Deposu:** [https://github.com/broadday0909/kuresel-tarih-atlasi.git](https://github.com/broadday0909/kuresel-tarih-atlasi.git)
 - **Birincil & Sınırsız Hosting:** **GitHub Pages** ([https://broadday0909.github.io/kuresel-tarih-atlasi/](https://broadday0909.github.io/kuresel-tarih-atlasi/))
 - **Özel Alan Adı Entegrasyonu:** `bayramakpamukcu.site` ve `www.bayramakpamukcu.site` doğrudan GitHub Pages IP'lerine (`185.199.108.153` vb.) ve `broadday0909.github.io` CNAME'ine bağlıdır.
+- **GitHub Yetkilendirmesi (Personal Access Token):** Ajanın doğrudan yetkili çalışması için yerel git remote origin URL'sinde kullanıcı belirteci tanımlıdır.
 - **İPTAL EDİLEN ESKİ PLATFORM (Netlify):** Netlify aylık 300 kredi sınırını aşıp 403 Forbidden hatası verdiği için sistem **tamamen terk edilmiş ve devre dışı bırakılmıştır**. Artık Netlify kullanılmaz, kredi/ücret derdi yoktur.
 
 ---
