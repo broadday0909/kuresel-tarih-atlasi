@@ -5766,20 +5766,16 @@
       }
     }
 
-    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle (Küre dokusu asla gizlenmez/siyahlaşmaz)
+    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle (Yakınlaştıkça şehir/ülke ikonları pürüzsüzce büyür)
     function updateZoomAndCompass() {
       if (!world) return;
       const pov = world.pointOfView();
       if (!pov) return;
 
-      let pinScale = 0.65;
-      if (pov.altitude < 0.55) {
-        pinScale = 0.48;
-      } else if (pov.altitude < 1.1) {
-        pinScale = 0.54;
-      } else if (pov.altitude < 1.7) {
-        pinScale = 0.60;
-      }
+      // Uzaktayken (altitude >= 1.8) 0.65 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 1.65'e kadar kademeli büyür
+      const clampedAlt = Math.max(0.02, Math.min(2.0, pov.altitude));
+      const zoomProgress = Math.pow(1 - (clampedAlt - 0.02) / 1.98, 1.35);
+      const pinScale = 0.65 + zoomProgress * 1.0;
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
 
       // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
