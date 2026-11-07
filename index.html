@@ -417,6 +417,62 @@
       box-shadow: 0 0 8px var(--tac-color, #ef4444);
     }
 
+    /* 3B ÜLKE SAVAŞLARI AĞAÇ DALLARI ALT BAŞLIK ROZETLERİ (3D TREE-BRANCH WAR NODES) */
+    .war-branch-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.52));
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 62;
+      transition: transform 0.22s ease, filter 0.22s ease;
+    }
+    .war-branch-wrapper:hover,
+    .war-branch-wrapper.active-war-branch {
+      transform: translate(-50%, -56%) scale(calc(var(--pin-zoom-scale, 0.52) * 1.22));
+      z-index: 165;
+    }
+    .war-branch-badge {
+      padding: 1.5px 6px;
+      border-radius: 7px;
+      font-size: 7.8px;
+      font-weight: 800;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      color: #ffe4e6;
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(244, 63, 94, 0.72);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 8px rgba(244, 63, 94, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .war-branch-wrapper.active-war-branch .war-branch-badge {
+      color: #fef08a;
+      background: linear-gradient(135deg, rgba(159, 18, 57, 0.96), rgba(15, 23, 42, 0.98));
+      border-color: #fbbf24;
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
+    }
+    .war-branch-prefix {
+      color: #fbbf24;
+      font-family: monospace;
+      font-weight: 900;
+      font-size: 8.5px;
+    }
+    .war-branch-dot {
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 999px;
+      margin-top: 1.5px;
+      background: #f43f5e;
+      box-shadow: 0 0 6px #f43f5e;
+    }
+    .war-branch-wrapper.active-war-branch .war-branch-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 9px #fbbf24;
+    }
+
     /* 3B KÜRE VE MOBİL DOKUNMATİK HASSASİYETİ (KASMA & GECİKME ÖNLEYİCİ) */
     #globeViz, #globeViz canvas {
       touch-action: none !important;
@@ -785,6 +841,15 @@
           <span class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_6px_#14b8a6]"></span>
           <span id="catLabelLit">Edebiyat &amp; Akımlar</span>
         </button>
+
+        <button
+          type="button"
+          data-category="savaslar"
+          class="category-btn px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-semibold transition-all duration-200 flex items-center gap-1 text-slate-300 hover:text-white hover:bg-white/10 border border-transparent cursor-pointer whitespace-nowrap"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+          <span id="catLabelWars">⚔️ Savaşlar</span>
+        </button>
       </div>
     </div>
   </header>
@@ -982,7 +1047,7 @@
         </div>
       </div>
 
-      <!-- ⚔️ 3B TAKTİK SAVAŞ VE TARİHSEL HAREKAT SİMÜLASYONU KONSOLU -->
+      <!-- ⚔️ 3B TAKTİK SAVAŞ VE ÜLKE SAVAŞLARI AĞAÇ DALLARI SİMÜLASYONU KONSOLU -->
       <div id="drawerBattleSimBox" class="rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br from-rose-950/60 via-slate-900/90 to-amber-950/45 border border-rose-500/40 shadow-[0_10px_28px_rgba(225,29,72,0.16)] space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
@@ -1002,6 +1067,24 @@
             <span id="battleSimPlayIcon">▶️</span>
             <span id="battleSimPlayText">3B Harekatı Canlandır</span>
           </button>
+        </div>
+
+        <!-- 🌳 ÜLKE SAVAŞLARI AĞAÇ DALLARI (ALT BAŞLIKLAR HALİNDE BELİREN SAVAŞLAR LİSTESİ) -->
+        <div id="countryWarsTreeBox" class="rounded-xl p-3 bg-slate-950/85 border border-rose-500/30 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold text-amber-300 uppercase tracking-wider">
+              <span>🌿</span>
+              <span id="countryWarsTreeHeading">Ülke Savaşları Ağacı (Alt Başlıklar)</span>
+            </div>
+            <span id="countryWarsCountBadge" class="text-[10px] font-bold text-rose-200 bg-rose-500/20 border border-rose-400/35 px-2 py-0.5 rounded-full">
+              6 Savaş Dalı
+            </span>
+          </div>
+          <p id="countryWarsTreeHint" class="text-[11px] text-slate-300/90 leading-snug">
+            3B haritada bu ülkeden ağaç dalları gibi ayrılan savaşlara veya aşağıdaki alt başlıklara tıklayarak cepheye odaklanın:
+          </p>
+          <!-- Ağaç Gövdesi ve Dalları -->
+          <div id="countryWarsTreeList" class="border-l-2 border-rose-500/50 ml-2 pl-2.5 space-y-1.5 max-h-52 overflow-y-auto custom-scroll pr-1"></div>
         </div>
 
         <!-- 3 Aşamalı Taktik Evre Seçici Butonlar -->
@@ -4854,6 +4937,7 @@
         catHistFull: "Tarihi Olaylar",
         catHistShort: "Tarih",
         catLit: "Edebiyat & Akımlar",
+        catWars: "⚔️ Savaşlar",
         timelineHeader: "Zaman Tüneli",
         eraAll: "Tüm Çağlar",
         eraAntik: "🏛️ Antik Çağ",
@@ -4906,7 +4990,10 @@
         battleOutcomeLabel: "🎯 Stratejik Sonuç:",
         battleLegendAttack: "Taarruz / Yayılım Hattı",
         battleLegendDefense: "Savunma / Karşı Harekat",
-        battleLegendShockwave: "3B Çarpışma & Etki Dalgası"
+        battleLegendShockwave: "3B Çarpışma & Etki Dalgası",
+        countryWarsTreeHeading: country => `${country} Savaşları Ağacı (Alt Başlıklar)`,
+        countryWarsCount: count => `${count} Savaş Dalı`,
+        countryWarsTreeHint: "3B kürede bu ülkeden ağaç dalları gibi ayrılan savaşlara veya aşağıdaki alt başlıklara tıklayarak cepheye odaklanın:"
       },
       en: {
         introProjectSubtitle: "TÜBİTAK 3D WORLD CULTURAL HERITAGE PROJECT",
@@ -4937,6 +5024,7 @@
         catHistFull: "Historical Events",
         catHistShort: "History",
         catLit: "Literature & Movements",
+        catWars: "⚔️ Wars & Battles",
         timelineHeader: "Timeline",
         eraAll: "All Eras",
         eraAntik: "🏛️ Ancient Era",
@@ -4989,11 +5077,14 @@
         battleOutcomeLabel: "🎯 Strategic Outcome:",
         battleLegendAttack: "Offensive / Expansion Vector",
         battleLegendDefense: "Defense / Counter-Maneuver",
-        battleLegendShockwave: "3D Clash & Shockwave Ring"
+        battleLegendShockwave: "3D Clash & Shockwave Ring",
+        countryWarsTreeHeading: country => `${country} Wars Tree (Sub-Branches)`,
+        countryWarsCount: count => `${count} War Branches`,
+        countryWarsTreeHint: "Click any war branch sprouting like a tree on the 3D globe or select a sub-heading below to inspect the battle:"
       }
     });
 
-    // Görünen (filtrelenmiş) şehirler listesine göre yalnızca geçerli edebiyat yaylarını üretir
+    // Görünen (filtrelenmiş) şehirler listesine göre yalnızca geçerli edebiyat yaylarını (ince & zarif trail) üretir
     function buildLiteratureArcs(visibleLocations) {
       const visible = new Map(
         visibleLocations
@@ -5013,7 +5104,72 @@
             endLat: b.lat,
             endLng: b.lng,
             label: (isEn && r.label_en) ? r.label_en : r.label,
-            color: ARC_COLORS[i % ARC_COLORS.length]
+            color: ARC_COLORS[i % ARC_COLORS.length],
+            altScale: 0.16,
+            stroke: 0.21,
+            dashLength: 0.22,
+            dashGap: 0.13,
+            animateTime: 1650
+          };
+        });
+    }
+
+    // "Savaşlar" kategorisi seçildiğinde küresel cepheler arasında ince animasyonlu harekat izleri (trails) üretir
+    const GLOBAL_WAR_ROUTES = Object.freeze([
+      { from: "canakkale", to: "istanbul", label: "Çanakkale Cephesi (1915) ➔ Payitaht İstanbul Savunma Hattı", label_en: "Gallipoli Front (1915) ➔ Istanbul Defense Line" },
+      { from: "samsun", to: "amasya", label: "19 Mayıs 1919 Samsun Çıkışı ➔ Amasya Genelgesi Harekat Hattı", label_en: "May 19, 1919 Samsun Landing ➔ Amasya Circular Route" },
+      { from: "amasya", to: "erzurum", label: "Amasya ➔ Erzurum Kongresi Doğu Cephesi Hattı", label_en: "Amasya ➔ Erzurum Congress Eastern Front Line" },
+      { from: "erzurum", to: "sivas", label: "Erzurum ➔ Sivas Kongresi Milli Mücadele Hattı", label_en: "Erzurum ➔ Sivas National Struggle Line" },
+      { from: "sivas", to: "ankara", label: "Sivas ➔ Ankara (Sakarya & Büyük Taarruz Başkomutanlık Karargahı)", label_en: "Sivas ➔ Ankara (Sakarya & Great Offensive Command HQ)" },
+      { from: "atina", to: "roma", label: "Antik Akdeniz Savaşları: Pers-Yunan & Roma Seferleri", label_en: "Ancient Mediterranean Wars: Greco-Persian & Roman Campaigns" },
+      { from: "kartaca", to: "roma", label: "Pön Savaşları: Hannibal'ın Kartaca ➔ Roma Seferi (M.Ö. 218–202)", label_en: "Punic Wars: Hannibal's Carthage ➔ Rome Campaign (218–202 BC)" },
+      { from: "roma", to: "kahire", label: "Actium & Doğu Akdeniz Seferi: Roma ➔ İskenderiye (M.Ö. 31)", label_en: "Actium & Eastern Mediterranean Campaign: Rome ➔ Alexandria" },
+      { from: "oslo", to: "lindisfarne", label: "Viking Kuzey Denizi Akını: Norveç ➔ Lindisfarne (793)", label_en: "Viking North Sea Raid: Norway ➔ Lindisfarne (793)" },
+      { from: "uppsala", to: "york", label: "Büyük Viking Ordusu Seferi: İskandinavya ➔ York / Jórvík (866)", label_en: "Great Heathen Army Campaign: Scandinavia ➔ York (866)" },
+      { from: "londra", to: "paris", label: "Yüzyıl Savaşları & Normandiya Cephesi: Londra ➔ Paris", label_en: "Hundred Years' War & Normandy Front: London ➔ Paris" },
+      { from: "paris", to: "viyana", label: "Napolyon Savaşları: Paris ➔ Austerlitz / Viyana Seferi (1805)", label_en: "Napoleonic Wars: Paris ➔ Austerlitz / Vienna Campaign (1805)" },
+      { from: "paris", to: "moskova", label: "1812 Koalisyon & Borodino Seferi: Paris ➔ Moskova Hattı", label_en: "1812 Coalition & Borodino Campaign: Paris ➔ Moscow Line" },
+      { from: "weimar", to: "stpetersburg", label: "Doğu Avrupa & Baltık Cephesi: Orta Avrupa ➔ St. Petersburg", label_en: "Eastern European & Baltic Front: Central Europe ➔ St. Petersburg" },
+      { from: "istanbul", to: "viyana", label: "Osmanlı Avrupa Seferleri: İstanbul ➔ Mohaç & Viyana Hattı", label_en: "Ottoman European Campaigns: Istanbul ➔ Mohács & Vienna Line" },
+      { from: "istanbul", to: "kahire", label: "Doğu Akdeniz & Mısır Seferi: İstanbul ➔ Kudüs ➔ Kahire", label_en: "Eastern Mediterranean & Egypt Campaign: Istanbul ➔ Jerusalem ➔ Cairo" },
+      { from: "kudus", to: "bagdat", label: "Orta Doğu Tarihsel Savaş Hattı: Kudüs (Hıttin) ➔ Bağdat", label_en: "Middle East Historical War Axis: Jerusalem (Hattin) ➔ Baghdad" },
+      { from: "karakurum", to: "semerkant", label: "Avrasya Bozkır Seferi: Karakurum ➔ Semerkant & Buhara (1219)", label_en: "Eurasian Steppe Campaign: Karakorum ➔ Samarkand & Bukhara (1219)" },
+      { from: "semerkant", to: "bagdat", label: "Orta Asya ➔ Mezopotamya Sefer Hattı: Semerkant ➔ Bağdat", label_en: "Central Asia ➔ Mesopotamia Campaign: Samarkand ➔ Baghdad" },
+      { from: "semerkant", to: "delhi", label: "Babür Seferi & Panipat Meydan Muharebesi: Semerkant ➔ Delhi (1526)", label_en: "Mughal Campaign & Battle of Panipat: Samarkand ➔ Delhi (1526)" },
+      { from: "pekin", to: "seul", label: "Doğu Asya Savunma Hattı: Pekin ➔ Seul ➔ Kyoto (Imjin & Sekigahara)", label_en: "East Asian Defense Axis: Beijing ➔ Seoul ➔ Kyoto" },
+      { from: "seul", to: "kyoto", label: "Kore Boğazı & Myeongnyang Deniz Zaferi Hattı (1597–1600)", label_en: "Korea Strait & Myeongnyang Naval Victory Line (1597–1600)" },
+      { from: "madrid", to: "meksiko", label: "Atlantik Ötesi Sefer & Tenochtitlan Kuşatması (1519–1521)", label_en: "Transatlantic Expedition & Siege of Tenochtitlan (1519–1521)" },
+      { from: "meksiko", to: "cusco", label: "Orta & Güney Amerika Direniş Hattı: Tenochtitlan ➔ Cusco", label_en: "Mesoamerican & Andean Resistance Axis: Tenochtitlan ➔ Cusco" },
+      { from: "concord", to: "newyork", label: "Amerikan Bağımsızlık Savaşı Cephesi: Lexington/Concord ➔ New York (1775–1783)", label_en: "American Revolutionary War Front: Concord ➔ New York (1775–1783)" }
+    ]);
+
+    const WAR_ARC_COLORS = [
+      ['#f43f5e', '#fbbf24'],
+      ['#ef4444', '#f97316'],
+      ['#fbbf24', '#ef4444'],
+      ['#fb7185', '#fde047']
+    ];
+
+    function buildGlobalWarArcs(visibleLocations) {
+      const visible = new Map(visibleLocations.map(loc => [loc.id, loc]));
+      const isEn = currentLang === 'en';
+      return GLOBAL_WAR_ROUTES
+        .filter(r => visible.has(r.from) && visible.has(r.to))
+        .map((r, i) => {
+          const a = visible.get(r.from);
+          const b = visible.get(r.to);
+          return {
+            startLat: a.lat,
+            startLng: a.lng,
+            endLat: b.lat,
+            endLng: b.lng,
+            label: (isEn && r.label_en) ? r.label_en : r.label,
+            color: WAR_ARC_COLORS[i % WAR_ARC_COLORS.length],
+            altScale: 0.15,
+            stroke: 0.21,
+            dashLength: 0.22,
+            dashGap: 0.13,
+            animateTime: 1550
           };
         });
     }
@@ -5055,7 +5211,7 @@
         .htmlLng(d => d.lng)
         .htmlAltitude(0.015)
         .htmlElement(d => createPinElement(d))
-        // Sadece "Edebiyat & Akımlar" veya 3B Taktik Savaş Simülasyonu seçildiğinde aktifleşen 3B kavisli animasyonlu ışık yayları
+        // "Edebiyat & Akımlar", "Savaşlar" veya 3B Ülke Savaşları Ağacı seçildiğinde aktifleşen ince & zarif 3B animasyonlu ışık izleri (trails)
         .arcsData([])
         .arcStartLat(d => d.startLat)
         .arcStartLng(d => d.startLng)
@@ -5063,11 +5219,11 @@
         .arcEndLng(d => d.endLng)
         .arcColor(d => d.color)
         .arcLabel(d => d.label)
-        .arcAltitudeAutoScale(d => d.altScale || 0.34)
-        .arcStroke(d => d.stroke || 0.65)
-        .arcDashLength(d => d.dashLength || 0.4)
-        .arcDashGap(d => d.dashGap || 0.2)
-        .arcDashAnimateTime(d => d.animateTime || 1800)
+        .arcAltitudeAutoScale(d => d.altScale || 0.16)
+        .arcStroke(d => d.stroke || 0.21)
+        .arcDashLength(d => d.dashLength || 0.22)
+        .arcDashGap(d => d.dashGap || 0.13)
+        .arcDashAnimateTime(d => d.animateTime || 1650)
         // 3B Taktik Savaş & Tarihsel Çarpışma Şok Dalgaları (Seçilen şehirde 3B darbe halkaları)
         .ringsData([])
         .ringLat(d => d.lat)
@@ -5279,8 +5435,30 @@
       }
     }
 
-    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın Sarısı, Edebiyat: Turkuaz/Zümrüt, Savaş Birimi: Taktik Rozet)
+    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın, Edebiyat: Turkuaz, Savaş Dalı: Ağaç Dalı Alt Başlığı, Taktik Birim: Saha Rozeti)
     function createPinElement(item) {
+      if (item.isWarBranchNode) {
+        const branchEl = document.createElement('div');
+        branchEl.className = `war-branch-wrapper ${item.isActiveBranch ? 'active-war-branch' : ''}`;
+        const labelText = (currentLang === 'en' && item.shortTitle_en) ? item.shortTitle_en : item.shortTitle_tr;
+        const prefixSymbol = item.isLastBranch ? '└─' : '├─';
+        branchEl.innerHTML = `
+          <div class="war-branch-badge">
+            <span class="war-branch-prefix">${prefixSymbol}</span>
+            <span>⚔️</span>
+            <span>${labelText}</span>
+          </div>
+          <div class="war-branch-dot"></div>
+        `;
+        branchEl.addEventListener('click', e => {
+          e.stopPropagation();
+          if (typeof item.warIndex === 'number' && activeCityId) {
+            selectCountryWarBranch(item.warIndex, true);
+          }
+        });
+        return branchEl;
+      }
+
       if (item.isTacticalMarker) {
         const tacEl = document.createElement('div');
         tacEl.className = 'tactical-point-wrapper';
@@ -5314,8 +5492,13 @@
       let pinBg = 'linear-gradient(135deg, #fbbf24, #d97706)';
       let pinGlow = 'rgba(245, 158, 11, 0.85)';
 
-      const isLitPin = item.category === 'edebiyat' || (activeCategory === 'edebiyat' && item.secondaryCategory === 'edebiyat');
-      if (isLitPin) {
+      const isLitPin = item.category === 'edebiyat' && activeCategory !== 'savaslar' || (activeCategory === 'edebiyat' && item.secondaryCategory === 'edebiyat');
+      if (activeCategory === 'savaslar') {
+        pinColor = '#f43f5e';
+        pinSecondColor = '#fbbf24';
+        pinBg = 'linear-gradient(135deg, #f43f5e, #be123c)';
+        pinGlow = 'rgba(244, 63, 94, 0.85)';
+      } else if (isLitPin) {
         pinColor = '#14b8a6';
         pinSecondColor = '#10b981';
         pinBg = 'linear-gradient(135deg, #2dd4bf, #059669)';
@@ -5366,6 +5549,7 @@
 
         const categoryMatch =
           activeCategory === 'all' ||
+          activeCategory === 'savaslar' ||
           item.category === activeCategory ||
           item.secondaryCategory === activeCategory;
 
@@ -5407,9 +5591,11 @@
         world.htmlElementsData(filteredList);
       }
 
-      // SADECE "Edebiyat & Akımlar" seçildiğinde, yalnızca haritada görünen edebiyat şehirleri arasında yay çiz
+      // "Edebiyat & Akımlar" veya "Savaşlar" seçildiğinde haritada ince animasyonlu izler (trails) çiz
       if (activeCategory === 'edebiyat') {
         world.arcsData(buildLiteratureArcs(filteredList));
+      } else if (activeCategory === 'savaslar') {
+        world.arcsData(buildGlobalWarArcs(filteredList));
       } else {
         world.arcsData([]);
       }
@@ -5456,6 +5642,9 @@
         } else if (cat === 'edebiyat') {
           btn.className =
             'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-teal-500/30 text-teal-200 border border-teal-400 shadow-[0_0_12px_rgba(20,184,166,0.5)] cursor-pointer whitespace-nowrap';
+        } else if (cat === 'savaslar') {
+          btn.className =
+            'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-rose-500/30 text-rose-200 border border-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.55)] cursor-pointer whitespace-nowrap';
         } else {
           btn.className =
             'category-btn active px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-white/20 text-white border border-white/50 shadow-[0_0_12px_rgba(255,255,255,0.25)] cursor-pointer whitespace-nowrap';
@@ -5837,6 +6026,1221 @@
       };
     }
 
+    // ============================================================================
+    // 5C. DÜNYA ÜLKELERİ SAVAŞLAR AĞACI VERİTABANI (ÜLKEYE TIKLANINCA AĞAÇ DALLARI GİBİ BELİREN SAVAŞLAR)
+    // ============================================================================
+    let activeCountryWarIndex = 0;
+
+    const COUNTRY_WARS_DATABASE = {
+      turkiye: [
+        {
+          short_tr: "Malazgirt Zaferi (1071)",
+          short_en: "Battle of Manzikert (1071)",
+          title_tr: "Malazgirt Meydan Muharebesi (26 Ağustos 1071)",
+          title_en: "Battle of Manzikert (August 26, 1071)",
+          year: "1071",
+          lat: 39.15,
+          lng: 42.54,
+          desc_tr: "Büyük Selçuklu Sultanı Alparslan, Malazgirt Ovası'nda uyguladığı Hilal (Turan) taktiğiyle Bizans İmparatoru Romen Diyojen'in ordusunu kuşatarak mağlup etti ve Anadolu'nun kapılarını Türklere ebediyen açtı.",
+          desc_en: "Great Seljuk Sultan Alp Arslan defeated Byzantine Emperor Romanos IV Diogenes using the crescent feigned-retreat tactic, opening Anatolia permanently to the Turks.",
+          forces_tr: "Büyük Selçuklu Ordusu (Sultan Alparslan) vs. Bizans İmparatorluğu (Romen Diyojen)",
+          forces_en: "Great Seljuk Army (Sultan Alp Arslan) vs. Byzantine Empire (Romanos IV)",
+          outcome_tr: "Anadolu'nun Kapıları Türklere Açıldı • Türkiye Tarihi Başladı",
+          outcome_en: "Gates of Anatolia Opened • Dawn of Turkish Anatolia"
+        },
+        {
+          short_tr: "Miryokefalon (1176)",
+          short_en: "Myriokephalon (1176)",
+          title_tr: "Miryokefalon Meydan Muharebesi (17 Eylül 1176)",
+          title_en: "Battle of Myriokephalon (September 17, 1176)",
+          year: "1176",
+          lat: 38.10,
+          lng: 30.85,
+          desc_tr: "Türkiye Selçuklu Sultanı II. Kılıçarslan, Eğirdir/Karamıkbeli geçidinde Bizans İmparatoru I. Manuel Komnenos'un büyük sefer ordusunu pusuya düşürerek Anadolu'nun kesin olarak Türk yurdu olduğunu tescilledi.",
+          desc_en: "Anatolian Seljuk Sultan Kilij Arslan II ambushed Emperor Manuel I Komnenos in the mountain passes, sealing Anatolia permanently as the Turkish homeland.",
+          forces_tr: "Türkiye Selçuklu Ordusu (II. Kılıçarslan) vs. Bizans Ordusu (I. Manuel)",
+          forces_en: "Anatolian Seljuks (Kilij Arslan II) vs. Byzantine Empire",
+          outcome_tr: "Anadolu'nun Kesin Türk Yurdu Olduğu Tescillendi",
+          outcome_en: "Anatolia Permanently Confirmed as Turkish Homeland"
+        },
+        {
+          short_tr: "Kosova & Niğbolu (1389–1396)",
+          short_en: "Kosovo & Nicopolis (1389–1396)",
+          title_tr: "I. Kosova (1389) ve Niğbolu (1396) Meydan Muharebeleri",
+          title_en: "Battles of Kosovo (1389) & Nicopolis (1396)",
+          year: "1389–1396",
+          lat: 42.69,
+          lng: 21.12,
+          desc_tr: "Sultan I. Murad ve Yıldırım Bayezid komutasındaki Osmanlı orduları, Balkanlar ve Tuna hattında kurulan büyük Haçlı koalisyonlarını mağlup ederek Osmanlı'nın Avrupa'daki varlığını kalıcılaştırdı.",
+          desc_en: "Ottoman armies under Sultan Murad I and Bayezid I defeated major Crusader coalitions in the Balkans and along the Danube.",
+          forces_tr: "Osmanlı Ordusu (I. Murad & Yıldırım Bayezid) vs. Balkan & Avrupa Haçlı İttifakı",
+          forces_en: "Ottoman Empire vs. Balkan & European Crusader Alliances",
+          outcome_tr: "Balkanlar ve Tuna Hattında Kesin Osmanlı Hakimiyeti",
+          outcome_en: "Decisive Ottoman Rule Secured Across the Balkans"
+        },
+        {
+          short_tr: "İstanbul'un Fethi (1453)",
+          short_en: "Conquest of Constantinople (1453)",
+          title_tr: "İstanbul'un Fethi ve Çağ Açan Kuşatma (29 Mayıs 1453)",
+          title_en: "Conquest of Constantinople (May 29, 1453)",
+          year: "1453",
+          lat: 41.01,
+          lng: 28.97,
+          desc_tr: "Fatih Sultan Mehmed, Şahi topları ve 72 geminin Dolmabahçe'den Kasımpaşa'ya karadan yürütülmesiyle 53 günlük kuşatma sonunda İstanbul'u fethederek Orta Çağ'ı kapatıp Yeni Çağ'ı başlattı.",
+          desc_en: "Sultan Mehmed II breached the millennial walls with giant bombards and hauled 72 ships overland into the Golden Horn, ending the Middle Ages.",
+          forces_tr: "Osmanlı Ordusu & Donanması (Fatih Sultan Mehmed) vs. Bizans & Venedik-Ceneviz Savunması",
+          forces_en: "Ottoman Forces (Mehmed II) vs. Byzantine & Allied Defenders",
+          outcome_tr: "İstanbul Osmanlı Başkenti Oldu • Orta Çağ Kapandı, Yeni Çağ Başladı",
+          outcome_en: "End of the Middle Ages • Rise of the Global Ottoman Empire"
+        },
+        {
+          short_tr: "Mohaç & Preveze (1526–1538)",
+          short_en: "Mohács & Preveza (1526–1538)",
+          title_tr: "Mohaç Meydan Muharebesi (1526) & Preveze Deniz Zaferi (1538)",
+          title_en: "Battle of Mohács (1526) & Naval Victory of Preveza (1538)",
+          year: "1526–1538",
+          lat: 38.95,
+          lng: 20.75,
+          desc_tr: "Kanuni Sultan Süleyman karada Mohaç'ta dünya tarihinin en kısa sürede (2 saat) kazanılan kesin meydan muharebesine imza atarken, Barbaros Hayreddin Paşa Preveze'de Andrea Doria komutasındaki Haçlı donanmasını bozguna uğrattı.",
+          desc_en: "Suleiman the Magnificent won the 2-hour battle at Mohács on land while Grand Admiral Hayreddin Barbarossa crushed the Holy League fleet at Preveza.",
+          forces_tr: "Kanuni Sultan Süleyman & Barbaros Hayreddin Paşa vs. Kutsal İttifak Ordusu & Donanması",
+          forces_en: "Suleiman the Magnificent & Barbarossa vs. Holy League Forces",
+          outcome_tr: "Orta Avrupa ve Akdeniz'de Zirve Hakimiyet",
+          outcome_en: "Ottoman Supremacy in Central Europe and the Mediterranean"
+        },
+        {
+          short_tr: "Çanakkale Destanı (1915)",
+          short_en: "Gallipoli Campaign (1915)",
+          title_tr: "Çanakkale Deniz ve Kara Savaşları (1915)",
+          title_en: "Gallipoli Naval & Land Battles (1915)",
+          year: "1915",
+          lat: 40.15,
+          lng: 26.28,
+          desc_tr: "18 Mart'ta Nusret Mayın Gemisi ve tabyalarla denizde, Arıburnu, Conkbayırı ve Anafartalar'da Mustafa Kemal'in dehası ve Mehmetçiğin sarsılmaz direnişiyle İtilaf kuvvetlerine 'Çanakkale Geçilmez' dedirtildi.",
+          desc_en: "On March 18 at sea and across Chunuk Bair and Anafartalar on land under Mustafa Kemal, Turkish forces repelled the Allied invasion.",
+          forces_tr: "Osmanlı 5. Ordusu (Mustafa Kemal - 19. Tümen & Anafartalar) vs. İtilaf Kuvvetleri",
+          forces_en: "Ottoman 5th Army (Mustafa Kemal) vs. Allied Expeditionary Forces",
+          outcome_tr: "Kesin Türk Zaferi • 'Çanakkale Geçilmez'",
+          outcome_en: "Decisive Turkish Victory • Allied Evacuation"
+        },
+        {
+          short_tr: "Sakarya Meydan Muharebesi (1921)",
+          short_en: "Battle of Sakarya (1921)",
+          title_tr: "Sakarya Meydan Muharebesi (23 Ağustos – 13 Eylül 1921)",
+          title_en: "Battle of Sakarya (Aug 23 – Sept 13, 1921)",
+          year: "1921",
+          lat: 39.58,
+          lng: 32.14,
+          desc_tr: "22 gün 22 gece süren ölüm kalım muharebesinde Başkomutan Mustafa Kemal Paşa, 'Hattı müdafaa yoktur, sathı müdafaa vardır; o satıh bütün vatandır!' doktriniyle taarruzu Polatlı-Haymana hattında kırdı.",
+          desc_en: "Fighting 22 days and nights, Commander-in-Chief Mustafa Kemal Pasha applied his total-surface defense doctrine to break the offensive near Ankara.",
+          forces_tr: "TBMM Ordusu (Mustafa Kemal Paşa) vs. Yunan Küçük Asya Ordusu",
+          forces_en: "Grand National Assembly Army (Mustafa Kemal Pasha) vs. Greek Army",
+          outcome_tr: "1683'ten Beri Süren Geri Çekiliş Son Buldu • Gazilik ve Mareşallik",
+          outcome_en: "Turning Point of the Turkish War of Independence"
+        },
+        {
+          short_tr: "Büyük Taarruz & Dumlupınar (1922)",
+          short_en: "Great Offensive & Dumlupınar (1922)",
+          title_tr: "Büyük Taarruz ve Başkomutanlık Meydan Muharebesi (26–30 Ağustos 1922)",
+          title_en: "The Great Offensive & Battle of Dumlupınar (Aug 26–30, 1922)",
+          year: "1922",
+          lat: 38.85,
+          lng: 29.98,
+          desc_tr: "26 Ağustos şafağında Afyon Kocatepe'den başlayan Büyük Taarruz, 30 Ağustos'ta Dumlupınar'da kesin imha zaferiyle sonuçlandı ve Türk ordusu 9 Eylül'de İzmir'e girerek Kurtuluş Savaşı'nı zaferle taçlandırdı.",
+          desc_en: "Launched at dawn on August 26 from Kocatepe, the Great Offensive achieved decisive victory at Dumlupınar on August 30 and liberated Izmir on September 9.",
+          forces_tr: "Türk Ordusu (Başkomutan Mustafa Kemal Paşa, Fevzi & İsmet Paşalar) vs. İşgal Ordusu",
+          forces_en: "Turkish National Army (Mustafa Kemal Pasha) vs. Occupying Forces",
+          outcome_tr: "Kesin Kurtuluş Zaferi & Tam Bağımsız Türkiye Cumhuriyeti",
+          outcome_en: "Complete Liberation & Foundation of the Republic of Türkiye"
+        }
+      ],
+      ingiltere: [
+        {
+          short_tr: "Lindisfarne & Viking İstilası (793–866)",
+          short_en: "Lindisfarne & Viking Invasion (793–866)",
+          title_tr: "Lindisfarne Baskını (793) ve Büyük Viking Ordusu'nun York Kuşatması (866)",
+          title_en: "Raid on Lindisfarne (793) & Great Heathen Army at York (866)",
+          year: "793–866",
+          lat: 54.60,
+          lng: -1.45,
+          desc_tr: "793'te Lindisfarne'a yapılan baskınla başlayan Viking Çağı, 866'da Ivar the Boneless ve Halfdan Ragnarsson'un York'u (Jórvík) ele geçirmesiyle Britanya siyasi haritasını değiştirdi.",
+          desc_en: "Beginning with the 793 Lindisfarne raid, the Viking Age reshaped Britain when the Great Heathen Army captured York (Jórvík) in 866.",
+          forces_tr: "Büyük Viking Ordusu (Ragnar Oğulları) vs. Northumbria & Wessex Krallıkları",
+          forces_en: "Great Heathen Army vs. Anglo-Saxon Kingdoms",
+          outcome_tr: "Danelaw Bölgesinin Kurulması ve Viking Çağı'nın Zirvesi",
+          outcome_en: "Establishment of the Danelaw Across Northern England"
+        },
+        {
+          short_tr: "Stamford Bridge & Hastings (1066)",
+          short_en: "Stamford Bridge & Hastings (1066)",
+          title_tr: "Stamford Bridge ve Hastings Meydan Muharebeleri (1066)",
+          title_en: "Battles of Stamford Bridge & Hastings (1066)",
+          year: "1066",
+          lat: 50.91,
+          lng: 0.48,
+          desc_tr: "Kral Harold Godwinson kuzeyde Viking Kralı Harald Hardrada'yı yendikten hemen sonra güneyde Hastings'te Norman Dükü Fatih William ile karşılaştı; Norman zaferi İngiltere tarihini kökten değiştirdi.",
+          desc_en: "Days after defeating Viking King Harald Hardrada at Stamford Bridge, King Harold fell to William the Conqueror at Hastings.",
+          forces_tr: "Norman Ordusu (Fatih William) vs. Anglo-Sakson Ordusu (Harold Godwinson)",
+          forces_en: "Norman Army (William the Conqueror) vs. Anglo-Saxon Army",
+          outcome_tr: "İngiltere'nin Normanlar Tarafından Fethi",
+          outcome_en: "Norman Conquest of England"
+        },
+        {
+          short_tr: "Bannockburn Savaşı (1314)",
+          short_en: "Battle of Bannockburn (1314)",
+          title_tr: "Bannockburn Muharebesi – İskoç Bağımsızlık Savaşı (1314)",
+          title_en: "Battle of Bannockburn – First War of Scottish Independence (1314)",
+          year: "1314",
+          lat: 56.09,
+          lng: -3.91,
+          desc_tr: "İskoç Kralı Robert the Bruce, Stirling Kalesi yakınlarında yoğun mızraklı 'schiltron' dizilimiyle kendisinden çok daha kalabalık İngiliz ağır süvari ordusunu mağlup etti.",
+          desc_en: "Scottish King Robert the Bruce used dense pike 'schiltrons' near Stirling Castle to rout the larger English heavy cavalry army.",
+          forces_tr: "İskoç Krallığı (Robert the Bruce) vs. İngiltere Krallığı (II. Edward)",
+          forces_en: "Kingdom of Scotland (Robert the Bruce) vs. Kingdom of England",
+          outcome_tr: "İskoç Bağımsızlığının Yeniden Kazanılması",
+          outcome_en: "Decisive Scottish Victory & Independence"
+        },
+        {
+          short_tr: "Agincourt Muharebesi (1415)",
+          short_en: "Battle of Agincourt (1415)",
+          title_tr: "Agincourt Meydan Muharebesi – Yüzyıl Savaşları (1415)",
+          title_en: "Battle of Agincourt – Hundred Years' War (1415)",
+          year: "1415",
+          lat: 50.46,
+          lng: 2.14,
+          desc_tr: "Kral V. Henry komutasındaki İngiliz ve Galli uzun yay (longbow) okçuları, çamurlu Agincourt sahasında Fransız ağır zırhlı şövalyelerini bozguna uğrattı.",
+          desc_en: "King Henry V's English and Welsh longbowmen devastated the heavily armored French nobility on the muddy field of Agincourt.",
+          forces_tr: "İngiliz Uzun Yay Ordusu (V. Henry) vs. Fransız Şövalye Ordusu",
+          forces_en: "English Longbow Army (Henry V) vs. French Heavy Cavalry",
+          outcome_tr: "Yüzyıl Savaşlarında Uzun Yay Taktik Devrimi",
+          outcome_en: "Tactical Revolution of the Longbow in Medieval Warfare"
+        },
+        {
+          short_tr: "İspanyol Armadası Deniz Savaşı (1588)",
+          short_en: "Spanish Armada Naval Battle (1588)",
+          title_tr: "Yenilmez Armada Deniz Muharebesi (1588)",
+          title_en: "Defeat of the Spanish Armada (1588)",
+          year: "1588",
+          lat: 50.35,
+          lng: -4.14,
+          desc_tr: "I. Elizabeth döneminde Sir Francis Drake ve Charles Howard komutasındaki çevik İngiliz kalyonları ve ateş gemileri, Manş Denizi'nde İspanyol Yenilmez Armadası'nı dağıttı.",
+          desc_en: "Under Queen Elizabeth I, Francis Drake and Charles Howard used agile warships and fireships in the English Channel to scatter the Spanish Armada.",
+          forces_tr: "İngiliz Kraliyet Donanması (Francis Drake) vs. İspanyol Yenilmez Armadası",
+          forces_en: "English Royal Navy (Francis Drake) vs. Spanish Armada",
+          outcome_tr: "İngiltere'nin Küresel Deniz Gücü Olarak Yükselişi",
+          outcome_en: "Rise of England as a Global Naval Power"
+        },
+        {
+          short_tr: "Waterloo & Britanya Savaşı (1815 / 1940)",
+          short_en: "Waterloo & Battle of Britain (1815 / 1940)",
+          title_tr: "Waterloo Meydan Muharebesi (1815) & Britanya Hava Savaşı (1940)",
+          title_en: "Battle of Waterloo (1815) & Battle of Britain (1940)",
+          year: "1815 / 1940",
+          lat: 51.50,
+          lng: -0.12,
+          desc_tr: "1815'te Wellington Dükü ve Blücher'in Napolyon'u durdurduğu Waterloo zaferi ve 1940'ta Kraliyet Hava Kuvvetleri'nin (RAF) Londra semalarını savunduğu Britanya Savaşı modern Avrupa kaderini belirledi.",
+          desc_en: "Wellington's victory at Waterloo in 1815 and the Royal Air Force's defense of British skies in 1940 shaped modern European history.",
+          forces_tr: "Birleşik Krallık & Müttefikler vs. Kıta İmparatorlukları",
+          forces_en: "United Kingdom & Allies vs. Continental Powers",
+          outcome_tr: "Avrupa Güç Dengesinin Korunması",
+          outcome_en: "Preservation of British Sovereignty & Allied Victory"
+        }
+      ],
+      fransa: [
+        {
+          short_tr: "Poitiers / Tours Muharebesi (732)",
+          short_en: "Battle of Tours / Poitiers (732)",
+          title_tr: "Poitiers (Tours / Balâtü'ş-Şühedâ) Muharebesi (732)",
+          title_en: "Battle of Tours / Poitiers (732)",
+          year: "732",
+          lat: 46.58,
+          lng: 0.34,
+          desc_tr: "Frank Saray Nazırı Charles Martel'in piyade falanksı ile Pireneler'i aşan Endülüs Emevi ordusu Poitiers yakınlarında karşılaştı.",
+          desc_en: "Charles Martel's Frankish infantry phalanx clashed with the Umayyad cavalry north of Poitiers, halting expansion into Western Europe.",
+          forces_tr: "Frank Krallığı (Charles Martel) vs. Endülüs Emevi Ordusu (Abdurrahman el-Gâfikî)",
+          forces_en: "Frankish Forces (Charles Martel) vs. Umayyad Forces",
+          outcome_tr: "Karolenj İmparatorluğu'nun Yükselişi",
+          outcome_en: "Rise of the Carolingian Empire in Western Europe"
+        },
+        {
+          short_tr: "Orléans Kuşatması – Jeanne d'Arc (1429)",
+          short_en: "Siege of Orléans – Joan of Arc (1429)",
+          title_tr: "Orléans Kuşatması ve Jeanne d'Arc'ın Dönüm Noktası (1429)",
+          title_en: "Siege of Orléans & Joan of Arc's Turning Point (1429)",
+          year: "1429",
+          lat: 47.90,
+          lng: 1.90,
+          desc_tr: "Yüzyıl Savaşları'nın en karanlık anında 17 yaşındaki Jeanne d'Arc öncülüğündeki Fransız kuvvetleri 9 günde Orléans kuşatmasını kırarak savaşın seyrini tersine çevirdi.",
+          desc_en: "Led by 17-year-old Joan of Arc, French forces lifted the siege of Orléans in nine days, reversing the tide of the Hundred Years' War.",
+          forces_tr: "Fransa Krallığı (Jeanne d'Arc) vs. İngiliz Kuşatma Ordusu",
+          forces_en: "Kingdom of France (Joan of Arc) vs. English Besieging Army",
+          outcome_tr: "Yüzyıl Savaşlarında Fransa'nın Yeniden Dirilişi",
+          outcome_en: "French Revival in the Hundred Years' War"
+        },
+        {
+          short_tr: "Bastille & Valmy – İhtilal Savaşları (1789–1792)",
+          short_en: "Bastille & Valmy – Revolutionary Wars (1789–1792)",
+          title_tr: "Bastille Baskını (1789) ve Valmy Topçu Muharebesi (1792)",
+          title_en: "Storming of the Bastille (1789) & Battle of Valmy (1792)",
+          year: "1789–1792",
+          lat: 49.08,
+          lng: 4.77,
+          desc_tr: "14 Temmuz 1789 Bastille Baskını ile başlayan Fransız İhtilali, 1792'de Valmy'de yurttaş ordusunun koalisyon güçlerini durdurmasıyla Cumhuriyetin ilanına ulaştı.",
+          desc_en: "Following the 1789 Storming of the Bastille, the French citizen-army halted the First Coalition at Valmy in 1792.",
+          forces_tr: "Fransız İhtilal Ordusu vs. I. Koalisyon Kuvvetleri",
+          forces_en: "French Revolutionary Army vs. First Coalition Forces",
+          outcome_tr: "Birinci Fransız Cumhuriyeti'nin İlanı",
+          outcome_en: "Proclamation of the First French Republic"
+        },
+        {
+          short_tr: "Austerlitz – Napolyon Zaferi (1805)",
+          short_en: "Battle of Austerlitz – Napoleon (1805)",
+          title_tr: "Austerlitz (Üç İmparator) Meydan Muharebesi (2 Aralık 1805)",
+          title_en: "Battle of Austerlitz – Battle of the Three Emperors (1805)",
+          year: "1805",
+          lat: 49.13,
+          lng: 16.76,
+          desc_tr: "Napolyon Bonapart, Pratzen Tepeleri'ni kasten zayıf göstererek Rus-Avusturya ordularını tuzağa çekti ve merkezden yaptığı yarma harekatıyla en büyük taktik zaferini kazandı.",
+          desc_en: "Napoleon Bonaparte lured the Austro-Russian army into a trap at the Pratzen Heights before splitting their center in his greatest tactical masterpiece.",
+          forces_tr: "Grande Armée (Napolyon Bonapart) vs. Rus-Avusturya İmparatorluk Orduları",
+          forces_en: "Grande Armée (Napoleon) vs. Austro-Russian Imperial Armies",
+          outcome_tr: "III. Koalisyonun Dağılması ve Napolyon'un Avrupa Zirvesi",
+          outcome_en: "Collapse of the Third Coalition"
+        },
+        {
+          short_tr: "Marne & Verdun (1914–1916)",
+          short_en: "Marne & Verdun (1914–1916)",
+          title_tr: "I. Marne (1914) ve Verdun Siper Muharebeleri (1916)",
+          title_en: "First Battle of the Marne (1914) & Battle of Verdun (1916)",
+          year: "1914–1916",
+          lat: 49.16,
+          lng: 5.38,
+          desc_tr: "Paris taksileriyle cepheye asker taşınan Marne Mucizesi ve 300 gün süren Verdun savunması ('On ne passe pas!'), I. Dünya Savaşı Batı Cephesi'nin en büyük direniş sembolü oldu.",
+          desc_en: "The Miracle of the Marne and the 300-day defense of Verdun ('They Shall Not Pass!') defined the Western Front of World War I.",
+          forces_tr: "Fransız Ordusu vs. Alman İmparatorluk Ordusu",
+          forces_en: "French Army vs. German Imperial Army",
+          outcome_tr: "Paris ve Batı Cephesi Savunma Hattının Korunması",
+          outcome_en: "Defense of Paris and the Western Front Held"
+        },
+        {
+          short_tr: "Normandiya (D-Day) & Paris (1944)",
+          short_en: "Normandy (D-Day) & Paris (1944)",
+          title_tr: "Normandiya Çıkarması (6 Haziran 1944) ve Paris'in Kurtuluşu",
+          title_en: "Normandy Landings (D-Day, June 6, 1944) & Liberation of Paris",
+          year: "1944",
+          lat: 49.34,
+          lng: -0.85,
+          desc_tr: "Tarihin en büyük amfibi harekatı olan Overlord (Normandiya Çıkarması) ile açılan Batı Cephesi, Ağustos 1944'te Paris'in kurtarılmasıyla sonuçlandı.",
+          desc_en: "Operation Overlord, the largest amphibious landing in history on the Normandy coast, led to the liberation of Paris in August 1944.",
+          forces_tr: "Müttefik Kuvvetler & Fransız Direnişi vs. Mihver Savunma Hattı",
+          forces_en: "Allied Expeditionary Force & French Resistance vs. Axis Forces",
+          outcome_tr: "Fransa ve Batı Avrupa'nın Kurtuluşu",
+          outcome_en: "Liberation of France and Western Europe"
+        }
+      ],
+      italya: [
+        {
+          short_tr: "Cannae Muharebesi – Pön Savaşları (M.Ö. 216)",
+          short_en: "Battle of Cannae – Punic Wars (216 BC)",
+          title_tr: "Cannae Meydan Muharebesi – II. Pön Savaşı (M.Ö. 216)",
+          title_en: "Battle of Cannae – Second Punic War (216 BC)",
+          year: "M.Ö. 216",
+          lat: 41.30,
+          lng: 16.13,
+          desc_tr: "Alpleri fillerle aşarak İtalya'ya giren Kartacalı komutan Hannibal Barca, Cannae'de çift kanatlı kuşatma manevrasıyla kendisinden iki kat büyük Roma ordusunu çembere aldı.",
+          desc_en: "Having crossed the Alps into Italy, Carthaginian general Hannibal Barca executed history's most famous double-envelopment at Cannae.",
+          forces_tr: "Kartaca Ordusu (Hannibal Barca) vs. Roma Cumhuriyeti (8 Lejyon)",
+          forces_en: "Carthaginian Army (Hannibal) vs. Roman Republic (8 Legions)",
+          outcome_tr: "Harp Tarihinin En Klasik Çift Kanatlı Kuşatma Örneği",
+          outcome_en: "Classic Double-Envelopment in Military History"
+        },
+        {
+          short_tr: "Rubicon & Sezar İç Savaşı (M.Ö. 49–48)",
+          short_en: "Rubicon & Caesar's Civil War (49–48 BC)",
+          title_tr: "Rubicon Geçişi ('Alea iacta est') ve Pharsalus Muharebesi (M.Ö. 49–48)",
+          title_en: "Crossing the Rubicon & Battle of Pharsalus (49–48 BC)",
+          year: "M.Ö. 49",
+          lat: 44.14,
+          lng: 12.40,
+          desc_tr: "Jül Sezar, XIII. Lejyon ile Rubicon Nehri'ni 'Ok yaydan çıktı!' diyerek geçti ve Roma Cumhuriyeti'nden İmparatorluğa geçişin yolunu açtı.",
+          desc_en: "Julius Caesar crossed the Rubicon River with Legio XIII declaring 'The die is cast', transforming Rome from Republic to Empire.",
+          forces_tr: "Jül Sezar Lejyonları vs. Pompeius & Senato Kuvvetleri",
+          forces_en: "Julius Caesar's Legions vs. Pompey & Optimates",
+          outcome_tr: "Roma İmparatorluk Döneminin Temellerinin Atılması",
+          outcome_en: "Transition from Roman Republic to Roman Empire"
+        },
+        {
+          short_tr: "Actium Deniz Savaşı (M.Ö. 31)",
+          short_en: "Battle of Actium (31 BC)",
+          title_tr: "Actium Deniz Muharebesi ve Pax Romana (M.Ö. 31)",
+          title_en: "Battle of Actium & Dawn of Pax Romana (31 BC)",
+          year: "M.Ö. 31",
+          lat: 38.95,
+          lng: 20.74,
+          desc_tr: "Octavianus (Augustus) ve amirali Agrippa, Actium açıklarında Marcus Antonius ile Kleopatra'nın donanmasını yenerek Roma İmparatorluğu'nun tek hakimi oldu.",
+          desc_en: "Octavian (Augustus) and Admiral Agrippa defeated the fleet of Mark Antony and Cleopatra at Actium, inaugurating the Roman Empire.",
+          forces_tr: "Octavianus & Agrippa Donanması vs. Marcus Antonius & Kleopatra Filosu",
+          forces_en: "Fleet of Octavian & Agrippa vs. Antony & Cleopatra",
+          outcome_tr: "Augustus Çağı ve 200 Yıllık Pax Romana (Roma Barışı)",
+          outcome_en: "Rise of Augustus and Two Centuries of Pax Romana"
+        },
+        {
+          short_tr: "İtalyan Rönesans Savaşları (1494–1559)",
+          short_en: "Italian Renaissance Wars (1494–1559)",
+          title_tr: "İtalya ve Rönesans Şehir Devletleri Savaşları (1494–1559)",
+          title_en: "Italian Wars of the Renaissance City-States (1494–1559)",
+          year: "1494–1559",
+          lat: 43.76,
+          lng: 11.25,
+          desc_tr: "Floransa, Venedik, Milano ve Papalık arasında yaşanan ve Machiavelli'nin 'Prens' ile 'Savaş Sanatı' eserlerine ilham veren modern diplomasi ve topçu savaşları.",
+          desc_en: "Conflicts across Florence, Venice, Milan, and Rome that inspired Machiavelli's 'The Prince' and 'The Art of War'.",
+          forces_tr: "İtalyan Şehir Devletleri (Floransa, Venedik) & Avrupa Güçleri",
+          forces_en: "Italian City-States (Florence, Venice) & European Powers",
+          outcome_tr: "Modern Siyaset Bilimi ve Yıldız Kale Mimarisi Doğdu",
+          outcome_en: "Birth of Modern Realpolitik and Trace Italienne Fortifications"
+        },
+        {
+          short_tr: "Risorgimento – İtalya Birliği (1859–1870)",
+          short_en: "Risorgimento – Italian Unification (1859–1870)",
+          title_tr: "Solferino Muharebesi ve Binlerin Seferi – İtalya Birliği (1859–1870)",
+          title_en: "Battle of Solferino & Expedition of the Thousand (1859–1870)",
+          year: "1859–1870",
+          lat: 45.36,
+          lng: 10.56,
+          desc_tr: "Garibaldi'nin 'Kırmızı Gömlekliler' (Binlerin Seferi) harekatı ve Solferino Muharebesi sonucunda İtalya yarımadası tek bayrak altında birleşti.",
+          desc_en: "Through the Battle of Solferino and Giuseppe Garibaldi's Expedition of the Thousand, Italy achieved national unification.",
+          forces_tr: "Piyemonte-Sardinya & Garibaldi Kuvvetleri vs. Avusturya & Bourbon Krallığı",
+          forces_en: "Piedmont-Sardinia & Garibaldi vs. Austrian & Bourbon Forces",
+          outcome_tr: "Modern İtalya Devleti'nin Kurulması ve Kızılhaç'ın Doğuşu",
+          outcome_en: "Unification of Italy & Creation of the International Red Cross"
+        }
+      ],
+      yunanistan: [
+        {
+          short_tr: "Maraton Meydan Muharebesi (M.Ö. 490)",
+          short_en: "Battle of Marathon (490 BC)",
+          title_tr: "Maraton Meydan Muharebesi (M.Ö. 490)",
+          title_en: "Battle of Marathon (490 BC)",
+          year: "M.Ö. 490",
+          lat: 38.11,
+          lng: 23.97,
+          desc_tr: "Atinalı komutan Miltiades, Maraton Ovası'nda hoplit falankslarının kanatlarını güçlendirerek Pers çıkarma ordusunu kuşattı; zafer haberi 42 km koşularak Atina'ya ulaştırıldı.",
+          desc_en: "Athenian general Miltiades reinforced the wings of his hoplite phalanx on the plain of Marathon to envelop the Persian landing force.",
+          forces_tr: "Atina & Plataea Hoplitleri (Miltiades) vs. Pers Ordusu (I. Darius)",
+          forces_en: "Athenian & Plataean Hoplites vs. Achaemenid Persian Army",
+          outcome_tr: "Klasik Atina Demokrasisinin Korunması",
+          outcome_en: "Preservation of Classical Athenian Democracy"
+        },
+        {
+          short_tr: "Termopil Geçidi Savunması (M.Ö. 480)",
+          short_en: "Battle of Thermopylae (480 BC)",
+          title_tr: "Termopil (Thermopylae) Geçidi Savunması – 300 Spartalı (M.Ö. 480)",
+          title_en: "Battle of Thermopylae – King Leonidas & the 300 Spartans (480 BC)",
+          year: "M.Ö. 480",
+          lat: 38.79,
+          lng: 22.53,
+          desc_tr: "Sparta Kralı Leonidas ve 300 Spartalı muhafızı ile Yunan müttefikleri, dar Termopil geçidinde dev Pers ordusunu 3 gün boyunca durdurarak Yunan donanmasına hazırlanma süresi kazandırdı.",
+          desc_en: "Spartan King Leonidas and his 300 Spartans held the narrow coastal pass of Thermopylae for three days against Xerxes' massive army.",
+          forces_tr: "Sparta Kralı Leonidas & Yunan İttifakı vs. Pers İmparatoru I. Serhas",
+          forces_en: "King Leonidas & Greek Allies vs. Xerxes I of Persia",
+          outcome_tr: "Tarihin En Ünlü Geçit Savunması ve Direniş Sembolü",
+          outcome_en: "Legendary Last Stand in Military History"
+        },
+        {
+          short_tr: "Salamis Deniz Zaferi (M.Ö. 480)",
+          short_en: "Battle of Salamis (480 BC)",
+          title_tr: "Salamis Boğazı Deniz Muharebesi (M.Ö. 480)",
+          title_en: "Naval Battle of Salamis (480 BC)",
+          year: "M.Ö. 480",
+          lat: 37.95,
+          lng: 23.56,
+          desc_tr: "Themistokles'in stratejisiyle dar Salamis Boğazı'na çekilen Pers donanması, çevik Yunan triremelerinin mahmuz darbesiyle manevra yapamaz hale getirilerek mağlup edildi.",
+          desc_en: "Lured into the narrow Straits of Salamis by Themistocles, the larger Persian fleet was outmaneuvered and rammed by Greek triremes.",
+          forces_tr: "Yunan Müttefik Donanması (Themistokles) vs. Pers Donanması",
+          forces_en: "Allied Greek Trireme Fleet (Themistocles) vs. Persian Navy",
+          outcome_tr: "Ege Denizi Hakimiyeti ve Klasik Yunan Altın Çağı",
+          outcome_en: "Greek Naval Supremacy and Dawn of the Golden Age of Athens"
+        },
+        {
+          short_tr: "Peloponez Savaşı (M.Ö. 431–404)",
+          short_en: "Peloponnesian War (431–404 BC)",
+          title_tr: "Peloponez Savaşı – Atina Deniz Gücü vs. Sparta Kara Gücü (M.Ö. 431–404)",
+          title_en: "Peloponnesian War – Athens vs. Sparta (431–404 BC)",
+          year: "M.Ö. 431–404",
+          lat: 37.07,
+          lng: 22.43,
+          desc_tr: "Thukydides'in ölümsüzleştirdiği 27 yıllık savaşta deniz imparatorluğu Atina ile kara gücü Sparta çarpıştı.",
+          desc_en: "Chronicled by Thucydides, the 27-year struggle pitted maritime Athens against the land power of Sparta.",
+          forces_tr: "Attika-Delos Deniz Birliği (Atina) vs. Peloponez Birliği (Sparta)",
+          forces_en: "Delian League (Athens) vs. Peloponnesian League (Sparta)",
+          outcome_tr: "Stratejik Tarih Yazımının (Thukydides) Doğuşu",
+          outcome_en: "Birth of Realist Strategic History (Thucydides)"
+        },
+        {
+          short_tr: "Büyük İskender Seferleri (M.Ö. 334–323)",
+          short_en: "Campaigns of Alexander the Great (334–323 BC)",
+          title_tr: "Büyük İskender'in Granikos, İssos ve Gaugamela Seferleri (M.Ö. 334–323)",
+          title_en: "Alexander the Great's Campaigns: Granicus, Issus & Gaugamela (334–323 BC)",
+          year: "M.Ö. 334–323",
+          lat: 40.50,
+          lng: 22.38,
+          desc_tr: "Aristo'nun öğrencisi Makedonya Kralı Büyük İskender, Makedon falanksı ve Hetairoi ağır süvarileriyle Balkanlar'dan Hindistan'a uzanan Helenistik imparatorluğu kurdu.",
+          desc_en: "Tutored by Aristotle, Alexander the Great used the Macedonian phalanx and Companion cavalry to forge an empire from Greece to India.",
+          forces_tr: "Makedon-Helen Ordusu (Büyük İskender) vs. Pers İmparatorluğu (III. Darius)",
+          forces_en: "Macedonian Army (Alexander the Great) vs. Persian Empire (Darius III)",
+          outcome_tr: "Doğu ve Batı Kültürlerini Birleştiren Helenistik Çağ Başladı",
+          outcome_en: "Dawn of the Hellenistic Era Bridging East and West"
+        }
+      ],
+      almanya: [
+        {
+          short_tr: "Teutoburg Ormanı Savaşı (M.S. 9)",
+          short_en: "Battle of the Teutoburg Forest (AD 9)",
+          title_tr: "Teutoburg Ormanı Pususu – Roma'nın Durdurulması (M.S. 9)",
+          title_en: "Battle of the Teutoburg Forest (AD 9)",
+          year: "M.S. 9",
+          lat: 52.41,
+          lng: 8.13,
+          desc_tr: "Arminius (Hermann) liderliğindeki Cermen kabileleri, sık Teutoburg ormanlarında Publius Quinctilius Varus komutasındaki 3 Roma lejyonunu (XVII, XVIII, XIX) tamamen imha etti.",
+          desc_en: "Germanic tribes under Arminius ambushed and destroyed three Roman legions under Varus in the Teutoburg Forest, fixing Rome's frontier at the Rhine.",
+          forces_tr: "Cermen İttifakı (Arminius) vs. Roma İmparatorluğu (3 Lejyon - Varus)",
+          forces_en: "Germanic Alliance (Arminius) vs. Three Roman Legions (Varus)",
+          outcome_tr: "Roma İmparatorluğu Sınırı Ren Nehri'nde Sabitlendi",
+          outcome_en: "Roman Expansion Permanently Halted at the Rhine"
+        },
+        {
+          short_tr: "I. ve II. Viyana Kuşatmaları (1529 & 1683)",
+          short_en: "Sieges of Vienna (1529 & 1683)",
+          title_tr: "I. ve II. Viyana Kuşatmaları – Orta Avrupa Cephesi (1529 & 1683)",
+          title_en: "First & Second Sieges of Vienna (1529 & 1683)",
+          year: "1529 & 1683",
+          lat: 48.20,
+          lng: 16.37,
+          desc_tr: "Osmanlı İmparatorluğu'nun Orta Avrupa'daki en ileri harekat noktası olan Viyana önlerinde Habsburglar ve Kutsal İttifak güçleriyle yapılan tarihi kuşatmalar.",
+          desc_en: "Historic sieges at the heart of Central Europe between the Ottoman Empire, the Habsburg Monarchy, and the Holy League.",
+          forces_tr: "Osmanlı Ordusu vs. Habsburg İmparatorluğu & Kutsal İttifak (Jan Sobieski)",
+          forces_en: "Ottoman Empire vs. Habsburg Monarchy & Holy League",
+          outcome_tr: "Orta Avrupa Siyasi Sınırlarının Şekillenmesi",
+          outcome_en: "Reshaping of the Balance of Power in Central Europe"
+        },
+        {
+          short_tr: "Otuz Yıl Savaşları & Vestfalya (1618–1648)",
+          short_en: "Thirty Years' War & Westphalia (1618–1648)",
+          title_tr: "Otuz Yıl Savaşları: Beyaz Dağ, Lützen ve Vestfalya Barışı (1618–1648)",
+          title_en: "Thirty Years' War: White Mountain, Lützen & Peace of Westphalia (1618–1648)",
+          year: "1618–1648",
+          lat: 51.25,
+          lng: 12.14,
+          desc_tr: "Prag'da Beyaz Dağ Muharebesi ile başlayıp Orta Avrupa'yı sarsan Otuz Yıl Savaşları, 1648 Vestfalya Antlaşması ile modern egemen ulus-devletler sistemini doğurdu.",
+          desc_en: "Beginning at White Mountain near Prague, the Thirty Years' War concluded with the 1648 Peace of Westphalia, founding modern international relations.",
+          forces_tr: "Katolik Birliği (Habsburg) vs. Protestan Birliği & İsveç-Fransa-Hollanda",
+          forces_en: "Habsburg Catholic League vs. Protestant Union & Allied Powers",
+          outcome_tr: "1648 Vestfalya Barışı • Modern Uluslararası Hukukun Doğuşu",
+          outcome_en: "1648 Peace of Westphalia • Birth of the Modern State System"
+        },
+        {
+          short_tr: "Leipzig Uluslar Muharebesi (1813)",
+          short_en: "Battle of Leipzig (1813)",
+          title_tr: "Leipzig (Uluslar) Meydan Muharebesi (16–19 Ekim 1813)",
+          title_en: "Battle of Leipzig – Battle of the Nations (Oct 16–19, 1813)",
+          year: "1813",
+          lat: 51.31,
+          lng: 12.41,
+          desc_tr: "I. Dünya Savaşı öncesinde Avrupa tarihinin en büyük meydan muharebesi olan Leipzig'de 500.000'den fazla asker çarpıştı.",
+          desc_en: "In the largest European battle prior to WWI, over 500,000 soldiers clashed at Leipzig during the German Campaign of 1813.",
+          forces_tr: "VI. Koalisyon (Prusya, Avusturya, Rusya, İsveç) vs. Napolyon İmparatorluğu",
+          forces_en: "Sixth Coalition (Prussia, Austria, Russia, Sweden) vs. Napoleon",
+          outcome_tr: "Almanya ve Orta Avrupa'da Koalisyon Üstünlüğü",
+          outcome_en: "Coalition Victory Across Central Europe"
+        }
+      ],
+      ispanya: [
+        {
+          short_tr: "Guadalete Savaşı – Târık bin Ziyâd (711)",
+          short_en: "Battle of Guadalete – Tariq ibn Ziyad (711)",
+          title_tr: "Guadalete Muharebesi ve Endülüs'ün Fethi (711)",
+          title_en: "Battle of Guadalete & Conquest of Al-Andalus (711)",
+          year: "711",
+          lat: 36.14,
+          lng: -5.35,
+          desc_tr: "Cebelitarık (Cebel-i Târık) Boğazı'nı geçerek gemilerini yakan Târık bin Ziyâd, Vizigot Kralı Roderic'i mağlup ederek İber Yarımadası'nda 800 yıllık Endülüs medeniyetini başlattı.",
+          desc_en: "Crossing the Strait of Gibraltar, Tariq ibn Ziyad defeated Visigothic King Roderic, initiating eight centuries of Al-Andalus civilization.",
+          forces_tr: "Emevi Ordusu (Târık bin Ziyâd) vs. Vizigot Krallığı (Roderic)",
+          forces_en: "Umayyad Forces (Tariq ibn Ziyad) vs. Visigothic Kingdom",
+          outcome_tr: "İber Yarımadası'nda Endülüs Medeniyetinin Kurulması",
+          outcome_en: "Foundation of Al-Andalus on the Iberian Peninsula"
+        },
+        {
+          short_tr: "Las Navas de Tolosa & Reconquista (1212–1492)",
+          short_en: "Las Navas de Tolosa & Reconquista (1212–1492)",
+          title_tr: "Las Navas de Tolosa (1212) ve Granada'nın Teslimi (1492)",
+          title_en: "Las Navas de Tolosa (1212) & Completion of the Reconquista (1492)",
+          year: "1212–1492",
+          lat: 38.34,
+          lng: -3.53,
+          desc_tr: "Kastilya, Aragon ve Navarra krallıklarının 1212'deki Las Navas de Tolosa muharebesi ve 1492'de İspanya'nın birleşmesiyle İspanyol İmparatorluğu Çağı başladı.",
+          desc_en: "The coalition victory at Las Navas de Tolosa in 1212 and the unification of Castile and Aragon in 1492 launched the Spanish Golden Age.",
+          forces_tr: "Kastilya & Aragon Krallıkları vs. Muvahhidler & Gırnata Emirliği",
+          forces_en: "Crown of Castile & Aragon vs. Almohad & Nasrid Forces",
+          outcome_tr: "İspanya Birliği ve Coğrafi Keşifler Çağı",
+          outcome_en: "Unification of Spain & Dawn of the Age of Discovery"
+        },
+        {
+          short_tr: "Trafalgar & Madrid Direnişi (1805–1808)",
+          short_en: "Trafalgar & Peninsular War (1805–1808)",
+          title_tr: "Trafalgar Deniz Muharebesi (1805) ve Madrid '2 Mayıs' Direnişi (1808)",
+          title_en: "Battle of Trafalgar (1805) & Dos de Mayo Madrid Uprising (1808)",
+          year: "1805–1808",
+          lat: 36.18,
+          lng: -6.03,
+          desc_tr: "1805'te Cebelitarık batısında Trafalgar Burnu'nda yaşanan dev deniz savaşı ve 1808'de Francisco Goya'nın tablolarına konu olan Madrid halk direnişi.",
+          desc_en: "The monumental naval clash off Cape Trafalgar in 1805 and the 1808 Madrid uprising immortalized by Francisco Goya.",
+          forces_tr: "İspanyol Direnişi & İngiliz-Portekiz Müttefikleri vs. Fransız İmparatorluğu",
+          forces_en: "Spanish Resistance & Allied Forces vs. French Empire",
+          outcome_tr: "Modern 'Gerilla' (Küçük Savaş) Kavramının Doğuşu",
+          outcome_en: "Birth of Modern Guerrilla Warfare Strategy"
+        }
+      ],
+      rusya: [
+        {
+          short_tr: "Peipus Gölü (Buz Üzerinde) Savaşı (1242)",
+          short_en: "Battle on the Ice – Lake Peipus (1242)",
+          title_tr: "Peipus Gölü (Buz Üzerinde) Muharebesi – Aleksandr Nevski (1242)",
+          title_en: "Battle on the Ice at Lake Peipus – Alexander Nevsky (1242)",
+          year: "1242",
+          lat: 58.68,
+          lng: 27.49,
+          desc_tr: "Novgorod Prensi Aleksandr Nevski, donmuş Peipus Gölü üzerinde Töton Şövalyeleri'nin ağır zırhlı süvarilerini ince buz tabakasına çekerek bozguna uğrattı.",
+          desc_en: "Prince Alexander Nevsky of Novgorod halted the Teutonic Knights on the frozen surface of Lake Peipus.",
+          forces_tr: "Novgorod Cumhuriyeti (Aleksandr Nevski) vs. Töton & Livonya Şövalyeleri",
+          forces_en: "Novgorod Republic (Alexander Nevsky) vs. Teutonic Knights",
+          outcome_tr: "Kuzeybatı Rus Topraklarının Savunulması",
+          outcome_en: "Eastern Frontier of the Northern Crusades Halted"
+        },
+        {
+          short_tr: "Poltava Meydan Muharebesi (1709)",
+          short_en: "Battle of Poltava (1709)",
+          title_tr: "Poltava Meydan Muharebesi – Büyük Kuzey Savaşı (1709)",
+          title_en: "Battle of Poltava – Great Northern War (1709)",
+          year: "1709",
+          lat: 49.63,
+          lng: 34.55,
+          desc_tr: "Çar I. Petro (Büyük Petro), modernleştirdiği Rus topçu ve piyade ordusuyla İsveç Kralı XII. Karl'ı Poltava'da yenerek Rusya'yı Avrupa'nın büyük güçleri arasına soktu.",
+          desc_en: "Tsar Peter the Great defeated Swedish King Charles XII at Poltava, establishing Russia as a major European power.",
+          forces_tr: "Rus Çarlığı (I. Petro) vs. İsveç İmparatorluğu (XII. Karl / Demirbaş Şarl)",
+          forces_en: "Tsardom of Russia (Peter the Great) vs. Swedish Empire (Charles XII)",
+          outcome_tr: "St. Petersburg'un Güvenliği ve Rus İmparatorluğu'nun Yükselişi",
+          outcome_en: "Rise of the Russian Empire on the Baltic Sea"
+        },
+        {
+          short_tr: "Borodino & 1812 Moskova Seferi (1812)",
+          short_en: "Battle of Borodino & 1812 Campaign (1812)",
+          title_tr: "Borodino Meydan Muharebesi ve 1812 Vatan Savaşı (Tolstoy - Savaş ve Barış)",
+          title_en: "Battle of Borodino & 1812 Patriotic War (Tolstoy's War and Peace)",
+          year: "1812",
+          lat: 55.52,
+          lng: 35.82,
+          desc_tr: "Lev Tolstoy'un 'Savaş ve Barış' romanında ölümsüzleştirdiği Borodino Muharebesi ve Mareşal Kutuzov'un derinlikte yıpratma stratejisiyle Napolyon'un 600.000 kişilik Grande Armée'si Rusya kışında eridi.",
+          desc_en: "Immortalized in Tolstoy's 'War and Peace', Field Marshal Kutuzov's defense at Borodino and strategic attrition shattered Napoleon's Grande Armée.",
+          forces_tr: "Rus İmparatorluk Ordusu (Mareşal Kutuzov) vs. Grande Armée (Napolyon)",
+          forces_en: "Russian Imperial Army (Kutuzov) vs. Napoleon's Grande Armée",
+          outcome_tr: "Napolyon'un Moskova'dan Çekilişi ve Avrupa'da Dönüm Noktası",
+          outcome_en: "Retreat of the Grande Armée from Moscow"
+        },
+        {
+          short_tr: "Leningrad & Stalingrad Savunmaları (1941–1944)",
+          short_en: "Siege of Leningrad & Battle of Stalingrad (1941–1944)",
+          title_tr: "900 Günlük Leningrad Kuşatması ve Stalingrad Meydan Muharebesi (1941–1944)",
+          title_en: "900-Day Siege of Leningrad & Battle of Stalingrad (1941–1944)",
+          year: "1941–1944",
+          lat: 48.70,
+          lng: 44.51,
+          desc_tr: "Donmuş Ladoga Gölü ('Yaşam Yolu') üzerinden direnen Leningrad (St. Petersburg) ve Volga kıyısında Uranüs Harekatı ile kuşatılan Stalingrad, II. Dünya Savaşı'nın kaderini değiştirdi.",
+          desc_en: "The 900-day defense of Leningrad via the frozen Lake Ladoga 'Road of Life' and the encirclement at Stalingrad turned the tide of World War II.",
+          forces_tr: "Sovyet Kızıl Ordusu (Mareşal Jukov) vs. Mihver Ordular Grubu",
+          forces_en: "Soviet Red Army (Marshal Zhukov) vs. Axis Army Groups",
+          outcome_tr: "II. Dünya Savaşı Doğu Cephesi'nin Kesin Dönüm Noktası",
+          outcome_en: "Decisive Turning Point on the Eastern Front of WWII"
+        }
+      ],
+      ortadogu: [
+        {
+          short_tr: "Kadeş Meydan Muharebesi (M.Ö. 1274)",
+          short_en: "Battle of Kadesh (1274 BC)",
+          title_tr: "Kadeş Meydan Muharebesi – Tarihin İlk Yazılı Barış Antlaşması (M.Ö. 1274)",
+          title_en: "Battle of Kadesh – World's First Recorded Peace Treaty (1274 BC)",
+          year: "M.Ö. 1274",
+          lat: 34.55,
+          lng: 36.51,
+          desc_tr: "Asi Nehri kıyısında Hitit Kralı II. Muvatalli ile Mısır Firavunu II. Ramses arasında 5.000 savaş arabasıyla yapılan tarihin en büyük savaş arabası muharebesi Kadeş Barış Antlaşması ile sonuçlandı.",
+          desc_en: "Fought with over 5,000 chariots between Hittite King Muwatalli II and Pharaoh Ramesses II, leading to history's oldest surviving peace treaty.",
+          forces_tr: "Hitit İmparatorluğu (II. Muvatalli) vs. Mısır İmparatorluğu (II. Ramses)",
+          forces_en: "Hittite Empire (Muwatalli II) vs. New Kingdom of Egypt (Ramesses II)",
+          outcome_tr: "Kadeş Antlaşması • Dünya Tarihinin İlk Yazılı Diplomasi Belgesi",
+          outcome_en: "Treaty of Kadesh • Oldest Known International Peace Treaty"
+        },
+        {
+          short_tr: "Gaugamela (Erbil) Muharebesi (M.Ö. 331)",
+          short_en: "Battle of Gaugamela (331 BC)",
+          title_tr: "Gaugamela (Erbil) Meydan Muharebesi (M.Ö. 331)",
+          title_en: "Battle of Gaugamela (331 BC)",
+          year: "M.Ö. 331",
+          lat: 36.36,
+          lng: 43.25,
+          desc_tr: "Mezopotamya düzlüğünde Büyük İskender, sağ kanada doğru eğik yürüyüş manevrasıyla Pers Kralı III. Darius'un savaş arabalarını boşa çıkarıp merkezde açılan gedikten kesin hücumu gerçekleştirdi.",
+          desc_en: "On the plains of Mesopotamia, Alexander the Great used an oblique echelon advance to open a gap in Darius III's Persian line.",
+          forces_tr: "Makedon Ordusu (Büyük İskender) vs. Ahameniş Pers İmparatorluğu (III. Darius)",
+          forces_en: "Macedonian Army (Alexander) vs. Achaemenid Empire (Darius III)",
+          outcome_tr: "Babil, Susa ve Persepolis'in İskender'in Elinde Birleşmesi",
+          outcome_en: "Fall of the Achaemenid Empire and Entry into Babylon"
+        },
+        {
+          short_tr: "Hıttin & Kudüs'ün Fethi – Selahaddin (1187)",
+          short_en: "Battle of Hattin & Jerusalem – Saladin (1187)",
+          title_tr: "Hıttin Meydan Muharebesi ve Kudüs'ün Fethi – Selahaddin Eyyubi (1187)",
+          title_en: "Battle of Hattin & Liberation of Jerusalem – Saladin (1187)",
+          year: "1187",
+          lat: 32.80,
+          lng: 35.45,
+          desc_tr: "Sultan Selahaddin Eyyubi, Taberiye Gölü yakınlarındaki Hıttin Boynuzları'nda su kaynaklarını kontrol altına alarak Haçlı ordusunu mağlup etti ve Kudüs'ü barışçıl bir amanname ile teslim aldı.",
+          desc_en: "Sultan Saladin cut off the Crusader army from water at the Horns of Hattin near Lake Tiberias and peacefully retook Jerusalem.",
+          forces_tr: "Eyyubi Ordusu (Selahaddin Eyyubi) vs. Kudüs Haçlı Krallığı",
+          forces_en: "Ayyubid Army (Saladin) vs. Kingdom of Jerusalem",
+          outcome_tr: "Kudüs'ün Yeniden Fethi ve Şövalyelik/Merhamet Diplomasisi",
+          outcome_en: "Recapture of Jerusalem & Renowned Chivalric Clemency"
+        },
+        {
+          short_tr: "Bağdat Kuşatması & Ayn Câlût (1258–1260)",
+          short_en: "Siege of Baghdad & Ain Jalut (1258–1260)",
+          title_tr: "Bağdat Kuşatması (1258) ve Ayn Câlût Meydan Muharebesi (1260)",
+          title_en: "Siege of Baghdad (1258) & Battle of Ain Jalut (1260)",
+          year: "1258–1260",
+          lat: 32.55,
+          lng: 35.35,
+          desc_tr: "1258'de Hülagü Han'ın Bağdat'ı kuşatmasının ardından 1260'ta Filistin'de Ayn Câlût'ta Sultan Kutuz ve Baybars komutasındaki Memlük ordusu Moğol ilerleyişini tarihte ilk kez durdurdu.",
+          desc_en: "Following the 1258 siege of Baghdad, Mamluk commanders Qutuz and Baibars inflicted the first decisive defeat on the Mongol army at Ain Jalut in 1260.",
+          forces_tr: "Memlük Sultanlığı (Kutuz & Baybars) vs. İlhanlı Moğol Ordusu",
+          forces_en: "Mamluk Sultanate (Qutuz & Baibars) vs. Ilkhanate Mongol Forces",
+          outcome_tr: "Mısır ve Doğu Akdeniz'de İslam Bilim ve Kültür Mirasının Korunması",
+          outcome_en: "Mongol Westward Advance Halted in the Levant"
+        }
+      ],
+      ortaasya: [
+        {
+          short_tr: "Talas Meydan Muharebesi (751)",
+          short_en: "Battle of Talas (751)",
+          title_tr: "Talas Meydan Muharebesi – Kağıdın Semerkant'tan Dünyaya Yayılışı (751)",
+          title_en: "Battle of Talas – Spread of Papermaking to Samarkand & the World (751)",
+          year: "751",
+          lat: 42.52,
+          lng: 72.24,
+          desc_tr: "Karluk Türklerinin desteğiyle Abbasi-Türk ittifakı Tang Hanedanı ordusunu Talas Irmağı kıyısında mağlup etti; Semerkant'ta kurulan kağıt atölyeleri dünya bilim ve edebiyat tarihini değiştirdi.",
+          desc_en: "Supported by Karluk Turks, Abbasid-Turkic forces defeated the Tang Dynasty at the Talas River, bringing papermaking technology to Samarkand and the West.",
+          forces_tr: "Abbasi & Karluk Türk Ordusu vs. Tang Hanedanı Ordusu",
+          forces_en: "Abbasid & Karluk Turkic Forces vs. Tang Dynasty Army",
+          outcome_tr: "Orta Asya'nın İslamlaşması ve Kağıt Teknolojisinin Batıya Geçişi",
+          outcome_en: "Spread of Papermaking via Samarkand to the Islamic World and Europe"
+        },
+        {
+          short_tr: "Buhara & Semerkant Seferi – Cengiz Han (1220)",
+          short_en: "Bukhara & Samarkand Campaign – Genghis Khan (1220)",
+          title_tr: "Cengiz Han'ın Kızılkum Çölü Manevrası ve Semerkant Seferi (1219–1221)",
+          title_en: "Genghis Khan's Kyzylkum Desert Maneuver & Samarkand Campaign (1219–1221)",
+          year: "1219–1221",
+          lat: 39.65,
+          lng: 66.95,
+          desc_tr: "Cengiz Han ve komutanları Cebe ile Subutay, geçilmez sanılan Kızılkum Çölü'nü aşarak Buhara ve Semerkant'ı kuşattı ve İpek Yolu'nu tek bir imparatorluk çatısı altında birleştirdi.",
+          desc_en: "Genghis Khan and generals Jebe and Subutai crossed the Kyzylkum Desert in a surprise strategic flank on Bukhara and Samarkand.",
+          forces_tr: "Moğol İmparatorluğu (Cengiz Han & Subutay) vs. Harzemşahlar Devleti",
+          forces_en: "Mongol Empire (Genghis Khan & Subutai) vs. Khwarazmian Empire",
+          outcome_tr: "İpek Yolu Üzerinde Pax Mongolica (Moğol Barışı) Ticaret Ağı",
+          outcome_en: "Integration of the Silk Road Under Pax Mongolica"
+        },
+        {
+          short_tr: "Terek Irmağı & Timur Rönesansı (1391–1395)",
+          short_en: "Terek River & Timurid Campaigns (1391–1395)",
+          title_tr: "Kunduzca (1391) ve Terek Irmağı (1395) Meydan Muharebeleri – Emir Timur",
+          title_en: "Battles of Kondurcha River (1391) & Terek River (1395) – Timur",
+          year: "1391–1395",
+          lat: 43.60,
+          lng: 46.10,
+          desc_tr: "Emir Timur, Altın Orda Hanı Toktamış'ı mağlup ederek İpek Yolu ticaretinin merkezini başkent Semerkant'a taşıdı ve Uluğ Bey'in bilim mirasına zemin hazırladı.",
+          desc_en: "Timur (Tamerlane) defeated Tokhtamysh of the Golden Horde, channeling Silk Road wealth into Samarkand's Timurid Renaissance.",
+          forces_tr: "Timur İmparatorluğu (Emir Timur) vs. Altın Orda Devleti (Toktamış Han)",
+          forces_en: "Timurid Empire (Timur) vs. Golden Horde (Tokhtamysh)",
+          outcome_tr: "Semerkant'ın Avrasya Bilim ve Mimari Başkenti Oluşu",
+          outcome_en: "Rise of Samarkand as the Jewel of the Timurid Renaissance"
+        }
+      ],
+      doguasya: [
+        {
+          short_tr: "Çin'in Birleşmesi Seferleri (M.Ö. 221)",
+          short_en: "Qin Wars of Unification (221 BC)",
+          title_tr: "Savaşan Devletler Dönemi ve Çin'in Birleşmesi (M.Ö. 230–221)",
+          title_en: "Warring States Campaigns & Qin Unification of China (230–221 BC)",
+          year: "M.Ö. 221",
+          lat: 34.26,
+          lng: 108.94,
+          desc_tr: "Sun Tzu'nun 'Savaş Sanatı' ilkelerinin uygulandığı Savaşan Devletler Dönemi sonunda Qin Shi Huang 6 rakip krallığı birleştirerek Çin Seddi ve Terracotta Ordusu'nu inşa ettirdi.",
+          desc_en: "Applying principles from Sun Tzu's 'The Art of War', Qin Shi Huang unified the Warring States, founding Imperial China and constructing the Great Wall.",
+          forces_tr: "Qin Krallığı (Qin Shi Huang & General Wang Jian) vs. 6 Savaşan Devlet",
+          forces_en: "State of Qin (Qin Shi Huang) vs. Six Warring States",
+          outcome_tr: "Birleşik Çin İmparatorluğu, Çin Seddi ve Yazı/Ölçü Standartlaşması",
+          outcome_en: "Unification of Imperial China & Construction of the Great Wall"
+        },
+        {
+          short_tr: "Kızıl Kayalar (Chibi) Deniz Savaşı (208)",
+          short_en: "Battle of Red Cliffs / Chibi (AD 208)",
+          title_tr: "Kızıl Kayalar (Red Cliffs / Chibi) Deniz Muharebesi (M.S. 208)",
+          title_en: "Battle of Red Cliffs (Chibi) on the Yangtze River (AD 208)",
+          year: "208",
+          lat: 29.87,
+          lng: 113.62,
+          desc_tr: "'Üç Krallığın Hikâyesi' destanının kalbi olan Kızıl Kayalar'da Zhuge Liang ve Zhou Yu, birbirine zincirlenmiş kuzey donanmasını rüzgar yönünü hesaplayarak ateş gemileriyle yaktı.",
+          desc_en: "Immortalized in 'Romance of the Three Kingdoms', strategists Zhuge Liang and Zhou Yu used fireships on the Yangtze River to destroy Cao Cao's chained fleet.",
+          forces_tr: "Güney İttifakı (Liu Bei, Sun Quan, Zhuge Liang) vs. Kuzey Donanması (Cao Cao)",
+          forces_en: "Allied Forces of Liu Bei & Sun Quan vs. Cao Cao's Fleet",
+          outcome_tr: "Çin'de Üç Krallık Döneminin Başlaması",
+          outcome_en: "Establishment of the Three Kingdoms Period"
+        },
+        {
+          short_tr: "Myeongnyang Deniz Zaferi – Kore (1597)",
+          short_en: "Battle of Myeongnyang – Admiral Yi (1597)",
+          title_tr: "Myeongnyang Boğazı Deniz Zaferi – Amiral Yi Sun-sin (1597)",
+          title_en: "Battle of Myeongnyang – Admiral Yi Sun-sin's 13 Ships vs. 133 (1597)",
+          year: "1597",
+          lat: 34.57,
+          lng: 126.30,
+          desc_tr: "Koreli Amiral Yi Sun-sin, Myeongnyang Boğazı'nın sert gelgit akıntılarını kullanarak yalnızca 13 savaş gemisiyle (ve Geobukseon Kaplumbağa Gemisi geleneğiyle) 133 gemilik filoyu hiçbir gemi kaybetmeden mağlup etti.",
+          desc_en: "Using the roaring tidal currents of Myeongnyang Strait, Korean Admiral Yi Sun-sin defeated 133 warships with just 13 ships without losing a single vessel.",
+          forces_tr: "Joseon Kore Donanması (Amiral Yi Sun-sin - 13 Gemi) vs. İstilacı Donanma (133 Gemi)",
+          forces_en: "Joseon Navy (Admiral Yi Sun-sin - 13 Ships) vs. 133 Warships",
+          outcome_tr: "Dünya Deniz Harp Tarihinin En Olağanüstü Savunma Zaferi",
+          outcome_en: "One of the Greatest Naval Defensive Victories in World History"
+        },
+        {
+          short_tr: "Sekigahara & Panipat Muharebeleri (1526 / 1600)",
+          short_en: "Panipat & Sekigahara Battles (1526 / 1600)",
+          title_tr: "I. Panipat (1526 - Babür Şah) ve Sekigahara Samuray Meydan Muharebesi (1600)",
+          title_en: "First Battle of Panipat (1526) & Battle of Sekigahara (1600)",
+          year: "1526 / 1600",
+          lat: 35.36,
+          lng: 136.46,
+          desc_tr: "Hindistan'da Babür Şah'ın Osmanlı tabur cengi ve topçu tertibiyle kazandığı Panipat Zaferi (1526) ile Japonya'da Tokugawa Ieyasu'nun Samuray çağını birleştirdiği Sekigahara Muharebesi (1600).",
+          desc_en: "Babur's artillery-wagon tactics at Panipat (1526) founding the Mughal Empire, and Tokugawa Ieyasu's samurai victory at Sekigahara (1600) unifying Japan.",
+          forces_tr: "Babür Şah (Hindistan) & Tokugawa Ieyasu (Japonya)",
+          forces_en: "Babur (Mughal India) & Tokugawa Ieyasu (Edo Japan)",
+          outcome_tr: "Babür İmparatorluğu ve Edo Dönemi Barışının Kurulması",
+          outcome_en: "Foundation of the Mughal Empire and 250-Year Edo Peace"
+        }
+      ],
+      amerika: [
+        {
+          short_tr: "Tenochtitlan Kuşatması – Meksika (1521)",
+          short_en: "Siege of Tenochtitlan – Mexico (1521)",
+          title_tr: "Tenochtitlan Göl Başkenti Kuşatması ve Aztek Direnişi (1521)",
+          title_en: "Siege of Tenochtitlan & Aztec Defense of the Lake Capital (1521)",
+          year: "1521",
+          lat: 19.43,
+          lng: -99.13,
+          desc_tr: "Texcoco Gölü ortasındaki Aztek başkenti Tenochtitlan'da son hükümdar Cuauhtémoc liderliğindeki Aztek savaşçıları, su yolları ve geçitlerde 75 gün boyunca destansı bir savunma verdi.",
+          desc_en: "Led by the last Aztec Emperor Cuauhtémoc, defenders fought across the causeways and canals of Lake Texcoco for 75 days.",
+          forces_tr: "Aztek İmparatorluğu (Cuauhtémoc) vs. İspanyol & Tlaxcala Koalisyonu",
+          forces_en: "Aztec Empire (Cuauhtémoc) vs. Spanish & Tlaxcalan Coalition",
+          outcome_tr: "Meksika'da Kolomb Öncesi İmparatorluktan Yeni İspanya'ya Geçiş",
+          outcome_en: "Transformation of Mesoamerica and Birth of Modern Mexico"
+        },
+        {
+          short_tr: "Cusco & Ollantaytambo – İnka Direnişi (1536–1537)",
+          short_en: "Cusco & Ollantaytambo – Inca Defense (1536–1537)",
+          title_tr: "Cusco Kuşatması ve Ollantaytambo İnka Savunması (1536–1537)",
+          title_en: "Siege of Cusco & Battle of Ollantaytambo (1536–1537)",
+          year: "1536–1537",
+          lat: -13.25,
+          lng: -72.26,
+          desc_tr: "Manco Inca Yupanqui, And Dağları'nın sarp teraslarında ve Ollantaytambo kalesinde nehir sularını vadiye salarak süvarileri durdurdu ve İnka direnişini başlattı.",
+          desc_en: "Manco Inca Yupanqui flooded the plains below the terraced fortress of Ollantaytambo in the Sacred Valley to neutralize Spanish cavalry.",
+          forces_tr: "İnka İmparatorluğu (Manco Inca) vs. Konkistador Kuvvetleri",
+          forces_en: "Inca Empire (Manco Inca) vs. Conquistador Forces",
+          outcome_tr: "And Dağları'nda Vilcabamba İnka Direniş Hattı",
+          outcome_en: "Preservation of Inca Resistance in the High Andes"
+        },
+        {
+          short_tr: "Lexington, Concord & Saratoga – ABD (1775–1777)",
+          short_en: "Lexington, Concord & Saratoga – USA (1775–1777)",
+          title_tr: "Lexington-Concord (1775) ve Saratoga Meydan Muharebesi (1777)",
+          title_en: "Battles of Lexington & Concord (1775) and Saratoga (1777)",
+          year: "1775–1777",
+          lat: 42.46,
+          lng: -71.35,
+          desc_tr: "Concord Kuzey Köprüsü'nde atılan 'dünyanın duyduğu ilk kurşun' ile başlayan Amerikan Bağımsızlık Savaşı, Saratoga ve Yorktown zaferleriyle ABD'nin kuruluşunu sağladı.",
+          desc_en: "Beginning with the 'shot heard round the world' at Concord's North Bridge, American victories at Saratoga and Yorktown secured independence.",
+          forces_tr: "Kıta Ordusu (George Washington) vs. Britanya İmparatorluk Ordusu",
+          forces_en: "Continental Army (George Washington) vs. British Army",
+          outcome_tr: "Amerika Birleşik Devletleri'nin Bağımsızlığı",
+          outcome_en: "Independence of the United States of America"
+        },
+        {
+          short_tr: "Boyacá & Ayacucho – Güney Amerika (1819–1824)",
+          short_en: "Boyacá & Ayacucho – South America (1819–1824)",
+          title_tr: "Boyacá (1819), Chacabuco ve Ayacucho Bağımsızlık Muharebeleri (1824)",
+          title_en: "Battles of Boyacá (1819), Chacabuco & Ayacucho (1824)",
+          year: "1819–1824",
+          lat: 5.45,
+          lng: -73.36,
+          desc_tr: "Simón Bolívar ve José de San Martín'in And Dağları'nı aşarak kazandıkları Boyacá, Chacabuco ve Ayacucho meydan muharebeleriyle Kolombiya, Peru, Arjantin ve tüm Güney Amerika bağımsızlığına kavuştu.",
+          desc_en: "Crossing the freezing Andes, Simón Bolívar and José de San Martín won decisive victories at Boyacá and Ayacucho to liberate South America.",
+          forces_tr: "Güney Amerika Kurtuluş Orduları (Bolívar & San Martín) vs. Kraliyet Ordusu",
+          forces_en: "Liberation Armies (Bolívar & San Martín) vs. Royalist Forces",
+          outcome_tr: "Güney Amerika Cumhuriyetlerinin Bağımsızlığı",
+          outcome_en: "Independence of the South American Republics"
+        },
+        {
+          short_tr: "Gettysburg Meydan Muharebesi (1863)",
+          short_en: "Battle of Gettysburg (1863)",
+          title_tr: "Gettysburg Meydan Muharebesi ve Abraham Lincoln'ün Hitabesi (1863)",
+          title_en: "Battle of Gettysburg & Lincoln's Gettysburg Address (1863)",
+          year: "1863",
+          lat: 39.81,
+          lng: -77.23,
+          desc_tr: "Amerikan İç Savaşı'nın en kritik dönüm noktası olan 3 günlük Gettysburg Muharebesi sonunda Birlik (Union) ordusu hattı korudu ve köleliğin kaldırılması süreci kesinleşti.",
+          desc_en: "The three-day Battle of Gettysburg marked the decisive turning point of the American Civil War and inspired Lincoln's Gettysburg Address.",
+          forces_tr: "Birlik Ordusu (Union - General Meade) vs. Konfederasyon Ordusu (General Lee)",
+          forces_en: "Union Army (Gen. Meade) vs. Confederate Army (Gen. Lee)",
+          outcome_tr: "ABD'nin Birliğinin Korunması ve Köleliğin Kaldırılması",
+          outcome_en: "Preservation of the Union & Abolition of Slavery"
+        }
+      ],
+      iskandinavya: [
+        {
+          short_tr: "Hafrsfjord Deniz Savaşı – Norveç (872)",
+          short_en: "Battle of Hafrsfjord – Norway (872)",
+          title_tr: "Hafrsfjord Fiyordu Deniz Savaşı – Norveç'in Birleşmesi (872)",
+          title_en: "Naval Battle of Hafrsfjord – Unification of Norway (872)",
+          year: "872",
+          lat: 58.94,
+          lng: 5.61,
+          desc_tr: "Kral Güzel Saçlı Harald (Harald Fairhair), Hafrsfjord fiyordunda Viking uzun gemileriyle yapılan büyük deniz muharebesini kazanarak birleşik Norveç Krallığı'nı kurdu.",
+          desc_en: "King Harald Fairhair won the great longship naval battle in Hafrsfjord, uniting the petty kingdoms into the Kingdom of Norway.",
+          forces_tr: "Kral Harald Fairhair Filosu vs. Batı Fiyortları Viking Şefleri",
+          forces_en: "King Harald Fairhair's Fleet vs. Rival Viking Chieftains",
+          outcome_tr: "Birleşik Norveç Krallığı'nın Kurulması ve İzlanda Göçleri",
+          outcome_en: "Unification of Norway & Viking Settlement of Iceland"
+        },
+        {
+          short_tr: "Clontarf & Svolder Viking Savaşları (1000–1014)",
+          short_en: "Svolder & Clontarf Viking Battles (1000–1014)",
+          title_tr: "Svolder Deniz Savaşı (1000) ve Dublin Clontarf Muharebesi (1014)",
+          title_en: "Naval Battle of Svolder (1000) & Battle of Clontarf in Dublin (1014)",
+          year: "1000–1014",
+          lat: 53.36,
+          lng: -6.20,
+          desc_tr: "Baltık'ta Kral Olaf Tryggvason'un 'Uzun Yılan' (Ormen Lange) gemisiyle verdiği efsanevi Svolder Savaşı ve İrlanda Yüksek Kralı Brian Boru'nun Dublin'de Viking gücünü kırdığı Clontarf Muharebesi.",
+          desc_en: "Olaf Tryggvason's legendary last stand aboard the 'Long Serpent' at Svolder (1000) and High King Brian Boru's victory at Clontarf near Dublin (1014).",
+          forces_tr: "İrlanda Yüksek Kralı Brian Boru & Kuzey Krallıkları vs. Dublin-Orkney Viking İttifakı",
+          forces_en: "High King Brian Boru & Norse Kings vs. Viking Coalitions",
+          outcome_tr: "Kuzey Denizi ve İrlanda'da Yeni Siyasi Dengenin Kurulması",
+          outcome_en: "Transformation of Norse-Gaelic Power Across the North Atlantic"
+        },
+        {
+          short_tr: "Breitenfeld & Lützen – İsveç (1631–1632)",
+          short_en: "Breitenfeld & Lützen – Sweden (1631–1632)",
+          title_tr: "Breitenfeld (1631) ve Lützen (1632) Muharebeleri – 'Kuzeyin Aslanı' Gustav Adolf",
+          title_en: "Battles of Breitenfeld (1631) & Lützen (1632) – Gustavus Adolphus",
+          year: "1631–1632",
+          lat: 51.40,
+          lng: 12.33,
+          desc_tr: "İsveç Kralı II. Gustav Adolf, hafif sahra topları ve hareketli ateş hattı taktiğiyle Breitenfeld ve Lützen'de modern askeri taktik devrimini gerçekleştirdi.",
+          desc_en: "Swedish King Gustavus Adolphus ('The Lion of the North') revolutionized warfare with mobile field artillery and combined-arms tactics.",
+          forces_tr: "İsveç İmparatorluğu (Gustav Adolf) vs. Kutsal Roma İmparatorluğu (Tilly & Wallenstein)",
+          forces_en: "Swedish Empire (Gustavus Adolphus) vs. Imperial Forces",
+          outcome_tr: "Modern Sahra Topçusu ve Ateş Gücü Doktrininin Doğuşu",
+          outcome_en: "Birth of Modern Combined-Arms Field Artillery Doctrine"
+        }
+      ],
+      afrika: [
+        {
+          short_tr: "Zama Meydan Muharebesi – Tunus (M.Ö. 202)",
+          short_en: "Battle of Zama – Tunisia (202 BC)",
+          title_tr: "Zama Meydan Muharebesi – Hannibal Barca vs. Scipio Africanus (M.Ö. 202)",
+          title_en: "Battle of Zama – Hannibal Barca vs. Scipio Africanus (202 BC)",
+          year: "M.Ö. 202",
+          lat: 36.11,
+          lng: 9.29,
+          desc_tr: "Tunus/Kartaca yakınlarındaki Zama Ovası'nda Hannibal'ın 80 savaş filine karşı Scipio Africanus, lejyonları arasında koridorlar açıp borazanlarla filleri şaşırtarak II. Pön Savaşı'nı kazandı.",
+          desc_en: "On the plains of Zama near Carthage, Scipio Africanus opened lanes in his legions to neutralize Hannibal's 80 war elephants, ending the Second Punic War.",
+          forces_tr: "Kartaca Ordusu (Hannibal Barca & 80 Savaş Fili) vs. Roma & Numidya Süvarileri (Scipio)",
+          forces_en: "Carthage (Hannibal & 80 War Elephants) vs. Rome & Numidia (Scipio)",
+          outcome_tr: "II. Pön Savaşı'nın Sona Ermesi ve Akdeniz Hakimiyetinin Değişimi",
+          outcome_en: "End of the Second Punic War"
+        },
+        {
+          short_tr: "Vadisseyl (Üç Kral) Savaşı – Fas (1578)",
+          short_en: "Battle of Alcácer Quibir – Morocco (1578)",
+          title_tr: "Vadisseyl (Vadi'l-Mehâzin / Üç Kral) Meydan Muharebesi (1578)",
+          title_en: "Battle of Alcácer Quibir – Battle of the Three Kings (1578)",
+          year: "1578",
+          lat: 35.03,
+          lng: -5.91,
+          desc_tr: "Fas Saadi Sultanlığı (Osmanlı desteğiyle), Kuzey Fas'ta Portekiz Kralı I. Sebastião'nun ordusunu kesin bir yenilgiye uğratarak Kuzeybatı Afrika'nın bağımsızlığını korudu.",
+          desc_en: "Moroccan Saadi forces decisively defeated King Sebastian of Portugal in northern Morocco, preserving Moroccan independence and elevating Ahmad al-Mansur.",
+          forces_tr: "Fas Saadi Sultanlığı (Abdülmelik & Ahmed el-Mansur) vs. Portekiz Krallığı (I. Sebastião)",
+          forces_en: "Saadi Sultanate of Morocco vs. Kingdom of Portugal",
+          outcome_tr: "Fas'ın Altın Çağı ve Kuzey Afrika Bağımsızlığının Korunması",
+          outcome_en: "Preservation of Moroccan Sovereignty & Golden Age of Marrakesh-Fez"
+        },
+        {
+          short_tr: "Isandlwana Muharebesi – Güney Afrika (1879)",
+          short_en: "Battle of Isandlwana – South Africa (1879)",
+          title_tr: "Isandlwana Meydan Muharebesi – Zulu 'Boğa Boynuzu' Taktiği (1879)",
+          title_en: "Battle of Isandlwana – Zulu 'Horns of the Buffalo' Tactic (1879)",
+          year: "1879",
+          lat: -28.35,
+          lng: 30.65,
+          desc_tr: "Zulu Kralı Cetshwayo'nun komutanı Ntshingwayo, Shaka Zulu'nun meşhur 'Impi Boğa Boynuzu' (merkez göğüs ve iki kuşatıcı kanat) taktiğiyle modern tüfekli ve toplu İngiliz kolordusunu kuşattı.",
+          desc_en: "Using Shaka Zulu's classic 'Horns of the Buffalo' encirclement formation, 20,000 Zulu warriors overwhelmed a modern British column at Isandlwana.",
+          forces_tr: "Zulu Krallığı Ordusu (20.000 Impi Savaşçısı) vs. Britanya İmparatorluk Kolordusu",
+          forces_en: "Zulu Kingdom Impi Army vs. British Imperial Column",
+          outcome_tr: "Afrika Askeri Tarihinin En Çarpıcı Kuşatma Manevralarından Biri",
+          outcome_en: "Landmark Indigenous Tactical Victory in Southern Africa"
+        },
+        {
+          short_tr: "Adowa (Adwa) Zaferi – Etiyopya (1896)",
+          short_en: "Battle of Adwa – Ethiopia (1896)",
+          title_tr: "Adowa (Adwa) Meydan Muharebesi – Etiyopya'nın Bağımsızlık Zaferi (1896)",
+          title_en: "Battle of Adwa – Ethiopian Victory Against Colonialism (1896)",
+          year: "1896",
+          lat: 14.16,
+          lng: 38.89,
+          desc_tr: "Etiyopya İmparatoru II. Menelik ve İmparatoriçe Taytu Betul, Adwa dağlarında 100.000 kişilik birleşik Etiyopya ordusuyla İtalyan sömürge ordusunu mağlup ederek Etiyopya'nın bağımsızlığını dünyaya kabul ettirdi.",
+          desc_en: "Emperor Menelik II and Empress Taytu Betul led a united Ethiopian army in the mountains of Adwa to defeat the invading Italian army, securing Ethiopian sovereignty.",
+          forces_tr: "Etiyopya İmparatorluğu (II. Menelik & Taytu Betul) vs. İtalya Krallığı Sömürge Ordusu",
+          forces_en: "Ethiopian Empire (Menelik II & Empress Taytu) vs. Kingdom of Italy",
+          outcome_tr: "Etiyopya'nın Sömürgeleştirilemeyen Bağımsız Afrika Devleti Olarak Kalması",
+          outcome_en: "Preservation of Ethiopian Independence & Pan-African Symbol"
+        }
+      ]
+    };
+
+    // Seçilen durağın ülkesine göre ilgili ülke savaşları listesini döndürür ve her savaşı durağın etrafında ağaç dalları gibi konumlandırır
+    function getCountryWarsForItem(item) {
+      let groupKey = 'avrupa';
+      const c = (item.country || '').toLocaleLowerCase('tr-TR');
+      if (item.region === 'turkiye' || c.includes('türkiye')) {
+        groupKey = 'turkiye';
+      } else if (c.includes('ingiltere') || c.includes('iskoçya') || c.includes('birleşik krallık')) {
+        groupKey = 'ingiltere';
+      } else if (c.includes('fransa')) {
+        groupKey = 'fransa';
+      } else if (c.includes('italya')) {
+        groupKey = 'italya';
+      } else if (c.includes('yunanistan')) {
+        groupKey = 'yunanistan';
+      } else if (c.includes('almanya') || c.includes('avusturya') || c.includes('çekya') || c.includes('hollanda')) {
+        groupKey = 'almanya';
+      } else if (c.includes('ispanya')) {
+        groupKey = 'ispanya';
+      } else if (c.includes('rusya')) {
+        groupKey = 'rusya';
+      } else if (c.includes('irak') || c.includes('iran') || c.includes('mısır') || c.includes('filistin')) {
+        groupKey = 'ortadogu';
+      } else if (c.includes('özbekistan') || c.includes('kazakistan') || c.includes('moğolistan')) {
+        groupKey = 'ortaasya';
+      } else if (c.includes('çin') || c.includes('japonya') || c.includes('kore') || c.includes('hindistan') || c.includes('kamboçya')) {
+        groupKey = 'doguasya';
+      } else if (item.region === 'amerika') {
+        groupKey = 'amerika';
+      } else if (c.includes('norveç') || c.includes('isveç') || c.includes('irlanda')) {
+        groupKey = 'iskandinavya';
+      } else if (item.region === 'afrika') {
+        groupKey = 'afrika';
+      }
+
+      const rawWars = COUNTRY_WARS_DATABASE[groupKey] || COUNTRY_WARS_DATABASE.turkiye;
+      const total = rawWars.length;
+
+      // Seçilen şehirden dışarıya doğru ağaç dalları (tree branches) gibi açılan koordinatları hesapla
+      return rawWars.map((w, idx) => {
+        const angle = ((idx / total) * Math.PI * 1.65) - (Math.PI * 0.82) + 0.35;
+        const radiusLat = 0.62 + (idx % 2) * 0.28;
+        const radiusLng = 0.85 + (idx % 2) * 0.36;
+        const branchLat = item.lat + Math.sin(angle) * radiusLat;
+        const branchLng = item.lng + Math.cos(angle) * radiusLng;
+
+        return {
+          ...w,
+          warIndex: idx,
+          branchLat,
+          branchLng,
+          isLastBranch: idx === total - 1
+        };
+      });
+    }
+
+    function renderCountryWarsTreeInDrawer(item, activeWarIdx = 0) {
+      const wars = getCountryWarsForItem(item);
+      const isEn = currentLang === 'en';
+      const t = TRANSLATIONS[currentLang];
+      const displayCountry = (isEn && item.country_en) ? item.country_en : item.country;
+
+      const headingEl = document.getElementById('countryWarsTreeHeading');
+      const countEl = document.getElementById('countryWarsCountBadge');
+      const hintEl = document.getElementById('countryWarsTreeHint');
+      const listEl = document.getElementById('countryWarsTreeList');
+
+      if (headingEl && typeof t.countryWarsTreeHeading === 'function') {
+        headingEl.textContent = t.countryWarsTreeHeading(displayCountry);
+      }
+      if (countEl && typeof t.countryWarsCount === 'function') {
+        countEl.textContent = t.countryWarsCount(wars.length);
+      }
+      if (hintEl) {
+        hintEl.textContent = t.countryWarsTreeHint;
+      }
+
+      if (!listEl) return;
+      listEl.innerHTML = wars
+        .map((w, idx) => {
+          const isSelected = idx === activeWarIdx;
+          const prefix = idx === wars.length - 1 ? '└─' : '├─';
+          const title = isEn ? w.title_en : w.title_tr;
+          return `
+            <button
+              type="button"
+              data-war-index="${idx}"
+              class="war-tree-item-btn w-full text-left px-2.5 py-1.5 rounded-lg text-[11.5px] sm:text-xs transition-all duration-150 flex items-center justify-between gap-2 cursor-pointer ${
+                isSelected
+                  ? 'bg-gradient-to-r from-rose-600/45 via-amber-600/30 to-slate-900/80 text-amber-200 border border-amber-400/60 shadow-[0_0_12px_rgba(244,63,94,0.3)] font-bold'
+                  : 'bg-white/[0.04] hover:bg-rose-500/15 text-slate-200 hover:text-white border border-white/5 font-medium'
+              }"
+            >
+              <span class="flex items-center gap-1.5 truncate">
+                <span class="font-mono text-amber-400 font-extrabold shrink-0">${prefix}</span>
+                <span class="shrink-0">⚔️</span>
+                <span class="truncate">${title}</span>
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 text-rose-300 border border-rose-400/25 shrink-0">
+                ${w.year}
+              </span>
+            </button>
+          `;
+        })
+        .join('');
+
+      listEl.querySelectorAll('.war-tree-item-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          stopBattleSimulation();
+          const wIdx = parseInt(btn.dataset.warIndex, 10) || 0;
+          selectCountryWarBranch(wIdx, true);
+        });
+      });
+    }
+
+    function selectCountryWarBranch(warIndex, flyCamera = false) {
+      if (!activeCityId || !world) return;
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item) return;
+
+      const wars = getCountryWarsForItem(item);
+      const wIdx = Math.max(0, Math.min(wars.length - 1, warIndex));
+      activeCountryWarIndex = wIdx;
+      const selectedWar = wars[wIdx];
+      const isEn = currentLang === 'en';
+      const t = TRANSLATIONS[currentLang];
+
+      renderCountryWarsTreeInDrawer(item, wIdx);
+
+      // Seçilen savaş dalının detaylarını brifing kartına yaz
+      document.getElementById('battleSimPhaseTitle').textContent = isEn ? selectedWar.title_en : selectedWar.title_tr;
+      document.getElementById('battleSimPhaseDesc').textContent = isEn ? selectedWar.desc_en : selectedWar.desc_tr;
+      document.getElementById('battleSimForces').textContent = isEn ? selectedWar.forces_en : selectedWar.forces_tr;
+      document.getElementById('battleSimOutcome').textContent = isEn ? selectedWar.outcome_en : selectedWar.outcome_tr;
+      document.getElementById('battleForcesLabel').textContent = t.battleForcesLabel;
+      document.getElementById('battleOutcomeLabel').textContent = t.battleOutcomeLabel;
+
+      const coordsBadge = document.getElementById('battleSimCoordsBadge');
+      if (coordsBadge) {
+        coordsBadge.textContent = `${selectedWar.lat.toFixed(2)}°N, ${selectedWar.lng.toFixed(2)}°E`;
+      }
+
+      // 3B Küre üzerinde:
+      // 1) Tıklanan şehirden (ağaç gövdesi) tüm ülke savaşlarına doğru ağaç dalları gibi çıkan ince izler (branch trails)
+      const treeBranchArcs = wars.map((w, idx) => ({
+        startLat: item.lat,
+        startLng: item.lng,
+        endLat: w.branchLat,
+        endLng: w.branchLng,
+        label: isEn ? w.title_en : w.title_tr,
+        color: idx === wIdx ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.75)', 'rgba(251,191,36,0.65)'],
+        altScale: 0.045,
+        stroke: idx === wIdx ? 0.28 : 0.17,
+        dashLength: 0.22,
+        dashGap: 0.11,
+        animateTime: idx === wIdx ? 1050 : 1550
+      }));
+
+      // Seçili savaşın gerçek tarihi cephesi farklı bir koordinattaysa oraya da ince bir harekat izi uzat
+      if (Math.hypot(selectedWar.lat - item.lat, selectedWar.lng - item.lng) > 0.35) {
+        treeBranchArcs.push({
+          startLat: selectedWar.branchLat,
+          startLng: selectedWar.branchLng,
+          endLat: selectedWar.lat,
+          endLng: selectedWar.lng,
+          label: isEn ? selectedWar.title_en : selectedWar.title_tr,
+          color: ['#fbbf24', '#ef4444'],
+          altScale: 0.11,
+          stroke: 0.24,
+          dashLength: 0.20,
+          dashGap: 0.10,
+          animateTime: 1150
+        });
+      }
+
+      const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
+      if (activeCategory === 'edebiyat') {
+        world.arcsData([...buildLiteratureArcs(filteredList), ...treeBranchArcs]);
+      } else if (activeCategory === 'savaslar') {
+        world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs]);
+      } else {
+        world.arcsData(treeBranchArcs);
+      }
+
+      // 2) Seçili dal ve savaş alanında 3B şok dalgaları (ringsData)
+      world.ringsData([
+        { lat: selectedWar.branchLat, lng: selectedWar.branchLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.55, speed: 0.55, repeat: 620 },
+        { lat: selectedWar.lat, lng: selectedWar.lng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.75, speed: 0.65, repeat: 580 }
+      ]);
+
+      // 3) Ağaç dallarının uçlarında beliren tıklanabilir Savaş Alt Başlık Rozetleri (.war-branch-wrapper)
+      const branchNodes = wars.map((w, idx) => ({
+        id: `war_branch_${item.id}_${idx}`,
+        lat: w.branchLat,
+        lng: w.branchLng,
+        shortTitle_tr: w.short_tr,
+        shortTitle_en: w.short_en,
+        warIndex: idx,
+        isLastBranch: w.isLastBranch,
+        isActiveBranch: idx === wIdx,
+        isWarBranchNode: true
+      }));
+
+      world.htmlElementsData([...filteredList, ...branchNodes]);
+
+      if (flyCamera) {
+        const isMobile = window.innerWidth < 768;
+        const lngOffset = isMobile ? 0 : 1.15;
+        world.pointOfView(
+          {
+            lat: selectedWar.branchLat - 0.12,
+            lng: selectedWar.branchLng + lngOffset,
+            altitude: 0.20
+          },
+          1050
+        );
+        setTimeout(updateZoomAndCompass, 1100);
+      }
+    }
+
     function selectBattlePhase(phaseIndex, flyCamera = false) {
       if (!activeCityId || !world) return;
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
@@ -5855,6 +7259,9 @@
       if (simHeadingEl) {
         simHeadingEl.textContent = sim.isBattle ? t.battleSimHeading : t.battleSimCulturalHeading;
       }
+
+      // Ülke savaşları ağacını da çekmecede hazır tut
+      renderCountryWarsTreeInDrawer(item, activeCountryWarIndex);
 
       document.querySelectorAll('.battle-phase-btn').forEach((btn, idx) => {
         const ph = phases[idx];
@@ -5885,8 +7292,25 @@
         coordsBadge.textContent = `${(phase.focusLat || item.lat).toFixed(2)}°N, ${(phase.focusLng || item.lng).toFixed(2)}°E`;
       }
 
-      // 3B Küre Üzerinde Şok Dalgalarını (ringsData), Harekat Oklarını (arcsData) ve Taktik Birim Rozetlerini Göster
+      // 3B Küre Üzerinde:
+      // 1) Şok Dalgaları (ringsData)
       world.ringsData(phase.rings || []);
+
+      // 2) Ülke Savaşları Ağaç Dalları (treeBranchArcs) + Seçili Evre Taktik Harekat İzleri (İnce & Küçük Boyutlu Trails)
+      const wars = getCountryWarsForItem(item);
+      const treeBranchArcs = wars.map((w, idx) => ({
+        startLat: item.lat,
+        startLng: item.lng,
+        endLat: w.branchLat,
+        endLng: w.branchLng,
+        label: isEn ? w.title_en : w.title_tr,
+        color: idx === activeCountryWarIndex ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.72)', 'rgba(251,191,36,0.6)'],
+        altScale: 0.045,
+        stroke: idx === activeCountryWarIndex ? 0.25 : 0.16,
+        dashLength: 0.20,
+        dashGap: 0.11,
+        animateTime: 1450
+      }));
 
       const battleArcs = (phase.vectors || []).map(v => ({
         startLat: v.startLat,
@@ -5895,29 +7319,42 @@
         endLng: v.endLng,
         label: v.label,
         color: v.type === 'attack' ? ['#ef4444', '#f97316'] : ['#fbbf24', '#38bdf8'],
-        altScale: 0.18,
-        stroke: 1.05,
-        dashLength: 0.35,
-        dashGap: 0.15,
-        animateTime: 1100
+        altScale: 0.11,
+        stroke: 0.26,
+        dashLength: 0.22,
+        dashGap: 0.12,
+        animateTime: 1150
       }));
 
+      const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
       if (activeCategory === 'edebiyat') {
-        const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
-        world.arcsData([...buildLiteratureArcs(filteredList), ...battleArcs]);
+        world.arcsData([...buildLiteratureArcs(filteredList), ...treeBranchArcs, ...battleArcs]);
+      } else if (activeCategory === 'savaslar') {
+        world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs, ...battleArcs]);
       } else {
-        world.arcsData(battleArcs);
+        world.arcsData([...treeBranchArcs, ...battleArcs]);
       }
 
-      // Taktik saha rozetlerini mevcut şehir pinlerine ekle
-      const basePins = getFilteredLocations().map(loc => ({ ...loc }));
+      // 3) Ülke Savaşları Ağaç Dalı Alt Başlık Rozetlerini (.war-branch-wrapper) ve Taktik Saha Noktalarını 3B Kürede Göster
+      const branchNodes = wars.map((w, idx) => ({
+        id: `war_branch_${item.id}_${idx}`,
+        lat: w.branchLat,
+        lng: w.branchLng,
+        shortTitle_tr: w.short_tr,
+        shortTitle_en: w.short_en,
+        warIndex: idx,
+        isLastBranch: w.isLastBranch,
+        isActiveBranch: idx === activeCountryWarIndex,
+        isWarBranchNode: true
+      }));
+
       const tacticalMarkers = (phase.markers || []).map((m, idx) => ({
         ...m,
         id: `tac_${item.id}_${pIdx}_${idx}`,
         isTacticalMarker: true,
         phaseIndex: pIdx
       }));
-      world.htmlElementsData([...basePins, ...tacticalMarkers]);
+      world.htmlElementsData([...filteredList, ...branchNodes, ...tacticalMarkers]);
 
       if (flyCamera) {
         const isMobile = window.innerWidth < 768;
@@ -5980,11 +7417,24 @@
       stopBattleSimulation();
       activeCityId = cityId;
 
+      // Seçilen şehre en yakın ülke savaş dalını başlangıçta aktif seç
+      const countryWars = getCountryWarsForItem(item);
+      let bestWarIdx = 0;
+      let minDist = Infinity;
+      countryWars.forEach((w, idx) => {
+        const d = Math.hypot(w.lat - item.lat, w.lng - item.lng);
+        if (d < minDist) {
+          minDist = d;
+          bestWarIdx = idx;
+        }
+      });
+      activeCountryWarIndex = bestWarIdx;
+
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.toggle('active-pin', el.dataset.cityId === cityId);
       });
 
-      // Şehre tıklandığında daha yakına (altitude: 0.21) odaklan ve uydu katmanını + 3B savaş simülasyonunu tetikle
+      // Şehre tıklandığında daha yakına (altitude: 0.21) odaklan ve uydu katmanını + 3B savaş ağacını tetikle
       const isMobile = window.innerWidth < 768;
       const lngOffset = isMobile ? 0 : 1.35;
       world.pointOfView(
@@ -6531,6 +7981,7 @@
       setElText('catLabelHistFull', t.catHistFull);
       setElText('catLabelHistShort', t.catHistShort);
       setElText('catLabelLit', t.catLit);
+      setElText('catLabelWars', t.catWars);
 
       setElText('timelineHeaderLabel', t.timelineHeader);
       setElText('eraBtnAll', t.eraAll);
