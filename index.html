@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Küresel Tarih ve Edebiyat Atlası | World History & Literature 3D Atlas (TÜBİTAK)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -5385,7 +5387,7 @@
     const BUMP_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png';
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
-    const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
+    const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/planets/earth_clouds_1024.png';
 
     // Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada/Bölge İsimleri) 3B Küresel Yüzey Karo Motoru
     // Karolar ve 3B HTML İkonlar TAM OLARAK aynı yüzey yüksekliğinde (SURFACE_OVERLAY_ALT = 0.0004) tutularak yakınlaştırmada 3B paralaks kayması %100 sıfırlanır.
@@ -5704,6 +5706,11 @@
         .ringMaxRadius(d => d.maxR || 0.85)
         .ringPropagationSpeed(d => d.speed || 0.32)
         .ringRepeatPeriod(d => d.repeat || 1200);
+
+      window.world = world;
+      window.MASTER_LOCATIONS = MASTER_LOCATIONS;
+      window.COUNTRY_WARS_DATABASE = COUNTRY_WARS_DATABASE;
+
 
       // KESKİN VE MOBİLDE KASMAYI ÖNLEYEN DPR AYARI (Mobilde 1.0 sabit 60 FPS akıcılık, masaüstünde 2.0)
       const renderer = world.renderer();
@@ -6446,7 +6453,550 @@
             ]
           }
         ]
+      },
+      malazgirt: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Karşılaşma & Kefen",
+            btn_en: "1. Muster & Oath",
+            title_tr: "26 Ağustos 1071: Sultan Alparslan'ın Beyaz Kefen Konuşması",
+            title_en: "August 26, 1071: Sultan Alp Arslan's Shroud Speech & Deployment",
+            desc_tr: "Sultan Alparslan, cuma namazının ardından beyaz kefenini giyip 'Eğer şehit olursam bu beyaz elbise kefenim olsun' diyerek ordusuna seslendi. 40.000 kişilik Selçuklu atlı okçuları, 70.000 kişilik ağır zırhlı Doğu Roma (Bizans) ordusunun karşısına dizildi.",
+            desc_en: "Sultan Alp Arslan donned his white burial shroud and led 40,000 Seljuk horse archers against Emperor Romanos IV Diogenes's 70,000-strong Byzantine imperial army on the plains of Manzikert.",
+            forces_tr: "Büyük Selçuklu Ordusu (Sultan Alparslan) vs. Doğu Roma İmparatorluğu (Romen Diyojen)",
+            forces_en: "Great Seljuk Army (Alp Arslan) vs. Byzantine Empire (Romanos IV)",
+            outcome_tr: "Stratejik Konuşlanma ve Psikolojik Üstünlük Sağlandı",
+            outcome_en: "Strategic High Ground & Moral Superiority Established",
+            focusLat: 39.145,
+            focusLng: 42.540,
+            vectors: [
+              { startLat: 39.125, startLng: 42.610, endLat: 39.145, endLng: 42.540, type: 'attack', label: "Bizans İmparatorluk Ağır Lejyonları Taarruzu" },
+              { startLat: 39.165, startLng: 42.470, endLat: 39.145, endLng: 42.540, type: 'defense', label: "Selçuklu Atlı Okçu Kanat Düzeni" }
+            ],
+            rings: [
+              { lat: 39.145, lng: 42.540, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.55, speed: 0.55, repeat: 700 }
+            ],
+            markers: [
+              { lat: 39.155, lng: 42.505, icon: "🏹", label: "Sultan Alparslan Karargahı", label_en: "Sultan Alp Arslan HQ", tacColor: "#ef4444" },
+              { lat: 39.135, lng: 42.585, icon: "🛡️", label: "İmparator Romen Diyojen Merkez Hattı", label_en: "Emperor Romanos IV Center", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Turan & Kurt Kapanı",
+            btn_en: "2. Crescent Trap",
+            title_tr: "Hilal & Turan Taktiği: Sahte Ricat ile Çemberin Kapanması",
+            title_en: "The Crescent Feigned Retreat & Encirclement Maneuver",
+            desc_tr: "Selçuklu merkez birlikleri sahte ricat (geri çekilme) yaparak Bizans öncü kuvvetlerini Malazgirt Ovası'nın derinliğine çekti. Kanatlardaki Peçenek ve Uz Türklerinin Selçuklu saflarına geçmesiyle hilalin uçları birleşti ve Bizans ordusu kuşatıldı.",
+            desc_en: "Seljuk feigned retreat drew Byzantine forces into the plain. Peçenek and Uz Turkic units switched sides, completing the crescent trap and encircling the Byzantine imperial core.",
+            forces_tr: "Selçuklu Çember Hattı (Peçenek & Uz İttifakı) vs. Kuşatılan Bizans Merkez Ordusu",
+            forces_en: "Seljuk Encirclement (Peçenek & Uz Allies) vs. Trapped Byzantine Core",
+            outcome_tr: "Bizans Ordusu Çembere Alındı ve Düzen Dağıldı",
+            outcome_en: "Byzantine Flanks Broken • Core Encircled",
+            focusLat: 39.145,
+            focusLng: 42.540,
+            vectors: [
+              { startLat: 39.175, startLng: 42.520, endLat: 39.145, endLng: 42.540, type: 'attack', label: "Kuzey Kanat Selçuklu-Uz Süvari Çemberi" },
+              { startLat: 39.115, startLng: 42.550, endLat: 39.145, endLng: 42.540, type: 'attack', label: "Güney Kanat Selçuklu-Peçenek Kuşatması" }
+            ],
+            rings: [
+              { lat: 39.145, lng: 42.540, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.72, speed: 0.65, repeat: 580 },
+              { lat: 39.145, lng: 42.540, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.42, speed: 0.48, repeat: 750 }
+            ],
+            markers: [
+              { lat: 39.145, lng: 42.540, icon: "💥", label: "Turan Hilal Kapanı (Ana Çarpışma)", label_en: "Crescent Decisive Clash Point", tacColor: "#ef4444" },
+              { lat: 39.170, lng: 42.555, icon: "⚔️", label: "Peçenek & Uz Süvarileri İttifakı", label_en: "Peçenek & Uz Flank Strike", tacColor: "#38bdf8" }
+            ]
+          },
+          {
+            btn_tr: "3. Zafer & Anadolu",
+            btn_en: "3. Gates of Anatolia",
+            title_tr: "Zafer & Anadolu'nun Kapılarının Türklere Ebediyen Açılışı",
+            title_en: "Decisive Triumph: Anatolia Opened Forever to the Turks",
+            desc_tr: "Bizans İmparatoru Romen Diyojen esir alındı; Sultan Alparslan eşsiz bir devlet ahlakıyla imparatora saygıyla muamele edip barış imzaladı. Malazgirt Zaferi Anadolu'nun fethini başlattı ve Türkiye tarihinin doğuşunu müjdeledi.",
+            desc_en: "Emperor Romanos IV was captured and treated with noble clemency. The victory permanently opened Anatolia to Turkish settlement, founding the roots of modern Türkiye.",
+            forces_tr: "Muzaffer Selçuklu Ordusu vs. Teslim Olan Doğu Roma Ordusu",
+            forces_en: "Victorious Seljuk Army vs. Surrendering Byzantine Forces",
+            outcome_tr: "Anadolu'nun Kapıları Türklere Açıldı • Türkiye Tarihinin Miladı",
+            outcome_en: "Gates of Anatolia Opened Forever • Dawn of Turkish Anatolia",
+            focusLat: 39.145,
+            focusLng: 42.540,
+            vectors: [
+              { startLat: 39.145, startLng: 42.540, endLat: 39.92, endLng: 32.85, type: 'defense', label: "Anadolu İçi Fetih & Yerleşim Vektörü" }
+            ],
+            rings: [
+              { lat: 39.145, lng: 42.540, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.85, speed: 0.50, repeat: 800 }
+            ],
+            markers: [
+              { lat: 39.145, lng: 42.540, icon: "🏆", label: "Malazgirt Zafer Otağı", label_en: "Manzikert Victory Monument", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      },
+      mohac: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Hilal & Sahra Topları",
+            btn_en: "1. Crescent & Artillery",
+            title_tr: "29 Ağustos 1526: Mohaç Ovası ve 300 Osmanlı Sahra Topu",
+            title_en: "August 29, 1526: Mohács Plain & 300 Ottoman Field Guns",
+            desc_tr: "Kanuni Sultan Süleyman komutasındaki Osmanlı ordusu Tuna boyundaki Mohaç Ovası'na ulaştı. Merkezde birbirine zincirlerle bağlı 300 seyyar sahra topu ve yeniçeriler gizlendi; kanatlara Rumeli ve Anadolu süvarileri yerleştirildi.",
+            desc_en: "Sultan Suleiman the Magnificent deployed 300 chained field cannons and janissaries behind an inverted crescent center on the plains of Mohács along the Danube.",
+            forces_tr: "Osmanlı Ordusu (Kanuni Sultan Süleyman & 300 Sahra Topu) vs. Macar Krallığı (Kral II. Lajos)",
+            forces_en: "Ottoman Empire (Suleiman the Magnificent) vs. Kingdom of Hungary (King Louis II)",
+            outcome_tr: "Hilal Savunma ve Topçu Baraj Hattı Kuruldu",
+            outcome_en: "Artillery Barrier & Tactical Defense Line Formed",
+            focusLat: 45.990,
+            focusLng: 18.680,
+            vectors: [
+              { startLat: 45.960, startLng: 18.620, endLat: 45.990, endLng: 18.680, type: 'attack', label: "Macar Ağır Şövalye Taarruz Hattı" },
+              { startLat: 46.015, startLng: 18.720, endLat: 45.990, endLng: 18.680, type: 'defense', label: "Osmanlı Topçu ve Yeniçeri Tahkimatı" }
+            ],
+            rings: [
+              { lat: 45.990, lng: 18.680, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.58, speed: 0.55, repeat: 680 }
+            ],
+            markers: [
+              { lat: 46.002, lng: 18.695, icon: "💣", label: "Kanuni Karargahı & 300 Sahra Topu", label_en: "Suleiman HQ & Artillery Battery", tacColor: "#ef4444" },
+              { lat: 45.975, lng: 18.640, icon: "🛡️", label: "Kral II. Lajos & Macar Zırhlı Süvarileri", label_en: "King Louis II & Heavy Knights", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. İki Saatlik Kırılma",
+            btn_en: "2. The Two-Hour Clash",
+            title_tr: "Macar Taarruzu ve 300 Topun Çapraz Baraj Ateşi",
+            title_en: "The Hungarian Heavy Charge & Ottoman Crossfire",
+            desc_tr: "Kral Lajos'un zırhlı şövalyeleri Osmanlı merkezine doğru hızla hücum etti. Kanat süvarilerinin manevrasıyla topçu bataryalarının önü açıldı; 300 top aynı anda ateşlenerek Macar hatlarını iki saatte darmadağın etti.",
+            desc_en: "Hungarian heavy knights charged the Ottoman center. Ottoman cavalry parted to unmask 300 chained cannons firing devastating point-blank crossfire that shattered the assault in two hours.",
+            forces_tr: "Osmanlı Topçu & Tüfekçi Taburu vs. Macar Ağır Süvari Hücumu",
+            forces_en: "Ottoman Artillery Crossfire vs. Hungarian Heavy Cavalry",
+            outcome_tr: "Tarihin En Hızlı Kesin Meydan Muharebesi Zaferi (2 Saat)",
+            outcome_en: "Decisive Rout in Record Time (Under Two Hours)",
+            focusLat: 45.990,
+            focusLng: 18.680,
+            vectors: [
+              { startLat: 46.020, startLng: 18.650, endLat: 45.990, endLng: 18.680, type: 'attack', label: "Rumeli Akıncıları Kanat Kuşatması" },
+              { startLat: 45.965, startLng: 18.710, endLat: 45.990, endLng: 18.680, type: 'attack', label: "Anadolu Süvarileri Kanat Kapanı" }
+            ],
+            rings: [
+              { lat: 45.990, lng: 18.680, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.75, speed: 0.70, repeat: 520 }
+            ],
+            markers: [
+              { lat: 45.990, lng: 18.680, icon: "💥", label: "Mohaç Meydan Muharebesi Kırılma Noktası", label_en: "Mohács Main Battle Line", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Zafer & Orta Avrupa",
+            btn_en: "3. Central European Hegemony",
+            title_tr: "Macar Krallığı'nın Sonu ve Budin'in Fethi (1526–1541)",
+            title_en: "Fall of the Kingdom of Hungary & Conquest of Buda",
+            desc_tr: "Mohaç Zaferi ile Orta Avrupa'nın kapıları açıldı. Kanuni Sultan Süleyman Budin'e (Budapeşte) girdi; Macaristan Osmanlı topraklarına katılarak 150 yıl sürecek Budin Beylerbeyliği kuruldu.",
+            desc_en: "Victory established Ottoman mastery over Central Europe. Suleiman entered Buda, incorporating Hungary into the empire and securing the Danube waterway.",
+            forces_tr: "Muzaffer Osmanlı Ordusu vs. Dağılan Macar İttifakı",
+            forces_en: "Victorious Ottoman Empire vs. Collapsed Hungarian Forces",
+            outcome_tr: "Orta Avrupa'da Zirve Hakimiyet • Budin Beylerbeyliği Kuruldu",
+            outcome_en: "Peak Ottoman Hegemony in Central Europe",
+            focusLat: 45.990,
+            focusLng: 18.680,
+            vectors: [
+              { startLat: 45.990, startLng: 18.680, endLat: 47.498, endLng: 19.040, type: 'defense', label: "Mohaç ➔ Budin (Budapeşte) İlerleme Hattı" }
+            ],
+            rings: [
+              { lat: 45.990, lng: 18.680, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.88, speed: 0.45, repeat: 820 }
+            ],
+            markers: [
+              { lat: 47.498, lng: 19.040, icon: "🏰", label: "Budin Kalesi (Osmanlı Merkezi)", label_en: "Buda Castle (Ottoman Seat)", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      },
+      waterloo: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Hougoumont & La Haye",
+            btn_en: "1. Hougoumont & Outposts",
+            title_tr: "18 Haziran 1815: Hougoumont Çiftliği ve Açılış Taarruzu",
+            title_en: "June 18, 1815: Assault on Hougoumont & Allied Outposts",
+            desc_tr: "Napoléon Bonaparte, Brüksel'in güneyindeki Waterloo sırtlarında Dük Wellington komutasındaki İngiliz ve Müttefik ordusuna karşı taarruzu başlattı. Hougoumont Çiftliği etrafında kanlı boğuşmalar yaşandı.",
+            desc_en: "Napoleon launched his assault against the Duke of Wellington's Anglo-Allied ridge line south of Brussels, opening with fierce combat around the chateau of Hougoumont.",
+            forces_tr: "Fransız Ordusu (Napoléon Bonaparte) vs. İngiliz-Müttefik Ordusu (Dük Wellington)",
+            forces_en: "French Armée du Nord (Napoleon) vs. Anglo-Allied Army (Wellington)",
+            outcome_tr: "İngiliz İleri Karakolları Direndi, Fransız Kanadı Oyalandı",
+            outcome_en: "Allied Outposts Held • French Flank Tied Down",
+            focusLat: 50.680,
+            focusLng: 4.410,
+            vectors: [
+              { startLat: 50.665, startLng: 4.412, endLat: 50.680, endLng: 4.410, type: 'attack', label: "Napoléon Merkez Kolordusu Taarruzu" },
+              { startLat: 50.690, startLng: 4.405, endLat: 50.680, endLng: 4.410, type: 'defense', label: "Wellington Savunma Sırtları Hattı" }
+            ],
+            rings: [
+              { lat: 50.680, lng: 4.410, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.54, speed: 0.52, repeat: 700 }
+            ],
+            markers: [
+              { lat: 50.665, lng: 4.412, icon: "🦅", label: "Napoléon Karargahı (La Belle Alliance)", label_en: "Napoleon HQ (Belle Alliance)", tacColor: "#ef4444" },
+              { lat: 50.685, lng: 4.408, icon: "🦁", label: "Wellington Sırtı & Mont-Saint-Jean", label_en: "Wellington Ridge (Mont-St-Jean)", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Süvari & Kareler",
+            btn_en: "2. Cavalry vs Squares",
+            title_tr: "Mareşal Ney'in Süvari Taarruzu ve İngiliz Piyade Kareleri",
+            title_en: "Marshal Ney's Grand Cavalry Charges vs Allied Squares",
+            desc_tr: "Mareşal Ney komutasındaki 9.000 Fransız ağır süvarisi İngiliz sırtlarına dalga dalga hücum etti. Wellington'ın piyadeleri kare düzeni alarak süvari hücumlarını sarsılmaz bir disiplinle püskürttü.",
+            desc_en: "Marshal Ney led 9,000 French cuirassiers and cavalry in massive uphill charges against Wellington's infantry, who held firm in unyielding defensive squares.",
+            forces_tr: "Fransız Ağır Süvarileri (Mareşal Ney) vs. İngiliz Piyade Kareleri (Wellington)",
+            forces_en: "French Heavy Cavalry (Marshal Ney) vs. British Infantry Squares",
+            outcome_tr: "Fransız Süvarisi Eridi • İngiliz Hatları Kırılamadı",
+            outcome_en: "French Cavalry Spent • Allied Line Held",
+            focusLat: 50.680,
+            focusLng: 4.410,
+            vectors: [
+              { startLat: 50.670, startLng: 4.415, endLat: 50.682, endLng: 4.412, type: 'attack', label: "Fransız Zırhlı Süvari Dalgası" },
+              { startLat: 50.685, startLng: 4.415, endLat: 50.680, endLng: 4.410, type: 'defense', label: "İngiliz Kare Düzeni Savunma Ateşi" }
+            ],
+            rings: [
+              { lat: 50.680, lng: 4.410, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.70, speed: 0.65, repeat: 580 }
+            ],
+            markers: [
+              { lat: 50.680, lng: 4.410, icon: "⚔️", label: "Ana Muharebe ve Kareler Alanı", label_en: "Infantry Squares Clash Zone", tacColor: "#ef4444" },
+              { lat: 50.678, lng: 4.398, icon: "🏰", label: "Hougoumont Kalesi", label_en: "Chateau d'Hougoumont", tacColor: "#38bdf8" }
+            ]
+          },
+          {
+            btn_tr: "3. Prusya & Son Perde",
+            btn_en: "3. Blücher & Final Rout",
+            title_tr: "Mareşal Blücher'in Gelişi ve İmparatorluk Muhafızları",
+            title_en: "Arrival of Blücher's Prussians & Rout of the Imperial Guard",
+            desc_tr: "Mareşal Blücher komutasındaki Prusya ordusu sağ kanattan savaş alanına girdi. Napoléon'un efsanevi 'Eski Muhafızları' (Garde Impériale) son taarruza kalktı ancak geri püskürtüldü. Napolyon Savaşları resmen sona erdi.",
+            desc_en: "Marshal Blücher's Prussian army struck the French right flank at Plancenoit. The Imperial Guard broke, marking the final downfall of Napoleon and the restoration of European peace.",
+            forces_tr: "İngiliz-Prusya Birleşik Kuvvetleri (Wellington & Blücher) vs. Fransız İmparatorluk Muhafızları",
+            forces_en: "Anglo-Prussian Combined Armies vs. French Imperial Guard",
+            outcome_tr: "Kesin Müttefik Zaferi • Napolyon Dönemi Resmen Sona Erdi",
+            outcome_en: "Decisive Allied Victory • End of the Napoleonic Era",
+            focusLat: 50.680,
+            focusLng: 4.410,
+            vectors: [
+              { startLat: 50.665, startLng: 4.480, endLat: 50.672, endLng: 4.425, type: 'attack', label: "Prusya Ordusu Sağ Kanat Taarruzu (Blücher)" }
+            ],
+            rings: [
+              { lat: 50.680, lng: 4.410, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.85, speed: 0.50, repeat: 760 }
+            ],
+            markers: [
+              { lat: 50.678, lng: 4.405, icon: "🦁", label: "Waterloo Aslan Tepe Anıtı", label_en: "Lion's Mound Monument", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      },
+      cannae: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Aufidus & Dışbükey Hilal",
+            btn_en: "1. Aufidus Crescent",
+            title_tr: "MÖ 216: Aufidus Nehri ve Hannibal'ın Dışbükey Hilal Düzeni",
+            title_en: "216 BC: River Aufidus & Hannibal's Inverted Crescent",
+            desc_tr: "Hannibal Barca, güney İtalya'daki Cannae ovasında 86.000 kişilik dev Roma ordusunu karşıladı. Merkezde zayıf İber ve Kelt birliklerini dışbükey hilal şeklinde öne sürerken, kanatlara seçkin Kartaca gazileri ile Numidya süvarilerini yerleştirdi.",
+            desc_en: "Hannibal Barca deployed his 50,000 veterans against Rome's massive 86,000-strong legionary army along the River Aufidus, arranging his center in a convex bow facing the enemy.",
+            forces_tr: "Kartaca Ordusu (Hannibal Barca) vs. Roma Cumhuriyeti Lejyonları (Konsül Paullus & Varro)",
+            forces_en: "Carthaginian Army (Hannibal) vs. Roman Republic Legions (Paullus & Varro)",
+            outcome_tr: "Taktik Tuzak Kuruldu: Roma Merkez Taarruzuna Başladı",
+            outcome_en: "Tactical Trap Set • Roman Legions Pushed Forward",
+            focusLat: 41.310,
+            focusLng: 16.150,
+            vectors: [
+              { startLat: 41.300, startLng: 16.170, endLat: 41.310, endLng: 16.150, type: 'attack', label: "Roma Lejyonları Merkez Taarruzu" },
+              { startLat: 41.320, startLng: 16.130, endLat: 41.310, endLng: 16.150, type: 'defense', label: "Kartaca Dışbükey Esnek Hilal Hattı" }
+            ],
+            rings: [
+              { lat: 41.310, lng: 16.150, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.52, speed: 0.50, repeat: 700 }
+            ],
+            markers: [
+              { lat: 41.315, lng: 16.140, icon: "🐘", label: "Hannibal Barca Karargahı", label_en: "Hannibal Barca HQ", tacColor: "#ef4444" },
+              { lat: 41.305, lng: 16.165, icon: "🏛️", label: "Roma Lejyonları Konsül Komutası", label_en: "Roman Consuls Command", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Çift Taraflı Kuşatma",
+            btn_en: "2. Double Envelopment",
+            title_tr: "İçbükey Dönüşüm ve Numidya Süvarilerinin Kanat Taarruzu",
+            title_en: "Convex to Concave: The Complete Double Envelopment",
+            desc_tr: "Roma merkez lejyonları hücum ettikçe Kartaca merkezi yavaşça geri çekilerek dışbükey hilali içbükey cebe dönüştürdü. Hasdrubal ve Numidya süvarileri Roma süvarilerini ovadan kovup Roma lejyonlarının arkasını kilitledi.",
+            desc_en: "As the Roman legions surged into the bowing center, Hannibal's veteran flanks stepped forward while his Numidian cavalry routed Roman horsemen and closed the rear.",
+            forces_tr: "Kartaca Seçkin Kanatları & Numidya Süvarileri vs. Sıkışan Roma Lejyonları",
+            forces_en: "Carthaginian Flanks & Numidian Cavalry vs. Compressed Roman Legions",
+            outcome_tr: "Askeri Tarihin En Kusursuz Çift Taraflı Kuşatması Sağlandı",
+            outcome_en: "Flawless Double Envelopment • Romans Trapped in Pocket",
+            focusLat: 41.310,
+            focusLng: 16.150,
+            vectors: [
+              { startLat: 41.325, startLng: 16.145, endLat: 41.310, endLng: 16.150, type: 'attack', label: "Kuzey Kanat Numidya Süvari Kuşatması" },
+              { startLat: 41.295, startLng: 16.155, endLat: 41.310, endLng: 16.150, type: 'attack', label: "Güney Kanat Kartaca Seçkin Piyade Kapanı" }
+            ],
+            rings: [
+              { lat: 41.310, lng: 16.150, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.72, speed: 0.65, repeat: 550 }
+            ],
+            markers: [
+              { lat: 41.310, lng: 16.150, icon: "💥", label: "Cannae Çifte Kuşatma Çemberi", label_en: "Cannae Double Envelopment Pocket", tacColor: "#ef4444" },
+              { lat: 41.325, lng: 16.160, icon: "🐎", label: "Numidya Süvarileri Arkadan Çevirme", label_en: "Numidian Cavalry Rear Strike", tacColor: "#38bdf8" }
+            ]
+          },
+          {
+            btn_tr: "3. Taktik Başyapıt",
+            btn_en: "3. Masterpiece of Annihilation",
+            title_tr: "Tarihin En Büyük Kuşatma Zaferi ve Roma'nın Şoku",
+            title_en: "The Ultimate Tactical Triumph & Legacy of Cannae",
+            desc_tr: "Bir günde 60.000'den fazla Roma askeri ve Konsül Paullus hayatını kaybetti. Cannae Muharebesi dünya harp akademilerinde iki bin yıldır taktik dehanın en üst zirvesi kabul edilir.",
+            desc_en: "Over 60,000 Romans fell in a single afternoon. Cannae remains the gold standard of encirclement warfare studied in military academies worldwide for two millennia.",
+            forces_tr: "Muzaffer Kartaca Ordusu vs. Yıkıma Uğrayan Roma Cumhuriyeti",
+            forces_en: "Victorious Carthaginian Army vs. Devastated Roman Republic",
+            outcome_tr: "Antik Çağın En Kusursuz Meydan Zaferi • Askeri Dehanın Zirvesi",
+            outcome_en: "Greatest Tactical Annihilation in Ancient History",
+            focusLat: 41.310,
+            focusLng: 16.150,
+            vectors: [
+              { startLat: 41.310, startLng: 16.150, endLat: 41.902, endLng: 12.496, type: 'defense', label: "Roma Kapılarına Ulaşan Korku Dalgası" }
+            ],
+            rings: [
+              { lat: 41.310, lng: 16.150, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.88, speed: 0.45, repeat: 820 }
+            ],
+            markers: [
+              { lat: 41.310, lng: 16.150, icon: "🏆", label: "Cannae Taktik Zafer Anıtı", label_en: "Cannae Tactical Landmark", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      },
+      kudus: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Hıttin Boynuzları",
+            btn_en: "1. Horns of Hattin",
+            title_tr: "4 Temmuz 1187: Hıttin Tepeleri ve Susuzluk Tuzağı",
+            title_en: "July 4, 1187: The Horns of Hattin & The Arid Trap",
+            desc_tr: "Selahaddin Eyyubi, Kudüs Haçlı Krallığı ordusunu susuz ve çorak Hıttin Tepeleri'ne çekti. Rüzgar yönünde çalıları ateşe vererek duman ve alevlerle Haçlı ordusunu Taberiye Gölü'nden kesti.",
+            desc_en: "Saladin lured the Crusader army under King Guy of Lusignan across the waterless plateau of Hattin, setting brushfires downwind and cutting them off from the Sea of Galilee.",
+            forces_tr: "Eyyubi Ordusu (Sultan Selahaddin Eyyubi) vs. Kudüs Haçlı Krallığı (Kral Guy de Lusignan)",
+            forces_en: "Ayyubid Army (Saladin) vs. Crusader Kingdom of Jerusalem (Guy of Lusignan)",
+            outcome_tr: "Haçlı Ordusu Susuz Kaldı ve Hıttin Tepeleri'nde Kuşatıldı",
+            outcome_en: "Crusader Host Trapped Without Water on the Horns",
+            focusLat: 32.805,
+            focusLng: 35.450,
+            vectors: [
+              { startLat: 32.785, startLng: 35.520, endLat: 32.805, endLng: 35.450, type: 'attack', label: "Eyyubi Atlı Süvarileri Çember Harekatı" },
+              { startLat: 32.795, startLng: 35.390, endLat: 32.805, endLng: 35.450, type: 'defense', label: "Haçlı Ağır Şövalyeleri Çıkış Arayışı" }
+            ],
+            rings: [
+              { lat: 32.805, lng: 35.450, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.52, speed: 0.50, repeat: 700 }
+            ],
+            markers: [
+              { lat: 32.810, lng: 35.440, icon: "⚔️", label: "Selahaddin Eyyubi Otağı", label_en: "Saladin Command Post", tacColor: "#ef4444" },
+              { lat: 32.800, lng: 35.460, icon: "🛡️", label: "Kral Guy & Haçlı Çadırı", label_en: "King Guy & Royal Red Tent", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Hıttin Zaferi",
+            btn_en: "2. Rout at Hattin",
+            title_tr: "Kutsal Haç'ın Alınması ve Haçlı Ordusunun Dağılması",
+            title_en: "Capture of the True Cross & Rout of the Crusader Host",
+            desc_tr: "Susuzluk ve çember taarruzuyla Haçlı hatları kırıldı. Kudüs Krallığı'nın en kutsal simgesi 'Gerçek Haç' ele geçirildi; Kral Guy ve Renaud de Châtillon esir alındı. Kudüs'ün savunmasız kalması kesinleşti.",
+            desc_en: "The desperate Crusader charges failed against Saladin's archers. The True Cross was captured, King Guy taken prisoner, and the military backbone of the Crusader States broken.",
+            forces_tr: "Eyyubi Ordusu vs. Teslim Olan Kudüs Krallığı Birlikleri",
+            forces_en: "Ayyubid Forces vs. Routed Crusader Knights",
+            outcome_tr: "Haçlı Ordusu Tamamen Dağıtıldı • Kudüs Yolu Açıldı",
+            outcome_en: "Decisive Ayyubid Victory • Road to Jerusalem Open",
+            focusLat: 32.805,
+            focusLng: 35.450,
+            vectors: [
+              { startLat: 32.805, startLng: 35.450, endLat: 31.780, endLng: 35.230, type: 'defense', label: "Hıttin ➔ Kudüs Fethi İlerleme Hattı" }
+            ],
+            rings: [
+              { lat: 32.805, lng: 35.450, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.70, speed: 0.60, repeat: 600 }
+            ],
+            markers: [
+              { lat: 32.805, lng: 35.450, icon: "💥", label: "Hıttin Meydan Zaferi Noktası", label_en: "Hattin Victory Monument", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Kudüs'ün Fethi",
+            btn_en: "3. Liberation of Jerusalem",
+            title_tr: "2 Ekim 1187: Selahaddin Eyyubi'nin Kudüs'e Girişi ve Barış",
+            title_en: "October 2, 1187: Saladin's Peaceful Entry into Jerusalem",
+            desc_tr: "Kısa bir kuşatmanın ardından Balian of Ibelin ile varılan barış anlaşmasıyla Kudüs teslim edildi. 88 yıllık Haçlı hakimiyetine son verilirken Selahaddin, halka dokunulmayacağını ve ibadet özgürlüğünü garanti ederek insanlık tarihine geçti.",
+            desc_en: "Following negotiations with Balian of Ibelin, Saladin entered Jerusalem on the anniversary of the Prophet's Night Journey, ending 88 years of Crusader rule with celebrated magnanimity and tolerance.",
+            forces_tr: "Muzaffer Eyyubi Kuvvetleri vs. Kudüs Savunucuları (Balian of Ibelin)",
+            forces_en: "Ayyubid Forces vs. Defenders of Jerusalem (Balian of Ibelin)",
+            outcome_tr: "88 Yıllık İşgal Sona Erdi • Mescid-i Aksa ve Kudüs Özgürleşti",
+            outcome_en: "End of 88-Year Crusader Occupation • Peace & Freedom of Worship Restored",
+            focusLat: 31.780,
+            focusLng: 35.230,
+            vectors: [
+              { startLat: 31.790, startLng: 35.220, endLat: 31.780, endLng: 35.230, type: 'attack', label: "Kuzey Surları (Şam Kapısı) Kuşatma Hattı" },
+              { startLat: 31.770, startLng: 35.240, endLat: 31.780, endLng: 35.230, type: 'defense', label: "Zeytindağı Selahaddin Eyyubi Karargahı" }
+            ],
+            rings: [
+              { lat: 31.780, lng: 35.230, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.85, speed: 0.45, repeat: 800 }
+            ],
+            markers: [
+              { lat: 31.778, lng: 35.235, icon: "🕌", label: "Mescid-i Aksa & Kubbetü's-Sahra", label_en: "Al-Aqsa & Dome of the Rock", tacColor: "#fbbf24" },
+              { lat: 31.781, lng: 35.230, icon: "🏰", label: "Davud Kulesi (Kudüs Kalesi)", label_en: "Tower of David (Citadel)", tacColor: "#ef4444" }
+            ]
+          }
+        ]
+      },
+      trafalgar: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Nelson Touch Planı",
+            btn_en: "1. The Nelson Touch",
+            title_tr: "21 Ekim 1805: İki Kolon Yarma Planı ve 'İngiltere Bekler...'",
+            title_en: "October 21, 1805: The 'Nelson Touch' Two-Column Assault",
+            desc_tr: "Amiral Lord Nelson, Trafalgar Burnu açıklarında Fransız ve İspanyol birleşik donanmasını karşıladı. Geleneksel paralel hat yerine, donanmayı iki dik kolona ayırarak düşman hattını ortadan yarma planını (The Nelson Touch) uyguladı.",
+            desc_en: "Admiral Lord Nelson intercepted the Franco-Spanish fleet off Cape Trafalgar, abandoning traditional parallel line tactics to pierce the enemy line with two perpendicular columns.",
+            forces_tr: "İngiliz Kraliyet Donanması (27 Hat Gemisi - Nelson) vs. Fransız-İspanyol Birleşik Armadası (33 Hat Gemisi - Villeneuve)",
+            forces_en: "British Royal Navy (27 ships - Nelson) vs. Combined Franco-Spanish Fleet (33 ships - Villeneuve)",
+            outcome_tr: "Düşman Hattı İki Ayrı Noktadan Yarıldı",
+            outcome_en: "Allied Line Pierced in Two Decisive Columns",
+            focusLat: 36.180,
+            focusLng: -6.030,
+            vectors: [
+              { startLat: 36.195, startLng: -6.150, endLat: 36.180, endLng: -6.030, type: 'attack', label: "HMS Victory Kolonu (Lord Nelson)" },
+              { startLat: 36.155, startLng: -6.120, endLat: 36.170, endLng: -6.020, type: 'attack', label: "HMS Royal Sovereign Kolonu (Collingwood)" }
+            ],
+            rings: [
+              { lat: 36.180, lng: -6.030, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.54, speed: 0.52, repeat: 700 }
+            ],
+            markers: [
+              { lat: 36.185, lng: -6.045, icon: "⚓", label: "HMS Victory (Nelson Amiral Gemisi)", label_en: "HMS Victory Flagship", tacColor: "#ef4444" },
+              { lat: 36.175, lng: -6.015, icon: "⛵", label: "Bucentaure (Villeneuve Amiral Gemisi)", label_en: "Bucentaure (Villeneuve)", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Borda Ateşi & Çarpışma",
+            btn_en: "2. Decisive Broadside Melee",
+            title_tr: "Gemi Gemiye Çarpışma ve Redoutable ile Düello",
+            title_en: "Close-Quarters Broadside Melee & The Death of Nelson",
+            desc_tr: "HMS Victory, Fransız amiral gemisi Bucentaure ve Redoutable'ın arasından geçerek öldürücü borda ateşi açtı. Yakın menzilli tüfek atışında Lord Nelson vuruldu ancak donanmanın zaferini görmeden önce son nefesini vermedi.",
+            desc_en: "HMS Victory raked Bucentaure at point-blank range and locked horns with Redoutable. Nelson was mortally wounded on the quarterdeck but lived long enough to know his fleet had triumphed.",
+            forces_tr: "Kraliyet Donanması Borda Topları vs. Fransız-İspanyol Armadası",
+            forces_en: "British Point-Blank Broadsides vs. Franco-Spanish Line",
+            outcome_tr: "Fransız-İspanyol Hattı Tamamen Parçalandı",
+            outcome_en: "Combined Fleet Shattered in Intense Melee",
+            focusLat: 36.180,
+            focusLng: -6.030,
+            vectors: [
+              { startLat: 36.180, startLng: -6.030, endLat: 36.160, endLng: -5.990, type: 'attack', label: "Dağılan Fransız-İspanyol Gemilerinin Ricatı" }
+            ],
+            rings: [
+              { lat: 36.180, lng: -6.030, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.70, speed: 0.65, repeat: 580 }
+            ],
+            markers: [
+              { lat: 36.180, lng: -6.030, icon: "💥", label: "Trafalgar Ana Muharebe Çarpışma Noktası", label_en: "Trafalgar Decisive Engagement", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Denizlerin Efendisi",
+            btn_en: "3. Rule the Waves",
+            title_tr: "Britanya'nın Deniz Hakimiyeti ve Napolyon'un İstilası İptal",
+            title_en: "British Naval Supremacy & Inviolable Island Security",
+            desc_tr: "22 düşman gemisi imha edildi veya ele geçirildi; İngilizler tek bir gemi bile kaybetmedi. Trafalgar, Britanya'ya 100 yıl boyunca 'Denizlerin Efendisi' (Pax Britannica) ünvanını getirdi.",
+            desc_en: "With 22 enemy ships captured or destroyed without a single British loss, Trafalgar established undisputed British naval dominance worldwide for over a century.",
+            forces_tr: "Muzaffer Kraliyet Donanması vs. Teslim Olan Donanma Kalıntıları",
+            forces_en: "Victorious Royal Navy vs. Captured Combined Fleet",
+            outcome_tr: "Britanya Denizlerin Tek Hakimi Oldu • İstilâ Tehdidi Yok Edildi",
+            outcome_en: "Total Naval Hegemony Secured • Britain Inviolable at Sea",
+            focusLat: 36.180,
+            focusLng: -6.030,
+            vectors: [
+              { startLat: 36.180, startLng: -6.030, endLat: 51.507, endLng: -0.127, type: 'defense', label: "Trafalgar Zaferinin Londra'ya İlânı" }
+            ],
+            rings: [
+              { lat: 36.180, lng: -6.030, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.85, speed: 0.45, repeat: 800 }
+            ],
+            markers: [
+              { lat: 36.180, lng: -6.030, icon: "🏆", label: "Trafalgar Zafer Alanı", label_en: "Cape Trafalgar Victory Memorial", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      },
+      moskova: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Şevardino & Tabyalar",
+            btn_en: "1. Shevardino & Redoubts",
+            title_tr: "7 Eylül 1812: Borodino Tabyaları ve Karşılıklı Topçu Düellosu",
+            title_en: "September 7, 1812: Shevardino Redoubts & Massive Artillery Duel",
+            desc_tr: "Moskova'nın 120 km batısındaki Borodino köyünde Mareşal Mihail Kutuzov komutasındaki Rus ordusu, Napoléon'un 130.000 kişilik Grande Armée'sinin karşısına dev toprak tabyalarla çıktı. 1.000'den fazla top aynı anda ateşe başladı.",
+            desc_en: "Outside Borodino, 120 km west of Moscow, General Kutuzov entrenched 120,000 Russian troops behind the Raevsky Redoubt and Bagration Flèches to bar Napoleon's advance.",
+            forces_tr: "Fransız Büyük Ordusu (Grande Armée - Napoléon) vs. Rus İmparatorluk Ordusu (Mihail Kutuzov)",
+            forces_en: "French Grande Armée (Napoleon) vs. Imperial Russian Army (Kutuzov)",
+            outcome_tr: "Tarihin En Yoğun Topçu Baraj Ateşi Başladı",
+            outcome_en: "Deadliest Single-Day Artillery Duel of the Napoleonic Wars",
+            focusLat: 55.520,
+            focusLng: 35.820,
+            vectors: [
+              { startLat: 55.510, startLng: 35.770, endLat: 55.520, endLng: 35.820, type: 'attack', label: "Napoléon Kolordularının Tabyalara Taarruzu" },
+              { startLat: 55.535, startLng: 35.860, endLat: 55.520, endLng: 35.820, type: 'defense', label: "Raevsky Tabyası ve Bagration Taburu Savunması" }
+            ],
+            rings: [
+              { lat: 55.520, lng: 35.820, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.55, speed: 0.55, repeat: 680 }
+            ],
+            markers: [
+              { lat: 55.515, lng: 35.790, icon: "🦅", label: "Napoléon Karargahı (Şevardino)", label_en: "Napoleon HQ (Shevardino)", tacColor: "#ef4444" },
+              { lat: 55.525, lng: 35.845, icon: "🏰", label: "Büyük Raevsky Tabyası", label_en: "Great Raevsky Redoubt", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Göğüs Göğüse Çarpışma",
+            btn_en: "2. The Bloodbath",
+            title_tr: "Tabyaların Düşüşü ve 70.000 Askerin Şehit/Kayıp Düştüğü An",
+            title_en: "Assault on the Flèches & The Battle of 70,000 Casualties",
+            desc_tr: "Fransız süvari ve piyadeleri Bagration tabyalarını kanlı süngü hücumlarıyla ele geçirdi. Tek bir günde 70.000'den fazla asker hayatını kaybetti veya yaralandı; iki ordu da geri adım atmadı.",
+            desc_en: "French cavalry stormed the Great Redoubt in ferocious hand-to-hand combat. Over 70,000 casualties occurred in a single day, leaving neither army decisively routed.",
+            forces_tr: "Fransız Ağır Süvarileri (Murat) vs. Rus Muhafız Alayları (Bagration)",
+            forces_en: "French Heavy Cavalry (Murat) vs. Russian Imperial Guards",
+            outcome_tr: "Tabyalar Ele Geçirildi Fakat Rus Ordusu İmha Edilemedi",
+            outcome_en: "Redoubts Taken • Russian Army Retreated in Good Order",
+            focusLat: 55.520,
+            focusLng: 35.820,
+            vectors: [
+              { startLat: 55.518, startLng: 35.805, endLat: 55.520, endLng: 35.820, type: 'attack', label: "Murat Süvari Kolordusu Yarması" }
+            ],
+            rings: [
+              { lat: 55.520, lng: 35.820, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.72, speed: 0.65, repeat: 540 }
+            ],
+            markers: [
+              { lat: 55.520, lng: 35.820, icon: "💥", label: "Borodino Merkez Çarpışma Hattı", label_en: "Borodino Main Battle Ground", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Moskova Yangını & Ricat",
+            btn_en: "3. Moscow Fire & Retreat",
+            title_tr: "Moskova'nın Boşaltılması ve Napoléon'un Büyük Ricatı",
+            title_en: "The Burning of Moscow & The Great French Retreat",
+            desc_tr: "Kutuzov ordusunu korumak için Moskova'yı tahliye etti. Boş şehre giren Napoléon büyük yangın ve Rus kışıyla karşılaştı; erzak bulamayarak tarihin en acımasız geri çekilme faciasını yaşadı.",
+            desc_en: "Kutuzov preserved his army by yielding Moscow. Napoleon entered an evacuated, burning capital, only to face bitter winter and scorched-earth tactics that destroyed the Grande Armée.",
+            forces_tr: "Rus Kışı ve Kutuzov'un Yıpratma Stratejisi vs. Geri Çekilen Grande Armée",
+            forces_en: "Russian Winter & Guerrilla Strategy vs. Retreating Grande Armée",
+            outcome_tr: "Napoléon'un Moskova Seferi İflas Etti • Büyük Ricat Başladı",
+            outcome_en: "Napoleon's Campaign Collapsed • Strategic Russian Triumph",
+            focusLat: 55.755,
+            focusLng: 37.617,
+            vectors: [
+              { startLat: 55.755, startLng: 37.617, endLat: 54.687, endLng: 25.279, type: 'defense', label: "Moskova ➔ Vilnius Grande Armée Ricat Hattı" }
+            ],
+            rings: [
+              { lat: 55.755, lng: 37.617, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.85, speed: 0.45, repeat: 800 }
+            ],
+            markers: [
+              { lat: 55.752, lng: 37.619, icon: "🏰", label: "Moskova Kremlin Sarayı", label_en: "Moscow Kremlin", tacColor: "#fbbf24" }
+            ]
+          }
+        ]
       }
+
     };
 
     // Herhangi bir şehir/durak için 3 aşamalı 3B Taktik Savaş veya Tarihsel/Kültürel Harekat Simülasyonu döndürür
@@ -7713,8 +8263,29 @@
       });
     }
 
+    function getWarCuratedKey(selectedWar, item) {
+      if (!selectedWar) return null;
+      const title = ((selectedWar.title_tr || '') + ' ' + (selectedWar.short_tr || '') + ' ' + (selectedWar.title_en || '')).toLocaleLowerCase('tr-TR');
+      if (title.includes('çanakkale') || title.includes('gallipoli')) return 'canakkale';
+      if (title.includes('istanbul') || title.includes('constantinople') || title.includes('feth')) return 'istanbul';
+      if (title.includes('sakarya') || title.includes('taarruz') || title.includes('dumlupınar') || title.includes('kocatepe')) return 'ankara';
+      if (title.includes('malazgirt') || title.includes('manzikert')) return 'malazgirt';
+      if (title.includes('mohaç') || title.includes('mohacs')) return 'mohac';
+      if (title.includes('waterloo')) return 'waterloo';
+      if (title.includes('cannae') || title.includes('pön') || title.includes('zama')) return 'cannae';
+      if (title.includes('kudüs') || title.includes('hıttin') || title.includes('hattin') || title.includes('jerusalem')) return 'kudus';
+      if (title.includes('trafalgar')) return 'trafalgar';
+      if (title.includes('borodino') || title.includes('moskova')) return 'moskova';
+      if (item && item.id && CURATED_BATTLE_SIMULATIONS[item.id]) return item.id;
+      return null;
+    }
+
     // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir (İki taraf birbirinden ayrık durur)
     function buildPhasesForSelectedWar(item, selectedWar) {
+      const warKey = getWarCuratedKey(selectedWar, item);
+      if (warKey && CURATED_BATTLE_SIMULATIONS[warKey]) {
+        return CURATED_BATTLE_SIMULATIONS[warKey].phases;
+      }
       const wLat = selectedWar.lat;
       const wLng = selectedWar.lng;
       const b = parseWarBelligerents(selectedWar);
@@ -8698,6 +9269,11 @@
       }
     }
 
+    window.selectCity = selectCity;
+    window.closeDrawer = closeDrawer;
+    window.selectCountryWarBranch = selectCountryWarBranch;
+    window.selectBattlePhase = selectBattlePhase;
+
     // Sesli anlatıcı tamamen kaldırıldı
     function stopSpeech() {}
 
@@ -9637,14 +10213,24 @@
         updateFilterButtonStyles();
         updateEraButtonStyles();
         renderFilteredMarkers();
+        isTilted3D = false;
+        const badge = document.getElementById('viewModeBadge');
+        if (badge) badge.textContent = '3D';
+        const btn3D = document.getElementById('toggle3DViewBtn');
+        if (btn3D) {
+          btn3D.classList.remove('border-sky-400', 'bg-sky-500/20', 'text-sky-200');
+        }
         world.pointOfView({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
         setTimeout(updateZoomAndCompass, 1450);
       });
 
-      document.getElementById('toggle3DViewBtn').addEventListener('click', () => {
+      document.getElementById('toggle3DViewBtn').addEventListener('click', e => {
         isTilted3D = !isTilted3D;
         const pov = world.pointOfView();
         const badge = document.getElementById('viewModeBadge');
+        e.currentTarget.classList.toggle('border-sky-400', isTilted3D);
+        e.currentTarget.classList.toggle('bg-sky-500/20', isTilted3D);
+        e.currentTarget.classList.toggle('text-sky-200', isTilted3D);
         if (isTilted3D) {
           badge.textContent = '2D';
           world.pointOfView(

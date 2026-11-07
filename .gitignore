@@ -5,8 +5,15 @@ package-lock.json
 package.json
 test_screenshots/
 temp/
+__pycache__/
 dev_test_runner.js
 dev_test_*.js
 dev_audit.js
+dev_audit.py
+dev_test_*.py
+dev_patch_*.py
+
+
+
 
 
