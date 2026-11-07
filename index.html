@@ -5312,7 +5312,222 @@
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
     const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
-    const SATELLITE_TILE_URL = (x, y, l) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${l}/${y}/${x}`;
+
+    // Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada/Bölge İsimleri) 3B Küresel Yüzey Karo Motoru
+    let googleEarthTileGroup = null;
+    const googleEarthTileCache = new Map();
+    const googleEarthTextureLoader = new THREE.TextureLoader();
+    googleEarthTextureLoader.setCrossOrigin('anonymous');
+    let lastTileUpdateSignature = '';
+
+    function latLngToSlippyTile(lat, lng, z) {
+      const n = Math.pow(2, z);
+      const clampedLat = Math.max(-85.05, Math.min(85.05, lat));
+      const latRad = (clampedLat * Math.PI) / 180;
+      const x = Math.floor(((lng + 180) / 360) * n);
+      const y = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n);
+      return {
+        x: ((x % n) + n) % n,
+        y: Math.max(0, Math.min(n - 1, y)),
+        n
+      };
+    }
+
+    function slippyTileYToLat(yFrac, n) {
+      const m = Math.PI * (1 - (2 * yFrac) / n);
+      return (180 / Math.PI) * Math.atan(Math.sinh(m));
+    }
+
+    function getOrCreateGoogleEarthTileMesh(z, x, y) {
+      const key = `${z}/${x}/${y}`;
+      if (googleEarthTileCache.has(key)) {
+        return googleEarthTileCache.get(key);
+      }
+
+      const n = Math.pow(2, z);
+      const GRID = 8;
+      const positions = [];
+      const uvs = [];
+      const indices = [];
+      const tileAlt = 0.0005 + z * 0.00012;
+
+      for (let j = 0; j <= GRID; j++) {
+        const v = j / GRID;
+        const lat = slippyTileYToLat(y + v, n);
+        for (let i = 0; i <= GRID; i++) {
+          const u = i / GRID;
+          const lng = ((x + u) / n) * 360 - 180;
+          const c = world.getCoords(lat, lng, tileAlt);
+          positions.push(c.x, c.y, c.z);
+          uvs.push(u, 1 - v);
+        }
+      }
+
+      for (let j = 0; j < GRID; j++) {
+        for (let i = 0; i < GRID; i++) {
+          const a = j * (GRID + 1) + i;
+          const b = a + 1;
+          const c = a + (GRID + 1);
+          const d = c + 1;
+          indices.push(a, c, b, b, c, d);
+        }
+      }
+
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geom.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      geom.setIndex(indices);
+
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide,
+        depthTest: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -z,
+        polygonOffsetUnits: -1
+      });
+
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.renderOrder = 10 + z;
+      mesh.visible = false;
+      mesh.userData = { key, z, x, y, loaded: false, wanted: true };
+
+      const serverIdx = (x + y) & 3;
+      const tileUrl = `https://mt${serverIdx}.google.com/vt/lyrs=y&hl=tr&x=${x}&y=${y}&z=${z}`;
+
+      googleEarthTextureLoader.load(
+        tileUrl,
+        tex => {
+          if (THREE.SRGBColorSpace) {
+            tex.colorSpace = THREE.SRGBColorSpace;
+          }
+          const renderer = world && world.renderer ? world.renderer() : null;
+          if (renderer && renderer.capabilities) {
+            tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+          }
+          tex.minFilter = THREE.LinearFilter;
+          tex.magFilter = THREE.LinearFilter;
+          tex.generateMipmaps = false;
+          tex.needsUpdate = true;
+
+          mat.map = tex;
+          mat.opacity = 1;
+          mat.needsUpdate = true;
+          mesh.userData.loaded = true;
+          mesh.visible = Boolean(mesh.userData.wanted);
+        },
+        undefined,
+        () => {
+          // Yedek olarak Esri World Imagery kullan
+          const fallbackUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
+          googleEarthTextureLoader.load(fallbackUrl, tex2 => {
+            if (THREE.SRGBColorSpace) tex2.colorSpace = THREE.SRGBColorSpace;
+            tex2.minFilter = THREE.LinearFilter;
+            tex2.magFilter = THREE.LinearFilter;
+            tex2.generateMipmaps = false;
+            mat.map = tex2;
+            mat.opacity = 1;
+            mat.needsUpdate = true;
+            mesh.userData.loaded = true;
+            mesh.visible = Boolean(mesh.userData.wanted);
+          });
+        }
+      );
+
+      if (googleEarthTileGroup) {
+        googleEarthTileGroup.add(mesh);
+      }
+      googleEarthTileCache.set(key, mesh);
+
+      // Önbellek boyutunu dengede tut (En eski görünmeyen karoları temizle)
+      if (googleEarthTileCache.size > 220) {
+        for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
+          if (!oldMesh.userData.wanted) {
+            if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
+            if (oldMesh.geometry) oldMesh.geometry.dispose();
+            if (oldMesh.material) {
+              if (oldMesh.material.map) oldMesh.material.map.dispose();
+              oldMesh.material.dispose();
+            }
+            googleEarthTileCache.delete(oldKey);
+            if (googleEarthTileCache.size <= 170) break;
+          }
+        }
+      }
+
+      return mesh;
+    }
+
+    function updateGoogleEarthSurfaceTiles(pov) {
+      if (!world || !googleEarthTileGroup || !pov) return;
+
+      // Uzaydan genel görünümde (altitude >= 1.25) 8K ana küre dokusunu göster
+      if (pov.altitude >= 1.25) {
+        googleEarthTileGroup.visible = false;
+        lastTileUpdateSignature = 'far';
+        return;
+      }
+
+      googleEarthTileGroup.visible = true;
+      const isMobile = window.innerWidth < 768;
+
+      let targetZ = 5;
+      if (pov.altitude < 0.13) {
+        targetZ = isMobile ? 8 : 9;
+      } else if (pov.altitude < 0.22) {
+        targetZ = 8;
+      } else if (pov.altitude < 0.38) {
+        targetZ = 7;
+      } else if (pov.altitude < 0.68) {
+        targetZ = 6;
+      } else {
+        targetZ = 5;
+      }
+
+      const centerTile = latLngToSlippyTile(pov.lat, pov.lng, targetZ);
+      const sig = `${targetZ}:${centerTile.x}:${centerTile.y}`;
+      if (sig === lastTileUpdateSignature) return;
+      lastTileUpdateSignature = sig;
+
+      const wantedKeys = new Set();
+      const radius = isMobile ? 2 : 3;
+
+      // 1) Alt katman (Parent Zoom Level): Yüksek çözünürlüklü karolar yüklenirken altta boşluk kalmaması için bir üst seviye karoları hazır tut
+      const parentZ = Math.max(4, targetZ - 1);
+      if (parentZ < targetZ) {
+        const pCenter = latLngToSlippyTile(pov.lat, pov.lng, parentZ);
+        const pRadius = isMobile ? 1 : 2;
+        for (let dy = -pRadius; dy <= pRadius; dy++) {
+          const py = pCenter.y + dy;
+          if (py < 0 || py >= pCenter.n) continue;
+          for (let dx = -pRadius; dx <= pRadius; dx++) {
+            const px = ((pCenter.x + dx) % pCenter.n + pCenter.n) % pCenter.n;
+            const pMesh = getOrCreateGoogleEarthTileMesh(parentZ, px, py);
+            wantedKeys.add(pMesh.userData.key);
+          }
+        }
+      }
+
+      // 2) Ana Google Earth Hybrid Karo Katmanı (targetZ)
+      for (let dy = -radius; dy <= radius; dy++) {
+        const ty = centerTile.y + dy;
+        if (ty < 0 || ty >= centerTile.n) continue;
+        for (let dx = -radius; dx <= radius; dx++) {
+          const tx = ((centerTile.x + dx) % centerTile.n + centerTile.n) % centerTile.n;
+          const mesh = getOrCreateGoogleEarthTileMesh(targetZ, tx, ty);
+          wantedKeys.add(mesh.userData.key);
+        }
+      }
+
+      for (const [k, mesh] of googleEarthTileCache.entries()) {
+        const isWanted = wantedKeys.has(k);
+        mesh.userData.wanted = isWanted;
+        mesh.visible = isWanted && mesh.userData.loaded;
+      }
+    }
 
     function initGlobe() {
       const container = document.getElementById('globeViz');
@@ -5418,6 +5633,11 @@
         directionalLight.position.set(1.5, 1.2, 1.2);
       }
 
+      // Google Earth Hybrid 3B Küresel Yüzey Karo Grubunu Sahneye Ekle (Ana 8K Küre Asla Gizlenmez, Üzerine Net Karolar Biner)
+      googleEarthTileGroup = new THREE.Group();
+      googleEarthTileGroup.renderOrder = 5;
+      world.scene().add(googleEarthTileGroup);
+
       // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Sadece Masaüstünde Aktif - Mobilde GPU Yükünü Sıfırlamak İçin Kapalı)
       const CLOUDS_ALT = 0.012;
       const CLOUDS_ROTATION_SPEED = -0.006;
@@ -5476,6 +5696,9 @@
             wheelZoomVelocity *= 0.88; // Google Earth tarzı yumuşak süzülerek yavaşlama
           } else {
             wheelZoomVelocity = 0;
+          }
+          if (world) {
+            updateGoogleEarthSurfaceTiles(world.pointOfView());
           }
           if (controls && typeof controls.update === 'function') {
             controls.update();
@@ -5543,10 +5766,13 @@
       }
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
 
-      // Yakınlaşıldığında bulutların opaklığını yumuşakça azalt ki 8K kara ve kıyı dokusu net görünsün
+      // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
+      updateGoogleEarthSurfaceTiles(pov);
+
+      // Yakınlaşıldığında bulutların opaklığını yumuşakça azalt ki Google Earth yüzey detayları ve yazıları net görünsün
       if (cloudsMesh && cloudsMesh.material) {
-        cloudsMesh.visible = pov.altitude >= 0.45;
-        cloudsMesh.material.opacity = pov.altitude < 0.85 ? 0.14 : 0.34;
+        cloudsMesh.visible = pov.altitude >= 0.88;
+        cloudsMesh.material.opacity = pov.altitude < 1.15 ? 0.14 : 0.34;
       }
 
       const compassIcon = document.getElementById('compassIcon');
