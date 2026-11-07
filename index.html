@@ -10156,8 +10156,13 @@
         if (activeCityId && !isImageLightboxOpen && !activeFigureModalState) {
           if (e.key === '1' || e.key === '2' || e.key === '3') {
             const idx = parseInt(e.key, 10) - 1;
-            const boxBtn = document.querySelector(`.gallery-box-btn[data-img-idx="${idx}"]`);
-            if (boxBtn) boxBtn.click();
+            if (activeCountryWarIndex >= 0) {
+              const phaseBtns = document.querySelectorAll('.battle-phase-btn');
+              if (phaseBtns[idx]) phaseBtns[idx].click();
+            } else {
+              const boxBtn = document.querySelector(`.gallery-box-btn[data-img-idx="${idx}"]`);
+              if (boxBtn) boxBtn.click();
+            }
           } else if (e.key === 'ArrowLeft') {
             const list = getFilteredLocations();
             if (!list.length) return;
