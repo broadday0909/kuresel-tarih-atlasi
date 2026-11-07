@@ -5,4 +5,8 @@ package-lock.json
 package.json
 test_screenshots/
 temp/
+dev_test_runner.js
+dev_test_*.js
+dev_audit.js
+
 
