@@ -4888,7 +4888,8 @@
     // 4. ULTRA HD FOTOGERÇEKÇİ 3B KÜRE, BULUT KATMANI VE ATMOSFER
     // Havadaki tüm çizgiler (arcs/paths/points/rings) kaldırıldı, sadece şehir pinleri var.
     // ============================================================================
-    const DAY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg';
+    const DAY_TEXTURE_MOBILE = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg';
+    const DAY_TEXTURE_8K_DESKTOP = './earth-8k.jpg';
     const BUMP_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png';
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
@@ -4903,7 +4904,7 @@
         alpha: false,
         powerPreference: isMobileDevice ? 'default' : 'high-performance'
       })(container)
-        .globeImageUrl(DAY_TEXTURE_ULTRA);
+        .globeImageUrl(isMobileDevice ? DAY_TEXTURE_MOBILE : DAY_TEXTURE_8K_DESKTOP);
 
       if (!isMobileDevice) {
         world.bumpImageUrl(BUMP_TEXTURE_ULTRA).backgroundImageUrl(SKY_TEXTURE_ULTRA);
@@ -4937,25 +4938,27 @@
       const renderer = world.renderer();
       const targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.0 : 2.0);
       renderer.setPixelRatio(targetDPR);
-      if (!isMobileDevice && renderer.capabilities) {
+      if (renderer.capabilities) {
         const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
         const applySharpness = () => {
           const mat = world.globeMaterial();
           if (mat) {
+            const aniso = isMobileDevice ? Math.min(4, maxAnisotropy) : maxAnisotropy;
             if (mat.map) {
-              mat.map.anisotropy = maxAnisotropy;
+              mat.map.anisotropy = aniso;
               mat.map.minFilter = THREE.LinearMipmapLinearFilter;
               mat.map.magFilter = THREE.LinearFilter;
               mat.map.needsUpdate = true;
             }
             if (mat.bumpMap) {
-              mat.bumpMap.anisotropy = maxAnisotropy;
+              mat.bumpMap.anisotropy = aniso;
               mat.bumpMap.needsUpdate = true;
             }
           }
         };
+        world.onGlobeReady(applySharpness);
         setTimeout(applySharpness, 600);
-        setTimeout(applySharpness, 1800);
+        setTimeout(applySharpness, 2200);
       }
 
       // Küre Materyalini Sadece Masaüstünde Fotogerçekçi Okyanus Parlaması, Kabartma ve Bulut Katmanı İle Güçlendir
