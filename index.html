@@ -16,8 +16,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Three.js & Globe.gl (Ücretsiz, API Anahtarsız 3B Küre & Uzay Motoru) -->
+  <!-- Three.js, TopoJSON & Globe.gl (Ücretsiz, API Anahtarsız 3B Küre & Vektör Sınır Motoru) -->
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
   <script src="https://unpkg.com/globe.gl@2.32.1/dist/globe.gl.min.js"></script>
 
   <script>
@@ -429,11 +430,11 @@
 <body class="relative w-screen h-screen overflow-hidden select-none">
 
   <!-- SİNEMATİK & PRESTİJLİ GİRİŞ EKRANI (OBSIDIAN BLACK, CHAMPAGNE GOLD & IVORY WHITE) -->
-  <div id="introOverlay" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+  <div id="introOverlay" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center p-4 sm:p-6 pb-8 sm:pb-6 text-center overflow-y-auto overflow-x-hidden">
     
     <!-- Ağır Çekimde Ters Yönlere Dönen Devasa Altın Pusula / Usturlap Halkaları (SVG Celestial Rings) -->
     <div class="pointer-events-none fixed inset-0 flex items-center justify-center overflow-hidden">
-      <svg class="w-[820px] h-[820px] sm:w-[980px] sm:h-[980px] max-w-none opacity-95" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="w-[540px] h-[540px] sm:w-[980px] sm:h-[980px] max-w-none opacity-95" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Dış Usturlap Derece Halkası (Saat Yönü) -->
         <g class="celestial-ring-cw">
           <circle cx="500" cy="500" r="450" stroke="rgba(212, 175, 55, 0.14)" stroke-width="1" />
@@ -464,70 +465,70 @@
       </svg>
     </div>
 
-    <!-- Merkez Sinematik Tipografi (Kutu İçine Hapsetmeden Doğrudan Merkezde) -->
-    <div class="relative z-10 max-w-5xl w-full px-4 flex flex-col items-center">
+    <!-- Merkez Sinematik Tipografi (Kutu İçine Hapsetmeden Doğrudan Merkezde - Mobilde Sıkıştırılmış) -->
+    <div class="relative z-10 max-w-5xl w-full px-3 sm:px-4 flex flex-col items-center">
       
       <!-- Üst Prestij Etiketi -->
-      <div class="cinematic-fade-up flex items-center gap-3 mb-5" style="animation-delay: 0.1s;">
-        <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-r from-transparent to-[#d4af37]/70"></span>
-        <span id="introTubitakBadge" class="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.38em] text-[#d4af37]">
+      <div class="cinematic-fade-up flex items-center gap-2 sm:gap-3 mb-2.5 sm:mb-5" style="animation-delay: 0.1s;">
+        <span class="h-[1px] w-6 sm:w-14 bg-gradient-to-r from-transparent to-[#d4af37]/70"></span>
+        <span id="introTubitakBadge" class="text-[9.5px] sm:text-xs font-semibold uppercase tracking-[0.22em] sm:tracking-[0.38em] text-[#d4af37]">
           TÜBİTAK 3B DÜNYA KÜLTÜR MİRASI PROJESİ
         </span>
-        <span class="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent to-[#d4af37]/70"></span>
+        <span class="h-[1px] w-6 sm:w-14 bg-gradient-to-l from-transparent to-[#d4af37]/70"></span>
       </div>
 
       <!-- Sinematik Blur-to-Clear & Letter-Spacing Açılan Ana Başlık -->
-      <h1 id="introMainTitle" class="font-display text-3xl sm:text-5xl md:text-6xl font-bold uppercase cinematic-title-reveal leading-tight">
+      <h1 id="introMainTitle" class="font-display text-2xl sm:text-5xl md:text-6xl font-bold uppercase cinematic-title-reveal leading-tight">
         KÜRESEL TARİH VE EDEBİYAT ATLASI
       </h1>
 
-      <p id="introProjectSubtitle" class="cinematic-fade-up mt-3 text-xs sm:text-sm md:text-base text-slate-300/80 font-light tracking-[0.22em] uppercase" style="animation-delay: 0.35s;">
+      <p id="introProjectSubtitle" class="cinematic-fade-up mt-1.5 sm:mt-3 text-[10px] sm:text-sm md:text-base text-slate-300/80 font-light tracking-[0.15em] sm:tracking-[0.22em] uppercase" style="animation-delay: 0.35s;">
         World History &amp; Literature 3D Interactive Atlas
       </p>
 
       <!-- Zarif Altın Ayırıcı Çizgi ve Pusula Yıldızı -->
-      <div class="cinematic-fade-up my-8 sm:my-10 flex items-center justify-center gap-4 w-full max-w-md" style="animation-delay: 0.55s;">
+      <div class="cinematic-fade-up my-3.5 sm:my-10 flex items-center justify-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-md" style="animation-delay: 0.55s;">
         <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#d4af37]/75 to-[#d4af37]"></div>
-        <span class="text-[#d4af37] text-sm">✦</span>
+        <span class="text-[#d4af37] text-xs sm:text-sm">✦</span>
         <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#d4af37]/75 to-[#d4af37]"></div>
       </div>
 
-      <!-- Çok Şık ve Büyük İmza Bölümü (Kutusuz, Ultra-Minimalist & Lüks) -->
-      <div class="cinematic-fade-up space-y-3 sm:space-y-4 text-center max-w-4xl mx-auto px-4" style="animation-delay: 0.75s;">
+      <!-- Çok Şık ve Büyük İmza Bölümü (Kutusuz, Ultra-Minimalist & Lüks - Mobilde Kompakt) -->
+      <div class="cinematic-fade-up space-y-1.5 sm:space-y-4 text-center max-w-4xl mx-auto px-2 sm:px-4" style="animation-delay: 0.75s;">
         
-        <!-- Akademik Danışman (Bayram Akpamukçu ile neredeyse aynı büyüklükte) -->
-        <div id="introAdvisorText" class="font-display text-xl sm:text-3xl md:text-[2.35rem] font-extrabold tracking-[0.12em] advisor-gold-signature leading-snug">
+        <!-- Akademik Danışman -->
+        <div id="introAdvisorText" class="font-display text-sm sm:text-3xl md:text-[2.35rem] font-extrabold tracking-[0.08em] sm:tracking-[0.12em] advisor-gold-signature leading-snug">
           Akademik Danışman: Öğr. Gör. Dr. Ayşegül Elçi
         </div>
 
-        <div class="h-[1px] w-24 mx-auto bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent my-1"></div>
+        <div class="h-[1px] w-16 sm:w-24 mx-auto bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent my-0.5 sm:my-1"></div>
 
         <!-- Baş Geliştirici -->
-        <div id="introLeadText" class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] ivory-gold-signature leading-snug">
+        <div id="introLeadText" class="font-display text-base sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.08em] sm:tracking-[0.14em] ivory-gold-signature leading-snug">
           PROJE YÜRÜTÜCÜSÜ &amp; GELİŞTİRİCİ: BAYRAM AKPAMUKÇU
         </div>
 
-        <!-- Büyütülmüş 'yardımlarıyla' İfadesi -->
-        <div id="introWithHelpText" class="font-serif italic text-xl sm:text-2xl md:text-3xl text-amber-100/90 tracking-[0.16em] pt-1">
+        <!-- 'yardımlarıyla' İfadesi -->
+        <div id="introWithHelpText" class="font-serif italic text-sm sm:text-2xl md:text-3xl text-amber-100/90 tracking-[0.12em] sm:tracking-[0.16em] pt-0.5 sm:pt-1">
           yardımlarıyla
         </div>
 
-        <!-- Katkı Sağlayanlar: Bayram Akpamukçu ile birebir aynı seviye büyüklükte ve aynı renkte (ivory-gold-signature) -->
-        <div class="font-display text-2xl sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.14em] ivory-gold-signature leading-snug">
+        <!-- Katkı Sağlayanlar -->
+        <div class="font-display text-base sm:text-4xl md:text-[2.6rem] font-extrabold tracking-[0.08em] sm:tracking-[0.14em] ivory-gold-signature leading-snug">
           SAMİ YUSUF MARAL
         </div>
 
       </div>
 
-      <!-- Haritaya Dal / Keşfet Butonu (Büyütülmüş & Prestijli Champagne Gold Buton) -->
+      <!-- Haritaya Dal / Keşfet Butonu (Büyütülmüş & Prestijli Champagne Gold Buton - Mobilde Tam Görünür) -->
       <button
         id="startExploreBtn"
         type="button"
         style="animation-delay: 1.05s;"
-        class="cinematic-fade-up mt-10 px-10 sm:px-14 py-4 sm:py-5 rounded-full bg-gradient-to-r from-[#d4af37]/15 via-[#d4af37]/25 to-[#d4af37]/15 hover:from-[#d4af37]/25 hover:via-[#d4af37]/40 hover:to-[#d4af37]/25 border-2 border-[#d4af37]/75 hover:border-[#d4af37] text-[#f8fafc] font-display font-bold text-base sm:text-xl md:text-2xl tracking-[0.24em] uppercase flex items-center gap-3.5 sm:gap-4 shadow-[0_0_40px_rgba(212,175,55,0.32)] hover:shadow-[0_0_65px_rgba(212,175,55,0.62)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+        class="cinematic-fade-up mt-5 sm:mt-10 px-7 sm:px-14 py-3 sm:py-5 rounded-full bg-gradient-to-r from-[#d4af37]/15 via-[#d4af37]/25 to-[#d4af37]/15 hover:from-[#d4af37]/25 hover:via-[#d4af37]/40 hover:to-[#d4af37]/25 border-2 border-[#d4af37]/75 hover:border-[#d4af37] text-[#f8fafc] font-display font-bold text-sm sm:text-xl md:text-2xl tracking-[0.18em] sm:tracking-[0.24em] uppercase flex items-center gap-2.5 sm:gap-4 shadow-[0_0_40px_rgba(212,175,55,0.32)] hover:shadow-[0_0_65px_rgba(212,175,55,0.62)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
       >
         <span id="startExploreBtnText">Haritayı Keşfet</span>
-        <i data-lucide="arrow-up-right" class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#d4af37]"></i>
+        <i data-lucide="arrow-up-right" class="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#d4af37]"></i>
       </button>
     </div>
 
@@ -4877,6 +4878,7 @@
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
     const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
+    const COUNTRIES_TOPOJSON_50M = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
 
     function initGlobe() {
       const container = document.getElementById('globeViz');
@@ -4892,7 +4894,15 @@
         .backgroundImageUrl(SKY_TEXTURE_ULTRA)
         .showAtmosphere(true)
         .atmosphereColor('#3a99d9')
-        .atmosphereAltitude(0.2)
+        .atmosphereAltitude(0.18)
+        // Yakınlaştırınca Jilet Gibi Net Duran Yüksek Çözünürlüklü (50m) Vektör Kıyı & Ülke Sınırları Katmanı
+        .polygonsData([])
+        .polygonCapColor(() => 'rgba(15, 23, 42, 0.04)')
+        .polygonSideColor(() => 'rgba(212, 175, 55, 0.03)')
+        .polygonStrokeColor(() => 'rgba(212, 175, 55, 0.42)')
+        .polygonAltitude(0.0022)
+        .polygonCapCurvatureResolution(isMobileDevice ? 5 : 3)
+        .polygonsTransitionDuration(0)
         // 3B Şehir Pinleri (Giriş ekranında bomboş başlar, intro bitince yüklenir)
         .htmlElementsData([])
         .htmlLat(d => d.lat)
@@ -4915,34 +4925,48 @@
 
       // KESKİN VE MOBİLDE KASMAYI ÖNLEYEN DPR AYARI
       const renderer = world.renderer();
-      const targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.0);
+      const targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.5);
       renderer.setPixelRatio(targetDPR);
-      if (renderer.capabilities) {
+      const applySharpness = () => {
+        if (!renderer.capabilities) return;
         const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-        const applySharpness = () => {
-          const mat = world.globeMaterial();
-          if (mat) {
-            const aniso = isMobileDevice ? Math.min(4, maxAnisotropy) : maxAnisotropy;
-            if (mat.map) {
-              mat.map.anisotropy = aniso;
-              mat.map.minFilter = THREE.LinearMipmapLinearFilter;
-              mat.map.magFilter = THREE.LinearFilter;
-              mat.map.needsUpdate = true;
-            }
-            if (mat.bumpMap) {
-              mat.bumpMap.anisotropy = aniso;
-              mat.bumpMap.needsUpdate = true;
-            }
+        const mat = world.globeMaterial();
+        if (mat) {
+          const aniso = isMobileDevice ? Math.min(8, maxAnisotropy) : maxAnisotropy;
+          if (mat.map) {
+            mat.map.anisotropy = aniso;
+            mat.map.generateMipmaps = true;
+            mat.map.minFilter = THREE.LinearMipmapLinearFilter;
+            mat.map.magFilter = THREE.LinearFilter;
+            mat.map.needsUpdate = true;
           }
-        };
-        setTimeout(applySharpness, 600);
-        setTimeout(applySharpness, 1800);
+          if (mat.bumpMap) {
+            mat.bumpMap.anisotropy = aniso;
+            mat.bumpMap.needsUpdate = true;
+          }
+        }
+      };
+      world.onGlobeReady(applySharpness);
+      setTimeout(applySharpness, 600);
+      setTimeout(applySharpness, 2000);
+
+      // Yüksek Çözünürlüklü (1:50m) Vektör Kıyı Şeritleri ve Ülke Sınırlarını Yükle (Yakınlaşınca Bulanıklığı Tamamen Önler)
+      if (typeof topojson !== 'undefined') {
+        fetch(COUNTRIES_TOPOJSON_50M)
+          .then(res => res.json())
+          .then(worldTopo => {
+            if (worldTopo && worldTopo.objects && worldTopo.objects.countries) {
+              const countriesGeo = topojson.feature(worldTopo, worldTopo.objects.countries).features;
+              world.polygonsData(countriesGeo);
+            }
+          })
+          .catch(() => {});
       }
 
       // Küre Materyalini Fotogerçekçi Okyanus Parlaması ve Kabartma İçin Güçlendir
       const globeMaterial = world.globeMaterial();
-      globeMaterial.bumpScale = 14;
-      globeMaterial.shininess = 18;
+      globeMaterial.bumpScale = 10;
+      globeMaterial.shininess = 22;
       new THREE.TextureLoader().load(WATER_SPECULAR_TEX, specularTexture => {
         globeMaterial.specularMap = specularTexture;
         globeMaterial.specular = new THREE.Color('#1e3a8a');
@@ -4953,17 +4977,17 @@
       const scene = world.scene();
       const ambientLight = scene.children.find(obj => obj.type === 'AmbientLight');
       if (ambientLight) {
-        ambientLight.intensity = 1.25;
+        ambientLight.intensity = 1.3;
       }
       const directionalLight = scene.children.find(obj => obj.type === 'DirectionalLight');
       if (directionalLight) {
-        directionalLight.intensity = 2.1;
+        directionalLight.intensity = 2.15;
         directionalLight.position.set(1.5, 1.2, 1.2);
       }
 
-      // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Clouds Layer - Mobilde Poligon Azaltılmış)
-      const CLOUDS_ALT = 0.012;
-      const CLOUDS_ROTATION_SPEED = -0.006;
+      // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Yakınlaşınca Otomatik Şeffaflaşır, Yüzeyi Bulanıklaştırmaz)
+      const CLOUDS_ALT = 0.011;
+      const CLOUDS_ROTATION_SPEED = -0.005;
 
       new THREE.TextureLoader().load(CLOUDS_TEXTURE_ULTRA, cloudsTexture => {
         const cloudSegments = isMobileDevice ? 48 : 96;
@@ -4972,7 +4996,7 @@
           new THREE.MeshPhongMaterial({
             map: cloudsTexture,
             transparent: true,
-            opacity: 0.36,
+            opacity: 0.28,
             depthWrite: false
           })
         );
@@ -4985,7 +5009,7 @@
       controls.dampingFactor = 0.06;
       controls.zoomSpeed = 0.7;
       controls.rotateSpeed = 0.6;
-      controls.minDistance = 108;
+      controls.minDistance = 138;
       controls.maxDistance = 550;
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0.45;
@@ -5010,7 +5034,7 @@
         if (Math.abs(wheelZoomVelocity) > 0.0004 && world) {
           const pov = world.pointOfView();
           if (pov) {
-            const nextAlt = Math.max(0.12, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
+            const nextAlt = Math.max(0.38, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
             world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 0);
             updateZoomAndCompass();
           }
@@ -5035,7 +5059,7 @@
         world.width(window.innerWidth);
         world.height(window.innerHeight);
         const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-        world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.5 : 2.0));
+        world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.5 : 2.5));
       });
     }
 
@@ -5067,21 +5091,27 @@
       }
     }
 
-    // Kamera yüksekliğine göre Pin ölçeğini ve Pusula açısını güncelle
+    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Şeffaflığını ve Pusula açısını güncelle
     function updateZoomAndCompass() {
       if (!world) return;
       const pov = world.pointOfView();
       if (!pov) return;
 
       let pinScale = 0.65;
-      if (pov.altitude < 0.55) {
-        pinScale = 0.44;
+      if (pov.altitude < 0.65) {
+        pinScale = 0.46;
       } else if (pov.altitude < 1.1) {
         pinScale = 0.52;
       } else if (pov.altitude < 1.7) {
         pinScale = 0.58;
       }
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
+
+      // Yakınlaştıkça bulut katmanını şeffaflaştır ki kara ve kıyı şeritleri bulanıklaşmasın, kristal netliğinde görünsün
+      if (cloudsMesh && cloudsMesh.material) {
+        const cloudOpacity = Math.max(0.03, Math.min(0.28, (pov.altitude - 0.35) * 0.22));
+        cloudsMesh.material.opacity = cloudOpacity;
+      }
 
       const compassIcon = document.getElementById('compassIcon');
       if (compassIcon) {
@@ -5264,12 +5294,12 @@
       });
 
       const isMobile = window.innerWidth < 768;
-      const lngOffset = isMobile ? 0 : 2.5;
+      const lngOffset = isMobile ? 0 : 2.8;
       world.pointOfView(
         {
           lat: item.lat - 0.3,
           lng: item.lng + lngOffset,
-          altitude: 0.38
+          altitude: 0.48
         },
         1550
       );
@@ -6056,7 +6086,7 @@
       // SAĞ ALT NAVİGASYON KONTROLLERİ
       document.getElementById('zoomInBtn').addEventListener('click', () => {
         const pov = world.pointOfView();
-        const nextAlt = Math.max(0.14, pov.altitude * 0.68);
+        const nextAlt = Math.max(0.38, pov.altitude * 0.72);
         world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
         setTimeout(updateZoomAndCompass, 600);
       });
