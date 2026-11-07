@@ -5443,7 +5443,7 @@
       controls.dampingFactor = isMobileDevice ? 0.08 : 0.06;
       controls.zoomSpeed = 0.7;
       controls.rotateSpeed = isMobileDevice ? 0.75 : 0.6;
-      controls.minDistance = 122;
+      controls.minDistance = 107;
       controls.maxDistance = 550;
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0.45;
@@ -5469,7 +5469,7 @@
           if (Math.abs(wheelZoomVelocity) > 0.0004 && world) {
             const pov = world.pointOfView();
             if (pov) {
-              const nextAlt = Math.max(0.24, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
+              const nextAlt = Math.max(0.12, Math.min(3.5, pov.altitude * (1 + wheelZoomVelocity)));
               world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 0);
               updateZoomAndCompass();
             }
@@ -5713,11 +5713,9 @@
         world.htmlElementsData(filteredList);
       }
 
-      // "Edebiyat & Akımlar" veya "Savaşlar" seçildiğinde haritada ince animasyonlu izler (trails) çiz
+      // Sadece "Edebiyat & Akımlar" seçildiğinde küresel edebiyat izlerini çiz; savaş izleri (trails) YALNIZCA bir savaşa tıklandığında çizilir
       if (activeCategory === 'edebiyat') {
         world.arcsData(buildLiteratureArcs(filteredList));
-      } else if (activeCategory === 'savaslar') {
-        world.arcsData(buildGlobalWarArcs(filteredList));
       } else {
         world.arcsData([]);
       }
@@ -7289,7 +7287,7 @@
       });
     }
 
-    // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir (Taraflar küre üzerinde net yazar, undefined asla olmaz)
+    // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir (Sadece tıklanan savaşta trail olur ve savaş alanına yakından odaklanır)
     function buildPhasesForSelectedWar(item, selectedWar) {
       const wLat = selectedWar.lat;
       const wLng = selectedWar.lng;
@@ -7310,35 +7308,34 @@
           focusLat: wLat,
           focusLng: wLng,
           rings: [
-            { lat: selectedWar.branchLat, lng: selectedWar.branchLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.52, speed: 0.30, repeat: 1200 },
-            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.72, speed: 0.34, repeat: 1100 }
+            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.42, speed: 0.28, repeat: 1150 }
           ],
           vectors: [
-            { startLat: item.lat, startLng: item.lng, endLat: wLat, endLng: wLng, type: 'attack', label: `${b.side1_tr} Harekat Hattı` },
-            { startLat: wLat - 0.55, startLng: wLng - 0.65, endLat: wLat, endLng: wLng, type: 'attack', label: b.side1_tr },
-            { startLat: wLat + 0.45, startLng: wLng + 0.55, endLat: wLat, endLng: wLng, type: 'defense', label: b.side2_tr }
+            { startLat: item.lat, startLng: item.lng, endLat: wLat, endLng: wLng, type: 'attack', label: `${selectedWar.short_tr}: ${b.side1_tr}` },
+            { startLat: wLat - 0.28, startLng: wLng - 0.34, endLat: wLat, endLng: wLng, type: 'attack', label: b.side1_tr },
+            { startLat: wLat + 0.26, startLng: wLng + 0.32, endLat: wLat, endLng: wLng, type: 'defense', label: b.side2_tr }
           ],
           markers: [
             {
-              lat: wLat - 0.14,
-              lng: wLng - 0.18,
+              lat: wLat - 0.08,
+              lng: wLng - 0.11,
               icon: '⚔️',
               label: b.side1_tr,
               label_tr: b.side1_tr,
               label_en: b.side1_en,
               tacColor: '#ef4444',
-              tacGlow: 'rgba(239, 68, 68, 0.8)',
+              tacGlow: 'rgba(239, 68, 68, 0.85)',
               tone: 'attack'
             },
             {
-              lat: wLat + 0.24,
-              lng: wLng + 0.32,
+              lat: wLat + 0.09,
+              lng: wLng + 0.12,
               icon: '🛡️',
               label: b.side2_tr,
               label_tr: b.side2_tr,
               label_en: b.side2_en,
               tacColor: '#f59e0b',
-              tacGlow: 'rgba(245, 158, 11, 0.8)',
+              tacGlow: 'rgba(245, 158, 11, 0.85)',
               tone: 'defense'
             }
           ]
@@ -7357,12 +7354,12 @@
           focusLat: wLat,
           focusLng: wLng,
           rings: [
-            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.92, speed: 0.36, repeat: 1050 },
-            { lat: wLat + 0.18, lng: wLng - 0.18, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.62, speed: 0.32, repeat: 1150 }
+            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.48, speed: 0.30, repeat: 1050 },
+            { lat: wLat + 0.06, lng: wLng - 0.06, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.34, speed: 0.28, repeat: 1150 }
           ],
           vectors: [
-            { startLat: wLat - 0.68, startLng: wLng + 0.52, endLat: wLat, endLng: wLng, type: 'attack', label: `${b.side1_tr} Taarruzu` },
-            { startLat: wLat + 0.58, startLng: wLng - 0.48, endLat: wLat, endLng: wLng, type: 'defense', label: `${b.side2_tr} Savunması` }
+            { startLat: wLat - 0.32, startLng: wLng + 0.28, endLat: wLat, endLng: wLng, type: 'attack', label: `${b.side1_tr} Taarruzu` },
+            { startLat: wLat + 0.30, startLng: wLng - 0.26, endLat: wLat, endLng: wLng, type: 'defense', label: `${b.side2_tr} Savunması` }
           ],
           markers: [
             {
@@ -7377,8 +7374,8 @@
               tone: 'clash'
             },
             {
-              lat: wLat - 0.32,
-              lng: wLng + 0.28,
+              lat: wLat - 0.12,
+              lng: wLng + 0.11,
               icon: '⚔️',
               label: b.side1_tr,
               label_tr: b.side1_tr,
@@ -7388,8 +7385,8 @@
               tone: 'attack'
             },
             {
-              lat: wLat + 0.30,
-              lng: wLng - 0.26,
+              lat: wLat + 0.12,
+              lng: wLng - 0.11,
               icon: '🛡️',
               label: b.side2_tr,
               label_tr: b.side2_tr,
@@ -7414,7 +7411,7 @@
           focusLat: wLat,
           focusLng: wLng,
           rings: [
-            { lat: wLat, lng: wLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 1.05, speed: 0.32, repeat: 1200 }
+            { lat: wLat, lng: wLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.52, speed: 0.28, repeat: 1200 }
           ],
           vectors: [
             { startLat: wLat, startLng: wLng, endLat: item.lat, endLng: item.lng, type: 'defense', label: selectedWar.outcome_tr }
@@ -7446,34 +7443,17 @@
       if (simBox) simBox.classList.remove('hidden');
 
       // Henüz spesifik bir savaşa tıklanmadıysa (activeCountryWarIndex < 0):
-      // Sadece Ülke Savaşları Ağacını (alt başlıkları) ve küredeki savaş dallarını göster; alt detay kartını gizli tut!
+      // Savaş trailleri (çizgileri) KESİNLİKLE gözükmez; sadece savaş başlıkları listesi ve rozetleri görünür!
       if (activeCountryWarIndex < 0) {
         if (detailPanel) detailPanel.classList.add('hidden');
         renderCountryWarsTreeInDrawer(item, -1);
 
-        const isEn = currentLang === 'en';
         const wars = getCountryWarsForItem(item);
-        const treeBranchArcs = wars.map(w => ({
-          startLat: item.lat,
-          startLng: item.lng,
-          endLat: w.branchLat,
-          endLng: w.branchLng,
-          label: isEn ? `${w.title_en} (${w.forces_en})` : `${w.title_tr} (${w.forces_tr})`,
-          color: ['rgba(244,63,94,0.78)', 'rgba(251,191,36,0.68)'],
-          altScale: 0.045,
-          stroke: 0.18,
-          dashLength: 0.22,
-          dashGap: 0.11,
-          animateTime: 3800
-        }));
-
         const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
         if (activeCategory === 'edebiyat') {
-          world.arcsData([...buildLiteratureArcs(filteredList), ...treeBranchArcs]);
-        } else if (activeCategory === 'savaslar') {
-          world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs]);
+          world.arcsData(buildLiteratureArcs(filteredList));
         } else {
-          world.arcsData(treeBranchArcs);
+          world.arcsData([]);
         }
         world.ringsData([]);
 
@@ -7490,7 +7470,7 @@
         }));
         world.htmlElementsData([...filteredList, ...branchNodes]);
       } else {
-        // Kullanıcı bir savaşa tıkladıysa detay panelini göster ve seçili savaşı yükle
+        // Kullanıcı bir savaşa tıkladıysa detay panelini göster ve SADECE o savaşın izlerini yükle
         if (detailPanel) detailPanel.classList.remove('hidden');
         selectBattlePhase(activeBattlePhaseIndex, false);
       }
@@ -7525,7 +7505,7 @@
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
       if (!item) return;
 
-      // Henüz bir savaşa tıklanmadıysa sadece savaş ağacını göster, detay kartını açma
+      // Henüz bir savaşa tıklanmadıysa sadece savaş ağacını göster, detay kartını ve trailleri açma
       if (activeCountryWarIndex < 0) {
         updateCityWarViewOnGlobeAndDrawer(item);
         return;
@@ -7586,21 +7566,7 @@
       // 1) Şok Dalgaları (ringsData)
       world.ringsData(phase.rings || []);
 
-      // 2) Ülke Savaşları Ağaç Dalları (treeBranchArcs) + Seçili Savaşın Taktik Harekat İzleri (Yavaşlatılmış & İnce Trails)
-      const treeBranchArcs = wars.map((w, idx) => ({
-        startLat: item.lat,
-        startLng: item.lng,
-        endLat: w.branchLat,
-        endLng: w.branchLng,
-        label: isEn ? `${w.title_en} (${w.forces_en})` : `${w.title_tr} (${w.forces_tr})`,
-        color: idx === wIdx ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.72)', 'rgba(251,191,36,0.6)'],
-        altScale: 0.045,
-        stroke: idx === wIdx ? 0.25 : 0.16,
-        dashLength: 0.20,
-        dashGap: 0.11,
-        animateTime: 3800
-      }));
-
+      // 2) SADECE TIKLANAN SAVAŞA AİT TRAİL (ÇİZGİ) GÖSTERİLİR (Diğer savaşlarda çizgi/trail olmaz)
       const battleArcs = (phase.vectors || []).map(v => ({
         startLat: v.startLat,
         startLng: v.startLng,
@@ -7608,23 +7574,21 @@
         endLng: v.endLng,
         label: v.label,
         color: v.type === 'attack' ? ['#ef4444', '#f97316'] : ['#fbbf24', '#38bdf8'],
-        altScale: 0.11,
-        stroke: 0.24,
+        altScale: 0.08,
+        stroke: 0.22,
         dashLength: 0.22,
         dashGap: 0.12,
-        animateTime: 3400
+        animateTime: 3600
       }));
 
       const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
       if (activeCategory === 'edebiyat') {
-        world.arcsData([...buildLiteratureArcs(filteredList), ...treeBranchArcs, ...battleArcs]);
-      } else if (activeCategory === 'savaslar') {
-        world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs, ...battleArcs]);
+        world.arcsData([...buildLiteratureArcs(filteredList), ...battleArcs]);
       } else {
-        world.arcsData([...treeBranchArcs, ...battleArcs]);
+        world.arcsData(battleArcs);
       }
 
-      // 3) Ülke Savaşları Ağaç Dalı Alt Başlık Rozetlerini (.war-branch-wrapper) ve Taktik Saha Noktalarını 3B Kürede Göster
+      // 3) Ülke Savaşları Ağaç Dalı Alt Başlık Rozetlerini (.war-branch-wrapper) ve Savaş Alanı Taraflarını 3B Kürede Göster
       const branchNodes = wars.map((w, idx) => ({
         id: `war_branch_${item.id}_${idx}`,
         lat: w.branchLat,
@@ -7645,18 +7609,19 @@
       }));
       world.htmlElementsData([...filteredList, ...branchNodes, ...tacticalMarkers]);
 
+      // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) çok daha yakından scope'la (altitude: 0.15)
       if (flyCamera) {
         const isMobile = window.innerWidth < 768;
-        const lngOffset = isMobile ? 0 : 1.85;
+        const lngOffset = isMobile ? 0 : 0.72;
         world.pointOfView(
           {
-            lat: (phase.focusLat || selectedWar.lat) - 0.18,
+            lat: (phase.focusLat || selectedWar.lat) - 0.06,
             lng: (phase.focusLng || selectedWar.lng) + lngOffset,
-            altitude: 0.30
+            altitude: 0.15
           },
-          1150
+          1250
         );
-        setTimeout(updateZoomAndCompass, 1200);
+        setTimeout(updateZoomAndCompass, 1300);
       }
     }
 
