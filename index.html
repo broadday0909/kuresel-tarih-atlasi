@@ -1012,17 +1012,21 @@
     <!-- Drawer Kaydırılabilir İçerik -->
     <div class="flex-1 overflow-y-auto custom-scroll p-5 space-y-5">
       
-      <!-- Yüksek Kaliteli AI Kapak Resmi Alanı -->
-      <div class="space-y-2">
+      <!-- Yüksek Kaliteli AI & Mimari / Savaş Alanı Görsel Galerisi (En Az 3 Görsel + Büyütme) -->
+      <div class="space-y-2.5">
         <div class="flex items-center justify-between text-xs">
           <span class="flex items-center gap-1.5 font-semibold text-sky-300">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span id="drawerSceneHeaderLabel">Yapay Zeka (AI) Tarihsel &amp; Edebi Sahne Görseli</span>
+            <span id="drawerSceneHeaderLabel">Önemli Yapılar &amp; Savaş Alanı Görselleri</span>
           </span>
           <span id="drawerYearBadge" class="font-mono text-[11px] text-amber-300 font-semibold">1919</span>
         </div>
 
-        <div class="relative rounded-2xl overflow-hidden border border-white/15 bg-slate-950 aspect-[16/9] group shadow-2xl">
+        <div
+          id="drawerImageCardWrapper"
+          class="relative rounded-2xl overflow-hidden border border-white/15 hover:border-amber-400/55 bg-slate-950 aspect-[16/9] group shadow-2xl cursor-zoom-in transition-all"
+          title="Resmi büyütmek için tıklayın (AI High-Res Art)"
+        >
           <img
             id="drawerCoverImage"
             src=""
@@ -1030,20 +1034,63 @@
             onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){ this.src = this.dataset.fallback; }"
             class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent pointer-events-none"></div>
 
-          <div class="absolute top-3 left-3 flex items-center gap-1.5">
-            <span class="text-[10px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-black/65 text-sky-300 border border-sky-400/30 backdrop-blur-md">
-              AI High-Res Art
+          <!-- Sol Üst: Tıklanabilir "AI High-Res Art" Büyütme Butonu -->
+          <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-1.5">
+            <button
+              id="openImageLightboxBtn"
+              type="button"
+              class="text-[10px] sm:text-[10.5px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-full bg-black/75 hover:bg-amber-500/30 text-sky-300 hover:text-amber-200 border border-sky-400/45 hover:border-amber-400/80 backdrop-blur-md shadow-[0_0_15px_rgba(56,189,248,0.3)] flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <i data-lucide="maximize-2" class="w-3 h-3 text-amber-400"></i>
+              <span id="aiHighResBtnLabel">AI High-Res Art • Büyüt</span>
+            </button>
+            <span id="drawerSlideTypeBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-950/80 text-amber-300 border border-amber-400/35 backdrop-blur-md">
+              🏛️ 1 / 3
             </span>
           </div>
 
           <!-- Görsel Alt Açıklaması -->
-          <div class="absolute bottom-3 left-3.5 right-3.5">
-            <p id="drawerImageCaption" class="text-xs text-slate-100 font-medium leading-snug drop-shadow">
+          <div class="absolute bottom-2.5 left-3.5 right-3.5 pointer-events-none">
+            <div id="drawerLandmarkTitle" class="text-xs sm:text-sm font-extrabold text-amber-300 drop-shadow truncate">
+              En Önemli Yapı / Savaş Alanı
+            </div>
+            <p id="drawerImageCaption" class="text-[11px] sm:text-xs text-slate-100 font-medium leading-snug drop-shadow line-clamp-2">
               Görsel sahne açıklaması
             </p>
           </div>
+        </div>
+
+        <!-- Resmin Altında Küçük Kutu (Box) Şeklinde 1 - 2 - 3 Görsel Seçici Butonlar -->
+        <div class="flex items-center justify-between gap-2 bg-slate-950/75 border border-white/10 rounded-xl px-2.5 py-1.5">
+          <div class="flex items-center gap-1.5" id="drawerGalleryBoxBtns">
+            <button
+              type="button"
+              data-img-idx="0"
+              class="gallery-box-btn w-7 h-7 rounded-lg text-xs font-mono font-extrabold flex items-center justify-center transition cursor-pointer bg-amber-500/30 text-amber-200 border border-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
+            >
+              1
+            </button>
+            <button
+              type="button"
+              data-img-idx="1"
+              class="gallery-box-btn w-7 h-7 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition cursor-pointer bg-white/5 hover:bg-white/15 text-slate-300 border border-white/15"
+            >
+              2
+            </button>
+            <button
+              type="button"
+              data-img-idx="2"
+              class="gallery-box-btn w-7 h-7 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition cursor-pointer bg-white/5 hover:bg-white/15 text-slate-300 border border-white/15"
+            >
+              3
+            </button>
+          </div>
+
+          <span id="drawerGalleryActiveLabel" class="text-[11px] font-semibold text-slate-300 truncate flex-1 text-right">
+            1. Ana Yapı / Savaş Alanı
+          </span>
         </div>
       </div>
 
@@ -1322,6 +1369,84 @@
           <span id="figureModalOtherLabel">Bu Duraktaki Tüm Şahsiyetler &amp; Eserler (Hızlı Geçiş):</span>
         </div>
         <div id="figureModalSiblingList" class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. AI HIGH-RES ART BÜYÜTÜLMÜŞ GÖRSEL & ÖNEMLİ YAPILAR / SAVAŞ ALANI GALERİ PENCERESİ (LIGHTBOX MODAL) -->
+  <div
+    id="imageLightboxOverlay"
+    class="fixed inset-0 z-[135] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div
+      id="imageLightboxDialog"
+      class="glass-panel w-full max-w-4xl rounded-3xl border border-amber-400/45 shadow-[0_25px_90px_rgba(0,0,0,0.95),0_0_45px_rgba(245,158,11,0.22)] flex flex-col overflow-hidden transform scale-95 transition-all duration-300"
+    >
+      <!-- Üst Başlık -->
+      <div class="px-4 sm:px-6 py-3.5 border-b border-white/10 bg-slate-950/85 flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span id="lightboxBadge" class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40">
+              AI High-Res Art • 1 / 3
+            </span>
+            <span id="lightboxCityLabel" class="text-xs font-semibold text-sky-300 truncate">Şehir, Ülke</span>
+          </div>
+          <h3 id="lightboxTitle" class="font-display text-base sm:text-xl font-bold text-white truncate mt-0.5">
+            En Önemli Yapı veya Savaş Alanı
+          </h3>
+        </div>
+        <button
+          id="closeImageLightboxBtn"
+          type="button"
+          class="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/15 transition shrink-0 cursor-pointer"
+          title="Kapat (ESC)"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Büyük Yüksek Çözünürlüklü Görsel Sahnesi -->
+      <div class="relative bg-black aspect-[16/10] sm:aspect-[16/9] max-h-[66vh] w-full flex items-center justify-center overflow-hidden">
+        <img
+          id="lightboxMainImage"
+          src=""
+          alt="Büyütülmüş Tarihsel Yapı / Savaş Alanı Görseli"
+          onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){ this.src = this.dataset.fallback; }"
+          class="w-full h-full object-cover transition-all duration-500"
+        />
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-transparent p-4 sm:p-5">
+          <p id="lightboxCaption" class="text-xs sm:text-sm text-slate-100 leading-relaxed font-medium">
+            Görsel açıklaması...
+          </p>
+        </div>
+      </div>
+
+      <!-- Alt Bar: Küçük Kutu (Box) Şeklinde 1 - 2 - 3 Butonları ve Yapı/Cephe İsimleri -->
+      <div class="px-4 sm:px-6 py-3.5 bg-slate-950/95 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2" id="lightboxGalleryBoxBtns">
+          <button
+            type="button"
+            data-img-idx="0"
+            class="lightbox-box-btn w-8 h-8 rounded-lg text-xs font-mono font-extrabold flex items-center justify-center transition cursor-pointer"
+          >
+            1
+          </button>
+          <button
+            type="button"
+            data-img-idx="1"
+            class="lightbox-box-btn w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition cursor-pointer"
+          >
+            2
+          </button>
+          <button
+            type="button"
+            data-img-idx="2"
+            class="lightbox-box-btn w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition cursor-pointer"
+          >
+            3
+          </button>
+        </div>
+        <div id="lightboxThumbLabels" class="flex flex-wrap items-center gap-1.5 text-xs text-slate-300"></div>
       </div>
     </div>
   </div>
@@ -7226,6 +7351,11 @@
 
       world.htmlElementsData([...filteredList, ...branchNodes]);
 
+      // Savaş dalı seçildiğinde galeriyi de güncellenen savaş alanıyla tazele
+      if (typeof selectGallerySlide === 'function') {
+        selectGallerySlide(activeGallerySlideIndex);
+      }
+
       if (flyCamera) {
         const isMobile = window.innerWidth < 768;
         const lngOffset = isMobile ? 0 : 1.15;
@@ -7453,6 +7583,444 @@
       openDrawer();
     }
 
+    // ============================================================================
+    // 6B. ŞEHİR ÖNEMLİ YAPILARI & SAVAŞ ALANI 3'LÜ GÖRSEL GALERİSİ VE BÜYÜTME (LIGHTBOX)
+    // ============================================================================
+    let activeGallerySlideIndex = 0;
+    let isImageLightboxOpen = false;
+    const landmarkPhotoCache = new Map();
+
+    const CITY_LANDMARK_GALLERIES = {
+      canakkale: [
+        {
+          title_tr: "1. Çanakkale Şehitler Abidesi & Conkbayırı Savaş Alanı",
+          title_en: "1. Çanakkale Martyrs' Memorial & Chunuk Bair Battlefield",
+          caption_tr: "Gelibolu Yarımadası'nda 1915 Çanakkale Deniz ve Kara Savaşlarının yaşandığı tarihi cephe hattı ve Şehitler Abidesi.",
+          caption_en: "Historic Gallipoli battlefield of 1915 and the monumental Çanakkale Martyrs' Memorial overlooking the Dardanelles.",
+          wikiQuery: "Çanakkale Şehitler Abidesi",
+          img: "https://images.unsplash.com/photo-1589561454226-796a8aa89b05?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Kilitbahir Kalesi & Nusret Mayın Gemisi Boğaz Hattı",
+          title_en: "2. Kilitbahir Fortress & Nusret Minelayer Strait Line",
+          caption_tr: "Fatih Sultan Mehmed tarafından Çanakkale Boğazı'nın en dar noktasına inşa ettirilen yonca planlı Kilitbahir Kalesi ve 18 Mart Boğaz savunması.",
+          caption_en: "Heart-shaped Kilitbahir Fortress built by Sultan Mehmed II at the narrowest point of the Dardanelles Strait.",
+          wikiQuery: "Kilitbahir Kalesi",
+          img: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Troya Antik Kenti & 57. Alay Şehitliği",
+          title_en: "3. Ancient City of Troy & 57th Infantry Regiment Memorial",
+          caption_tr: "Homeros'un İlyada destanına konu olan 5.000 yıllık Troya Antik Kenti surları ve Gelibolu 57. Alay Şehitliği.",
+          caption_en: "The 5,000-year-old walls of Homeric Troy and the 57th Infantry Regiment Memorial on the Gallipoli Peninsula.",
+          wikiQuery: "Troya",
+          img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      istanbul: [
+        {
+          title_tr: "1. Ayasofya-i Kebir & Tarihi Yarımada",
+          title_en: "1. Hagia Sophia & Historic Peninsula",
+          caption_tr: "1453 İstanbul'un Fethi'nin sembolü, dünya mimarlık tarihinin başyapıtı Ayasofya-i Kebir Cami-i Şerifi.",
+          caption_en: "Architectural masterpiece Hagia Sophia at the heart of Istanbul's Historic Peninsula.",
+          wikiQuery: "Ayasofya",
+          img: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Topkapı Sarayı, Rumeli Hisarı & 1453 Kuşatma Surları",
+          title_en: "2. Topkapı Palace, Rumeli Fortress & 1453 Siege Walls",
+          caption_tr: "Osmanlı İmparatorluğu'nun 400 yıl yönetim merkezi olan Topkapı Sarayı, Boğazkesen Rumeli Hisarı ve tarihi kara surları.",
+          caption_en: "Topkapı Palace, Rumeli Fortress on the Bosphorus, and the historic Theodosian land walls.",
+          wikiQuery: "Rumeli Hisarı",
+          img: "https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Galata Kulesi, Süleymaniye & Haliç Panoraması",
+          title_en: "3. Galata Tower, Süleymaniye Mosque & Golden Horn",
+          caption_tr: "Mimar Sinan'ın kalfalık eseri Süleymaniye Külliyesi, Ceneviz mirası Galata Kulesi ve Haliç su yolu.",
+          caption_en: "Mimar Sinan's Süleymaniye Mosque, medieval Galata Tower, and the Golden Horn.",
+          wikiQuery: "Galata Kulesi",
+          img: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      ankara: [
+        {
+          title_tr: "1. Anıtkabir & Cumhuriyetin Kalbi",
+          title_en: "1. Anıtkabir – Mausoleum of Mustafa Kemal Atatürk",
+          caption_tr: "Türkiye Cumhuriyeti'nin kurucusu Gazi Mustafa Kemal Atatürk'ün ebedi istirahatgahı Anıtkabir ve Aslanlı Yol.",
+          caption_en: "Anıtkabir, the monumental mausoleum of Mustafa Kemal Atatürk, founder of the Republic of Türkiye.",
+          wikiQuery: "Anıtkabir",
+          img: "https://images.unsplash.com/photo-1589561454226-796a8aa89b05?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. I. TBMM Binası (Kurtuluş Savaşı Müzesi)",
+          title_en: "2. First Grand National Assembly Building (War of Independence Museum)",
+          caption_tr: "23 Nisan 1920'de açılan ve Sakarya ile Büyük Taarruz kararlarının alındığı Birinci Türkiye Büyük Millet Meclisi binası.",
+          caption_en: "The historic First Parliament building in Ulus where the Turkish War of Independence was directed.",
+          wikiQuery: "Kurtuluş Savaşı Müzesi",
+          img: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Polatlı Duatepe (Sakarya Cephesi) & Ankara Kalesi",
+          title_en: "3. Duatepe Sakarya Battlefield Memorial & Ankara Castle",
+          caption_tr: "Sakarya Meydan Muharebesi'nin dönüm noktası olan Polatlı Duatepe Anıtı ve binlerce yıllık tarihi Ankara Kalesi.",
+          caption_en: "Duatepe Battlefield Memorial of the Battle of Sakarya and historic Ankara Castle.",
+          wikiQuery: "Ankara Kalesi",
+          img: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      samsun: [
+        {
+          title_tr: "1. Bandırma Vapuru & Milli Mücadele Açıkhava Müzesi",
+          title_en: "1. Bandırma Ferry & National Struggle Museum",
+          caption_tr: "Mustafa Kemal Paşa ve silah arkadaşlarını 19 Mayıs 1919'da Samsun'a ulaştıran tarihi Bandırma Vapuru.",
+          caption_en: "Historic Bandırma Ferry that carried Mustafa Kemal Pasha to Samsun on May 19, 1919.",
+          wikiQuery: "Bandırma Vapuru",
+          img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Samsun Onur Anıtı (Atatürk Anıtı) & İlkadım",
+          title_en: "2. Samsun Monument of Honor (Heinrich Krippel Monument)",
+          caption_tr: "Avusturyalı heykeltıraş Heinrich Krippel tarafından yapılan ve Kurtuluş Savaşı'nın başlangıcını simgeleyen Onur Anıtı.",
+          caption_en: "Iconic equestrian Monument of Honor in Samsun symbolizing the birth of the National Struggle.",
+          wikiQuery: "Onur Anıtı",
+          img: "https://images.unsplash.com/photo-1589561454226-796a8aa89b05?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Tütün İskelesi, Kurtuluş Yolu & Gazi Müzesi",
+          title_en: "3. Tütün Pier, Liberation Road & Gazi Museum",
+          caption_tr: "19 Mayıs 1919'da ilk adımın atıldığı Tütün İskelesi ve Mustafa Kemal Paşa'nın karargah olarak kullandığı Gazi Müzesi (Mıntıka Palas).",
+          caption_en: "Tütün Pier where the first step of liberation was taken and the historic Gazi Museum.",
+          wikiQuery: "Gazi Müzesi",
+          img: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      amasya: [
+        {
+          title_tr: "1. Amasya Saraydüzü Kışlası (Genelge Karargahı)",
+          title_en: "1. Saraydüzü Barracks (Amasya Circular Headquarters)",
+          caption_tr: "22 Haziran 1919'da 'Milletin istiklalini yine milletin azim ve kararı kurtaracaktır' maddesinin kaleme alındığı Saraydüzü Kışlası.",
+          caption_en: "Saraydüzü Barracks where the historic Amasya Circular of June 22, 1919 was drafted.",
+          wikiQuery: "Amasya Genelgesi",
+          img: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Harşena Kalesi & Pontus Kral Kaya Mezarları",
+          title_en: "2. Harşena Castle & Tombs of the Kings of Pontus",
+          caption_tr: "Yeşilırmak vadisine hakim sarp kayalıklara oyulmuş antik Kral Kaya Mezarları ve UNESCO mirası Harşena Kalesi.",
+          caption_en: "Rock-cut Tombs of the Kings of Pontus and Harşena Fortress overlooking the Yeşilırmak River.",
+          wikiQuery: "Kral Kaya Mezarları",
+          img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. II. Bayezid Külliyesi & Yalıboyu Konakları",
+          title_en: "3. Sultan Bayezid II Complex & Yalıboyu Ottoman Houses",
+          caption_tr: "Şehzadeler şehri Amasya'da Yeşilırmak kıyısına dizilen tarihi Yalıboyu konakları ve 1486 tarihli II. Bayezid Külliyesi.",
+          caption_en: "Historic Ottoman riverside mansions of Yalıboyu and the 1486 Sultan Bayezid II Complex.",
+          wikiQuery: "Amasya",
+          img: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      erzurum: [
+        {
+          title_tr: "1. Erzurum Kongre Binası & Aziziye Tabyaları",
+          title_en: "1. Erzurum Congress Building & Aziziye Redoubts",
+          caption_tr: "23 Temmuz 1919'da Misak-ı Milli kararlarının alındığı Erzurum Kongre Binası ve Nene Hatun destanının yazıldığı Aziziye Tabyaları.",
+          caption_en: "Historic Erzurum Congress Building (1919) and the Aziziye Redoubts defended by the people of Erzurum.",
+          wikiQuery: "Erzurum Kongresi",
+          img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Çifte Minareli Medrese & Yakutiye Medresesi",
+          title_en: "2. Twin Minaret Madrasa (Çifte Minareli Medrese) & Yakutiye",
+          caption_tr: "Anadolu Selçuklu taş işçiliğinin zirvesi olan 13. yüzyıl Çifte Minareli Medrese ve Yakutiye Medresesi.",
+          caption_en: "13th-century Anatolian Seljuk architectural jewel Çifte Minareli Medrese in Erzurum.",
+          wikiQuery: "Çifte Minareli Medrese",
+          img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Erzurum Kalesi, Üç Kümbetler & Ulu Cami",
+          title_en: "3. Erzurum Citadel, Three Tombs (Üç Kümbetler) & Grand Mosque",
+          caption_tr: "Saltuklu ve Selçuklu mirası Üç Kümbetler, tarihi Erzurum İç Kalesi ve Saat Kulesi.",
+          caption_en: "Historic Erzurum Citadel, the Saltukid Three Tombs (Üç Kümbetler), and the Grand Mosque.",
+          wikiQuery: "Erzurum Kalesi",
+          img: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      sivas: [
+        {
+          title_tr: "1. Sivas Kongre Binası (Atatürk ve Etnografya Müzesi)",
+          title_en: "1. Sivas Congress Building (Atatürk & Ethnography Museum)",
+          caption_tr: "4 Eylül 1919 Sivas Kongresi'ne ve Milli Mücadele karargahına 108 gün ev sahipliği yapan tarihi Sivas Lisesi / Kongre Binası.",
+          caption_en: "Historic Sivas Congress Building where national resistance societies were united in September 1919.",
+          wikiQuery: "Sivas Kongresi",
+          img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Divriği Ulu Camii ve Darüşşifası (UNESCO Mirası)",
+          title_en: "2. Great Mosque and Hospital of Divriği (UNESCO World Heritage)",
+          caption_tr: "1228 yılında Mengücekliler döneminde inşa edilen ve taş bezemeleriyle 'Anadolu'nun Elhamrası' sayılan UNESCO Dünya Mirası.",
+          caption_en: "1228 Mengujekid masterpiece Divriği Great Mosque and Hospital, a UNESCO World Heritage Site.",
+          wikiQuery: "Divriği Ulu Camii ve Darüşşifası",
+          img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Gök Medrese, Çifte Minareli Medrese & Âşık Veysel Müzesi",
+          title_en: "3. Gök Medrese, Buruciye & Âşık Veysel Museum (Sivrialan)",
+          caption_tr: "1271 tarihli Selçuklu şaheseri Gök Medrese ve Sivrialan köyündeki Âşık Veysel Müzesi.",
+          caption_en: "1271 Seljuk Gök Medrese in Sivas and the Âşık Veysel Museum in Sivrialan.",
+          wikiQuery: "Gök Medrese (Sivas)",
+          img: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      konya: [
+        {
+          title_tr: "1. Mevlânâ Müzesi ve Kubbe-i Hadra (Yeşil Kubbe)",
+          title_en: "1. Mevlana Museum & Kubbe-i Hadra (Green Dome)",
+          caption_tr: "Mevlânâ Celâleddîn-i Rûmî'nin türbesinin yer aldığı Kubbe-i Hadra ve Mevlevî dergâhı.",
+          caption_en: "Mevlana Museum and the turquoise Green Dome (Kubbe-i Hadra) in Konya.",
+          wikiQuery: "Mevlana Müzesi",
+          img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "2. Karatay Medresesi, İnce Minareli Medrese & Alaeddin Tepesi",
+          title_en: "2. Karatay Madrasa, Ince Minaret & Alaeddin Mosque",
+          caption_tr: "Türkiye Selçuklu Devleti'nin başkenti Konya'da yükselen 13. yüzyıl Karatay ve İnce Minareli medreseleri.",
+          caption_en: "13th-century Seljuk architectural landmarks Karatay Madrasa and Ince Minaret Madrasa.",
+          wikiQuery: "Karatay Medresesi",
+          img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: "3. Çatalhöyük Neolitik Kenti (UNESCO Dünya Mirası)",
+          title_en: "3. Çatalhöyük Neolithic Settlement (UNESCO World Heritage)",
+          caption_tr: "İnsanlık tarihinin bilinen en eski yerleşim ve ilk kentleşme merkezlerinden 9.000 yıllık Çatalhöyük.",
+          caption_en: "9,000-year-old Neolithic proto-city of Çatalhöyük on the Konya Plain.",
+          wikiQuery: "Çatalhöyük",
+          img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=85"
+        }
+      ]
+    };
+
+    // Her şehir için en az 3 adet (1: En önemli yapı veya Savaş Alanı, 2: İkinci önemli anıtsal yapı, 3: Üçüncü yapı/kültür mekanı) galeri verisi döndürür
+    function getCityGallerySlides(item) {
+      const wars = getCountryWarsForItem(item);
+      const selectedWar = wars[activeCountryWarIndex] || wars[0];
+
+      if (CITY_LANDMARK_GALLERIES[item.id]) {
+        const baseSlides = CITY_LANDMARK_GALLERIES[item.id].map(s => ({ ...s }));
+        // Eğer kullanıcı savaş ağacından özel bir savaş dalına tıkladıysa 1. slaytta o savaşı ve yapıyı vurgula
+        if (selectedWar && activeCategory === 'savaslar') {
+          baseSlides[0] = {
+            ...baseSlides[0],
+            title_tr: `1. ⚔️ ${selectedWar.title_tr} & ${baseSlides[0].title_tr.replace(/^1\.\s*/, '')}`,
+            title_en: `1. ⚔️ ${selectedWar.title_en} & ${baseSlides[0].title_en.replace(/^1\.\s*/, '')}`,
+            caption_tr: `${selectedWar.desc_tr} (${selectedWar.outcome_tr})`,
+            caption_en: `${selectedWar.desc_en} (${selectedWar.outcome_en})`,
+            wikiQuery: selectedWar.short_tr.replace(/\([^)]*\)/g, '').trim()
+          };
+        }
+        return baseSlides;
+      }
+
+      const figs = item.figuresAndWorks || [];
+      const landmark1 = figs[0] ? String(figs[0]).split('(')[0].trim() : item.title;
+      const landmark2 = figs[1] ? String(figs[1]).split('(')[0].trim() : `${item.city} Tarihi Anıtı`;
+      const landmark3 = figs[2] ? String(figs[2]).split('(')[0].trim() : `${item.city} Kültür Mirası`;
+
+      return [
+        {
+          title_tr: `1. 🏛️ ${item.city} Ana Tarihi Yapı & ${selectedWar ? selectedWar.short_tr : item.title}`,
+          title_en: `1. 🏛️ ${item.city_en || item.city} Primary Monument & ${selectedWar ? selectedWar.short_en : (item.title_en || item.title)}`,
+          caption_tr: selectedWar
+            ? `${item.imageCaption} • Cephe / Savaş Alanı: ${selectedWar.title_tr} — ${selectedWar.outcome_tr}`
+            : item.imageCaption,
+          caption_en: selectedWar
+            ? `${item.imageCaption_en || item.imageCaption} • Battlefield: ${selectedWar.title_en} — ${selectedWar.outcome_en}`
+            : (item.imageCaption_en || item.imageCaption),
+          wikiQuery: `${item.city} ${landmark1}`,
+          img: item.coverImage
+        },
+        {
+          title_tr: `2. ⚔️ ${selectedWar ? selectedWar.title_tr : landmark2} (Savaş Alanı & Anıtsal Miras)`,
+          title_en: `2. ⚔️ ${selectedWar ? selectedWar.title_en : landmark2} (Battlefield & Monumental Heritage)`,
+          caption_tr: selectedWar ? selectedWar.desc_tr : item.description,
+          caption_en: selectedWar ? selectedWar.desc_en : (item.description_en || item.description),
+          wikiQuery: selectedWar ? selectedWar.short_tr.replace(/\([^)]*\)/g, '').trim() : landmark2,
+          img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=85"
+        },
+        {
+          title_tr: `3. 🏰 ${item.city} Önemli Yapılar: ${landmark2} & ${landmark3}`,
+          title_en: `3. 🏰 ${item.city_en || item.city} Landmarks: ${landmark2} & ${landmark3}`,
+          caption_tr: `${item.city} (${item.country}) durağının mimari dokusu, tarihi meydanları ve ${landmark3} mirası.`,
+          caption_en: `Architectural heritage, historic squares, and ${landmark3} landmarks of ${item.city_en || item.city}, ${item.country_en || item.country}.`,
+          wikiQuery: item.city_en || item.city,
+          img: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=85"
+        }
+      ];
+    }
+
+    async function fetchLandmarkWikiPhoto(wikiQuery, lang) {
+      if (!wikiQuery) return null;
+      const wikiLang = lang === 'en' ? 'en' : 'tr';
+      const cacheKey = `${wikiLang}::${wikiQuery}`;
+      if (landmarkPhotoCache.has(cacheKey)) {
+        return landmarkPhotoCache.get(cacheKey);
+      }
+      try {
+        const url = `https://${wikiLang}.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(wikiQuery)}&gsrlimit=1&prop=pageimages&pithumbsize=1100&origin=*`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const pages = data && data.query && data.query.pages ? Object.values(data.query.pages) : [];
+        if (pages.length && pages[0].thumbnail && pages[0].thumbnail.source) {
+          const src = pages[0].thumbnail.source;
+          landmarkPhotoCache.set(cacheKey, src);
+          return src;
+        }
+      } catch (e) {
+        // Fallback kullan
+      }
+      return null;
+    }
+
+    async function selectGallerySlide(slideIdx = 0) {
+      if (!activeCityId) return;
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item) return;
+
+      const slides = getCityGallerySlides(item);
+      const sIdx = Math.max(0, Math.min(slides.length - 1, slideIdx));
+      activeGallerySlideIndex = sIdx;
+      const slide = slides[sIdx];
+      const isEn = currentLang === 'en';
+
+      const slideTitle = isEn ? slide.title_en : slide.title_tr;
+      const slideCaption = isEn ? slide.caption_en : slide.caption_tr;
+
+      // Çekmecedeki (Drawer) görseli ve 1-2-3 kutu butonlarını güncelle
+      const coverImg = document.getElementById('drawerCoverImage');
+      const fallbackSvg = createAICoverIllustration({
+        title: slideTitle.toUpperCase(),
+        subtitle: slideCaption.slice(0, 90),
+        era: item.year,
+        primaryColor: sIdx === 0 ? '#92400e' : (sIdx === 1 ? '#881337' : '#0f766e'),
+        secondaryColor: '#0f172a',
+        accentColor: '#fbbf24',
+        icon: sIdx === 0 ? '🏛️' : (sIdx === 1 ? '⚔️' : '🏰'),
+        regionTag: item.city.toUpperCase()
+      });
+
+      if (coverImg) {
+        coverImg.dataset.fallback = fallbackSvg;
+        coverImg.src = slide.img || item.coverImage || fallbackSvg;
+      }
+
+      const landmarkTitleEl = document.getElementById('drawerLandmarkTitle');
+      if (landmarkTitleEl) landmarkTitleEl.textContent = slideTitle;
+
+      const captionEl = document.getElementById('drawerImageCaption');
+      if (captionEl) captionEl.textContent = slideCaption;
+
+      const badgeEl = document.getElementById('drawerSlideTypeBadge');
+      if (badgeEl) badgeEl.textContent = `${sIdx === 1 ? '⚔️' : '🏛️'} ${sIdx + 1} / ${slides.length}`;
+
+      const activeLabelEl = document.getElementById('drawerGalleryActiveLabel');
+      if (activeLabelEl) activeLabelEl.textContent = slideTitle;
+
+      const aiBtnLabel = document.getElementById('aiHighResBtnLabel');
+      if (aiBtnLabel) {
+        aiBtnLabel.textContent = isEn ? 'AI High-Res Art • Enlarge' : 'AI High-Res Art • Büyüt';
+      }
+
+      // 1-2-3 Kutu (Box) Butonlarının Aktif Stilleri (Hem Drawer hem Lightbox)
+      document.querySelectorAll('.gallery-box-btn, .lightbox-box-btn').forEach(btn => {
+        const idx = parseInt(btn.dataset.imgIdx, 10) || 0;
+        const isCurrent = idx === sIdx;
+        const sizeCls = btn.classList.contains('lightbox-box-btn') ? 'w-8 h-8 text-xs' : 'w-7 h-7 text-xs';
+        const roleCls = btn.classList.contains('lightbox-box-btn') ? 'lightbox-box-btn' : 'gallery-box-btn';
+        if (isCurrent) {
+          btn.className = `${roleCls} ${sizeCls} rounded-lg font-mono font-extrabold flex items-center justify-center transition cursor-pointer bg-amber-500/35 text-amber-200 border border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]`;
+        } else {
+          btn.className = `${roleCls} ${sizeCls} rounded-lg font-mono font-bold flex items-center justify-center transition cursor-pointer bg-white/5 hover:bg-white/15 text-slate-300 border border-white/15`;
+        }
+      });
+
+      // Lightbox açıksa oradaki büyük görseli ve başlıkları da senkronize güncelle
+      const lightboxImg = document.getElementById('lightboxMainImage');
+      if (lightboxImg) {
+        lightboxImg.dataset.fallback = fallbackSvg;
+        lightboxImg.src = slide.img || item.coverImage || fallbackSvg;
+      }
+      const lbBadge = document.getElementById('lightboxBadge');
+      if (lbBadge) lbBadge.textContent = `AI High-Res Art • ${sIdx + 1} / ${slides.length}`;
+      const lbCity = document.getElementById('lightboxCityLabel');
+      if (lbCity) lbCity.textContent = `${isEn && item.city_en ? item.city_en : item.city}, ${isEn && item.country_en ? item.country_en : item.country}`;
+      const lbTitle = document.getElementById('lightboxTitle');
+      if (lbTitle) lbTitle.textContent = slideTitle;
+      const lbCap = document.getElementById('lightboxCaption');
+      if (lbCap) lbCap.textContent = slideCaption;
+
+      const lbThumbs = document.getElementById('lightboxThumbLabels');
+      if (lbThumbs) {
+        lbThumbs.innerHTML = slides
+          .map((sl, idx) => {
+            const active = idx === sIdx;
+            const tText = (isEn ? sl.title_en : sl.title_tr).replace(/^\d+\.\s*/, '');
+            return `
+              <button
+                type="button"
+                data-lb-idx="${idx}"
+                class="lb-label-btn px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer truncate max-w-[220px] ${
+                  active
+                    ? 'bg-amber-500/25 text-amber-200 border border-amber-400/60'
+                    : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10'
+                }"
+              >
+                ${idx + 1}. ${tText}
+              </button>
+            `;
+          })
+          .join('');
+        lbThumbs.querySelectorAll('.lb-label-btn').forEach(b => {
+          b.addEventListener('click', () => selectGallerySlide(parseInt(b.dataset.lbIdx, 10) || 0));
+        });
+      }
+
+      // Wikipedia/Wikimedia Commons üzerinden gerçek yüksek çözünürlüklü yapı/savaş alanı fotoğrafını çekip güncelle
+      const currentCitySnapshot = activeCityId;
+      const wikiPhoto = await fetchLandmarkWikiPhoto(slide.wikiQuery, currentLang);
+      if (wikiPhoto && activeCityId === currentCitySnapshot && activeGallerySlideIndex === sIdx) {
+        if (coverImg) coverImg.src = wikiPhoto;
+        if (lightboxImg) lightboxImg.src = wikiPhoto;
+      }
+    }
+
+    function openImageLightbox() {
+      if (!activeCityId) return;
+      isImageLightboxOpen = true;
+      selectGallerySlide(activeGallerySlideIndex);
+      const overlay = document.getElementById('imageLightboxOverlay');
+      const dialog = document.getElementById('imageLightboxDialog');
+      if (overlay && dialog) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+        dialog.classList.remove('scale-95');
+        dialog.classList.add('scale-100');
+      }
+    }
+
+    function closeImageLightbox() {
+      isImageLightboxOpen = false;
+      const overlay = document.getElementById('imageLightboxOverlay');
+      const dialog = document.getElementById('imageLightboxDialog');
+      if (overlay && dialog) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        dialog.classList.add('scale-95');
+        dialog.classList.remove('scale-100');
+      }
+    }
+
     function populateDrawer(item) {
       const badgesContainer = document.getElementById('drawerBadges');
       const isEn = currentLang === 'en';
@@ -7511,24 +8079,9 @@
       document.getElementById('drawerDescription').textContent = displayDesc;
       document.getElementById('drawerQuote').textContent = displayQuote;
 
-      // Kapak Görseli (Garantili Yüksek Çözünürlüklü Görsel + onerror Yedek İllüstrasyon Koruması)
-      const coverImg = document.getElementById('drawerCoverImage');
-      coverImg.style.opacity = '0.35';
-      const fallbackSvg = item.fallbackImage || '';
-      coverImg.dataset.fallback = fallbackSvg;
-      coverImg.onerror = () => {
-        if (fallbackSvg && coverImg.src !== fallbackSvg) {
-          coverImg.src = fallbackSvg;
-        }
-        coverImg.style.opacity = '1';
-      };
-      coverImg.onload = () => {
-        coverImg.style.opacity = '1';
-      };
-      setTimeout(() => {
-        coverImg.src = item.coverImage || fallbackSvg;
-      }, 60);
-      document.getElementById('drawerImageCaption').textContent = displayCaption;
+      // 3'lü Önemli Yapılar & Savaş Alanı Görsel Galerisini Yükle (1 - 2 - 3 Kutu Butonları + Büyütme)
+      activeGallerySlideIndex = 0;
+      selectGallerySlide(0);
 
       // Önemli Şahsiyetler / Eserler Rozetleri (Tıklanabilir İnteraktif Okuma Kartları)
       const tagsContainer = document.getElementById('drawerTags');
@@ -8202,8 +8755,47 @@
         searchInput.focus();
       });
 
-      // Drawer Kapatma ve 3B Taktik Savaş Simülasyonu Kontrolleri
+      // Drawer Kapatma, Görsel Büyütme (AI High-Res Art Lightbox), 1-2-3 Kutu Butonları ve 3B Savaş Simülasyonu Kontrolleri
       document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+
+      const openImageLightboxBtn = document.getElementById('openImageLightboxBtn');
+      const drawerImageCardWrapper = document.getElementById('drawerImageCardWrapper');
+      const closeImageLightboxBtn = document.getElementById('closeImageLightboxBtn');
+      const imageLightboxOverlay = document.getElementById('imageLightboxOverlay');
+
+      if (openImageLightboxBtn) {
+        openImageLightboxBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          openImageLightbox();
+        });
+      }
+      if (drawerImageCardWrapper) {
+        drawerImageCardWrapper.addEventListener('click', () => {
+          openImageLightbox();
+        });
+      }
+      if (closeImageLightboxBtn) {
+        closeImageLightboxBtn.addEventListener('click', closeImageLightbox);
+      }
+      if (imageLightboxOverlay) {
+        imageLightboxOverlay.addEventListener('click', e => {
+          if (e.target === imageLightboxOverlay) closeImageLightbox();
+        });
+      }
+
+      document.querySelectorAll('.gallery-box-btn, .lightbox-box-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.imgIdx, 10) || 0;
+          selectGallerySlide(idx);
+        });
+      });
+
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && isImageLightboxOpen) {
+          closeImageLightbox();
+        }
+      });
 
       const battleSimPlayBtn = document.getElementById('battleSimPlayBtn');
       if (battleSimPlayBtn) {
