@@ -307,6 +307,28 @@
       z-index: 9999 !important;
     }
 
+    /* Ekran-uzayı etiket çakışma önleyici: çakışan düşük öncelikli etiketler gizlenir, ikon görünür kalır, üzerine gelince etiket açılır */
+    .pin-anchor-root .pin-label,
+    .pin-anchor-root .pin-stem {
+      transition: opacity 0.18s ease;
+    }
+    .pin-anchor-root.label-collapsed .pin-label,
+    .pin-anchor-root.label-collapsed .pin-stem {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .pin-anchor-root.label-collapsed:hover .pin-label,
+    .pin-anchor-root.label-collapsed:hover .pin-stem {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Arama sonuçları açılır paneli */
+    #searchResultsPanel .search-result-item.is-highlighted {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.55);
+    }
+
     .atlas-pin-wrapper {
       position: absolute;
       left: 0;
@@ -412,31 +434,31 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform-origin: 50% 50%;
-      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.85));
+      transform-origin: 50% calc(100% - 3px);
+      transform: translate(-50%, calc(-100% + 3px)) scale(var(--pin-zoom-scale, 0.85));
       pointer-events: auto;
       cursor: pointer;
       z-index: 65;
       will-change: transform;
     }
     .tactical-point-wrapper:hover {
-      transform: translate(-50%, -50%) scale(calc(var(--pin-zoom-scale, 0.85) * 1.15));
+      transform: translate(-50%, calc(-100% + 3px)) scale(calc(var(--pin-zoom-scale, 0.85) * 1.15));
       z-index: 160;
     }
     .tactical-point-badge {
-      padding: 2px 6.5px;
+      padding: 3.5px 8.5px;
       border-radius: 999px;
-      font-size: 8.5px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.02em;
       white-space: nowrap;
       color: #fef2f2;
-      background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(15, 23, 42, 0.96));
-      border: 1.2px solid var(--tac-color, #ef4444);
-      box-shadow: 0 0 12px var(--tac-glow, rgba(239, 68, 68, 0.75));
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96));
+      border: 1.5px solid var(--tac-color, #ef4444);
+      box-shadow: 0 0 14px var(--tac-glow, rgba(239, 68, 68, 0.85));
       display: flex;
       align-items: center;
-      gap: 3.5px;
+      gap: 5px;
     }
     .tactical-point-dot {
       width: 6px;
@@ -455,8 +477,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform-origin: 50% 50%;
-      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.85));
+      transform-origin: 50% calc(100% - 2.5px);
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(var(--pin-zoom-scale, 0.85));
       pointer-events: auto;
       cursor: pointer;
       z-index: 62;
@@ -464,23 +486,23 @@
     }
     .war-branch-wrapper:hover,
     .war-branch-wrapper.active-war-branch {
-      transform: translate(-50%, -50%) scale(calc(var(--pin-zoom-scale, 0.85) * 1.18));
+      transform: translate(-50%, calc(-100% + 2.5px)) scale(calc(var(--pin-zoom-scale, 0.85) * 1.18));
       z-index: 165;
     }
     .war-branch-badge {
-      padding: 1.5px 6px;
-      border-radius: 7px;
-      font-size: 7.8px;
+      padding: 2.5px 7.5px;
+      border-radius: 8px;
+      font-size: 9.5px;
       font-weight: 800;
       letter-spacing: 0.015em;
       white-space: nowrap;
       color: #ffe4e6;
-      background: rgba(15, 23, 42, 0.94);
-      border: 1px solid rgba(244, 63, 94, 0.72);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1.2px solid rgba(244, 63, 94, 0.75);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 8px rgba(244, 63, 94, 0.35);
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
     }
     .war-branch-wrapper.active-war-branch .war-branch-badge {
       color: #fef08a;
@@ -887,6 +909,13 @@
       </div>
     </div>
   </header>
+
+  <!-- ARAMA SONUÇLARI AÇILIR PANELİ (Üst bar overflow ile kesilmesin diye body seviyesinde, fixed konumlu) -->
+  <div
+    id="searchResultsPanel"
+    role="listbox"
+    class="hidden fixed z-[80] glass-panel rounded-xl p-1.5 max-h-[60vh] overflow-y-auto custom-scroll pointer-events-auto"
+  ></div>
 
   <!-- 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRESİ (INTERACTIVE TIMELINE & CENTURY CONSOLE) -->
   <div class="fixed bottom-16 md:bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-auto max-w-[calc(100vw-1.5rem)] select-none">
@@ -5490,7 +5519,7 @@
       googleEarthTileCache.set(key, mesh);
 
       // Önbellek boyutunu dengede tut (En eski görünmeyen karoları temizle)
-      if (googleEarthTileCache.size > 420) {
+      if (googleEarthTileCache.size > 650) {
         for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
           if (!oldMesh.userData.wanted) {
             if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
@@ -5500,7 +5529,7 @@
               oldMesh.material.dispose();
             }
             googleEarthTileCache.delete(oldKey);
-            if (googleEarthTileCache.size <= 310) break;
+            if (googleEarthTileCache.size <= 480) break;
           }
         }
       }
@@ -5510,22 +5539,28 @@
 
     function addTileGridAroundCenter(lat, lng, z, radiusX, radiusY, wantedKeys) {
       const center = latLngToSlippyTile(lat, lng, z);
+      // Ekran merkezine en yakın karolar önce istensin (tarayıcı istekleri sırayla işlediği için merkez önce netleşir)
+      const offsets = [];
       for (let dy = -radiusY; dy <= radiusY; dy++) {
+        for (let dx = -radiusX; dx <= radiusX; dx++) {
+          offsets.push([dx, dy, dx * dx + dy * dy]);
+        }
+      }
+      offsets.sort((a, b) => a[2] - b[2]);
+      for (const [dx, dy] of offsets) {
         const ty = center.y + dy;
         if (ty < 0 || ty >= center.n) continue;
-        for (let dx = -radiusX; dx <= radiusX; dx++) {
-          const tx = ((center.x + dx) % center.n + center.n) % center.n;
-          const mesh = getOrCreateGoogleEarthTileMesh(z, tx, ty);
-          wantedKeys.add(mesh.userData.key);
-        }
+        const tx = ((center.x + dx) % center.n + center.n) % center.n;
+        const mesh = getOrCreateGoogleEarthTileMesh(z, tx, ty);
+        wantedKeys.add(mesh.userData.key);
       }
     }
 
     function updateGoogleEarthSurfaceTiles(pov) {
       if (!world || !googleEarthTileGroup || !pov) return;
 
-      // Uzaydan çok uzak görünümde (altitude >= 1.35) 8K ana küre dokusunu göster
-      if (pov.altitude >= 1.35) {
+      // Uzaydan çok uzak görünümde (altitude >= 1.55) 8K ana küre dokusunu göster
+      if (pov.altitude >= 1.55) {
         googleEarthTileGroup.visible = false;
         lastTileUpdateSignature = 'far';
         return;
@@ -5536,22 +5571,26 @@
       const aspect = Math.max(1.0, (window.innerWidth || 1280) / Math.max(1, window.innerHeight || 720));
       const cosLat = Math.max(0.42, Math.cos((Math.abs(pov.lat) * Math.PI) / 180));
       // Geniş ekranlarda (16:9 / 21:9) sağ ve sol kenarların asla bulanık kalmaması için yatay karo yarıçapını ekran oranına göre genişlet
-      const wideFactor = Math.min(2.6, aspect / cosLat);
+      const wideFactor = Math.min(2.8, aspect / cosLat);
 
       let targetZ = 5;
-      if (pov.altitude < 0.022) {
+      if (pov.altitude < 0.008) {
+        targetZ = isMobile ? 12 : 14;
+      } else if (pov.altitude < 0.018) {
+        targetZ = isMobile ? 11 : 13;
+      } else if (pov.altitude < 0.038) {
         targetZ = isMobile ? 10 : 12;
-      } else if (pov.altitude < 0.042) {
+      } else if (pov.altitude < 0.075) {
         targetZ = isMobile ? 9 : 11;
-      } else if (pov.altitude < 0.078) {
-        targetZ = isMobile ? 9 : 10;
-      } else if (pov.altitude < 0.145) {
-        targetZ = isMobile ? 8 : 9;
-      } else if (pov.altitude < 0.27) {
-        targetZ = 8;
+      } else if (pov.altitude < 0.14) {
+        targetZ = isMobile ? 8 : 10;
+      } else if (pov.altitude < 0.26) {
+        targetZ = isMobile ? 7 : 9;
       } else if (pov.altitude < 0.48) {
-        targetZ = 7;
+        targetZ = 8;
       } else if (pov.altitude < 0.82) {
+        targetZ = 7;
+      } else if (pov.altitude < 1.25) {
         targetZ = 6;
       } else {
         targetZ = 5;
@@ -5565,26 +5604,24 @@
 
       const wantedKeys = new Set();
 
-      // 1) En Alt Geniş Ufuk Katmanı (targetZ - 2): Sağ ve sol ekran kenarlarının en uç noktalarını bile Google Earth dokusuyla kaplar
-      const horizonZ = Math.max(4, targetZ - 2);
-      if (horizonZ < targetZ) {
-        const hRadY = isMobile ? 2 : 3;
-        const hRadX = Math.min(8, Math.ceil(hRadY * wideFactor) + 2);
-        addTileGridAroundCenter(pov.lat, pov.lng, horizonZ, hRadX, hRadY, wantedKeys);
-      }
-
-      // 2) Orta Geçiş Katmanı (targetZ - 1): Sağ-sol kenarları ve yakınlaşma geçişlerini kesintisiz net tutar
-      const parentZ = Math.max(4, targetZ - 1);
-      if (parentZ < targetZ) {
-        const pRadY = isMobile ? 2 : 3;
-        const pRadX = Math.min(8, Math.ceil(pRadY * wideFactor) + 1);
-        addTileGridAroundCenter(pov.lat, pov.lng, parentZ, pRadX, pRadY, wantedKeys);
-      }
-
-      // 3) En Üst Tam Çözünürlüklü Google Earth Hybrid Katmanı (targetZ): Geniş yatay yarıçapla ekranın solundan sağına tamamını kaplar
+      // 1) En Üst Tam Çözünürlüklü Google Earth Hybrid Katmanı (targetZ): Ekranın merkezi ve odaklanılan şehir en önce netleşir
       const mainRadY = isMobile ? 2 : 3;
       const mainRadX = isMobile ? 3 : Math.min(7, Math.max(5, Math.ceil(mainRadY * wideFactor)));
       addTileGridAroundCenter(pov.lat, pov.lng, targetZ, mainRadX, mainRadY, wantedKeys);
+
+      // 2) Alt Geçiş Katmanı (targetZ - 1 veya targetZ - 2): Yakınlaşırken yumuşak geçiş sağlar
+      const subZ = Math.max(5, targetZ - 2);
+      if (subZ < targetZ) {
+        const sRadY = isMobile ? 2 : 3;
+        const sRadX = Math.min(8, Math.ceil(sRadY * wideFactor) + 1);
+        addTileGridAroundCenter(pov.lat, pov.lng, subZ, sRadX, sRadY, wantedKeys);
+      }
+
+      // 3) Kesintisiz Küresel Ufuk Katmanı (z=5 veya z=4): Ekranın solundan sağına tüm görünen Dünya yüzeyini kesintisiz Google Earth uydusuyla kaplar; asla kare sınır veya sağ-sol bulanıklık bırakmaz!
+      const horizonZ = pov.altitude < 0.35 ? 5 : 4;
+      const hRadY = isMobile ? 3 : 5;
+      const hRadX = isMobile ? 5 : Math.min(14, Math.ceil(hRadY * wideFactor) + 3);
+      addTileGridAroundCenter(pov.lat, pov.lng, horizonZ, hRadX, hRadY, wantedKeys);
 
       for (const [k, mesh] of googleEarthTileCache.entries()) {
         const isWanted = wantedKeys.has(k);
@@ -5729,13 +5766,22 @@
       controls.dynamicDampingFactor = isMobileDevice ? 0.14 : 0.11;
       controls.zoomSpeed = 0.85;
       controls.rotateSpeed = isMobileDevice ? 0.75 : 0.62;
-      controls.minDistance = 100.8;
+      controls.minDistance = 100.35; // Çok daha derin yakınlaşma imkanı (önceden 100.8 idi)
       controls.maxDistance = 520;
       controls.autoRotate = false;
       controls.autoRotateSpeed = 0.45;
 
+      const cam = world.camera();
+      if (cam) {
+        cam.near = 0.05; // Yüzeye çok yakınken nesnelerin kesilmesini engeller
+        cam.updateProjectionMatrix();
+      }
+
       // Hem masaüstü hem mobilde kamera uçuşları (fly-to) ve yakınlaşma sırasında karoları + ikon ölçeğini 60 FPS gerçek zamanlı güncelle
-      (function animateGlobeScene() {
+      let lastCameraMoveAt = 0;
+      let lastDeclutterAt = 0;
+      (function animateGlobeScene(now) {
+        now = now || performance.now();
         if (cloudsMesh) {
           cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
         }
@@ -5747,8 +5793,15 @@
             const altDiff = lastTrackedPov.alt === null ? 1 : Math.abs(pov.altitude - lastTrackedPov.alt);
             if (latDiff > 0.0005 || lngDiff > 0.0005 || altDiff > 0.0003) {
               lastTrackedPov = { lat: pov.lat, lng: pov.lng, alt: pov.altitude };
+              lastCameraMoveAt = now;
               updateZoomAndCompass();
             }
+          }
+          // Etiket çakışma önleyici: kamera hareket ederken ~8 Hz, dururken ~2.5 Hz (yeni pin/filtre değişikliklerini de yakalar)
+          const cameraMoving = now - lastCameraMoveAt < 250;
+          if (introDismissed && now - lastDeclutterAt > (cameraMoving ? 120 : 400)) {
+            lastDeclutterAt = now;
+            declutterPinLabels();
           }
         }
         requestAnimationFrame(animateGlobeScene);
@@ -5796,6 +5849,12 @@
         setTimeout(() => {
           world.htmlElementsData(getFilteredLocations().map(item => ({ ...item })));
         }, 400);
+
+        // Paylaşılan bir bağlantıyla (#sehir-id) gelindiyse, kamera dalışından sonra doğrudan o durağı aç
+        const deepLinkedCityId = getCityIdFromHash();
+        if (deepLinkedCityId) {
+          setTimeout(() => selectCity(deepLinkedCityId), 1300);
+        }
       }
     }
 
@@ -5805,10 +5864,10 @@
       const pov = world.pointOfView();
       if (!pov) return;
 
-      // Uzaktayken (altitude >= 1.8) 0.70 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 1.55'e kadar tam merkezinden pürüzsüz büyür
-      const clampedAlt = Math.max(0.01, Math.min(2.0, pov.altitude));
-      const zoomProgress = Math.pow(1 - (clampedAlt - 0.01) / 1.99, 1.35);
-      const pinScale = 0.70 + zoomProgress * 0.85;
+      // Uzaktayken (altitude >= 1.8) 0.75 ölçekte kompakt durur; yakınlaştıkça (altitude düştükçe) 2.35'e kadar tam merkezinden pürüzsüz ve yerinde büyür
+      const clampedAlt = Math.max(0.0035, Math.min(2.0, pov.altitude));
+      const zoomProgress = Math.pow(1 - (clampedAlt - 0.0035) / 1.9965, 1.25);
+      const pinScale = 0.75 + zoomProgress * 1.60;
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(3));
 
       // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
@@ -5827,6 +5886,48 @@
     }
 
     // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu
+    // Etiket çakışmasında hangi şehrin etiketinin görüneceğini belirleyen sabit öncelik (MASTER_LOCATIONS sırası)
+    const LOCATION_PRIORITY = new Map(MASTER_LOCATIONS.map((d, i) => [d.id, i]));
+
+    // Ekran-uzayı etiket çakışma önleyici (greedy): öncelik sırasıyla etiketleri yerleştirir, çakışanların sadece etiketini gizler
+    function declutterPinLabels() {
+      const anchors = document.querySelectorAll('.pin-anchor-root[data-city-id]');
+      if (!anchors.length) return;
+      const items = [];
+      for (const a of anchors) {
+        if (a.style.display === 'none') continue;
+        const label = a.querySelector('.pin-label');
+        const head = a.querySelector('.pin-head');
+        if (!label || !head) continue;
+        const r = label.getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) continue;
+        items.push({
+          a,
+          r,
+          h: head.getBoundingClientRect(),
+          active: a.classList.contains('active-anchor') ? 1 : 0,
+          p: Number(a.dataset.priority) || 0
+        });
+      }
+      items.sort((x, y) => (y.active - x.active) || (x.p - y.p));
+      const placed = [];
+      const PAD = 2;
+      const overlaps = r => {
+        for (const q of placed) {
+          if (r.left < q.right + PAD && r.right > q.left - PAD && r.top < q.bottom + PAD && r.bottom > q.top - PAD) return true;
+        }
+        return false;
+      };
+      for (const it of items) {
+        const show = it.active === 1 || !overlaps(it.r);
+        if (it.a.classList.contains('label-collapsed') === show) {
+          it.a.classList.toggle('label-collapsed', !show);
+        }
+        if (show) placed.push(it.r);
+        placed.push(it.h);
+      }
+    }
+
     // CSS2DRenderer'ın root elementin style.transform özelliğini ezmesini önlemek için 0x0 boyutlu .pin-anchor-root konteyneri döndürülür.
     function createPinElement(item) {
       const anchorRoot = document.createElement('div');
@@ -5889,6 +5990,7 @@
         anchorRoot.classList.add('active-anchor');
       }
       anchorRoot.dataset.cityId = item.id;
+      anchorRoot.dataset.priority = String(LOCATION_PRIORITY.has(item.id) ? LOCATION_PRIORITY.get(item.id) : 999);
 
       const wrapper = document.createElement('div');
       wrapper.className = `atlas-pin-wrapper ${isActiveCity ? 'active-pin' : ''}`;
@@ -6317,9 +6419,9 @@
       const baseLat = item.lat;
       const baseLng = item.lng;
       const figs = item.figuresAndWorks || [];
-      const fig1 = figs[0] || item.title;
-      const fig2 = figs[1] || item.city;
-      const fig3 = figs[2] || item.year;
+      const fig1 = figs[0] || item.title || (isHist ? 'Merkez Kuvvetleri' : 'Kurucu Fikirler');
+      const fig2 = figs[1] || item.city || (isHist ? 'Bölgesel Güçler' : 'Edebi Çevre');
+      const fig3 = figs[2] || item.year || item.title || (isHist ? 'Tarihsel Miras' : 'Kültürel Kanon');
 
       // En yakın 2 komşu durağı bulup gerçekçi bölgesel harekat/etkileşim vektörleri oluştur
       const neighbors = MASTER_LOCATIONS
@@ -7850,22 +7952,22 @@
       }));
       world.htmlElementsData([...filteredList, ...branchNodes, ...tacticalMarkers]);
 
-      // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) enlem açısına duyarlı kusursuz ortalama ile scope'la (altitude: 0.14)
+      // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) enlem açısına duyarlı kusursuz ortalama ile derin scope'la (altitude: 0.055)
       if (flyCamera) {
         const isMobile = window.innerWidth < 768;
         const targetLat = phase.focusLat || selectedWar.lat;
         const targetLng = phase.focusLng || selectedWar.lng;
         const cosLat = Math.max(0.5, Math.cos((Math.abs(targetLat) * Math.PI) / 180));
-        const lngOffset = isMobile ? 0 : 0.38 / cosLat;
+        const lngOffset = isMobile ? 0 : 0.15 / cosLat;
         world.pointOfView(
           {
             lat: targetLat,
             lng: targetLng + lngOffset,
-            altitude: 0.14
+            altitude: 0.055
           },
-          1200
+          1350
         );
-        setTimeout(updateZoomAndCompass, 1250);
+        setTimeout(updateZoomAndCompass, 1400);
       }
     }
 
@@ -7973,6 +8075,17 @@
       populateDrawer(item);
       updateCityWarViewOnGlobeAndDrawer(item);
       openDrawer();
+
+      // Paylaşılabilir bağlantı: adres çubuğu #sehir-id olarak güncellenir (geçmişi kirletmeden)
+      if (location.hash !== `#${cityId}`) {
+        history.replaceState(null, '', `#${cityId}`);
+      }
+    }
+
+    // Adres çubuğundaki #sehir-id değerini okuyup geçerli bir durak ise döndürür
+    function getCityIdFromHash() {
+      const raw = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+      return raw && MASTER_LOCATIONS.some(d => d.id === raw) ? raw : null;
     }
 
     // ============================================================================
@@ -8538,6 +8651,10 @@
       document.querySelectorAll('.pin-anchor-root').forEach(el => {
         el.classList.remove('active-anchor');
       });
+
+      if (location.hash) {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
     }
 
     // Sesli anlatıcı tamamen kaldırıldı
@@ -9126,41 +9243,178 @@
         });
       });
 
-      // 4. ARAMA ÇUBUĞU
+      // 4. ARAMA ÇUBUĞU + CANLI SONUÇ LİSTESİ (↑ / ↓ ile gezin, Enter ile aç, Esc ile kapat)
       const searchInput = document.getElementById('searchInput');
       const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const searchResultsPanel = document.getElementById('searchResultsPanel');
+      let searchResults = [];
+      let searchHighlightIdx = 0;
+
+      // Tüm duraklarda (filtrelerden bağımsız) puanlı arama: şehir adı başı > şehir adı içi > başlık > diğer alanlar
+      function computeSearchResults(rawQuery) {
+        const q = rawQuery.trim().toLocaleLowerCase('tr-TR');
+        if (!q) return [];
+        const low = s => String(s || '').toLocaleLowerCase('tr-TR');
+        const scored = [];
+        MASTER_LOCATIONS.forEach((item, idx) => {
+          const city = low(item.city) + ' ' + low(item.city_en);
+          const title = low(item.title) + ' ' + low(item.title_en);
+          const rest = [item.country, item.country_en, item.year, ...(item.figuresAndWorks || [])].map(low).join(' ');
+          let score = -1;
+          if (low(item.city).startsWith(q) || low(item.city_en).startsWith(q)) score = 0;
+          else if (city.includes(q)) score = 1;
+          else if (title.includes(q)) score = 2;
+          else if (rest.includes(q)) score = 3;
+          if (score >= 0) scored.push({ item, score, idx });
+        });
+        scored.sort((a, b) => a.score - b.score || a.idx - b.idx);
+        return scored.slice(0, 8).map(s => s.item);
+      }
+
+      function positionSearchPanel() {
+        const r = searchInput.getBoundingClientRect();
+        const width = Math.min(window.innerWidth - 16, Math.max(280, r.width + 120));
+        const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
+        searchResultsPanel.style.left = `${left}px`;
+        searchResultsPanel.style.top = `${r.bottom + 6}px`;
+        searchResultsPanel.style.width = `${width}px`;
+      }
+
+      function hideSearchResults() {
+        searchResultsPanel.classList.add('hidden');
+        searchResultsPanel.innerHTML = '';
+        searchResults = [];
+      }
+
+      function renderSearchResults() {
+        searchResults = computeSearchResults(searchQuery);
+        searchHighlightIdx = 0;
+        if (!searchQuery.trim()) {
+          hideSearchResults();
+          return;
+        }
+        const isEn = currentLang === 'en';
+        searchResultsPanel.innerHTML = '';
+        if (!searchResults.length) {
+          const empty = document.createElement('div');
+          empty.className = 'px-3 py-2 text-[11px] text-slate-400';
+          empty.textContent = isEn ? 'No matching stop found' : 'Eşleşen durak bulunamadı';
+          searchResultsPanel.appendChild(empty);
+        }
+        searchResults.forEach((item, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('role', 'option');
+          btn.dataset.resultIdx = String(idx);
+          btn.className = `search-result-item w-full text-left px-2.5 py-1.5 rounded-lg border border-transparent hover:bg-white/10 flex items-center gap-2 cursor-pointer transition ${idx === 0 ? 'is-highlighted' : ''}`;
+
+          const dot = document.createElement('span');
+          const isLit = item.category === 'edebiyat';
+          dot.className = `w-2 h-2 rounded-full shrink-0 ${isLit ? 'bg-teal-400' : 'bg-amber-400'}`;
+
+          const textWrap = document.createElement('span');
+          textWrap.className = 'min-w-0 flex-1';
+          const cityLine = document.createElement('span');
+          cityLine.className = 'block text-[12px] font-bold text-white truncate';
+          cityLine.textContent = `${item.flag || '🌍'} ${(isEn && item.city_en) ? item.city_en : item.city} · ${(isEn && item.country_en) ? item.country_en : item.country}`;
+          const titleLine = document.createElement('span');
+          titleLine.className = 'block text-[10.5px] text-slate-400 truncate';
+          titleLine.textContent = (isEn && item.title_en) ? item.title_en : item.title;
+          textWrap.append(cityLine, titleLine);
+
+          btn.append(dot, textWrap);
+          btn.addEventListener('mousedown', e => e.preventDefault()); // input blur olmadan tıklama yakalansın
+          btn.addEventListener('click', () => pickSearchResult(idx));
+          searchResultsPanel.appendChild(btn);
+        });
+        positionSearchPanel();
+        searchResultsPanel.classList.remove('hidden');
+      }
+
+      function updateSearchHighlight() {
+        searchResultsPanel.querySelectorAll('.search-result-item').forEach((el, i) => {
+          el.classList.toggle('is-highlighted', i === searchHighlightIdx);
+          if (i === searchHighlightIdx) el.scrollIntoView({ block: 'nearest' });
+        });
+      }
+
+      function pickSearchResult(idx) {
+        const item = searchResults[idx];
+        if (!item) return;
+        // Seçilen durak aktif bölge/kategori/çağ filtrelerinin dışındaysa filtreleri sıfırla ki pin haritada görünsün
+        const regionOk = activeRegion === 'all' || item.region === activeRegion;
+        const catOk = activeCategory === 'all' || activeCategory === 'savaslar' || item.category === activeCategory || item.secondaryCategory === activeCategory;
+        const eraOk = activeEra === 'all' || item.era === activeEra;
+        if (!regionOk || !catOk || !eraOk) {
+          activeRegion = 'all';
+          activeCategory = 'all';
+          activeEra = 'all';
+          updateFilterButtonStyles();
+          updateEraButtonStyles();
+        }
+        searchInput.value = '';
+        searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        hideSearchResults();
+        searchInput.blur();
+        renderFilteredMarkers();
+        selectCity(item.id);
+      }
 
       searchInput.addEventListener('input', e => {
         searchQuery = e.target.value;
         clearSearchBtn.classList.toggle('hidden', !searchQuery);
         renderFilteredMarkers();
+        renderSearchResults();
+      });
+
+      searchInput.addEventListener('focus', () => {
+        if (searchQuery.trim()) renderSearchResults();
+      });
+
+      searchInput.addEventListener('blur', () => {
+        setTimeout(hideSearchResults, 120);
       });
 
       searchInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
+        if (e.key === 'ArrowDown' && searchResults.length) {
           e.preventDefault();
-          let matches = getFilteredLocations();
-
-          if (matches.length === 0 && searchQuery.trim()) {
-            activeRegion = 'all';
-            activeCategory = 'all';
-            updateFilterButtonStyles();
-            renderFilteredMarkers();
-            matches = getFilteredLocations();
+          searchHighlightIdx = (searchHighlightIdx + 1) % searchResults.length;
+          updateSearchHighlight();
+        } else if (e.key === 'ArrowUp' && searchResults.length) {
+          e.preventDefault();
+          searchHighlightIdx = (searchHighlightIdx - 1 + searchResults.length) % searchResults.length;
+          updateSearchHighlight();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (searchResults.length) {
+            pickSearchResult(searchHighlightIdx);
           }
-
-          if (matches.length > 0) {
-            selectCity(matches[0].id);
-          }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          hideSearchResults();
+          searchInput.blur();
         }
+      });
+
+      window.addEventListener('resize', () => {
+        if (!searchResultsPanel.classList.contains('hidden')) positionSearchPanel();
       });
 
       clearSearchBtn.addEventListener('click', () => {
         searchInput.value = '';
         searchQuery = '';
         clearSearchBtn.classList.add('hidden');
+        hideSearchResults();
         renderFilteredMarkers();
         searchInput.focus();
+      });
+
+      // Paylaşılan bağlantı adres çubuğunda değiştirilirse (ör. #paris yazılırsa) o durağa uç
+      window.addEventListener('hashchange', () => {
+        if (!introDismissed) return;
+        const id = getCityIdFromHash();
+        if (id && id !== activeCityId) selectCity(id);
       });
 
       // Drawer Kapatma, Görsel Büyütme (AI High-Res Art Lightbox), 1-2-3 Kutu Butonları ve 3B Savaş Simülasyonu Kontrolleri
@@ -9197,12 +9451,6 @@
           const idx = parseInt(btn.dataset.imgIdx, 10) || 0;
           selectGallerySlide(idx);
         });
-      });
-
-      window.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && isImageLightboxOpen) {
-          closeImageLightbox();
-        }
       });
 
       const battleSimPlayBtn = document.getElementById('battleSimPlayBtn');
@@ -9284,7 +9532,7 @@
       // SAĞ ALT NAVİGASYON KONTROLLERİ
       document.getElementById('zoomInBtn').addEventListener('click', () => {
         const pov = world.pointOfView();
-        const nextAlt = Math.max(0.012, pov.altitude * 0.65);
+        const nextAlt = Math.max(0.0035, pov.altitude * 0.65);
         world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
         setTimeout(updateZoomAndCompass, 600);
       });
