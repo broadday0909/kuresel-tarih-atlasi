@@ -1094,28 +1094,8 @@
         </div>
       </div>
 
-      <!-- ⚔️ 3B TAKTİK SAVAŞ VE ÜLKE SAVAŞLARI AĞAÇ DALLARI SİMÜLASYONU KONSOLU -->
-      <div id="drawerBattleSimBox" class="rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br from-rose-950/60 via-slate-900/90 to-amber-950/45 border border-rose-500/40 shadow-[0_10px_28px_rgba(225,29,72,0.16)] space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
-            <span class="relative flex h-2.5 w-2.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-            </span>
-            <h3 id="drawerBattleSimHeading" class="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
-              <span>⚔️ 3B Taktik Savaş &amp; Harekat Simülasyonu</span>
-            </h3>
-          </div>
-          <button
-            id="battleSimPlayBtn"
-            type="button"
-            class="px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold tracking-wide bg-gradient-to-r from-rose-600 via-amber-600 to-rose-600 hover:from-rose-500 hover:to-amber-500 text-white border border-amber-300/50 shadow-[0_0_16px_rgba(244,63,94,0.45)] flex items-center gap-1.5 transition cursor-pointer"
-          >
-            <span id="battleSimPlayIcon">▶️</span>
-            <span id="battleSimPlayText">3B Harekatı Canlandır</span>
-          </button>
-        </div>
-
+      <!-- ⚔️ 3B TAKTİK SAVAŞ VE ÜLKE SAVAŞLARI AĞAÇ DALLARI SİMÜLASYONU KONSOLU (Sadece Savaşlar modunda görünür, savaş detayı ise savaşa tıklanınca açılır) -->
+      <div id="drawerBattleSimBox" class="hidden rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br from-rose-950/60 via-slate-900/90 to-amber-950/45 border border-rose-500/40 shadow-[0_10px_28px_rgba(225,29,72,0.16)] space-y-3">
         <!-- 🌳 ÜLKE SAVAŞLARI AĞAÇ DALLARI (ALT BAŞLIKLAR HALİNDE BELİREN SAVAŞLAR LİSTESİ) -->
         <div id="countryWarsTreeBox" class="rounded-xl p-3 bg-slate-950/85 border border-rose-500/30 space-y-2">
           <div class="flex items-center justify-between gap-2">
@@ -1128,64 +1108,87 @@
             </span>
           </div>
           <p id="countryWarsTreeHint" class="text-[11px] text-slate-300/90 leading-snug">
-            3B haritada bu ülkeden ağaç dalları gibi ayrılan savaşlara veya aşağıdaki alt başlıklara tıklayarak cepheye odaklanın:
+            Detayları ve 3B savaş simülasyonunu görmek için aşağıdaki savaşlardan birine veya 3B küredeki savaş dalına tıklayın:
           </p>
           <!-- Ağaç Gövdesi ve Dalları -->
           <div id="countryWarsTreeList" class="border-l-2 border-rose-500/50 ml-2 pl-2.5 space-y-1.5 max-h-52 overflow-y-auto custom-scroll pr-1"></div>
         </div>
 
-        <!-- 3 Aşamalı Taktik Evre Seçici Butonlar -->
-        <div id="battlePhaseBtns" class="grid grid-cols-3 gap-1.5">
-          <button type="button" data-phase="0" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
-            1. Aşama
-          </button>
-          <button type="button" data-phase="1" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
-            2. Aşama
-          </button>
-          <button type="button" data-phase="2" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
-            3. Aşama
-          </button>
-        </div>
+        <!-- 🎯 SADECE BİR SAVAŞA TIKLANDIĞINDA AÇILAN SAVAŞ DETAYI VE 3B SİMÜLASYON PANELİ -->
+        <div id="warSelectedDetailPanel" class="hidden space-y-3 pt-2 border-t border-rose-500/30">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+              </span>
+              <h3 id="drawerBattleSimHeading" class="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+                <span>⚔️ 3B Taktik Savaş &amp; Harekat Simülasyonu</span>
+              </h3>
+            </div>
+            <button
+              id="battleSimPlayBtn"
+              type="button"
+              class="px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold tracking-wide bg-gradient-to-r from-rose-600 via-amber-600 to-rose-600 hover:from-rose-500 hover:to-amber-500 text-white border border-amber-300/50 shadow-[0_0_16px_rgba(244,63,94,0.45)] flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <span id="battleSimPlayIcon">▶️</span>
+              <span id="battleSimPlayText">3B Harekatı Canlandır</span>
+            </button>
+          </div>
 
-        <!-- Seçili Aşama Taktik Brifing Kartı -->
-        <div class="rounded-xl p-3 bg-slate-950/80 border border-white/10 space-y-2">
-          <div class="flex items-center justify-between gap-2">
-            <span id="battleSimPhaseTitle" class="text-xs sm:text-sm font-bold text-amber-300">
-              1. Aşama: Cephe Hatları ve İlk Temas
+          <!-- 3 Aşamalı Taktik Evre Seçici Butonlar -->
+          <div id="battlePhaseBtns" class="grid grid-cols-3 gap-1.5">
+            <button type="button" data-phase="0" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+              1. Aşama
+            </button>
+            <button type="button" data-phase="1" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+              2. Aşama
+            </button>
+            <button type="button" data-phase="2" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+              3. Aşama
+            </button>
+          </div>
+
+          <!-- Seçili Savaş & Aşama Taktik Brifing Kartı -->
+          <div class="rounded-xl p-3 bg-slate-950/80 border border-white/10 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span id="battleSimPhaseTitle" class="text-xs sm:text-sm font-bold text-amber-300">
+                1. Aşama: Cephe Hatları ve İlk Temas
+              </span>
+              <span id="battleSimCoordsBadge" class="text-[10px] font-mono text-rose-300/90 bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 rounded-md shrink-0">
+                3D LIVE
+              </span>
+            </div>
+            <p id="battleSimPhaseDesc" class="text-xs sm:text-[13.5px] text-slate-200 leading-relaxed">
+              Küre üzerindeki 3B şok dalgaları ve hareketli taarruz/savunma vektörleri ile harekatın aşamalarını inceleyin.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 border-t border-white/10 text-[11px]">
+              <div class="flex items-start gap-1.5 text-slate-300">
+                <span class="text-rose-400 font-bold shrink-0" id="battleForcesLabel">🛡️ Kuvvetler:</span>
+                <span id="battleSimForces" class="text-slate-100 font-medium">-</span>
+              </div>
+              <div class="flex items-start gap-1.5 text-slate-300">
+                <span class="text-amber-400 font-bold shrink-0" id="battleOutcomeLabel">🎯 Sonuç:</span>
+                <span id="battleSimOutcome" class="text-amber-200 font-medium">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3B Harita Vektör Lejantı -->
+          <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-300 px-1">
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+              <span id="battleLegendAttack">Taarruz / Kuşatma Hattı</span>
             </span>
-            <span id="battleSimCoordsBadge" class="text-[10px] font-mono text-rose-300/90 bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 rounded-md shrink-0">
-              3D LIVE
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"></span>
+              <span id="battleLegendDefense">Savunma / Karşı Harekat</span>
+            </span>
+            <span class="inline-flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded-full border border-rose-400 bg-rose-500/30"></span>
+              <span id="battleLegendShockwave">3B Çarpışma Şok Dalgası</span>
             </span>
           </div>
-          <p id="battleSimPhaseDesc" class="text-xs sm:text-[13.5px] text-slate-200 leading-relaxed">
-            Küre üzerindeki 3B şok dalgaları ve hareketli taarruz/savunma vektörleri ile harekatın aşamalarını inceleyin.
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 border-t border-white/10 text-[11px]">
-            <div class="flex items-start gap-1.5 text-slate-300">
-              <span class="text-rose-400 font-bold shrink-0" id="battleForcesLabel">🛡️ Kuvvetler:</span>
-              <span id="battleSimForces" class="text-slate-100 font-medium">-</span>
-            </div>
-            <div class="flex items-start gap-1.5 text-slate-300">
-              <span class="text-amber-400 font-bold shrink-0" id="battleOutcomeLabel">🎯 Sonuç:</span>
-              <span id="battleSimOutcome" class="text-amber-200 font-medium">-</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3B Harita Vektör Lejantı -->
-        <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-300 px-1">
-          <span class="inline-flex items-center gap-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
-            <span id="battleLegendAttack">Taarruz / Kuşatma Hattı</span>
-          </span>
-          <span class="inline-flex items-center gap-1">
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"></span>
-            <span id="battleLegendDefense">Savunma / Karşı Harekat</span>
-          </span>
-          <span class="inline-flex items-center gap-1">
-            <span class="w-2.5 h-2.5 rounded-full border border-rose-400 bg-rose-500/30"></span>
-            <span id="battleLegendShockwave">3B Çarpışma Şok Dalgası</span>
-          </span>
         </div>
       </div>
 
@@ -7202,7 +7205,7 @@
       });
     }
 
-    function renderCountryWarsTreeInDrawer(item, activeWarIdx = 0) {
+    function renderCountryWarsTreeInDrawer(item, activeWarIdx = -1) {
       const wars = getCountryWarsForItem(item);
       const isEn = currentLang === 'en';
       const t = TRANSLATIONS[currentLang];
@@ -7220,7 +7223,9 @@
         countEl.textContent = t.countryWarsCount(wars.length);
       }
       if (hintEl) {
-        hintEl.textContent = t.countryWarsTreeHint;
+        hintEl.textContent = isEn
+          ? 'Click on any war below or on a 3D war branch on the globe to open its battle details and 3D simulation:'
+          : 'Detayları ve 3B savaş simülasyonunu açmak için aşağıdaki savaşlardan birine veya 3B küredeki savaş dalına tıklayın:';
       }
 
       if (!listEl) return;
@@ -7261,6 +7266,153 @@
       });
     }
 
+    // Seçilen ülke savaşı (selectedWar) için 3 aşamalı taktik simülasyon verisi üretir
+    function buildPhasesForSelectedWar(item, selectedWar) {
+      const wLat = selectedWar.lat;
+      const wLng = selectedWar.lng;
+      return [
+        {
+          btn_tr: "1. Cephe & Yığınak",
+          btn_en: "1. Front & Deployment",
+          title_tr: `${selectedWar.title_tr} — 1. Aşama: Cephe Hatları`,
+          title_en: `${selectedWar.title_en} — Phase 1: Frontlines & Deployment`,
+          desc_tr: selectedWar.desc_tr,
+          desc_en: selectedWar.desc_en,
+          forces_tr: selectedWar.forces_tr,
+          forces_en: selectedWar.forces_en,
+          outcome_tr: selectedWar.outcome_tr,
+          outcome_en: selectedWar.outcome_en,
+          focusLat: wLat,
+          focusLng: wLng,
+          rings: [
+            { lat: selectedWar.branchLat, lng: selectedWar.branchLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.52, speed: 0.55, repeat: 620 },
+            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.72, speed: 0.65, repeat: 580 }
+          ],
+          vectors: [
+            { startLat: item.lat, startLng: item.lng, endLat: wLat, endLng: wLng, type: 'attack', label: selectedWar.short_tr },
+            { startLat: wLat - 0.55, startLng: wLng - 0.65, endLat: wLat, endLng: wLng, type: 'attack', label: 'Taarruz Kolu' },
+            { startLat: wLat + 0.45, startLng: wLng + 0.55, endLat: wLat, endLng: wLng, type: 'defense', label: 'Savunma Hattı' }
+          ],
+          markers: [
+            { lat: wLat, lng: wLng, icon: '⚔️', label_tr: selectedWar.short_tr, label_en: selectedWar.short_en, tone: 'attack' },
+            { lat: wLat + 0.35, lng: wLng + 0.42, icon: '🛡️', label_tr: 'Cephe Tahkimatı', label_en: 'Frontline Defense', tone: 'defense' }
+          ]
+        },
+        {
+          btn_tr: "2. Ana Muharebe",
+          btn_en: "2. Main Clash",
+          title_tr: `${selectedWar.short_tr} — 2. Aşama: Kırılma Anı ve Meydan Muharebesi`,
+          title_en: `${selectedWar.short_en} — Phase 2: Decisive Clash`,
+          desc_tr: `${selectedWar.forces_tr} kuvvetleri arasında ${selectedWar.year} tarihinde yaşanan ana çarpışma ve kuşatma/taarruz manevraları. ${selectedWar.desc_tr}`,
+          desc_en: `Decisive engagement in ${selectedWar.year} between ${selectedWar.forces_en}. ${selectedWar.desc_en}`,
+          forces_tr: selectedWar.forces_tr,
+          forces_en: selectedWar.forces_en,
+          outcome_tr: selectedWar.outcome_tr,
+          outcome_en: selectedWar.outcome_en,
+          focusLat: wLat,
+          focusLng: wLng,
+          rings: [
+            { lat: wLat, lng: wLng, color: ['rgba(239,68,68,1)', 'rgba(239,68,68,0)'], maxR: 0.92, speed: 0.82, repeat: 460 },
+            { lat: wLat + 0.18, lng: wLng - 0.18, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.62, speed: 0.68, repeat: 540 }
+          ],
+          vectors: [
+            { startLat: wLat - 0.68, startLng: wLng + 0.52, endLat: wLat, endLng: wLng, type: 'attack', label: 'Merkez Taarruzu' },
+            { startLat: wLat + 0.58, startLng: wLng - 0.48, endLat: wLat, endLng: wLng, type: 'defense', label: 'Karşı Harekat' }
+          ],
+          markers: [
+            { lat: wLat, lng: wLng, icon: '🔥', label_tr: 'Ana Muharebe Meydanı', label_en: 'Main Battlefield', tone: 'clash' },
+            { lat: wLat - 0.35, lng: wLng + 0.28, icon: '🚩', label_tr: 'İleri Harekat', label_en: 'Vanguard Push', tone: 'attack' }
+          ]
+        },
+        {
+          btn_tr: "3. Sonuç & Etki",
+          btn_en: "3. Outcome & Impact",
+          title_tr: `${selectedWar.short_tr} — 3. Aşama: ${selectedWar.outcome_tr}`,
+          title_en: `${selectedWar.short_en} — Phase 3: ${selectedWar.outcome_en}`,
+          desc_tr: `Tarihsel Sonuç: ${selectedWar.outcome_tr}. ${selectedWar.desc_tr}`,
+          desc_en: `Historical Outcome: ${selectedWar.outcome_en}. ${selectedWar.desc_en}`,
+          forces_tr: selectedWar.forces_tr,
+          forces_en: selectedWar.forces_en,
+          outcome_tr: selectedWar.outcome_tr,
+          outcome_en: selectedWar.outcome_en,
+          focusLat: wLat,
+          focusLng: wLng,
+          rings: [
+            { lat: wLat, lng: wLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 1.05, speed: 0.65, repeat: 640 }
+          ],
+          vectors: [
+            { startLat: wLat, startLng: wLng, endLat: item.lat, endLng: item.lng, type: 'defense', label: selectedWar.outcome_tr }
+          ],
+          markers: [
+            { lat: wLat, lng: wLng, icon: '🏆', label_tr: selectedWar.outcome_tr.slice(0, 32), label_en: selectedWar.outcome_en.slice(0, 32), tone: 'victory' }
+          ]
+        }
+      ];
+    }
+
+    // Şehir seçildiğinde veya üstten kategori değiştirildiğinde Savaşlar kutusunun ve 3B dalların görünürlüğünü yönetir
+    function updateCityWarViewOnGlobeAndDrawer(item) {
+      if (!item || !world) return;
+      const simBox = document.getElementById('drawerBattleSimBox');
+      const detailPanel = document.getElementById('warSelectedDetailPanel');
+
+      // Savaşlar kategorisi aktif DEĞİLSE: Savaş kutusunu ve 3B savaş dallarını kesinlikle gösterme
+      if (activeCategory !== 'savaslar') {
+        if (simBox) simBox.classList.add('hidden');
+        if (detailPanel) detailPanel.classList.add('hidden');
+        world.ringsData([]);
+        renderFilteredMarkers();
+        return;
+      }
+
+      // Savaşlar kategorisi aktifse: Savaş Ağacı kutusunu göster
+      if (simBox) simBox.classList.remove('hidden');
+
+      // Henüz spesifik bir savaşa tıklanmadıysa (activeCountryWarIndex < 0):
+      // Sadece Ülke Savaşları Ağacını (alt başlıkları) ve küredeki savaş dallarını göster; alt detay kartını gizli tut!
+      if (activeCountryWarIndex < 0) {
+        if (detailPanel) detailPanel.classList.add('hidden');
+        renderCountryWarsTreeInDrawer(item, -1);
+
+        const isEn = currentLang === 'en';
+        const wars = getCountryWarsForItem(item);
+        const treeBranchArcs = wars.map(w => ({
+          startLat: item.lat,
+          startLng: item.lng,
+          endLat: w.branchLat,
+          endLng: w.branchLng,
+          label: isEn ? w.title_en : w.title_tr,
+          color: ['rgba(244,63,94,0.78)', 'rgba(251,191,36,0.68)'],
+          altScale: 0.045,
+          stroke: 0.18,
+          dashLength: 0.22,
+          dashGap: 0.11,
+          animateTime: 1450
+        }));
+
+        const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
+        world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs]);
+        world.ringsData([]);
+
+        const branchNodes = wars.map((w, idx) => ({
+          id: `war_branch_${item.id}_${idx}`,
+          lat: w.branchLat,
+          lng: w.branchLng,
+          shortTitle_tr: w.short_tr,
+          shortTitle_en: w.short_en,
+          warIndex: idx,
+          isLastBranch: w.isLastBranch,
+          isActiveBranch: false,
+          isWarBranchNode: true
+        }));
+        world.htmlElementsData([...filteredList, ...branchNodes]);
+      } else {
+        // Kullanıcı bir savaşa tıkladıysa detay panelini göster ve seçili savaşı yükle
+        if (detailPanel) detailPanel.classList.remove('hidden');
+        selectBattlePhase(activeBattlePhaseIndex, false);
+      }
+    }
+
     function selectCountryWarBranch(warIndex, flyCamera = false) {
       if (!activeCityId || !world) return;
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
@@ -7269,105 +7421,19 @@
       const wars = getCountryWarsForItem(item);
       const wIdx = Math.max(0, Math.min(wars.length - 1, warIndex));
       activeCountryWarIndex = wIdx;
-      const selectedWar = wars[wIdx];
-      const isEn = currentLang === 'en';
-      const t = TRANSLATIONS[currentLang];
+      activeBattlePhaseIndex = 0;
 
-      renderCountryWarsTreeInDrawer(item, wIdx);
+      // Savaş dalına tıklandığında savaş kutusunu ve savaş detay panelini görünür yap
+      const simBox = document.getElementById('drawerBattleSimBox');
+      const detailPanel = document.getElementById('warSelectedDetailPanel');
+      if (simBox) simBox.classList.remove('hidden');
+      if (detailPanel) detailPanel.classList.remove('hidden');
 
-      // Seçilen savaş dalının detaylarını brifing kartına yaz
-      document.getElementById('battleSimPhaseTitle').textContent = isEn ? selectedWar.title_en : selectedWar.title_tr;
-      document.getElementById('battleSimPhaseDesc').textContent = isEn ? selectedWar.desc_en : selectedWar.desc_tr;
-      document.getElementById('battleSimForces').textContent = isEn ? selectedWar.forces_en : selectedWar.forces_tr;
-      document.getElementById('battleSimOutcome').textContent = isEn ? selectedWar.outcome_en : selectedWar.outcome_tr;
-      document.getElementById('battleForcesLabel').textContent = t.battleForcesLabel;
-      document.getElementById('battleOutcomeLabel').textContent = t.battleOutcomeLabel;
-
-      const coordsBadge = document.getElementById('battleSimCoordsBadge');
-      if (coordsBadge) {
-        coordsBadge.textContent = `${selectedWar.lat.toFixed(2)}°N, ${selectedWar.lng.toFixed(2)}°E`;
-      }
-
-      // 3B Küre üzerinde:
-      // 1) Tıklanan şehirden (ağaç gövdesi) tüm ülke savaşlarına doğru ağaç dalları gibi çıkan ince izler (branch trails)
-      const treeBranchArcs = wars.map((w, idx) => ({
-        startLat: item.lat,
-        startLng: item.lng,
-        endLat: w.branchLat,
-        endLng: w.branchLng,
-        label: isEn ? w.title_en : w.title_tr,
-        color: idx === wIdx ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.75)', 'rgba(251,191,36,0.65)'],
-        altScale: 0.045,
-        stroke: idx === wIdx ? 0.28 : 0.17,
-        dashLength: 0.22,
-        dashGap: 0.11,
-        animateTime: idx === wIdx ? 1050 : 1550
-      }));
-
-      // Seçili savaşın gerçek tarihi cephesi farklı bir koordinattaysa oraya da ince bir harekat izi uzat
-      if (Math.hypot(selectedWar.lat - item.lat, selectedWar.lng - item.lng) > 0.35) {
-        treeBranchArcs.push({
-          startLat: selectedWar.branchLat,
-          startLng: selectedWar.branchLng,
-          endLat: selectedWar.lat,
-          endLng: selectedWar.lng,
-          label: isEn ? selectedWar.title_en : selectedWar.title_tr,
-          color: ['#fbbf24', '#ef4444'],
-          altScale: 0.11,
-          stroke: 0.24,
-          dashLength: 0.20,
-          dashGap: 0.10,
-          animateTime: 1150
-        });
-      }
-
-      const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
-      if (activeCategory === 'edebiyat') {
-        world.arcsData([...buildLiteratureArcs(filteredList), ...treeBranchArcs]);
-      } else if (activeCategory === 'savaslar') {
-        world.arcsData([...buildGlobalWarArcs(filteredList), ...treeBranchArcs]);
-      } else {
-        world.arcsData(treeBranchArcs);
-      }
-
-      // 2) Seçili dal ve savaş alanında 3B şok dalgaları (ringsData)
-      world.ringsData([
-        { lat: selectedWar.branchLat, lng: selectedWar.branchLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.55, speed: 0.55, repeat: 620 },
-        { lat: selectedWar.lat, lng: selectedWar.lng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.75, speed: 0.65, repeat: 580 }
-      ]);
-
-      // 3) Ağaç dallarının uçlarında beliren tıklanabilir Savaş Alt Başlık Rozetleri (.war-branch-wrapper)
-      const branchNodes = wars.map((w, idx) => ({
-        id: `war_branch_${item.id}_${idx}`,
-        lat: w.branchLat,
-        lng: w.branchLng,
-        shortTitle_tr: w.short_tr,
-        shortTitle_en: w.short_en,
-        warIndex: idx,
-        isLastBranch: w.isLastBranch,
-        isActiveBranch: idx === wIdx,
-        isWarBranchNode: true
-      }));
-
-      world.htmlElementsData([...filteredList, ...branchNodes]);
+      selectBattlePhase(0, flyCamera);
 
       // Savaş dalı seçildiğinde galeriyi de güncellenen savaş alanıyla tazele
       if (typeof selectGallerySlide === 'function') {
         selectGallerySlide(activeGallerySlideIndex);
-      }
-
-      if (flyCamera) {
-        const isMobile = window.innerWidth < 768;
-        const lngOffset = isMobile ? 0 : 1.15;
-        world.pointOfView(
-          {
-            lat: selectedWar.branchLat - 0.12,
-            lng: selectedWar.branchLng + lngOffset,
-            altitude: 0.20
-          },
-          1050
-        );
-        setTimeout(updateZoomAndCompass, 1100);
       }
     }
 
@@ -7376,22 +7442,33 @@
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
       if (!item) return;
 
-      const sim = getCityBattleSimulation(item);
-      const phases = sim.phases || [];
+      // Eğer Savaşlar modunda değilsek veya henüz bir savaşa tıklanmadıysa çık
+      if (activeCategory !== 'savaslar' || activeCountryWarIndex < 0) {
+        updateCityWarViewOnGlobeAndDrawer(item);
+        return;
+      }
+
+      const wars = getCountryWarsForItem(item);
+      const wIdx = Math.max(0, Math.min(wars.length - 1, activeCountryWarIndex));
+      const selectedWar = wars[wIdx];
+      const phases = buildPhasesForSelectedWar(item, selectedWar);
       const pIdx = Math.max(0, Math.min(phases.length - 1, phaseIndex));
       activeBattlePhaseIndex = pIdx;
       const phase = phases[pIdx];
       const isEn = currentLang === 'en';
       const t = TRANSLATIONS[currentLang];
 
+      const detailPanel = document.getElementById('warSelectedDetailPanel');
+      if (detailPanel) detailPanel.classList.remove('hidden');
+
       // Başlık ve Butonları Güncelle
       const simHeadingEl = document.getElementById('drawerBattleSimHeading');
       if (simHeadingEl) {
-        simHeadingEl.textContent = sim.isBattle ? t.battleSimHeading : t.battleSimCulturalHeading;
+        simHeadingEl.textContent = t.battleSimHeading;
       }
 
-      // Ülke savaşları ağacını da çekmecede hazır tut
-      renderCountryWarsTreeInDrawer(item, activeCountryWarIndex);
+      // Ülke savaşları ağacında tıklanan savaşı aktif göster
+      renderCountryWarsTreeInDrawer(item, wIdx);
 
       document.querySelectorAll('.battle-phase-btn').forEach((btn, idx) => {
         const ph = phases[idx];
@@ -7419,24 +7496,23 @@
 
       const coordsBadge = document.getElementById('battleSimCoordsBadge');
       if (coordsBadge) {
-        coordsBadge.textContent = `${(phase.focusLat || item.lat).toFixed(2)}°N, ${(phase.focusLng || item.lng).toFixed(2)}°E`;
+        coordsBadge.textContent = `${(phase.focusLat || selectedWar.lat).toFixed(2)}°N, ${(phase.focusLng || selectedWar.lng).toFixed(2)}°E`;
       }
 
       // 3B Küre Üzerinde:
       // 1) Şok Dalgaları (ringsData)
       world.ringsData(phase.rings || []);
 
-      // 2) Ülke Savaşları Ağaç Dalları (treeBranchArcs) + Seçili Evre Taktik Harekat İzleri (İnce & Küçük Boyutlu Trails)
-      const wars = getCountryWarsForItem(item);
+      // 2) Ülke Savaşları Ağaç Dalları (treeBranchArcs) + Seçili Savaşın Taktik Harekat İzleri (İnce & Küçük Boyutlu Trails)
       const treeBranchArcs = wars.map((w, idx) => ({
         startLat: item.lat,
         startLng: item.lng,
         endLat: w.branchLat,
         endLng: w.branchLng,
         label: isEn ? w.title_en : w.title_tr,
-        color: idx === activeCountryWarIndex ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.72)', 'rgba(251,191,36,0.6)'],
+        color: idx === wIdx ? ['#fbbf24', '#f43f5e'] : ['rgba(244,63,94,0.72)', 'rgba(251,191,36,0.6)'],
         altScale: 0.045,
-        stroke: idx === activeCountryWarIndex ? 0.25 : 0.16,
+        stroke: idx === wIdx ? 0.25 : 0.16,
         dashLength: 0.20,
         dashGap: 0.11,
         animateTime: 1450
@@ -7450,7 +7526,7 @@
         label: v.label,
         color: v.type === 'attack' ? ['#ef4444', '#f97316'] : ['#fbbf24', '#38bdf8'],
         altScale: 0.11,
-        stroke: 0.26,
+        stroke: 0.24,
         dashLength: 0.22,
         dashGap: 0.12,
         animateTime: 1150
@@ -7474,7 +7550,7 @@
         shortTitle_en: w.short_en,
         warIndex: idx,
         isLastBranch: w.isLastBranch,
-        isActiveBranch: idx === activeCountryWarIndex,
+        isActiveBranch: idx === wIdx,
         isWarBranchNode: true
       }));
 
@@ -7491,8 +7567,8 @@
         const lngOffset = isMobile ? 0 : 1.15;
         world.pointOfView(
           {
-            lat: (phase.focusLat || item.lat) - 0.12,
-            lng: (phase.focusLng || item.lng) + lngOffset,
+            lat: (phase.focusLat || selectedWar.lat) - 0.12,
+            lng: (phase.focusLng || selectedWar.lng) + lngOffset,
             altitude: 0.19
           },
           1150
@@ -7519,6 +7595,9 @@
         return;
       }
       if (!activeCityId) return;
+      if (activeCountryWarIndex < 0) {
+        activeCountryWarIndex = 0;
+      }
       isBattleSimPlaying = true;
       const playIcon = document.getElementById('battleSimPlayIcon');
       const playText = document.getElementById('battleSimPlayText');
@@ -7547,24 +7626,15 @@
       stopBattleSimulation();
       activeCityId = cityId;
 
-      // Seçilen şehre en yakın ülke savaş dalını başlangıçta aktif seç
-      const countryWars = getCountryWarsForItem(item);
-      let bestWarIdx = 0;
-      let minDist = Infinity;
-      countryWars.forEach((w, idx) => {
-        const d = Math.hypot(w.lat - item.lat, w.lng - item.lng);
-        if (d < minDist) {
-          minDist = d;
-          bestWarIdx = idx;
-        }
-      });
-      activeCountryWarIndex = bestWarIdx;
+      // Bir şehre/ülkeye tıklandığında savaş detayı direkt AÇILMASIN (-1); sadece kullanıcı bir savaşa tıklarsa açılsın
+      activeCountryWarIndex = -1;
+      activeBattlePhaseIndex = 0;
 
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.toggle('active-pin', el.dataset.cityId === cityId);
       });
 
-      // Şehre tıklandığında daha yakına (altitude: 0.21) odaklan ve uydu katmanını + 3B savaş ağacını tetikle
+      // Şehre tıklandığında daha yakına (altitude: 0.21) odaklan
       const isMobile = window.innerWidth < 768;
       const lngOffset = isMobile ? 0 : 1.35;
       world.pointOfView(
@@ -7579,7 +7649,7 @@
       setTimeout(updateZoomAndCompass, 550);
       setTimeout(updateZoomAndCompass, 1600);
       populateDrawer(item);
-      selectBattlePhase(0, false);
+      updateCityWarViewOnGlobeAndDrawer(item);
       openDrawer();
     }
 
@@ -7804,7 +7874,7 @@
     // Her şehir için en az 3 adet (1: En önemli yapı veya Savaş Alanı, 2: İkinci önemli anıtsal yapı, 3: Üçüncü yapı/kültür mekanı) galeri verisi döndürür
     function getCityGallerySlides(item) {
       const wars = getCountryWarsForItem(item);
-      const selectedWar = wars[activeCountryWarIndex] || wars[0];
+      const selectedWar = (activeCategory === 'savaslar' && activeCountryWarIndex >= 0) ? wars[activeCountryWarIndex] : null;
 
       if (CITY_LANDMARK_GALLERIES[item.id]) {
         const baseSlides = CITY_LANDMARK_GALLERIES[item.id].map(s => ({ ...s }));
@@ -8581,7 +8651,7 @@
         const currentItem = MASTER_LOCATIONS.find(d => d.id === activeCityId);
         if (currentItem) {
           populateDrawer(currentItem);
-          selectBattlePhase(activeBattlePhaseIndex, false);
+          updateCityWarViewOnGlobeAndDrawer(currentItem);
         }
       }
       const playTextEl = document.getElementById('battleSimPlayText');
@@ -8666,13 +8736,25 @@
         });
       });
 
-      // 2. KATEGORİ FİLTRELERİ (Tüm Kategoriler / Tarihi Olaylar / Edebiyat & Akımlar)
+      // 2. KATEGORİ FİLTRELERİ (Tüm Kategoriler / Tarihi Olaylar / Edebiyat & Akımlar / Savaşlar)
       document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+          stopBattleSimulation();
           activeCategory = btn.dataset.category;
+          if (activeCategory !== 'savaslar') {
+            activeCountryWarIndex = -1;
+          }
 
           updateFilterButtonStyles();
           renderFilteredMarkers();
+
+          if (activeCityId) {
+            const currentItem = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+            if (currentItem) {
+              updateCityWarViewOnGlobeAndDrawer(currentItem);
+              selectGallerySlide(activeGallerySlideIndex);
+            }
+          }
         });
       });
 
