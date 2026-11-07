@@ -16,9 +16,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Three.js & Globe.gl (Ücretsiz, API Anahtarsız 3B Küre & Uzay Motoru) -->
+  <!-- Three.js & Globe.gl (Ücretsiz, API Anahtarsız 3B Küre, Uzay & Uydu Karo Motoru) -->
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/globe.gl@2.32.1/dist/globe.gl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.41.4/dist/globe.gl.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -4894,6 +4894,7 @@
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
     const CLOUDS_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-clouds.png';
+    const SATELLITE_TILE_URL = (x, y, l) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${l}/${y}/${x}`;
 
     function initGlobe() {
       const container = document.getElementById('globeViz');
@@ -5094,7 +5095,9 @@
       }
     }
 
-    // Kamera yüksekliğine göre Pin ölçeğini ve Pusula açısını güncelle
+    let isTileEngineActive = false;
+
+    // Kamera yüksekliğine göre Pin ölçeğini, Uydu Karo Motorunu (Tile Engine) ve Pusula açısını güncelle
     function updateZoomAndCompass() {
       if (!world) return;
       const pov = world.pointOfView();
@@ -5109,6 +5112,23 @@
         pinScale = 0.58;
       }
       document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(2));
+
+      // Yakınlaşıldığında (altitude < 0.92) Google Earth gibi yüksek çözünürlüklü Uydu Karo Motoruna (Tile Engine) geç
+      // Uzaktayken ise 8K atmosferik küre ve bulut katmanını kullan
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (typeof world.globeTileEngineUrl === 'function') {
+        if (pov.altitude < 0.92 && !isTileEngineActive) {
+          isTileEngineActive = true;
+          world.globeTileEngineUrl(SATELLITE_TILE_URL).globeTileEngineMaxLevel(isMobile ? 9 : 13);
+        } else if (pov.altitude >= 1.02 && isTileEngineActive) {
+          isTileEngineActive = false;
+          world.globeTileEngineUrl(null);
+        }
+      }
+
+      if (cloudsMesh && cloudsMesh.material) {
+        cloudsMesh.visible = pov.altitude >= 0.78;
+      }
 
       const compassIcon = document.getElementById('compassIcon');
       if (compassIcon) {
