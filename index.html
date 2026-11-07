@@ -5490,10 +5490,20 @@
           tex.needsUpdate = true;
 
           mat.map = tex;
-          mat.opacity = 1;
-          mat.needsUpdate = true;
           mesh.userData.loaded = true;
           mesh.visible = Boolean(mesh.userData.wanted);
+          // Sinematik pürüzsüz mikro-fade (ani belirmeyi ve göz yorulmasını engeller)
+          let fadeStart = performance.now();
+          const fadeDuration = 180;
+          function runFade(now) {
+            const p = Math.min(1, (now - fadeStart) / fadeDuration);
+            mat.opacity = p;
+            mat.needsUpdate = true;
+            if (p < 1 && mesh.userData.wanted) {
+              requestAnimationFrame(runFade);
+            }
+          }
+          requestAnimationFrame(runFade);
         },
         undefined,
         () => {
@@ -5505,10 +5515,18 @@
             tex2.magFilter = THREE.LinearFilter;
             tex2.generateMipmaps = false;
             mat.map = tex2;
-            mat.opacity = 1;
-            mat.needsUpdate = true;
             mesh.userData.loaded = true;
             mesh.visible = Boolean(mesh.userData.wanted);
+            let fadeStart2 = performance.now();
+            function runFade2(now) {
+              const p = Math.min(1, (now - fadeStart2) / 180);
+              mat.opacity = p;
+              mat.needsUpdate = true;
+              if (p < 1 && mesh.userData.wanted) {
+                requestAnimationFrame(runFade2);
+              }
+            }
+            requestAnimationFrame(runFade2);
           });
         }
       );
@@ -5626,7 +5644,14 @@
       for (const [k, mesh] of googleEarthTileCache.entries()) {
         const isWanted = wantedKeys.has(k);
         mesh.userData.wanted = isWanted;
-        mesh.visible = isWanted && mesh.userData.loaded;
+        if (isWanted) {
+          mesh.visible = mesh.userData.loaded;
+        } else if (mesh.userData.loaded && mesh.userData.z <= 6) {
+          // z <= 6 olan geniş bölge/kıta karoları yüksek çözünürlüklü detaylar inerken arka planı doldurmak için görünür kalır (Boşluk/delik önleyici)
+          mesh.visible = true;
+        } else {
+          mesh.visible = false;
+        }
       }
     }
 
@@ -5880,8 +5905,20 @@
       }
 
       const compassIcon = document.getElementById('compassIcon');
-      if (compassIcon) {
-        compassIcon.style.transform = `rotate(${(-pov.lng * 0.35).toFixed(1)}deg)`;
+      if (compassIcon && world) {
+        const cam = world.camera();
+        if (cam && typeof THREE !== 'undefined' && THREE.Vector3) {
+          const v0 = new THREE.Vector3(0, 0, 0).applyMatrix4(cam.matrixWorldInverse);
+          const vN = new THREE.Vector3(0, 100, 0).applyMatrix4(cam.matrixWorldInverse);
+          const dx = vN.x - v0.x;
+          const dy = vN.y - v0.y;
+          if (Math.hypot(dx, dy) > 0.001) {
+            const deg = Math.atan2(dx, dy) * (180 / Math.PI);
+            compassIcon.style.transform = `rotate(${(-deg).toFixed(1)}deg)`;
+          }
+        } else {
+          compassIcon.style.transform = `rotate(${(-pov.lng * 0.35).toFixed(1)}deg)`;
+        }
       }
     }
 
@@ -7697,6 +7734,17 @@
           tone: 'attack'
         },
         {
+          lat: wLat,
+          lng: wLng,
+          icon: '⚔️',
+          label: (currentLang === 'en' && selectedWar.short_en) ? selectedWar.short_en : selectedWar.short_tr,
+          label_tr: selectedWar.short_tr,
+          label_en: selectedWar.short_en,
+          tacColor: '#f43f5e',
+          tacGlow: 'rgba(244, 63, 94, 0.95)',
+          tone: 'clash'
+        },
+        {
           lat: side2Lat,
           lng: side2Lng,
           icon: '🛡️',
@@ -7921,7 +7969,7 @@
         stroke: 0.22,
         dashLength: 0.22,
         dashGap: 0.12,
-        animateTime: 3600
+        animateTime: 4800 // Taktik askeri harekat akışının sakin ve net izlenebilmesi için optimize edilmiş hız
       }));
 
       const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
@@ -9482,7 +9530,7 @@
         });
       }
       window.addEventListener('keydown', e => {
-        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
         if (e.key === 'Escape') {
           if (isImageLightboxOpen) {
             closeImageLightbox();
@@ -9495,8 +9543,49 @@
           }
           return;
         }
+        // Hızlı Kısayol Tuşları (100x Power User Keyboard Controls)
+        if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+          const searchInput = document.getElementById('searchInput');
+          if (searchInput) searchInput.focus();
+          return;
+        }
+        if (e.key === '+' || e.key === '=') {
+          e.preventDefault();
+          document.getElementById('zoomInBtn')?.click();
+          return;
+        }
+        if (e.key === '-' || e.key === '_') {
+          e.preventDefault();
+          document.getElementById('zoomOutBtn')?.click();
+          return;
+        }
+        if ((e.key === 'r' || e.key === 'R') && !e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById('toggleRotateBtn')?.click();
+          return;
+        }
+        if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById('compassResetBtn')?.click();
+          return;
+        }
+        if ((e.key === 't' || e.key === 'T') && !e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById('toggle3DViewBtn')?.click();
+          return;
+        }
+        if (e.key === ' ' && activeCountryWarIndex >= 0) {
+          e.preventDefault();
+          document.getElementById('battleSimPlayBtn')?.click();
+          return;
+        }
         if (activeCityId && !isImageLightboxOpen && !activeFigureModalState) {
-          if (e.key === 'ArrowLeft') {
+          if (e.key === '1' || e.key === '2' || e.key === '3') {
+            const idx = parseInt(e.key, 10) - 1;
+            const boxBtn = document.querySelector(`.gallery-box-btn[data-img-idx="${idx}"]`);
+            if (boxBtn) boxBtn.click();
+          } else if (e.key === 'ArrowLeft') {
             const list = getFilteredLocations();
             if (!list.length) return;
             const idx = list.findIndex(d => d.id === activeCityId);
@@ -9566,13 +9655,13 @@
         if (isTilted3D) {
           badge.textContent = '2D';
           world.pointOfView(
-            { lat: Math.max(-65, pov.lat - 8), lng: pov.lng, altitude: Math.min(0.45, pov.altitude) },
+            { lat: pov.lat, lng: pov.lng, altitude: Math.min(0.12, Math.max(0.025, pov.altitude * 0.45)) },
             900
           );
         } else {
           badge.textContent = '3D';
           world.pointOfView(
-            { lat: pov.lat + 8, lng: pov.lng, altitude: Math.max(0.85, pov.altitude) },
+            { lat: pov.lat, lng: pov.lng, altitude: Math.max(1.15, pov.altitude * 2.2) },
             900
           );
         }
