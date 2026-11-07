@@ -378,6 +378,45 @@
       transform: translateX(var(--label-shift-x, 0px));
     }
 
+    /* 3B TAKTİK SAVAŞ VE CEPHE İŞARETÇİLERİ (3D BATTLEFIELD MARKERS) */
+    .tactical-point-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translate(-50%, -50%) scale(var(--pin-zoom-scale, 0.55));
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 65;
+      transition: transform 0.25s ease;
+    }
+    .tactical-point-wrapper:hover {
+      transform: translate(-50%, -56%) scale(calc(var(--pin-zoom-scale, 0.55) * 1.18));
+      z-index: 160;
+    }
+    .tactical-point-badge {
+      padding: 2px 6.5px;
+      border-radius: 999px;
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #fef2f2;
+      background: linear-gradient(135deg, rgba(127, 29, 29, 0.95), rgba(15, 23, 42, 0.96));
+      border: 1.2px solid var(--tac-color, #ef4444);
+      box-shadow: 0 0 12px var(--tac-glow, rgba(239, 68, 68, 0.75));
+      display: flex;
+      align-items: center;
+      gap: 3.5px;
+    }
+    .tactical-point-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      margin-top: 2px;
+      background: var(--tac-color, #ef4444);
+      box-shadow: 0 0 8px var(--tac-color, #ef4444);
+    }
+
     /* 3B KÜRE VE MOBİL DOKUNMATİK HASSASİYETİ (KASMA & GECİKME ÖNLEYİCİ) */
     #globeViz, #globeViz canvas {
       touch-action: none !important;
@@ -943,6 +982,83 @@
         </div>
       </div>
 
+      <!-- ⚔️ 3B TAKTİK SAVAŞ VE TARİHSEL HAREKAT SİMÜLASYONU KONSOLU -->
+      <div id="drawerBattleSimBox" class="rounded-2xl p-3.5 sm:p-4 bg-gradient-to-br from-rose-950/60 via-slate-900/90 to-amber-950/45 border border-rose-500/40 shadow-[0_10px_28px_rgba(225,29,72,0.16)] space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+            </span>
+            <h3 id="drawerBattleSimHeading" class="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-rose-300 flex items-center gap-1.5">
+              <span>⚔️ 3B Taktik Savaş &amp; Harekat Simülasyonu</span>
+            </h3>
+          </div>
+          <button
+            id="battleSimPlayBtn"
+            type="button"
+            class="px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-extrabold tracking-wide bg-gradient-to-r from-rose-600 via-amber-600 to-rose-600 hover:from-rose-500 hover:to-amber-500 text-white border border-amber-300/50 shadow-[0_0_16px_rgba(244,63,94,0.45)] flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <span id="battleSimPlayIcon">▶️</span>
+            <span id="battleSimPlayText">3B Harekatı Canlandır</span>
+          </button>
+        </div>
+
+        <!-- 3 Aşamalı Taktik Evre Seçici Butonlar -->
+        <div id="battlePhaseBtns" class="grid grid-cols-3 gap-1.5">
+          <button type="button" data-phase="0" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+            1. Aşama
+          </button>
+          <button type="button" data-phase="1" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+            2. Aşama
+          </button>
+          <button type="button" data-phase="2" class="battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-bold transition cursor-pointer text-center truncate">
+            3. Aşama
+          </button>
+        </div>
+
+        <!-- Seçili Aşama Taktik Brifing Kartı -->
+        <div class="rounded-xl p-3 bg-slate-950/80 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span id="battleSimPhaseTitle" class="text-xs sm:text-sm font-bold text-amber-300">
+              1. Aşama: Cephe Hatları ve İlk Temas
+            </span>
+            <span id="battleSimCoordsBadge" class="text-[10px] font-mono text-rose-300/90 bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 rounded-md shrink-0">
+              3D LIVE
+            </span>
+          </div>
+          <p id="battleSimPhaseDesc" class="text-xs sm:text-[13.5px] text-slate-200 leading-relaxed">
+            Küre üzerindeki 3B şok dalgaları ve hareketli taarruz/savunma vektörleri ile harekatın aşamalarını inceleyin.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 border-t border-white/10 text-[11px]">
+            <div class="flex items-start gap-1.5 text-slate-300">
+              <span class="text-rose-400 font-bold shrink-0" id="battleForcesLabel">🛡️ Kuvvetler:</span>
+              <span id="battleSimForces" class="text-slate-100 font-medium">-</span>
+            </div>
+            <div class="flex items-start gap-1.5 text-slate-300">
+              <span class="text-amber-400 font-bold shrink-0" id="battleOutcomeLabel">🎯 Sonuç:</span>
+              <span id="battleSimOutcome" class="text-amber-200 font-medium">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3B Harita Vektör Lejantı -->
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-300 px-1">
+          <span class="inline-flex items-center gap-1">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+            <span id="battleLegendAttack">Taarruz / Kuşatma Hattı</span>
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_6px_#fbbf24]"></span>
+            <span id="battleLegendDefense">Savunma / Karşı Harekat</span>
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <span class="w-2.5 h-2.5 rounded-full border border-rose-400 bg-rose-500/30"></span>
+            <span id="battleLegendShockwave">3B Çarpışma Şok Dalgası</span>
+          </span>
+        </div>
+      </div>
+
       <!-- Detaylı Akademik Açıklama -->
       <div class="space-y-2.5">
         <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
@@ -952,17 +1068,6 @@
         <p id="drawerDescription" class="text-base sm:text-lg text-slate-100 leading-relaxed font-normal">
           Detaylı akademik açıklama metni...
         </p>
-      </div>
-
-      <!-- Dönem Alıntısı / Edebi Manifesto -->
-      <div class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-teal-950/55 via-slate-900/75 to-amber-950/30 border border-teal-500/30 space-y-2">
-        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-300">
-          <i data-lucide="quote" class="w-4 h-4"></i>
-          <span id="drawerQuoteHeading">Tarihi Söz &amp; Edebi Alıntı</span>
-        </div>
-        <blockquote id="drawerQuote" class="text-base sm:text-lg italic text-teal-100/95 leading-relaxed border-l-2 border-teal-400 pl-3.5">
-          "Alıntı..."
-        </blockquote>
       </div>
 
       <!-- Önemli Şahsiyetler / Eserler Rozetleri (Tıklanabilir Ansiklopedik Kartlar) -->
@@ -978,6 +1083,17 @@
           </span>
         </div>
         <div id="drawerTags" class="flex flex-col sm:flex-wrap sm:flex-row gap-2.5"></div>
+      </div>
+
+      <!-- Dönem Alıntısı / Edebi Manifesto (Önemli Şahsiyetler Bölümünün Altında) -->
+      <div class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-teal-950/55 via-slate-900/75 to-amber-950/30 border border-teal-500/30 space-y-2">
+        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-300">
+          <i data-lucide="quote" class="w-4 h-4"></i>
+          <span id="drawerQuoteHeading">Tarihi Söz &amp; Edebi Alıntı</span>
+        </div>
+        <blockquote id="drawerQuote" class="text-base sm:text-lg italic text-teal-100/95 leading-relaxed border-l-2 border-teal-400 pl-3.5">
+          "Alıntı..."
+        </blockquote>
       </div>
 
     </div>
@@ -2893,7 +3009,7 @@
         pinOffsetX: "0px",
         pinOffsetY: "0px",
         labelShiftX: "0px",
-        era: "antik",
+        era: "antik",/*  */
         numericYear: -218,
         year: "M.Ö. 814 – 1377",
         title: "Hannibal Barca'nın Kartaca'sı ve İbn Haldun'un Mukaddime'si",
@@ -4781,7 +4897,16 @@
         figureOtherLabel: "Bu Duraktaki Tüm Şahsiyetler & Eserler (Hızlı Geçiş):",
         prevCityBtnText: "Önceki Nokta",
         nextCityBtnText: "Sonraki Nokta",
-        stepIndicator: (idx, total) => `Nokta ${idx} / ${total}`
+        stepIndicator: (idx, total) => `Nokta ${idx} / ${total}`,
+        battleSimHeading: "⚔️ 3B Taktik Savaş & Harekat Simülasyonu",
+        battleSimCulturalHeading: "🌐 3B Tarihsel & Kültürel Harekat Simülasyonu",
+        battleSimPlayBtn: "3B Harekatı Canlandır",
+        battleSimStopBtn: "Simülasyonu Durdur",
+        battleForcesLabel: "🛡️ Kuvvetler / Aktörler:",
+        battleOutcomeLabel: "🎯 Stratejik Sonuç:",
+        battleLegendAttack: "Taarruz / Yayılım Hattı",
+        battleLegendDefense: "Savunma / Karşı Harekat",
+        battleLegendShockwave: "3B Çarpışma & Etki Dalgası"
       },
       en: {
         introProjectSubtitle: "TÜBİTAK 3D WORLD CULTURAL HERITAGE PROJECT",
@@ -4855,7 +4980,16 @@
         figureOtherLabel: "All Figures & Works at This Stop (Quick Switch):",
         prevCityBtnText: "Previous Stop",
         nextCityBtnText: "Next Stop",
-        stepIndicator: (idx, total) => `Stop ${idx} / ${total}`
+        stepIndicator: (idx, total) => `Stop ${idx} / ${total}`,
+        battleSimHeading: "⚔️ 3D Tactical Battle & Campaign Simulation",
+        battleSimCulturalHeading: "🌐 3D Historical & Cultural Campaign Simulation",
+        battleSimPlayBtn: "Animate 3D Campaign",
+        battleSimStopBtn: "Stop Simulation",
+        battleForcesLabel: "🛡️ Forces / Actors:",
+        battleOutcomeLabel: "🎯 Strategic Outcome:",
+        battleLegendAttack: "Offensive / Expansion Vector",
+        battleLegendDefense: "Defense / Counter-Maneuver",
+        battleLegendShockwave: "3D Clash & Shockwave Ring"
       }
     });
 
@@ -4921,7 +5055,7 @@
         .htmlLng(d => d.lng)
         .htmlAltitude(0.015)
         .htmlElement(d => createPinElement(d))
-        // Sadece "Edebiyat & Akımlar" seçildiğinde aktifleşen 3B kavisli animasyonlu ışık yayları (Normalde boş [])
+        // Sadece "Edebiyat & Akımlar" veya 3B Taktik Savaş Simülasyonu seçildiğinde aktifleşen 3B kavisli animasyonlu ışık yayları
         .arcsData([])
         .arcStartLat(d => d.startLat)
         .arcStartLng(d => d.startLng)
@@ -4929,11 +5063,20 @@
         .arcEndLng(d => d.endLng)
         .arcColor(d => d.color)
         .arcLabel(d => d.label)
-        .arcAltitudeAutoScale(0.34)
-        .arcStroke(0.65)
-        .arcDashLength(0.4)
-        .arcDashGap(0.2)
-        .arcDashAnimateTime(1800);
+        .arcAltitudeAutoScale(d => d.altScale || 0.34)
+        .arcStroke(d => d.stroke || 0.65)
+        .arcDashLength(d => d.dashLength || 0.4)
+        .arcDashGap(d => d.dashGap || 0.2)
+        .arcDashAnimateTime(d => d.animateTime || 1800)
+        // 3B Taktik Savaş & Tarihsel Çarpışma Şok Dalgaları (Seçilen şehirde 3B darbe halkaları)
+        .ringsData([])
+        .ringLat(d => d.lat)
+        .ringLng(d => d.lng)
+        .ringAltitude(0.0025)
+        .ringColor(d => d.color || ['rgba(239, 68, 68, 0.95)', 'rgba(239, 68, 68, 0)'])
+        .ringMaxRadius(d => d.maxR || 0.85)
+        .ringPropagationSpeed(d => d.speed || 0.65)
+        .ringRepeatPeriod(d => d.repeat || 750);
 
       // KESKİN VE MOBİLDE KASMAYI ÖNLEYEN DPR AYARI (Mobilde 1.0 sabit 60 FPS akıcılık, masaüstünde 2.0)
       const renderer = world.renderer();
@@ -5136,8 +5279,32 @@
       }
     }
 
-    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın Sarısı, Edebiyat: Turkuaz/Zümrüt)
+    // 3B Parlayan (Pulsing) İşaretleyici Oluşturucu (Tarih: Altın Sarısı, Edebiyat: Turkuaz/Zümrüt, Savaş Birimi: Taktik Rozet)
     function createPinElement(item) {
+      if (item.isTacticalMarker) {
+        const tacEl = document.createElement('div');
+        tacEl.className = 'tactical-point-wrapper';
+        const tacColor = item.tacColor || '#ef4444';
+        const tacGlow = item.tacGlow || 'rgba(239, 68, 68, 0.75)';
+        tacEl.style.setProperty('--tac-color', tacColor);
+        tacEl.style.setProperty('--tac-glow', tacGlow);
+        const labelText = (currentLang === 'en' && item.label_en) ? item.label_en : item.label;
+        tacEl.innerHTML = `
+          <div class="tactical-point-badge">
+            <span>${item.icon || '⚔️'}</span>
+            <span>${labelText}</span>
+          </div>
+          <div class="tactical-point-dot"></div>
+        `;
+        tacEl.addEventListener('click', e => {
+          e.stopPropagation();
+          if (typeof item.phaseIndex === 'number' && activeCityId) {
+            selectBattlePhase(item.phaseIndex, true);
+          }
+        });
+        return tacEl;
+      }
+
       const wrapper = document.createElement('div');
       wrapper.className = `atlas-pin-wrapper ${activeCityId === item.id ? 'active-pin' : ''}`;
       wrapper.dataset.cityId = item.id;
@@ -5297,6 +5464,512 @@
     }
 
     // ============================================================================
+    // 5B. 3B TAKTİK SAVAŞ VE TARİHSEL HAREKAT SİMÜLASYONU VERİTABANI & MOTORU
+    // ============================================================================
+    let activeBattlePhaseIndex = 0;
+    let battleSimInterval = null;
+    let isBattleSimPlaying = false;
+
+    const CURATED_BATTLE_SIMULATIONS = {
+      canakkale: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Deniz Zaferi",
+            btn_en: "1. Naval Victory",
+            title_tr: "18 Mart 1915: Nusret Mayınları ve Boğaz Savunması",
+            title_en: "March 18, 1915: Nusret Mine Line & Strait Defense",
+            desc_tr: "İtilaf donanmasının zırhlı armadası Çanakkale Boğazı'na yüklendi. Nusret Mayın Gemisi'nin Erenköy Koyu'na döşediği mayınlar ve Seyit Onbaşı'nın top atışı Bouvet, Irresistible ve Ocean zırhlılarını sulara gömdü.",
+            desc_en: "Allied battleships entered the Dardanelles. Mines secretly laid by Nusret in Erenköy Bay and Corporal Seyit's artillery fire sank Bouvet, Irresistible, and Ocean.",
+            forces_tr: "Türk Boğaz Müstahkemukimliği vs. İtilaf Birleşik Donanması",
+            forces_en: "Turkish Strait Fortifications vs. Allied Combined Fleet",
+            outcome_tr: "Denizden Geçiş Kesin Olarak Durduruldu (Çanakkale Geçilmez)",
+            outcome_en: "Naval Breakthrough Decisively Repelled",
+            focusLat: 40.04,
+            focusLng: 26.24,
+            vectors: [
+              { startLat: 39.88, startLng: 25.95, endLat: 40.06, endLng: 26.25, type: 'attack', label: "İtilaf Donanması Taarruzu" },
+              { startLat: 40.14, startLng: 26.40, endLat: 40.05, endLng: 26.26, type: 'defense', label: "Nusret Mayın Hattı & Mecidiye Tabyası" }
+            ],
+            rings: [
+              { lat: 40.05, lng: 26.26, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.55, speed: 0.55, repeat: 650 },
+              { lat: 40.14, lng: 26.40, color: ['rgba(251,191,36,0.9)', 'rgba(251,191,36,0)'], maxR: 0.45, speed: 0.45, repeat: 850 }
+            ],
+            markers: [
+              { lat: 40.03, lng: 26.29, icon: "⚓", label: "Erenköy Nusret Mayın Hattı", label_en: "Nusret Mine Line", tacColor: "#fbbf24" },
+              { lat: 40.09, lng: 26.36, icon: "💥", label: "Mecidiye Tabyası (Seyit Onbaşı)", label_en: "Corporal Seyit Battery", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "2. Arıburnu & 57. Alay",
+            btn_en: "2. ANZAC & 57th Reg.",
+            title_tr: "25 Nisan 1915: Arıburnu Çıkarması ve 57. Alay Destanı",
+            title_en: "April 25, 1915: ANZAC Landing & 57th Regiment Counter-Attack",
+            desc_tr: "Seddülbahir ve Arıburnu kıyılarına yapılan kara çıkarmasına karşı Yarbay Mustafa Kemal, 57. Alay ile Kocaçimen-Conkbayırı hattında 'Size taarruzu değil, ölmeyi emrediyorum!' emriyle cepheyi kilitledi.",
+            desc_en: "Against the landings at Cape Helles and Ari Burnu, Lt. Col. Mustafa Kemal led the 57th Regiment onto Chunuk Bair with the historic order: 'I order you not to attack, I order you to die!'",
+            forces_tr: "19. Tümen (57. Alay - Mustafa Kemal) vs. ANZAC Kolordusu",
+            forces_en: "19th Division (57th Reg. - Mustafa Kemal) vs. ANZAC Corps",
+            outcome_tr: "Yarımada Sırtları Tutuldu ve İlerleyiş Durduruldu",
+            outcome_en: "High Ground Secured, Allied Advance Halted",
+            focusLat: 40.23,
+            focusLng: 26.28,
+            vectors: [
+              { startLat: 40.18, startLng: 26.05, endLat: 40.24, endLng: 26.27, type: 'attack', label: "Arıburnu ANZAC Çıkarması" },
+              { startLat: 40.21, startLng: 26.38, endLat: 40.25, endLng: 26.29, type: 'defense', label: "57. Alay Karşı Taarruzu (Mustafa Kemal)" }
+            ],
+            rings: [
+              { lat: 40.24, lng: 26.28, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.6, speed: 0.6, repeat: 600 }
+            ],
+            markers: [
+              { lat: 40.24, lng: 26.27, icon: "⚔️", label: "Arıburnu & 57. Alay Cephesi", label_en: "Ari Burnu & 57th Regiment", tacColor: "#ef4444" },
+              { lat: 40.04, lng: 26.18, icon: "🛡️", label: "Seddülbahir Savunması", label_en: "Cape Helles Defense", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "3. Conkbayırı Zaferi",
+            btn_en: "3. Chunuk Bair Victory",
+            title_tr: "Ağustos 1915: Anafartalar ve Conkbayırı Süngü Hücumu",
+            title_en: "August 1915: Sari Bair & Anafartalar Counter-Offensive",
+            desc_tr: "Anafartalar Grup Komutanı Albay Mustafa Kemal'in 10 Ağustos sabahı Conkbayırı'nda bizzat yönettiği süngü hücumuyla İtilaf kuvvetleri geri püskürtüldü ve cephe kesin Türk zaferiyle sonuçlandı.",
+            desc_en: "Col. Mustafa Kemal, Commander of the Anafartalar Group, personally led the August 10 bayonet charge at Chunuk Bair, sealing ultimate Turkish victory across the peninsula.",
+            forces_tr: "Anafartalar Grubu (Mustafa Kemal) vs. İngiliz IX. Kolordusu & ANZAC",
+            forces_en: "Anafartalar Group (Mustafa Kemal) vs. British IX Corps & ANZAC",
+            outcome_tr: "Kesin Türk Zaferi & İtilaf Tahliyesi",
+            outcome_en: "Decisive Turkish Victory & Allied Evacuation",
+            focusLat: 40.28,
+            focusLng: 26.31,
+            vectors: [
+              { startLat: 40.31, startLng: 26.22, endLat: 40.27, endLng: 26.31, type: 'attack', label: "Suvla Koyu İngiliz Çıkarması" },
+              { startLat: 40.29, startLng: 26.39, endLat: 40.26, endLng: 26.31, type: 'defense', label: "Conkbayırı & Anafartalar Süngü Hücumu" }
+            ],
+            rings: [
+              { lat: 40.26, lng: 26.31, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.65, speed: 0.65, repeat: 620 }
+            ],
+            markers: [
+              { lat: 40.26, lng: 26.31, icon: "🏆", label: "Conkbayırı Zafer Tepesi", label_en: "Chunuk Bair Victory Ridge", tacColor: "#fbbf24" },
+              { lat: 40.30, lng: 26.26, icon: "⚔️", label: "Anafartalar Cephesi", label_en: "Anafartalar Front", tacColor: "#ef4444" }
+            ]
+          }
+        ]
+      },
+      istanbul: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Kuşatma & Şahi",
+            btn_en: "1. Siege & Great Cannon",
+            title_tr: "6 Nisan 1453: Surların Kuşatılması ve Şahi Toplarının Ateşi",
+            title_en: "April 6, 1453: Theodosian Walls & The Great Cannon Barrage",
+            desc_tr: "Fatih Sultan Mehmed (II. Mehmed) Edirne'den dökülen devasa Şahi toplarını Topkapı-Edirnekapı surları karşısına konuşlandırdı. Rumeli ve Anadolu Hisarları ile Boğaz kontrol altına alındı.",
+            desc_en: "Sultan Mehmed II deployed the massive Orban 'Şahi' bombards against the Theodosian Walls while Rumeli and Anadolu Fortresses sealed the Bosphorus.",
+            forces_tr: "Osmanlı Ordusu (80.000+ Asker & Şahi Bataryaları) vs. Bizans Savunması",
+            forces_en: "Ottoman Army & Bombard Batteries vs. Byzantine Garrison",
+            outcome_tr: "Bin Yıllık Surlarda İlk Büyük Gedikler Açıldı",
+            outcome_en: "First Major Breaches Opened in the Millennial Walls",
+            focusLat: 41.02,
+            focusLng: 28.93,
+            vectors: [
+              { startLat: 41.67, startLng: 26.55, endLat: 41.02, endLng: 28.92, type: 'attack', label: "Edirne'den Osmanlı Ordusu & Şahi Topları Yürüyüşü" },
+              { startLat: 41.08, startLng: 29.05, endLat: 41.02, endLng: 28.98, type: 'defense', label: "Rumeli Hisarı Boğaz Ablukası" }
+            ],
+            rings: [
+              { lat: 41.02, lng: 28.92, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.6, speed: 0.6, repeat: 620 }
+            ],
+            markers: [
+              { lat: 41.02, lng: 28.92, icon: "💣", label: "Topkapı Surları & Şahi Bataryası", label_en: "Theodosian Walls & Şahi Cannon", tacColor: "#ef4444" },
+              { lat: 41.08, lng: 29.05, icon: "🏰", label: "Rumeli Hisarı", label_en: "Rumeli Fortress", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "2. Gemiler Karadan",
+            btn_en: "2. Ships Over Land",
+            title_tr: "21-22 Nisan 1453: 72 Geminin Karadan Haliç'e İndirilmesi",
+            title_en: "April 21-22, 1453: 72 Ottoman Ships Hauled Over Land into the Golden Horn",
+            desc_tr: "Bizans'ın Haliç girişine gerdiği dev zinciri aşmak için Fatih Sultan Mehmed dünya harp tarihinin en dahi manevrasıyla 72 kadırgayı Dolmabahçe-Kasımpaşa hattından kızaklarla Haliç'e indirdi.",
+            desc_en: "Bypassing the Golden Horn chain, Sultan Mehmed II executed a masterstroke by hauling 72 galleys over greased logs from Dolmabahçe into Kasımpaşa overnight.",
+            forces_tr: "Osmanlı Donanması (72 Kadırga) vs. Haliç Zinciri & Venedik-Bizans Filosu",
+            forces_en: "Ottoman Fleet (72 Galleys) vs. Golden Horn Chain & Allied Fleet",
+            outcome_tr: "Haliç Surları Denizden Kuşatıldı, Savunma İkiye Bölündü",
+            outcome_en: "Golden Horn Sea Walls Flanked, Defenders Split",
+            focusLat: 41.04,
+            focusLng: 28.97,
+            vectors: [
+              { startLat: 41.04, startLng: 29.00, endLat: 41.03, endLng: 28.95, type: 'defense', label: "Gemilerin Dolmabahçe'den Haliç'e Karadan Yürütülmesi" },
+              { startLat: 40.98, startLng: 28.99, endLat: 41.01, endLng: 28.98, type: 'attack', label: "Marmara Donanma Ablukası" }
+            ],
+            rings: [
+              { lat: 41.03, lng: 28.96, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.55, speed: 0.55, repeat: 640 }
+            ],
+            markers: [
+              { lat: 41.038, lng: 28.972, icon: "⛵", label: "Gemilerin Karadan Yürütülmesi", label_en: "Overland Ship Route (Kasımpaşa)", tacColor: "#fbbf24" },
+              { lat: 41.018, lng: 28.978, icon: "⛓️", label: "Haliç Zincir Hattı", label_en: "Golden Horn Chain", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Fetih & Yeni Çağ",
+            btn_en: "3. Final Assault",
+            title_tr: "29 Mayıs 1453: Son Genel Taarruz, Ulubatlı Hasan ve Fetih",
+            title_en: "May 29, 1453: Final General Assault & Dawn of a New Age",
+            desc_tr: "29 Mayıs şafağında üç dalga halinde başlayan genel taarruzda Ulubatlı Hasan Topkapı burçlarına sancağı dikti. İstanbul'un fethiyle Orta Çağ kapandı ve Yeni Çağ başladı.",
+            desc_en: "At dawn on May 29, three successive assault waves breached the Topkapı sector as Ulubatlı Hasan raised the banner, ending the Middle Ages.",
+            forces_tr: "Yeniçeri Merkez Kolu (Fatih Sultan Mehmed) vs. Son Bizans Savunma Hattı",
+            forces_en: "Elite Janissary Corps (Mehmed II) vs. Inner Wall Defenders",
+            outcome_tr: "İstanbul'un Fethi • Orta Çağ Kapandı, Yeni Çağ Başladı",
+            outcome_en: "Conquest of Constantinople • Dawn of the Early Modern Era",
+            focusLat: 41.01,
+            focusLng: 28.97,
+            vectors: [
+              { startLat: 41.03, startLng: 28.89, endLat: 41.01, endLng: 28.97, type: 'attack', label: "Topkapı-Aya Romanos Nihai Yarma Harekatı" },
+              { startLat: 41.03, startLng: 28.95, endLat: 41.01, endLng: 28.97, type: 'defense', label: "Haliç Cephesi Eşzamanlı Taarruzu" }
+            ],
+            rings: [
+              { lat: 41.008, lng: 28.98, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.7, speed: 0.7, repeat: 580 }
+            ],
+            markers: [
+              { lat: 41.018, lng: 28.924, icon: "🚩", label: "Ulubatlı Hasan Burcu (Topkapı)", label_en: "Ulubatlı Hasan Bastion", tacColor: "#fbbf24" },
+              { lat: 41.008, lng: 28.980, icon: "🕌", label: "Ayasofya & Fetih Merkezi", label_en: "Hagia Sophia", tacColor: "#ef4444" }
+            ]
+          }
+        ]
+      },
+      ankara: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Sakarya Savunması",
+            btn_en: "1. Battle of Sakarya",
+            title_tr: "Ağustos-Eylül 1921: Sakarya Meydan Muharebesi (Hattı Müdafaa Yoktur)",
+            title_en: "Aug-Sept 1921: Battle of Sakarya (Defense of the Entire Surface)",
+            desc_tr: "Polatlı-Haymana önlerine kadar yaklaşan taarruza karşı Başkomutan Mustafa Kemal Paşa, dünya harp literatürünü değiştiren 'Hattı müdafaa yoktur, sathı müdafaa vardır; o satıh bütün vatandır!' doktrinini uyguladı.",
+            desc_en: "At Polatlı-Haymana near Ankara, Commander-in-Chief Mustafa Kemal Pasha issued his historic total-surface defense doctrine, halting the offensive after 22 days and nights.",
+            forces_tr: "TBMM Ordusu (Mustafa Kemal Paşa) vs. Yunan Küçük Asya Ordusu",
+            forces_en: "Turkish Grand National Assembly Army vs. Greek Expeditionary Army",
+            outcome_tr: "22 Gün 22 Gece Sonunda Taarruz Kırıldı (1683'ten Beri İlk Geri Çekilişin Sonu)",
+            outcome_en: "Offensive Broken After 22 Days and Nights",
+            focusLat: 39.65,
+            focusLng: 32.25,
+            vectors: [
+              { startLat: 39.75, startLng: 30.52, endLat: 39.58, endLng: 32.14, type: 'attack', label: "Eskişehir-Polatlı İlerleyiş Hattı" },
+              { startLat: 39.93, startLng: 32.85, endLat: 39.58, endLng: 32.18, type: 'defense', label: "Ankara-Sakarya Sathı Müdafaa Hattı" }
+            ],
+            rings: [
+              { lat: 39.58, lng: 32.15, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.7, speed: 0.6, repeat: 620 }
+            ],
+            markers: [
+              { lat: 39.58, lng: 32.14, icon: "🛡️", label: "Polatlı Duatepe & Sakarya Hattı", label_en: "Duatepe & Sakarya Defense Line", tacColor: "#fbbf24" },
+              { lat: 39.43, lng: 32.49, icon: "⚔️", label: "Haymana-Mangaldağı Cephesi", label_en: "Haymana-Mangaldağı Front", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "2. Büyük Taarruz",
+            btn_en: "2. Great Offensive",
+            title_tr: "26-30 Ağustos 1922: Kocatepe'den Dumlupınar Başkomutanlık Meydan Muharebesi",
+            title_en: "Aug 26-30, 1922: The Great Offensive & Battle of Dumlupınar",
+            desc_tr: "Ankara'dan yönetilen bir yıllık gizli hazırlığın ardından 26 Ağustos şafağında Kocatepe'den başlayan Büyük Taarruz, 30 Ağustos'ta Dumlupınar'da kesin zaferle taçlandı.",
+            desc_en: "Launched at dawn on August 26 from Kocatepe, the Great Offensive encircled opposing forces at Dumlupınar on August 30.",
+            forces_tr: "Türk Batı Cephesi Orduları vs. Afyon-Dumlupınar Tahkimat Hattı",
+            forces_en: "Turkish Western Front Armies vs. Afyon-Dumlupınar Fortified Line",
+            outcome_tr: "Kesin Meydan Muharebesi Zaferi & 'Ordular! İlk Hedefiniz Akdeniz'dir!'",
+            outcome_en: "Decisive Victory & Order: 'Armies, Your First Goal is the Mediterranean!'",
+            focusLat: 39.10,
+            focusLng: 31.20,
+            vectors: [
+              { startLat: 39.93, startLng: 32.85, endLat: 38.75, endLng: 30.54, type: 'defense', label: "Ankara Başkomutanlık Karargahı Sevk Hattı" },
+              { startLat: 38.75, startLng: 30.54, endLat: 38.42, endLng: 27.14, type: 'attack', label: "Büyük Taarruz: Kocatepe ➔ Dumlupınar ➔ İzmir" }
+            ],
+            rings: [
+              { lat: 38.85, lng: 30.15, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.75, speed: 0.7, repeat: 600 }
+            ],
+            markers: [
+              { lat: 38.65, lng: 30.52, icon: "💥", label: "Afyon Kocatepe Karargahı", label_en: "Kocatepe Command Post", tacColor: "#ef4444" },
+              { lat: 38.85, lng: 29.98, icon: "🏆", label: "Dumlupınar Zafer Meydanı", label_en: "Dumlupınar Battlefield", tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: "3. Cumhuriyetin İlanı",
+            btn_en: "3. Republic Proclaimed",
+            title_tr: "29 Ekim 1923: Başkent Ankara ve Cumhuriyetin İlanı",
+            title_en: "October 29, 1923: Proclamation of the Republic of Türkiye in Ankara",
+            desc_tr: "Milli Mücadele'nin karargahı Ankara, 13 Ekim 1923'te başkent ilan edildi ve 29 Ekim 1923'te Gazi Mustafa Kemal Atatürk önderliğinde Türkiye Cumhuriyeti kuruldu.",
+            desc_en: "Following the War of Independence, Ankara became the capital on October 13 and the Republic of Türkiye was proclaimed on October 29, 1923.",
+            forces_tr: "TBMM & Gazi Mustafa Kemal Atatürk",
+            forces_en: "Grand National Assembly & Mustafa Kemal Atatürk",
+            outcome_tr: "Tam Bağımsız ve Çağdaş Türkiye Cumhuriyeti Kuruldu",
+            outcome_en: "Sovereign Republic of Türkiye Established",
+            focusLat: 39.93,
+            focusLng: 32.85,
+            vectors: [
+              { startLat: 39.93, startLng: 32.85, endLat: 41.01, endLng: 28.98, type: 'defense', label: "Cumhuriyet Devrimleri & Ulusal Egemenlik Ağı" },
+              { startLat: 39.93, startLng: 32.85, endLat: 38.42, endLng: 27.14, type: 'defense', label: "İktisat ve Kültür Atılımı Hattı" }
+            ],
+            rings: [
+              { lat: 39.93, lng: 32.85, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.8, speed: 0.65, repeat: 620 }
+            ],
+            markers: [
+              { lat: 39.942, lng: 32.854, icon: "🏛️", label: "I. TBMM & Ulus Karargahı", label_en: "First Parliament (Ulus)", tacColor: "#fbbf24" },
+              { lat: 39.925, lng: 32.837, icon: "🇹🇷", label: "Anıtkabir (Ebedi İstirahatgah)", label_en: "Anıtkabir", tacColor: "#ef4444" }
+            ]
+          }
+        ]
+      }
+    };
+
+    // Herhangi bir şehir/durak için 3 aşamalı 3B Taktik Savaş veya Tarihsel/Kültürel Harekat Simülasyonu döndürür
+    function getCityBattleSimulation(item) {
+      if (CURATED_BATTLE_SIMULATIONS[item.id]) {
+        return CURATED_BATTLE_SIMULATIONS[item.id];
+      }
+
+      const isEn = currentLang === 'en';
+      const isHist = item.category === 'tarih';
+      const baseLat = item.lat;
+      const baseLng = item.lng;
+      const figs = item.figuresAndWorks || [];
+      const fig1 = figs[0] || item.title;
+      const fig2 = figs[1] || item.city;
+      const fig3 = figs[2] || item.year;
+
+      // En yakın 2 komşu durağı bulup gerçekçi bölgesel harekat/etkileşim vektörleri oluştur
+      const neighbors = MASTER_LOCATIONS
+        .filter(d => d.id !== item.id)
+        .map(d => ({
+          loc: d,
+          dist: Math.hypot(d.lat - baseLat, d.lng - baseLng)
+        }))
+        .sort((a, b) => a.dist - b.dist)
+        .slice(0, 2)
+        .map(x => x.loc);
+
+      const n1 = neighbors[0] || { lat: baseLat + 3.2, lng: baseLng - 4.1, city: "Kuzey Cephesi" };
+      const n2 = neighbors[1] || { lat: baseLat - 2.8, lng: baseLng + 3.8, city: "Güney Hattı" };
+
+      return {
+        isBattle: isHist,
+        phases: [
+          {
+            btn_tr: isHist ? "1. Kuşatma & Cephe" : "1. Doğuş & Kıvılcım",
+            btn_en: isHist ? "1. Front & Deployment" : "1. Genesis & Spark",
+            title_tr: isHist
+              ? `1. Aşama: ${item.city} Stratejik Konuşlanma ve İlk Harekat (${item.year})`
+              : `1. Aşama: ${item.city} Entelektüel ve Edebi Ocağının Doğuşu (${item.year})`,
+            title_en: isHist
+              ? `Phase 1: Strategic Deployment & Opening Maneuver in ${item.city_en || item.city} (${item.year_en || item.year})`
+              : `Phase 1: Genesis of the Literary & Cultural Movement in ${item.city_en || item.city} (${item.year_en || item.year})`,
+            desc_tr: isHist
+              ? `${item.city} (${item.year}) merkezli "${item.title}" sürecinde stratejik hatlar kuruldu. ${fig1} öncülüğündeki kuvvetler ve tarihsel dinamikler bölge coğrafyasında ilk büyük kırılmayı başlattı.`
+              : `${item.city} (${item.year}) coğrafyasında "${item.title}" akımının ilk düşünsel temelleri atıldı. ${fig1} etrafında şekillenen edebi ve felsefi birikim şehir merkezinde güçlü bir çekim alanı yarattı.`,
+            desc_en: isHist
+              ? `Strategic lines formed around ${item.city_en || item.city} (${item.year_en || item.year}) during "${item.title_en || item.title}". Forces and historical dynamics led by ${fig1} initiated the pivotal regional breakthrough.`
+              : `Foundational ideas of "${item.title_en || item.title}" emerged in ${item.city_en || item.city} (${item.year_en || item.year}), centered around ${fig1}.`,
+            forces_tr: `${fig1} & ${item.city} Merkez Kuvvetleri`,
+            forces_en: `${fig1} & ${item.city_en || item.city} Central Actors`,
+            outcome_tr: isHist ? "Stratejik Üstünlük ve Cephe Tahkimatı Sağlandı" : "Dönemin İlk Kurucu Eserleri ve Fikirleri Ortaya Çıktı",
+            outcome_en: isHist ? "Strategic Initiative & Perimeter Secured" : "Foundational Masterpieces & Ideas Established",
+            focusLat: baseLat,
+            focusLng: baseLng,
+            vectors: [
+              { startLat: n1.lat, startLng: n1.lng, endLat: baseLat, endLng: baseLng, type: 'attack', label: `${n1.city} ➔ ${item.city} Stratejik Harekat Hattı` },
+              { startLat: baseLat + 1.1, startLng: baseLng - 1.4, endLat: baseLat, endLng: baseLng, type: 'defense', label: `${item.city} Merkez Tahkimatı` }
+            ],
+            rings: [
+              { lat: baseLat, lng: baseLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.65, speed: 0.6, repeat: 640 }
+            ],
+            markers: [
+              { lat: baseLat + 0.35, lng: baseLng - 0.45, icon: isHist ? "⚔️" : "📜", label: String(fig1).split('(')[0].trim(), label_en: String(fig1).split('(')[0].trim(), tacColor: "#ef4444" },
+              { lat: baseLat - 0.32, lng: baseLng + 0.42, icon: isHist ? "🛡️" : "🏛️", label: `${item.city} Merkez Hattı`, label_en: `${item.city_en || item.city} Core Line`, tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: isHist ? "2. Kırılma & Çarpışma" : "2. Zirve & Başyapıt",
+            btn_en: isHist ? "2. Decisive Clash" : "2. Peak & Masterpiece",
+            title_tr: isHist
+              ? `2. Aşama: ${item.title} – Merkez Çarpışma ve Kırılma Anı`
+              : `2. Aşama: ${item.title} – Başyapıtların Yükselişi ve Dönem Ruhu`,
+            title_en: isHist
+              ? `Phase 2: ${item.title_en || item.title} – Decisive Clash & Turning Point`
+              : `Phase 2: ${item.title_en || item.title} – Zenith of Masterpieces`,
+            desc_tr: item.description,
+            desc_en: item.description_en || item.description,
+            forces_tr: `${fig1} • ${fig2}`,
+            forces_en: `${fig1} • ${fig2}`,
+            outcome_tr: isHist ? "Tarihsel Kırılma Noktası ve Hakimiyet Tesisi" : "Kültürel ve Edebi Kanonun Zirve Noktası",
+            outcome_en: isHist ? "Decisive Historical Turning Point" : "Culmination of the Literary & Cultural Canon",
+            focusLat: baseLat,
+            focusLng: baseLng,
+            vectors: [
+              { startLat: n1.lat, startLng: n1.lng, endLat: baseLat, endLng: baseLng, type: 'attack', label: `${item.title} Ana Taarruz / Etki Vektörü` },
+              { startLat: baseLat, startLng: baseLng, endLat: n2.lat, endLng: n2.lng, type: 'defense', label: `${item.city} ➔ ${n2.city} Karşı Harekat & Yayılım` }
+            ],
+            rings: [
+              { lat: baseLat, lng: baseLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.85, speed: 0.72, repeat: 560 },
+              { lat: baseLat + 0.25, lng: baseLng + 0.25, color: ['rgba(251,191,36,0.9)', 'rgba(251,191,36,0)'], maxR: 0.55, speed: 0.55, repeat: 740 }
+            ],
+            markers: [
+              { lat: baseLat + 0.38, lng: baseLng + 0.35, icon: isHist ? "💥" : "✒️", label: String(fig2).split('(')[0].trim(), label_en: String(fig2).split('(')[0].trim(), tacColor: "#ef4444" },
+              { lat: baseLat - 0.35, lng: baseLng - 0.38, icon: isHist ? "🚩" : "🎭", label: String(fig1).split('(')[0].trim(), label_en: String(fig1).split('(')[0].trim(), tacColor: "#fbbf24" }
+            ]
+          },
+          {
+            btn_tr: isHist ? "3. Zafer & Miras" : "3. Küresel Etki",
+            btn_en: isHist ? "3. Victory & Legacy" : "3. Global Impact",
+            title_tr: `3. Aşama: ${item.city} Mirasının Kıtasal ve Küresel Yayılımı`,
+            title_en: `Phase 3: Continental & Global Legacy of ${item.city_en || item.city}`,
+            desc_tr: `${item.city} durağında yaşanan "${item.title}" (${item.year}), ${fig3} ile birlikte bölgesel sınırları aşarak komşu coğrafyalara ve dünya tarihine kalıcı bir miras bıraktı.`,
+            desc_en: `"${item.title_en || item.title}" (${item.year_en || item.year}) in ${item.city_en || item.city} transcended regional borders alongside ${fig3}, leaving an enduring global legacy.`,
+            forces_tr: `${item.city} Mirası & ${fig3}`,
+            forces_en: `${item.city_en || item.city} Legacy & ${fig3}`,
+            outcome_tr: `${item.year} Sonrası Dünya Tarihinde ve Edebiyatında Kalıcı İz`,
+            outcome_en: `Enduring Impact on World History & Literature Post-${item.year_en || item.year}`,
+            focusLat: baseLat,
+            focusLng: baseLng,
+            vectors: [
+              { startLat: baseLat, startLng: baseLng, endLat: n1.lat, endLng: n1.lng, type: 'defense', label: `${item.city} ➔ ${n1.city} Tarihsel & Kültürel Yayılım` },
+              { startLat: baseLat, startLng: baseLng, endLat: n2.lat, endLng: n2.lng, type: 'defense', label: `${item.city} ➔ ${n2.city} Stratejik Etki Hattı` }
+            ],
+            rings: [
+              { lat: baseLat, lng: baseLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.9, speed: 0.65, repeat: 620 }
+            ],
+            markers: [
+              { lat: baseLat + 0.3, lng: baseLng - 0.3, icon: "🏆", label: String(fig3).split('(')[0].trim(), label_en: String(fig3).split('(')[0].trim(), tacColor: "#fbbf24" }
+            ]
+          }
+        ]
+      };
+    }
+
+    function selectBattlePhase(phaseIndex, flyCamera = false) {
+      if (!activeCityId || !world) return;
+      const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
+      if (!item) return;
+
+      const sim = getCityBattleSimulation(item);
+      const phases = sim.phases || [];
+      const pIdx = Math.max(0, Math.min(phases.length - 1, phaseIndex));
+      activeBattlePhaseIndex = pIdx;
+      const phase = phases[pIdx];
+      const isEn = currentLang === 'en';
+      const t = TRANSLATIONS[currentLang];
+
+      // Başlık ve Butonları Güncelle
+      const simHeadingEl = document.getElementById('drawerBattleSimHeading');
+      if (simHeadingEl) {
+        simHeadingEl.textContent = sim.isBattle ? t.battleSimHeading : t.battleSimCulturalHeading;
+      }
+
+      document.querySelectorAll('.battle-phase-btn').forEach((btn, idx) => {
+        const ph = phases[idx];
+        if (ph) {
+          btn.textContent = isEn ? ph.btn_en : ph.btn_tr;
+        }
+        if (idx === pIdx) {
+          btn.className =
+            'battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-extrabold transition cursor-pointer text-center truncate bg-gradient-to-r from-rose-600/80 to-amber-600/80 text-white border border-amber-300/70 shadow-[0_0_12px_rgba(244,63,94,0.45)]';
+        } else {
+          btn.className =
+            'battle-phase-btn px-2 py-1.5 rounded-xl text-[10.5px] sm:text-xs font-semibold transition cursor-pointer text-center truncate bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10';
+        }
+      });
+
+      document.getElementById('battleSimPhaseTitle').textContent = isEn ? phase.title_en : phase.title_tr;
+      document.getElementById('battleSimPhaseDesc').textContent = isEn ? phase.desc_en : phase.desc_tr;
+      document.getElementById('battleSimForces').textContent = isEn ? phase.forces_en : phase.forces_tr;
+      document.getElementById('battleSimOutcome').textContent = isEn ? phase.outcome_en : phase.outcome_tr;
+      document.getElementById('battleForcesLabel').textContent = t.battleForcesLabel;
+      document.getElementById('battleOutcomeLabel').textContent = t.battleOutcomeLabel;
+      document.getElementById('battleLegendAttack').textContent = t.battleLegendAttack;
+      document.getElementById('battleLegendDefense').textContent = t.battleLegendDefense;
+      document.getElementById('battleLegendShockwave').textContent = t.battleLegendShockwave;
+
+      const coordsBadge = document.getElementById('battleSimCoordsBadge');
+      if (coordsBadge) {
+        coordsBadge.textContent = `${(phase.focusLat || item.lat).toFixed(2)}°N, ${(phase.focusLng || item.lng).toFixed(2)}°E`;
+      }
+
+      // 3B Küre Üzerinde Şok Dalgalarını (ringsData), Harekat Oklarını (arcsData) ve Taktik Birim Rozetlerini Göster
+      world.ringsData(phase.rings || []);
+
+      const battleArcs = (phase.vectors || []).map(v => ({
+        startLat: v.startLat,
+        startLng: v.startLng,
+        endLat: v.endLat,
+        endLng: v.endLng,
+        label: v.label,
+        color: v.type === 'attack' ? ['#ef4444', '#f97316'] : ['#fbbf24', '#38bdf8'],
+        altScale: 0.18,
+        stroke: 1.05,
+        dashLength: 0.35,
+        dashGap: 0.15,
+        animateTime: 1100
+      }));
+
+      if (activeCategory === 'edebiyat') {
+        const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
+        world.arcsData([...buildLiteratureArcs(filteredList), ...battleArcs]);
+      } else {
+        world.arcsData(battleArcs);
+      }
+
+      // Taktik saha rozetlerini mevcut şehir pinlerine ekle
+      const basePins = getFilteredLocations().map(loc => ({ ...loc }));
+      const tacticalMarkers = (phase.markers || []).map((m, idx) => ({
+        ...m,
+        id: `tac_${item.id}_${pIdx}_${idx}`,
+        isTacticalMarker: true,
+        phaseIndex: pIdx
+      }));
+      world.htmlElementsData([...basePins, ...tacticalMarkers]);
+
+      if (flyCamera) {
+        const isMobile = window.innerWidth < 768;
+        const lngOffset = isMobile ? 0 : 1.15;
+        world.pointOfView(
+          {
+            lat: (phase.focusLat || item.lat) - 0.12,
+            lng: (phase.focusLng || item.lng) + lngOffset,
+            altitude: 0.19
+          },
+          1150
+        );
+        setTimeout(updateZoomAndCompass, 1200);
+      }
+    }
+
+    function stopBattleSimulation() {
+      if (battleSimInterval) {
+        clearInterval(battleSimInterval);
+        battleSimInterval = null;
+      }
+      isBattleSimPlaying = false;
+      const playIcon = document.getElementById('battleSimPlayIcon');
+      const playText = document.getElementById('battleSimPlayText');
+      if (playIcon) playIcon.textContent = '▶️';
+      if (playText) playText.textContent = TRANSLATIONS[currentLang].battleSimPlayBtn;
+    }
+
+    function toggleBattleSimulationPlay() {
+      if (isBattleSimPlaying) {
+        stopBattleSimulation();
+        return;
+      }
+      if (!activeCityId) return;
+      isBattleSimPlaying = true;
+      const playIcon = document.getElementById('battleSimPlayIcon');
+      const playText = document.getElementById('battleSimPlayText');
+      if (playIcon) playIcon.textContent = '⏹️';
+      if (playText) playText.textContent = TRANSLATIONS[currentLang].battleSimStopBtn;
+
+      selectBattlePhase(0, true);
+      battleSimInterval = setInterval(() => {
+        if (!activeCityId) {
+          stopBattleSimulation();
+          return;
+        }
+        const nextPhase = (activeBattlePhaseIndex + 1) % 3;
+        selectBattlePhase(nextPhase, true);
+      }, 4200);
+    }
+
+    // ============================================================================
     // 6. ŞEHİR SEÇİMİ, FLY-TO KAMERA UÇUŞU VE ÇİFT DİLLİ DETAY PANELİ
     // ============================================================================
     function selectCity(cityId) {
@@ -5304,25 +5977,29 @@
       if (!item) return;
 
       stopSpeech();
+      stopBattleSimulation();
       activeCityId = cityId;
 
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.toggle('active-pin', el.dataset.cityId === cityId);
       });
 
+      // Şehre tıklandığında daha yakına (altitude: 0.21) odaklan ve uydu katmanını + 3B savaş simülasyonunu tetikle
       const isMobile = window.innerWidth < 768;
-      const lngOffset = isMobile ? 0 : 2.5;
+      const lngOffset = isMobile ? 0 : 1.35;
       world.pointOfView(
         {
-          lat: item.lat - 0.3,
+          lat: item.lat - 0.16,
           lng: item.lng + lngOffset,
-          altitude: 0.38
+          altitude: 0.21
         },
         1550
       );
 
+      setTimeout(updateZoomAndCompass, 550);
       setTimeout(updateZoomAndCompass, 1600);
       populateDrawer(item);
+      selectBattlePhase(0, false);
       openDrawer();
     }
 
@@ -5448,10 +6125,16 @@
 
     function closeDrawer() {
       stopSpeech();
+      stopBattleSimulation();
       const drawer = document.getElementById('detailDrawer');
       drawer.classList.add('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
       drawer.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
       activeCityId = null;
+
+      if (world) {
+        world.ringsData([]);
+        renderFilteredMarkers();
+      }
 
       document.querySelectorAll('.atlas-pin-wrapper').forEach(el => {
         el.classList.remove('active-pin');
@@ -5889,12 +6572,17 @@
       // Haritadaki pin etiketlerini ve yayları yeni dile göre tazele
       renderFilteredMarkers();
 
-      // Eğer detay çekmecesi (drawer) açıksa, seçili şehrin içeriğini yeni dilde anında güncelle
+      // Eğer detay çekmecesi (drawer) açıksa, seçili şehrin içeriğini ve 3B savaş simülasyonunu yeni dilde anında güncelle
       if (activeCityId) {
         const currentItem = MASTER_LOCATIONS.find(d => d.id === activeCityId);
         if (currentItem) {
           populateDrawer(currentItem);
+          selectBattlePhase(activeBattlePhaseIndex, false);
         }
+      }
+      const playTextEl = document.getElementById('battleSimPlayText');
+      if (playTextEl) {
+        playTextEl.textContent = isBattleSimPlaying ? t.battleSimStopBtn : t.battleSimPlayBtn;
       }
 
       // Eğer Şahsiyet/Eser okuma modalı açıksa onu da yeni dilde güncelle
@@ -6063,8 +6751,21 @@
         searchInput.focus();
       });
 
-      // Drawer Kapatma
+      // Drawer Kapatma ve 3B Taktik Savaş Simülasyonu Kontrolleri
       document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+
+      const battleSimPlayBtn = document.getElementById('battleSimPlayBtn');
+      if (battleSimPlayBtn) {
+        battleSimPlayBtn.addEventListener('click', toggleBattleSimulationPlay);
+      }
+
+      document.querySelectorAll('.battle-phase-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          stopBattleSimulation();
+          const pIdx = parseInt(btn.dataset.phase, 10) || 0;
+          selectBattlePhase(pIdx, true);
+        });
+      });
 
       // Şahsiyet & Eser Detaylı Okuma Penceresi (Modal) Etkileşimleri
       const closeFigureModalBtn = document.getElementById('closeFigureModalBtn');
