@@ -1047,6 +1047,17 @@
         >
           <span id="eraBtnModern">🚀 20. Yy &amp; Modern Çağ</span>
         </button>
+
+        <!-- Otomatik Kronolojik 3B Zaman Yolculuğu / Cinematic Tour -->
+        <button
+          type="button"
+          id="timelineTourBtn"
+          class="px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-gradient-to-r from-amber-500/20 to-orange-500/30 text-amber-300 border border-amber-400/40 hover:from-amber-500/35 hover:to-orange-500/45 transition flex items-center gap-1 cursor-pointer whitespace-nowrap shadow-sm ml-1"
+          title="Otomatik Kronolojik 3B Zaman Yolculuğu (Tüm Çağları Sırayla Gez)"
+        >
+          <span id="timelineTourIcon">▶️</span>
+          <span id="timelineTourBtnText">Zaman Yolculuğu</span>
+        </button>
       </div>
 
     </div>
@@ -6077,6 +6088,9 @@
         quizBtnLabel: "Yarışma",
         toursBtnLabel: "Rotalar",
         routesBtnLabel: "Kadim Yollar",
+        timelineTourBtnText: "Zaman Yolculuğu",
+        timelineTourStop: "Durdur",
+        tipTimelineTour: "Otomatik Kronolojik 3B Zaman Yolculuğu (Tüm Çağları Sırayla Gez)", 
       compareBtnLabel: "Karşılaştır",
       routesModalTitle: "Kadim Ticaret ve Kültür Yolları",
       routesModalSubtitle: "Fikirlerin, destanların, bilimin ve dillerin kıtalar arasında aktığı 6 büyük tarihsel koridor",
@@ -6183,6 +6197,9 @@
         quizBtnLabel: "Quiz",
         toursBtnLabel: "Tours",
         routesBtnLabel: "Ancient Routes",
+        timelineTourBtnText: "Time Travel",
+        timelineTourStop: "Stop Tour",
+        tipTimelineTour: "3D Chronological Time Travel (Sequential Era Tour)", 
       compareBtnLabel: "Compare",
       routesModalTitle: "Historic Trade & Cultural Corridors",
       routesModalSubtitle: "Six foundational intercontinental arteries transmitting ideas, literature, and trade",
@@ -11904,6 +11921,8 @@
       setElText('quizBtnLabel', t.quizBtnLabel);
       setElText('toursBtnLabel', t.toursBtnLabel);
       setElText('routesBtnLabel', t.routesBtnLabel);
+      if (!isTimelineTourActive) setElText('timelineTourBtnText', t.timelineTourBtnText);
+      setElTitle('timelineTourBtn', t.tipTimelineTour);
       setElText('compareBtnLabel', t.compareBtnLabel);
       setElTitle('openCompareBtn', t.tipCompare);
       setElTitle('openRoutesBtn', t.tipRoutes);
@@ -12521,6 +12540,61 @@
         correct: 0,
         explanation_tr: "Ahmed Arif, Dicle ve Fırat havzasının destansı halk kültürünü, tutkulu lirik dilini ve toplumsal direncini benzersiz bir şiir diline dönüştürmüştür.",
         explanation_en: "Ahmed Arif transformed Mesopotamian folk culture and passionate lyricism into one of the most widely read poetry volumes in modern Turkish history."
+      },
+      {
+        cityId: "tokyo",
+        category: "edebiyat",
+        q_tr: "Edo dönemi Japonya'sında yalın hece kalıplarıyla doğayı ve anı mühürleyen Haiku türünün en büyük ustası olan ve 'Kuzeye Giden İnce Yol' (Oku no Hosomichi) seyahatnamesini kaleme alan şair kimdir?",
+        q_en: "Living in Edo Japan, which legendary master elevated the 17-syllable Haiku poetic form to sublime spiritual heights in 'The Narrow Road to the Deep North'?",
+        options_tr: ["Matsuo Bashō", "Yosa Buson", "Kobayashi Issa", "Natsume Sōseki"],
+        options_en: ["Matsuo Basho", "Yosa Buson", "Kobayashi Issa", "Natsume Soseki"],
+        correct: 0,
+        explanation_tr: "Matsuo Bashō, Zen felsefesiyle harmanladığı haikularıyla doğanın faniliğini ve derin sadeliğini dünya edebiyatına kazandırmıştır.",
+        explanation_en: "Matsuo Basho transformed Zen aesthetic into crystalline haiku verse, pioneering travel literature and minimalist world poetry."
+      },
+      {
+        cityId: "isfahan",
+        category: "dunya_tarihi",
+        q_tr: "Safevi Şahı I. Abbas döneminde 'Nısf-ı Cihan' (Dünyanın Yarısı) unvanıyla imar edilen, UNESCO tescilli Nakş-ı Cihan Meydanı ve Şeyh Lütfullah Camii ile ünlü tarihi başkent neresidir?",
+        q_en: "Renowned as 'Half the World' (Nesf-e Jahan) during Shah Abbas's reign, which imperial capital is famed for the UNESCO-listed Naqsh-e Jahan Square and Lotfollah Mosque?",
+        options_tr: ["İsfahan", "Şiraz", "Tebriz", "Rey"],
+        options_en: ["Isfahan", "Shiraz", "Tabriz", "Ray"],
+        correct: 0,
+        explanation_tr: "İsfahan, 16. ve 17. yüzyıllarda İslam mimarisinin, minyatür sanatının ve ipek ticaretinin zirveye ulaştığı görkemli bir Safevi başkentidir.",
+        explanation_en: "Isfahan flourished as the pinnacle of Persian-Islamic architectural, ceramic, and diplomatic brilliance under the Safavid Empire."
+      },
+      {
+        cityId: "belh",
+        category: "edebiyat",
+        q_tr: "Horasan'ın kadim ilim kenti Belh'te doğan, Moğol istilası üzerine ailesiyle Anadolu'ya göç ederek Konya'ya yerleşen ve 25.000 beyitlik 'Mesnevî'yi kaleme alan büyük mutasavvıf kimdir?",
+        q_en: "Born in ancient Balkh (Bactria), who migrated to Anatolia fleeing Mongol invasions to author the 25,000-verse 'Masnavi' and establish universal humanistic Sufi thought?",
+        options_tr: ["Mevlânâ Celâleddîn-i Rûmî", "Yunus Emre", "Hacı Bektâş-ı Velî", "Ferîdüddin Attâr"],
+        options_en: ["Mevlana Jalaluddin Rumi", "Yunus Emre", "Haji Bektash Veli", "Farid al-Din Attar"],
+        correct: 0,
+        explanation_tr: "Mevlânâ, Belh'ten Konya'ya uzanan seyr-i sülûkunda sevgi, hoşgörü ve ilahi aşk felsefesiyle Doğu ve Batı düşüncesini derinden etkilemiştir.",
+        explanation_en: "Rumi synthesized transcendent divine love and universal brotherhood in the Masnavi, remaining the most translated mystic poet worldwide."
+      },
+      {
+        cityId: "venedik",
+        category: "dunya_tarihi",
+        q_tr: "Venedik Cumhuriyeti'nden yola çıkarak İpek Yolu üzerinden Kubilay Han'ın sarayına ulaşan ve 'Dünyanın Çeşitliliği Üzerine' (İl Milione) seyahatnamesiyle Doğu'yu Avrupa'ya tanıtan seyyah kimdir?",
+        q_en: "Departing from maritime Venice across the Silk Road to Kublai Khan's imperial court, which merchant-explorer introduced the wonders of Asia in 'Il Milione'?",
+        options_tr: ["Marco Polo", "İbn Battûta", "Evliya Çelebi", "Kristof Kolomb"],
+        options_en: ["Marco Polo", "Ibn Battuta", "Evliya Celebi", "Christopher Columbus"],
+        correct: 0,
+        explanation_tr: "Marco Polo'nun 24 yıllık Asya seyahati, Avrupa'nın Doğu coğrafyasına ve deniz keşiflerine bakışını kökten değiştirmiştir.",
+        explanation_en: "Marco Polo's 24-year Odyssey across China and Persia inaugurated European fascination with Far Eastern trade routes."
+      },
+      {
+        cityId: "canakkale",
+        category: "turk_tarihi",
+        q_tr: "1915 Çanakkale Kara Savaşları'nda 19. Tümen Komutanı Yarbay Mustafa Kemal'in 'Ben size taarruzu değil, ölmeyi emrediyorum!' emriyle tarihin akışını değiştirdiği tepe hangisidir?",
+        q_en: "During the 1915 Gallipoli Campaign, on which ridge did Lt. Col. Mustafa Kemal issue the immortal order 'I do not order you to attack, I order you to die!'?",
+        options_tr: ["Conkbayırı", "Kilitbahir", "Seddülbahir", "Arıburnu"],
+        options_en: ["Chunuk Bair (Conkbayiri)", "Kilitbahir", "Sedd el Bahr", "Anzac Cove"],
+        correct: 0,
+        explanation_tr: "Conkbayırı'ndaki 57. Alay'ın destansı direnişi ve Mustafa Kemal'in dahi sevk ve idaresi, müttefik çıkarmasını durdurmuş ve Türk Kurtuluş Savaşı'nın liderlik meşalesini yakmıştır.",
+        explanation_en: "The heroic stand at Chunuk Bair by the 57th Regiment halted the Allied advance and forged Mustafa Kemal's leadership destined to build modern Turkey."
       }
     ];
     window.QUIZ_QUESTIONS = QUIZ_QUESTIONS;
@@ -12697,18 +12771,53 @@
 
       const container = document.getElementById('quizOptionsContainer');
       container.innerHTML = `
-        <div class="p-6 rounded-2xl bg-gradient-to-br from-amber-500/15 via-slate-900/60 to-emerald-500/15 border border-amber-400/40 text-center space-y-3">
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-amber-500/15 via-slate-900/80 to-emerald-500/15 border border-amber-400/40 text-center space-y-3.5 shadow-2xl">
           <div class="text-4xl">🏆</div>
-          <h4 class="text-base sm:text-lg font-bold text-white">
-            ${isEn ? 'TÜBİTAK History & Literature Certificate' : 'TÜBİTAK Tarih ve Edebiyat Başarı Belgesi'}
-          </h4>
-          <p class="text-xs sm:text-sm text-slate-200">
-            ${isEn
-              ? `You answered ${quizScore} out of ${total} questions correctly (${pct}%). Outstanding historical knowledge!`
-              : `${total} sorudan ${quizScore} tanesini doğru cevapladınız (%${pct}). Harika bir tarihsel ve edebi birikim!`}
-          </p>
-          <div class="text-xs font-mono font-bold text-amber-300 p-2 rounded-xl bg-black/40 border border-white/10 w-fit mx-auto">
-            ${isEn ? `Final Score: ${quizScore} / ${total}` : `Toplam Skor: ${quizScore} / ${total}`}
+          <div>
+            <h4 class="text-base sm:text-lg font-bold text-white">
+              ${isEn ? 'TÜBİTAK 3D World Atlas Certificate of Merit' : 'TÜBİTAK 3B Küresel Atlas Üstün Başarı Belgesi'}
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-lg mx-auto leading-relaxed">
+              ${isEn
+                ? `You answered ${quizScore} out of ${total} questions correctly (${pct}%). Outstanding mastery of world history and classical literature!`
+                : `${total} sorudan ${quizScore} tanesini doğru yanıtladınız (%${pct}). Harika bir küresel tarih ve edebiyat birikimi!`}
+            </p>
+          </div>
+
+          <div class="flex items-center justify-center gap-3">
+            <div class="text-xs font-mono font-bold text-amber-300 px-3 py-1.5 rounded-xl bg-black/50 border border-amber-400/30 shadow-inner">
+              ${isEn ? `Score: ${quizScore} / ${total}` : `Skor: ${quizScore} / ${total}`}
+            </div>
+            <div class="text-xs font-mono font-bold text-emerald-300 px-3 py-1.5 rounded-xl bg-black/50 border border-emerald-400/30 shadow-inner">
+              ${isEn ? `Accuracy: %${pct}` : `Başarı: %${pct}`}
+            </div>
+          </div>
+
+          <!-- Certificate Recipient Input & Download Button -->
+          <div class="pt-3 border-t border-white/10 space-y-2.5 max-w-md mx-auto">
+            <label class="block text-[11px] font-mono text-slate-300 text-left font-semibold">
+              ${isEn ? 'Enter your name to personalize official certificate:' : 'Resmi belgenizi kişiselleştirmek için Adınız ve Soyadınız:'}
+            </label>
+            <div class="flex items-center gap-2">
+              <input
+                id="certificateRecipientName"
+                type="text"
+                placeholder="${isEn ? 'e.g. Marie Curie / Student Name' : 'Örn: Ahmet Yılmaz / Araştırmacı'}"
+                class="flex-1 bg-slate-950/90 border border-amber-400/40 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+              />
+              <button
+                id="downloadCertificateBtn"
+                type="button"
+                onclick="downloadQuizCertificate()"
+                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-amber-500/30 whitespace-nowrap"
+              >
+                <span>📜</span>
+                <span>${isEn ? 'Download (.PNG)' : 'Belgeyi İndir (.PNG)'}</span>
+              </button>
+            </div>
+            <p class="text-[9.5px] text-slate-400 text-left italic">
+              ${isEn ? 'High-resolution official certificate signed by Bayram Akpamukçu, Sami Yusuf Maral & Academic Advisor Dr. Ayşegül Elçi.' : 'Bayram Akpamukçu, Sami Yusuf Maral ve Proje Danışmanı Öğr. Gör. Dr. Ayşegül Elçi imzalı yüksek çözünürlüklü dijital sertifika.'}
+            </p>
           </div>
         </div>
       `;
@@ -12716,6 +12825,181 @@
       document.getElementById('quizExplanationCard').classList.add('hidden');
       document.getElementById('quizNextBtn').disabled = true;
     }
+
+    function downloadQuizCertificate() {
+      playTone('fanfare');
+      const isEn = currentLang === 'en';
+      const inputEl = document.getElementById('certificateRecipientName');
+      const studentName = (inputEl && inputEl.value.trim()) ? inputEl.value.trim() : (isEn ? 'Distinguished Scholar' : 'Genç Araştırmacı');
+
+      const total = getActiveQuizQuestions().length;
+      const pct = Math.round((quizScore / total) * 100);
+      const catKey = currentQuizCategory;
+      let catTitle = isEn ? 'Comprehensive Atlas Curriculum' : 'Tüm Müfredat & Küresel Tarih';
+      if (catKey === 'turk_tarihi') catTitle = isEn ? 'Turkish History & National Literature' : 'Türk Tarihi ve Milli Edebiyat';
+      else if (catKey === 'dunya_tarihi') catTitle = isEn ? 'World History & Ancient Civilizations' : 'Dünya Tarihi ve Medeniyetler';
+      else if (catKey === 'edebiyat') catTitle = isEn ? 'Classical World Literature & Epics' : 'Klasik Dünya Edebiyatı ve Destanlar';
+
+      const cvs = document.createElement('canvas');
+      cvs.width = 1600;
+      cvs.height = 1100;
+      const ctx = cvs.getContext('2d');
+
+      // Background gradient
+      const bgGrad = ctx.createLinearGradient(0, 0, 1600, 1100);
+      bgGrad.addColorStop(0, '#0a0f1d');
+      bgGrad.addColorStop(0.5, '#0f172a');
+      bgGrad.addColorStop(1, '#020617');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 1600, 1100);
+
+      // Gold ornate outer border
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(36, 36, 1528, 1028);
+
+      // Gold thin inner border
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(52, 52, 1496, 996);
+
+      // Corner decorative diamonds
+      const corners = [[52, 52], [1548, 52], [52, 1048], [1548, 1048]];
+      ctx.fillStyle = '#fbbf24';
+      corners.forEach(([cx, cy]) => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Header top ribbon
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 22px system-ui, -apple-system, sans-serif';
+      ctx.fillText(isEn ? 'TÜBİTAK 2204 RESEARCH COMPETITIONS • 3D DIGITAL ATLAS' : 'TÜBİTAK 2204 ARAŞTIRMA PROJELERİ • 3B DİJİTAL ATLAS', 800, 115);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 17px system-ui, -apple-system, sans-serif';
+      ctx.fillText('KÜRESEL TARİH VE EDEBİYAT ATLASI (bayramakpamukcu.site)', 800, 150);
+
+      // Main Certificate Title
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 44px Georgia, serif';
+      ctx.fillText(isEn ? 'CERTIFICATE OF MERIT & SCHOLARSHIP' : 'ÜSTÜN BAŞARI VE YETKİNLİK BELGESİ', 800, 235);
+
+      // Decorative divider
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(500, 265);
+      ctx.lineTo(1100, 265);
+      ctx.stroke();
+
+      // Body preamble
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = 'italic 23px Georgia, serif';
+      ctx.fillText(
+        isEn
+          ? 'This official certificate of accomplishment is proudly conferred upon:'
+          : 'Bu üstün başarı ve yetkinlik belgesi, atlas bilgi yarışmasını başarıyla tamamlayan Sayın:',
+        800,
+        340
+      );
+
+      // Recipient Name (Glorious Gold & Large)
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 54px Georgia, serif';
+      ctx.fillText(studentName, 800, 435);
+
+      // Explanatory accomplishment text
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '22px system-ui, -apple-system, sans-serif';
+      const accText = isEn
+        ? `For demonstrating exceptional intellectual mastery in ${catTitle}`
+        : `${catTitle} alanında gösterdiği seçkin entelektüel kavrayış ve akademik başarı vesilesiyle`;
+      ctx.fillText(accText, 800, 520);
+
+      const scoreText = isEn
+        ? `Successfully answered ${quizScore} of ${total} curated questions (${pct}% overall accuracy rate).`
+        : `Sorulan ${total} sorunun ${quizScore} tanesini doğru yanıtlayarak (%${pct} genel başarı oranı) üstün başarı göstermiştir.`;
+      ctx.fillText(scoreText, 800, 565);
+
+      // Metrics Box (Score, Accuracy, Date, Verification Hash)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(250, 630, 1100, 100, 16);
+      ctx.fill();
+      ctx.stroke();
+
+      const todayStr = new Date().toLocaleDateString(isEn ? 'en-US' : 'tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+      const verifyHash = `TUBITAK-${Math.random().toString(36).substring(2, 8).toUpperCase()}-${quizScore}${total}`;
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '600 18px monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(`${isEn ? 'SCORE' : 'SKOR'}: ${quizScore} / ${total}`, 290, 688);
+      ctx.fillText(`${isEn ? 'ACCURACY' : 'BAŞARI'}: %${pct}`, 520, 688);
+      ctx.fillText(`${isEn ? 'DATE' : 'TARİH'}: ${todayStr}`, 750, 688);
+      ctx.fillText(`${isEn ? 'CODE' : 'KOD'}: ${verifyHash}`, 1080, 688);
+
+      // Signatures (3 official project personnel)
+      const sigY = 880;
+      ctx.textAlign = 'center';
+
+      // Left: Bayram Akpamukçu
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(180, sigY);
+      ctx.lineTo(460, sigY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 20px Georgia, serif';
+      ctx.fillText('Bayram Akpamukçu', 320, sigY + 30);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '15px system-ui, sans-serif';
+      ctx.fillText(isEn ? 'Project Lead & Developer' : 'Proje Lideri & Geliştirici', 320, sigY + 54);
+
+      // Center: Sami Yusuf Maral
+      ctx.beginPath();
+      ctx.moveTo(660, sigY);
+      ctx.lineTo(940, sigY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 20px Georgia, serif';
+      ctx.fillText('Sami Yusuf Maral', 800, sigY + 30);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '15px system-ui, sans-serif';
+      ctx.fillText(isEn ? 'Project Contributor' : 'Proje Katkı Sağlayıcı', 800, sigY + 54);
+
+      // Right: Öğr. Gör. Dr. Ayşegül Elçi
+      ctx.beginPath();
+      ctx.moveTo(1140, sigY);
+      ctx.lineTo(1420, sigY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 20px Georgia, serif';
+      ctx.fillText('Öğr. Gör. Dr. Ayşegül Elçi', 1280, sigY + 30);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '15px system-ui, sans-serif';
+      ctx.fillText(isEn ? 'Academic Project Advisor' : 'Akademik Proje Danışmanı', 1280, sigY + 54);
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.download = `TUBITAK_3B_Atlas_Basari_Belgesi_${studentName.replace(/\s+/g, '_')}.png`;
+      link.href = cvs.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    window.showQuizResults = showQuizResults;
+    window.downloadQuizCertificate = downloadQuizCertificate;
+    window.getActiveQuizQuestions = getActiveQuizQuestions;
 
     // ============================================================================
     // 7D. REHBERLİ TEMATİK ROTALAR (GUIDED TOURS DATABASE & ENGINE)
@@ -13666,7 +13950,172 @@ Web: https://bayramakpamukcu.site
       closeRoutesModal();
     }
 
-        // ============================================================================
+
+    // ============================================================================
+    // 7F. KRONOLOJİK 3B ZAMAN YOLCULUĞU TUR MOTORU (CHRONOLOGICAL TIME TRAVEL TOUR)
+    // ============================================================================
+    function applyEraFilter() {
+      document.querySelectorAll('.era-btn').forEach(btn => {
+        const era = btn.dataset.era;
+        const isSelected = era === activeEra;
+        if (isSelected) {
+          btn.className =
+            'era-btn active px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.3)] transition cursor-pointer whitespace-nowrap';
+        } else {
+          btn.className =
+            'era-btn px-2 py-1 rounded-lg text-[10.5px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap';
+        }
+      });
+      const label = document.getElementById('timelineCurrentEraLabel');
+      if (window.TRANSLATIONS && TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang].eraDescriptions) {
+        const eraDescs = TRANSLATIONS[currentLang].eraDescriptions;
+        if (label && eraDescs && eraDescs[activeEra]) {
+          label.textContent = eraDescs[activeEra];
+        }
+      }
+      renderFilteredMarkers();
+    }
+    window.applyEraFilter = applyEraFilter;
+
+    let isTimelineTourActive = false;
+    let timelineTourTimer = null;
+    let timelineTourCurrentIndex = 0;
+
+    const TIMELINE_TOUR_STEPS = [
+      {
+        era: 'antik',
+        title_tr: '🏛️ Antik Çağ (M.Ö. 10.000 – M.S. 476)',
+        title_en: '🏛️ Antiquity (10,000 BC – 476 AD)',
+        center: { lat: 38.0, lng: 28.0, altitude: 1.4 },
+        rings: [
+          { lat: 37.07, lng: 38.86, color: ['rgba(245,158,11,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 39.95, lng: 26.23, color: ['rgba(245,158,11,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 37.98, lng: 23.72, color: ['rgba(245,158,11,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]
+      },
+      {
+        era: 'ortacag',
+        title_tr: '⚔️ Orta Çağ & Vikingler (476 – 1453)',
+        title_en: '⚔️ Middle Ages & Vikings (476 – 1453)',
+        center: { lat: 39.0, lng: 55.0, altitude: 1.6 },
+        rings: [
+          { lat: 39.65, lng: 66.96, color: ['rgba(16,185,129,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 33.31, lng: 44.36, color: ['rgba(16,185,129,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 43.76, lng: 11.25, color: ['rgba(16,185,129,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]
+      },
+      {
+        era: 'ronesans',
+        title_tr: '🎭 Rönesans & Aydınlanma (1453 – 1789)',
+        title_en: '🎭 Renaissance & Enlightenment (1453 – 1789)',
+        center: { lat: 45.0, lng: 20.0, altitude: 1.5 },
+        rings: [
+          { lat: 41.01, lng: 28.98, color: ['rgba(168,85,247,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 51.50, lng: -0.12, color: ['rgba(168,85,247,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 50.98, lng: 11.32, color: ['rgba(168,85,247,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]
+      },
+      {
+        era: 'yuzvil19',
+        title_tr: '📜 19. Yüzyıl Klasikleri (1789 – 1914)',
+        title_en: '📜 19th Century Classics (1789 – 1914)',
+        center: { lat: 50.0, lng: 30.0, altitude: 1.6 },
+        rings: [
+          { lat: 48.85, lng: 2.35, color: ['rgba(56,189,248,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 59.93, lng: 30.33, color: ['rgba(56,189,248,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 50.07, lng: 14.43, color: ['rgba(56,189,248,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]
+      },
+      {
+        era: 'modern',
+        title_tr: '🚀 20. Yy & Modern Çağ (1914 – Günümüz)',
+        title_en: '🚀 20th Century & Modern Era (1914 – Present)',
+        center: { lat: 39.0, lng: 35.0, altitude: 1.3 },
+        rings: [
+          { lat: 41.28, lng: 36.33, color: ['rgba(244,63,94,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 39.93, lng: 32.85, color: ['rgba(244,63,94,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: 40.15, lng: 26.40, color: ['rgba(244,63,94,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]
+      }
+    ];
+
+    function toggleTimelineTour() {
+      if (isTimelineTourActive) {
+        stopTimelineTour();
+      } else {
+        startTimelineTour();
+      }
+    }
+
+    function startTimelineTour() {
+      isTimelineTourActive = true;
+      timelineTourCurrentIndex = 0;
+      updateTimelineTourBtnUI();
+      playTone('fly');
+      executeTimelineTourStep();
+    }
+
+    function stopTimelineTour() {
+      if (timelineTourTimer) {
+        clearTimeout(timelineTourTimer);
+        timelineTourTimer = null;
+      }
+      isTimelineTourActive = false;
+      updateTimelineTourBtnUI();
+      world.ringsData([]);
+    }
+
+    function updateTimelineTourBtnUI() {
+      const btn = document.getElementById('timelineTourBtn');
+      const icon = document.getElementById('timelineTourIcon');
+      const text = document.getElementById('timelineTourBtnText');
+      const isEn = currentLang === 'en';
+      if (!btn) return;
+
+      if (isTimelineTourActive) {
+        if (icon) icon.textContent = '⏸️';
+        if (text) text.textContent = isEn ? 'Stop Tour' : 'Durdur';
+        btn.classList.add('border-rose-400', 'bg-rose-500/25', 'text-rose-200');
+        btn.classList.remove('border-amber-400/40', 'bg-gradient-to-r', 'text-amber-300');
+      } else {
+        if (icon) icon.textContent = '▶️';
+        if (text) text.textContent = isEn ? 'Time Travel' : 'Zaman Yolculuğu';
+        btn.classList.remove('border-rose-400', 'bg-rose-500/25', 'text-rose-200');
+        btn.classList.add('border-amber-400/40', 'bg-gradient-to-r', 'text-amber-300');
+      }
+    }
+
+    function executeTimelineTourStep() {
+      if (!isTimelineTourActive) return;
+
+      if (timelineTourCurrentIndex >= TIMELINE_TOUR_STEPS.length) {
+        // Tour completed! Reset to panoramic view
+        playTone('fanfare');
+        stopTimelineTour();
+        activeEra = 'all';
+        applyEraFilter();
+        world.pointOfView({ lat: 39.0, lng: 35.0, altitude: 2.1 }, 1800);
+        return;
+      }
+
+      const step = TIMELINE_TOUR_STEPS[timelineTourCurrentIndex];
+      const isEn = currentLang === 'en';
+      activeEra = step.era;
+      applyEraFilter();
+
+      // Fly to era vantage point
+      playTone('fly');
+      world.pointOfView({ lat: step.center.lat, lng: step.center.lng, altitude: step.center.altitude }, 1800);
+      world.ringsData(step.rings);
+
+      // Advance step after 4.2 seconds
+      timelineTourCurrentIndex += 1;
+      timelineTourTimer = setTimeout(() => {
+        executeTimelineTourStep();
+      }, 4200);
+    }
+
+            // ============================================================================
     // 8. ARAYÜZ ETKİLEŞİMLERİ
     // ============================================================================
     function setupUIEvents() {
@@ -13755,6 +14204,8 @@ Web: https://bayramakpamukcu.site
         });
       });
 
+      document.getElementById('timelineTourBtn')?.addEventListener('click', toggleTimelineTour);
+
       // 3. ZAMAN TÜNELİ VE ÇAĞ FİLTRELERİ
       function updateEraButtonStyles() {
         document.querySelectorAll('.era-btn').forEach(btn => {
@@ -13777,6 +14228,7 @@ Web: https://bayramakpamukcu.site
 
       document.querySelectorAll('.era-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+          if (isTimelineTourActive) stopTimelineTour();
           playTone('click');
           activeEra = btn.dataset.era;
           updateEraButtonStyles();
@@ -14043,6 +14495,10 @@ Web: https://bayramakpamukcu.site
       window.addEventListener('keydown', e => {
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
         if (e.key === 'Escape') {
+          if (isTimelineTourActive) {
+            stopTimelineTour();
+            return;
+          }
           if (document.getElementById('routesModalOverlay')?.classList.contains('opacity-100')) {
             closeRoutesModal();
           } else if (document.getElementById('compareModalOverlay')?.classList.contains('opacity-100')) {
@@ -14442,10 +14898,10 @@ Web: https://bayramakpamukcu.site
       <div class="p-4 sm:p-6 overflow-y-auto custom-scroll space-y-4 flex-1">
         <!-- Quiz Kategori Filtre Butonları -->
         <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1" id="quizCategoryFilterGroup">
-          <button type="button" data-quiz-cat="all" class="quiz-cat-btn active px-2.5 py-1 rounded-lg text-[10px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/50 shadow-[0_0_8px_rgba(245,158,11,0.25)] transition cursor-pointer whitespace-nowrap">Tümü (35)</button>
-          <button type="button" data-quiz-cat="turk_tarihi" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">🇹🇷 Türk Tarihi &amp; Edebiyatı (13)</button>
-          <button type="button" data-quiz-cat="dunya_tarihi" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">⚔️ Dünya Tarihi (11)</button>
-          <button type="button" data-quiz-cat="edebiyat" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">📚 Klasik Edebiyat (11)</button>
+          <button type="button" data-quiz-cat="all" class="quiz-cat-btn active px-2.5 py-1 rounded-lg text-[10px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/50 shadow-[0_0_8px_rgba(245,158,11,0.25)] transition cursor-pointer whitespace-nowrap">Tümü (40)</button>
+          <button type="button" data-quiz-cat="turk_tarihi" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">🇹🇷 Türk Tarihi &amp; Edebiyatı (14)</button>
+          <button type="button" data-quiz-cat="dunya_tarihi" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">⚔️ Dünya Tarihi (13)</button>
+          <button type="button" data-quiz-cat="edebiyat" class="quiz-cat-btn px-2.5 py-1 rounded-lg text-[10px] font-medium text-slate-300 hover:text-white hover:bg-white/10 border border-transparent transition cursor-pointer whitespace-nowrap">📚 Klasik Edebiyat (13)</button>
         </div>
 
         <!-- Progress Bar & Question Counter -->
