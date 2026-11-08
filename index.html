@@ -960,6 +960,16 @@
 
         <button
           type="button"
+          id="openRoutesBtn"
+          class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-gradient-to-r from-emerald-500/25 to-teal-600/35 text-emerald-200 border border-emerald-400/50 hover:bg-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.25)] cursor-pointer whitespace-nowrap"
+          title="Kadim Ticaret ve Medeniyet Yolları (İpek Yolu, Baharat Yolu, Bozkır vb.) (Kısayol: Y)"
+        >
+          <span>🛣️</span>
+          <span id="routesBtnLabel">Kadim Yollar</span>
+        </button>
+
+        <button
+          type="button"
           id="filterFavoritesBtn"
           class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-slate-950/70 text-slate-300 hover:text-amber-300 border border-white/10 hover:border-amber-400/40 cursor-pointer whitespace-nowrap"
           title="Favori Duraklarımı Filtrele"
@@ -6066,7 +6076,13 @@
         catWars: "⚔️ Savaşlar",
         quizBtnLabel: "Yarışma",
         toursBtnLabel: "Rotalar",
+        routesBtnLabel: "Kadim Yollar",
       compareBtnLabel: "Karşılaştır",
+      routesModalTitle: "Kadim Ticaret ve Kültür Yolları",
+      routesModalSubtitle: "Fikirlerin, destanların, bilimin ve dillerin kıtalar arasında aktığı 6 büyük tarihsel koridor",
+      routesShowAll: "Tüm Yolları Kürede Göster",
+      routesClear: "Yolları Temizle",
+      tipRoutes: "Kadim Ticaret ve Medeniyet Yolları (İpek Yolu, Baharat Yolu, Bozkır vb.) (Kısayol: Y)",
       compareModalTitle: "Akademik Şehir ve Medeniyet Karşılaştırma Matrisi",
       compareDrawArcLabel: "3B Kürede Yay Çiz & Göster",
       tipAtmosphere: "Harita Atmosfer Filtresi (Antik Parşömen / Gece / Standart)",
@@ -6166,7 +6182,13 @@
         catWars: "⚔️ Battles",
         quizBtnLabel: "Quiz",
         toursBtnLabel: "Tours",
+        routesBtnLabel: "Ancient Routes",
       compareBtnLabel: "Compare",
+      routesModalTitle: "Historic Trade & Cultural Corridors",
+      routesModalSubtitle: "Six foundational intercontinental arteries transmitting ideas, literature, and trade",
+      routesShowAll: "Show All Routes on Globe",
+      routesClear: "Clear Routes Layer",
+      tipRoutes: "Historic Trade & Civilizational Corridors (Silk Road, Spice Route etc.) (Key: Y)",
       compareModalTitle: "Comparative City & Civilization Matrix",
       compareDrawArcLabel: "Draw Geodesic Arc on 3D Globe",
       tipAtmosphere: "Map Atmosphere Filter (Vintage / Night / Satellite)",
@@ -6654,7 +6676,19 @@
         .ringColor(d => d.color || ['rgba(239, 68, 68, 0.95)', 'rgba(239, 68, 68, 0)'])
         .ringMaxRadius(d => d.maxR || 0.85)
         .ringPropagationSpeed(d => d.speed || 0.32)
-        .ringRepeatPeriod(d => d.repeat || 1200);
+        .ringRepeatPeriod(d => d.repeat || 1200)
+        // 3B Kadim Ticaret & Kültür Yolları Katmanı
+        .pathsData([])
+        .pathPoints(d => d.coords)
+        .pathPointLat(p => p[0])
+        .pathPointLng(p => p[1])
+        .pathPointAlt(p => p[2] !== undefined ? p[2] : 0.006)
+        .pathColor(d => d.color || '#f59e0b')
+        .pathStroke(d => d.stroke || 2.4)
+        .pathDashLength(d => d.dashLength || 0.14)
+        .pathDashGap(d => d.dashGap || 0.035)
+        .pathDashAnimateTime(d => d.animateTime || 5000)
+        .pathLabel(d => `<div class="bg-slate-900/90 text-amber-300 font-bold px-2 py-1 rounded shadow-lg text-xs border border-amber-500/40">${currentLang === 'en' ? (d.name_en || d.name_tr) : d.name_tr}</div>`);
 
       window.world = world;
       window.MASTER_LOCATIONS = MASTER_LOCATIONS;
@@ -11869,8 +11903,14 @@
       setElText('catLabelWars', t.catWars);
       setElText('quizBtnLabel', t.quizBtnLabel);
       setElText('toursBtnLabel', t.toursBtnLabel);
+      setElText('routesBtnLabel', t.routesBtnLabel);
       setElText('compareBtnLabel', t.compareBtnLabel);
       setElTitle('openCompareBtn', t.tipCompare);
+      setElTitle('openRoutesBtn', t.tipRoutes);
+      setElText('routesModalTitle', t.routesModalTitle);
+      setElText('routesModalSubtitle', t.routesModalSubtitle);
+      setElText('routesShowAllBtnText', t.routesShowAll);
+      setElText('routesClearBtnText', t.routesClear);
       setElTitle('toggleAtmosphereBtn', t.tipAtmosphere);
       setElText('compareModalTitle', t.compareModalTitle);
       setElText('compareDrawArcLabel', t.compareDrawArcLabel);
@@ -13262,7 +13302,371 @@ Web: https://bayramakpamukcu.site
       world.pointOfView({ lat: midLat, lng: midLng, altitude: calculatedAlt }, 1750);
     }
 
+
     // ============================================================================
+    // 7E. KADİM TİCARET VE MEDENİYET YOLLARI (HISTORIC TRADE ROUTES DATABASE & ENGINE)
+    // ============================================================================
+    const HISTORIC_TRADE_ROUTES = [
+      {
+        id: "silk_road",
+        icon: "🐪",
+        color: "#f59e0b",
+        glowColor: "rgba(245, 158, 11, 0.95)",
+        centerLat: 36.5,
+        centerLng: 52.0,
+        altitude: 1.85,
+        name_tr: "Büyük İpek Yolu (Doğu-Batı Medeniyet Hattı)",
+        name_en: "The Great Silk Road (East-West Civilizational Artery)",
+        era_tr: "M.Ö. 130 – M.S. 1453",
+        era_en: "130 BC – 1453 AD",
+        length_km: "8.000+ km",
+        desc_tr: "Chang'an'dan (Xi'an) Semerkant, Buhara, Merv, Rey, Bağdat ve İstanbul üzerinden Roma ve Venedik'e uzanan; ipek, porselen, kağıt, matbaa, barut ve antik felsefeyi taşıyan 2.000 yıllık küresel ticaret omurgası.",
+        desc_en: "From Chang'an through Samarkand, Bukhara, Merv, Ray, Baghdad, and Constantinople to Rome and Venice; transmitting silk, paper, mathematics, and philosophy across continents.",
+        stops_tr: ["Xi'an (Chang'an)", "Dunhuang", "Kaşgar", "Semerkant", "Buhara", "Merv", "Nişabur", "Rey", "Tebriz", "Bağdat", "Halep", "Konya", "Bursa", "İstanbul", "Venedik", "Roma"],
+        stops_en: ["Xi'an (Chang'an)", "Dunhuang", "Kashgar", "Samarkand", "Bukhara", "Merv", "Nishapur", "Ray", "Tabriz", "Baghdad", "Aleppo", "Konya", "Bursa", "Istanbul", "Venice", "Rome"],
+        coords: [
+          [34.34, 108.94], [36.06, 103.83], [39.73, 98.50], [40.14, 94.66], [42.95, 89.18],
+          [41.72, 82.96], [39.47, 75.99], [40.52, 72.80], [39.65, 66.96], [39.77, 64.42],
+          [37.60, 62.19], [36.21, 58.79], [35.59, 51.44], [38.08, 46.29], [36.19, 44.01],
+          [33.31, 44.36], [36.20, 37.16], [37.00, 35.32], [37.87, 32.49], [40.19, 29.06],
+          [41.01, 28.98], [41.68, 26.56], [42.14, 24.75], [42.70, 23.32], [43.83, 18.35],
+          [45.44, 12.33], [41.90, 12.50]
+        ],
+        rings: [
+          { lat: 34.34, lng: 108.94, label: "Xi'an" },
+          { lat: 39.65, lng: 66.96, label: "Semerkant" },
+          { lat: 33.31, lng: 44.36, label: "Bağdat" },
+          { lat: 41.01, lng: 28.98, label: "İstanbul" },
+          { lat: 41.90, lng: 12.50, label: "Roma" }
+        ]
+      },
+      {
+        id: "spice_route",
+        icon: "🌊",
+        color: "#10b981",
+        glowColor: "rgba(16, 185, 129, 0.95)",
+        centerLat: 22.0,
+        centerLng: 68.0,
+        altitude: 2.1,
+        name_tr: "Baharat & Deniz İpek Yolu",
+        name_en: "Maritime Silk & Spice Route",
+        era_tr: "Antik Çağ – 17. Yüzyıl",
+        era_en: "Antiquity – 17th Century",
+        length_km: "12.000+ km",
+        desc_tr: "Malakka Boğazı, Seylan ve Hindistan kıyılarından Umman Denizi, Kızıldeniz, İskenderiye ve Doğu Akdeniz üzerinden Venedik ve Cenova'ya tarçın, karabiber, karanfil, porselen ve astronomi aletleri taşıyan deniz ticaret koridoru.",
+        desc_en: "Connecting Malacca and Indian spice ports across the Arabian Sea, Red Sea, Alexandria, and Crete to Venice and Genoa; trading cinnamon, pepper, clove, and nautical science.",
+        stops_tr: ["Malakka", "Andaman", "Kalküta", "Seylan (Sri Lanka)", "Kalküt (Kozhikode)", "Goa", "Maskat", "Aden", "Cidde", "Süveyş", "İskenderiye", "Girit", "Venedik"],
+        stops_en: ["Malacca", "Andaman", "Kolkata", "Ceylon (Sri Lanka)", "Calicut", "Goa", "Muscat", "Aden", "Jeddah", "Suez", "Alexandria", "Crete", "Venice"],
+        coords: [
+          [2.19, 102.25], [5.97, 95.32], [9.15, 92.75], [6.92, 79.86], [11.25, 75.78],
+          [15.30, 73.83], [22.00, 68.00], [23.59, 58.43], [14.50, 50.00], [12.79, 45.03],
+          [14.00, 42.50], [21.54, 39.17], [27.50, 34.50], [29.97, 32.55], [31.20, 29.91],
+          [35.24, 24.81], [38.00, 18.00], [40.00, 16.00], [45.44, 12.33]
+        ],
+        rings: [
+          { lat: 2.19, lng: 102.25, label: "Malakka" },
+          { lat: 11.25, lng: 75.78, label: "Kalküt" },
+          { lat: 12.79, lng: 45.03, label: "Aden" },
+          { lat: 31.20, lng: 29.91, label: "İskenderiye" },
+          { lat: 45.44, lng: 12.33, label: "Venedik" }
+        ]
+      },
+      {
+        id: "royal_road",
+        icon: "👑",
+        color: "#a855f7",
+        glowColor: "rgba(168, 85, 247, 0.95)",
+        centerLat: 35.5,
+        centerLng: 38.0,
+        altitude: 1.55,
+        name_tr: "Pers Kral Yolu & Mezopotamya Ekseni",
+        name_en: "Persian Royal Road & Mesopotamian Axis",
+        era_tr: "M.Ö. 5. Yüzyıl (I. Dareios)",
+        era_en: "5th Century BC (Darius the Great)",
+        length_km: "2.700 km",
+        desc_tr: "I. Dareios tarafından kurulan 2.700 kilometrelik antik imparatorluk anayolu; Susa sarayından Babil, Harran ve Gordion üzerinden Lidyalıların başkenti Sardes ve Efes limanına 7 günde haber ulaştıran efsanevi kurye rotası.",
+        desc_en: "Commissioned by Darius the Great across 2,700 km from Susa through Babylon, Nineveh, Harran, and Gordion to Sardis and Ephesus; the world's first rapid imperial courier network.",
+        stops_tr: ["Susa (Şuş)", "Babil", "Opis", "Ninova (Musul)", "Nusaybin", "Harran (Şanlıurfa)", "Göbeklitepe", "Kapadokya", "Gordion", "Sardes", "Efes"],
+        stops_en: ["Susa", "Babylon", "Opis", "Nineveh (Mosul)", "Nisibis", "Harran (Sanliurfa)", "Gobekli Tepe", "Cappadocia", "Gordion", "Sardis", "Ephesus"],
+        coords: [
+          [32.19, 48.24], [32.54, 44.42], [34.00, 44.30], [35.47, 44.39], [36.36, 43.15],
+          [37.07, 41.22], [36.86, 39.03], [37.16, 38.79], [37.58, 36.93], [38.35, 35.00],
+          [38.64, 34.83], [39.65, 31.98], [38.75, 29.40], [38.48, 28.04], [37.94, 27.34]
+        ],
+        rings: [
+          { lat: 32.19, lng: 48.24, label: "Susa" },
+          { lat: 32.54, lng: 44.42, label: "Babil" },
+          { lat: 36.86, lng: 39.03, label: "Harran" },
+          { lat: 38.48, lng: 28.04, label: "Sardes" },
+          { lat: 37.94, lng: 27.34, label: "Efes" }
+        ]
+      },
+      {
+        id: "amber_road",
+        icon: "✨",
+        color: "#fbbf24",
+        glowColor: "rgba(251, 191, 36, 0.95)",
+        centerLat: 48.0,
+        centerLng: 16.5,
+        altitude: 1.45,
+        name_tr: "Kadim Kehribar Yolu (Baltık - Akdeniz)",
+        name_en: "The Ancient Amber Road (Baltic to Mediterranean)",
+        era_tr: "M.Ö. 1600 – Roma İmparatorluğu",
+        era_en: "1600 BC – Roman Empire",
+        length_km: "1.800 km",
+        desc_tr: "Baltık kıyılarında toplanan 'kuzeyin altını' fosilleşmiş kehribarı Vistül havzası, Krakow, Moravia Boğazı, Bohemya (Prag) ve Tuna (Carnuntum/Viyana) üzerinden Adriyatik kıyısındaki Aquileia ve Roma'ya taşıyan antik rota.",
+        desc_en: "Transporting prehistoric Baltic amber from Gdansk through the Vistula, Krakow, Moravia, Bohemia (Prague), and Carnuntum/Vienna to Aquileia and the Roman Empire.",
+        stops_tr: ["Gdansk (Baltık Denizi)", "Torun", "Krakow", "Moravia Kapısı", "Prag", "Brno", "Carnuntum (Viyana)", "Graz", "Aquileia", "Ravenna", "Roma"],
+        stops_en: ["Gdansk (Baltic)", "Torun", "Krakow", "Moravian Gate", "Prague", "Brno", "Carnuntum (Vienna)", "Graz", "Aquileia", "Ravenna", "Rome"],
+        coords: [
+          [54.35, 18.65], [53.01, 18.60], [51.50, 19.50], [50.06, 19.94], [49.59, 17.25],
+          [50.08, 14.44], [49.19, 16.60], [48.11, 16.86], [47.07, 15.44], [46.30, 14.00],
+          [45.77, 13.37], [44.41, 12.20], [42.50, 12.60], [41.90, 12.50]
+        ],
+        rings: [
+          { lat: 54.35, lng: 18.65, label: "Gdansk" },
+          { lat: 50.06, lng: 19.94, label: "Krakow" },
+          { lat: 50.08, lng: 14.44, label: "Prag" },
+          { lat: 48.11, lng: 16.86, label: "Viyana" },
+          { lat: 41.90, lng: 12.50, label: "Roma" }
+        ]
+      },
+      {
+        id: "incense_road",
+        icon: "🏺",
+        color: "#f43f5e",
+        glowColor: "rgba(244, 63, 94, 0.95)",
+        centerLat: 24.0,
+        centerLng: 40.0,
+        altitude: 1.65,
+        name_tr: "Tütsü & Kervan Yolu (Arabistan - Akdeniz)",
+        name_en: "Incense & Oasis Caravan Route",
+        era_tr: "M.Ö. 7. Yüzyıl – M.S. 2. Yüzyıl",
+        era_en: "7th Century BC – 2nd Century AD",
+        length_km: "2.400 km",
+        desc_tr: "Zofar (Umman) ve Hadramut'tan (Yemen) elde edilen değerli akgünlük ve mür tütsülerini kervanlarla Mekke, Medine, Nebati kayadan oyma başkenti Petra ve Gazze limanlarına taşıyan çöl vaha ticaret arteri.",
+        desc_en: "Caravans laden with sacred frankincense and myrrh travelling from southern Arabia through Mecca, Medina, and the rock-cut Nabataean capital Petra to Gaza and Damascus.",
+        stops_tr: ["Salalah (Zofar)", "Hadramut", "Şebve", "Marib", "Necran", "Mekke", "Yesrib (Medine)", "Hegra (Al-Ula)", "Petra", "Gazze", "Kudüs", "Şam"],
+        stops_en: ["Salalah (Dhofar)", "Hadhramaut", "Shabwa", "Marib", "Najran", "Mecca", "Yathrib (Medina)", "Hegra (Al-Ula)", "Petra", "Gaza", "Jerusalem", "Damascus"],
+        coords: [
+          [17.02, 54.09], [16.00, 49.00], [15.20, 47.00], [15.42, 45.33], [17.49, 44.13],
+          [19.00, 42.50], [21.42, 39.83], [24.47, 39.61], [26.80, 37.95], [28.50, 36.50],
+          [30.33, 35.44], [31.25, 34.80], [31.50, 34.47], [31.77, 35.21], [33.51, 36.29]
+        ],
+        rings: [
+          { lat: 17.02, lng: 54.09, label: "Salalah" },
+          { lat: 21.42, lng: 39.83, label: "Mekke" },
+          { lat: 26.80, lng: 37.95, label: "Hegra" },
+          { lat: 30.33, lng: 35.44, label: "Petra" },
+          { lat: 31.77, lng: 35.21, label: "Kudüs" }
+        ]
+      },
+      {
+        id: "steppe_migration",
+        icon: "🏹",
+        color: "#38bdf8",
+        glowColor: "rgba(56, 189, 248, 0.95)",
+        centerLat: 42.0,
+        centerLng: 65.0,
+        altitude: 1.95,
+        name_tr: "Bozkır Yolu & Türk Boyları Büyük Göç Ekseni",
+        name_en: "Great Eurasian Steppe & Turkic Migration Corridor",
+        era_tr: "6. Yüzyıl – 14. Yüzyıl",
+        era_en: "6th – 14th Century",
+        length_km: "7.500+ km",
+        desc_tr: "Orhun Vadisi ve Ötüken'den Altaylar, Balasagun, Isık Göl, Seyhun-Ceyhun nehirleri, Hazar Denizi, Horasan, Rey ve Ahlat üzerinden Malazgirt, Sivas, Konya ve Bursa'ya uzanan; destanları, kilimleri ve medeniyeti taşıyan bin yıllık büyük göç hattı.",
+        desc_en: "The millennial Eurasian migration corridor from the sacred Orkhon Valley through the Altay Mountains, Transoxiana, Khorasan, and Ahlat to Malazgirt, Konya, and Bursa.",
+        stops_tr: ["Ötüken (Orhun Vadisi)", "Altay Dağları", "Urumçi", "Isık Göl", "Balasagun", "Talas", "Taşkent", "Semerkant", "Buhara", "Merv (Horasan)", "Nişabur", "Rey", "Tebriz", "Ahlat (Van)", "Erzurum", "Malazgirt", "Sivas", "Konya", "Bursa"],
+        stops_en: ["Otuken (Orkhon Valley)", "Altay Mountains", "Urumqi", "Issyk-Kul", "Balasagun", "Talas", "Tashkent", "Samarkand", "Bukhara", "Merv (Khorasan)", "Nishapur", "Ray", "Tabriz", "Ahlat (Van)", "Erzurum", "Malazgirt", "Sivas", "Konya", "Bursa"],
+        coords: [
+          [47.55, 102.83], [48.00, 95.00], [49.00, 87.00], [43.82, 87.61], [42.15, 77.50],
+          [42.75, 75.25], [42.52, 72.24], [41.29, 69.24], [39.65, 66.96], [39.77, 64.42],
+          [37.60, 62.19], [36.21, 58.79], [35.59, 51.44], [38.08, 46.29], [38.75, 42.49],
+          [39.14, 42.54], [39.90, 41.27], [39.75, 37.01], [37.87, 32.49], [40.19, 29.06]
+        ],
+        rings: [
+          { lat: 47.55, lng: 102.83, label: "Ötüken" },
+          { lat: 42.75, lng: 75.25, label: "Balasagun" },
+          { lat: 39.65, lng: 66.96, label: "Semerkant" },
+          { lat: 38.75, lng: 42.49, label: "Ahlat" },
+          { lat: 40.19, lng: 29.06, label: "Bursa" }
+        ]
+      }
+    ];
+    window.HISTORIC_TRADE_ROUTES = HISTORIC_TRADE_ROUTES;
+
+    let activeTradeRouteId = null;
+
+    function openRoutesModal() {
+      playTone('click');
+      renderRoutesList();
+      const overlay = document.getElementById('routesModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function closeRoutesModal() {
+      playTone('click');
+      const overlay = document.getElementById('routesModalOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function renderRoutesList() {
+      const isEn = currentLang === 'en';
+      const container = document.getElementById('routesListContainer');
+      if (!container) return;
+
+      container.innerHTML = HISTORIC_TRADE_ROUTES.map(route => {
+        const title = isEn ? route.name_en : route.name_tr;
+        const era = isEn ? route.era_en : route.era_tr;
+        const desc = isEn ? route.desc_en : route.desc_tr;
+        const stops = isEn ? route.stops_en : route.stops_tr;
+        const isActive = activeTradeRouteId === route.id;
+
+        return `
+          <div
+            data-route-id="${route.id}"
+            class="route-card p-4 sm:p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border ${isActive ? 'border-amber-400/80 shadow-[0_0_15px_rgba(245,158,11,0.25)]' : 'border-white/10 hover:border-white/20'} transition-all duration-200 flex flex-col justify-between gap-3.5 group"
+          >
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">${route.icon}</span>
+                  <div>
+                    <h4 class="font-display font-bold text-sm sm:text-base text-white group-hover:text-amber-300 transition-colors">
+                      ${title}
+                    </h4>
+                    <span class="text-[10px] font-mono text-slate-400">
+                      ${era} • <span class="text-amber-400">${route.length_km}</span>
+                    </span>
+                  </div>
+                </div>
+                <span class="w-3 h-3 rounded-full shrink-0 shadow-lg" style="background-color: ${route.color};"></span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed font-normal">
+                ${desc}
+              </p>
+              <div class="pt-1.5 border-t border-white/5">
+                <span class="text-[9.5px] font-mono text-slate-400 block mb-1">
+                  ${isEn ? 'Milestone Citadels & Oasis Ports:' : 'Önemli Menzil Şehirleri & Vahalar:'}
+                </span>
+                <div class="flex flex-wrap gap-1">
+                  ${stops.slice(0, 7).map(s => `
+                    <span class="px-2 py-0.5 rounded-md bg-white/5 text-[9.5px] text-slate-300 border border-white/5">
+                      ${s}
+                    </span>
+                  `).join('')}
+                  ${stops.length > 7 ? `
+                    <span class="px-1.5 py-0.5 rounded-md bg-white/5 text-[9.5px] text-amber-300/80">
+                      +${stops.length - 7}
+                    </span>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onclick="focusTradeRoute('${route.id}')"
+                class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500/25 to-amber-600/35 hover:from-amber-500/40 hover:to-amber-600/50 text-amber-200 border border-amber-400/50 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
+              >
+                <span>🌍</span>
+                <span>${isEn ? 'Animate & Focus on 3D Globe' : '3B Kürede Canlandır & Odaklan'}</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showAllTradeRoutes() {
+      playTone('fly');
+      activeTradeRouteId = 'all';
+
+      const allPaths = HISTORIC_TRADE_ROUTES.map(r => ({
+        coords: r.coords,
+        color: r.color,
+        stroke: 2.2,
+        dashLength: 0.16,
+        dashGap: 0.04,
+        animateTime: 6000,
+        name_tr: r.name_tr,
+        name_en: r.name_en
+      }));
+
+      world.pathsData(allPaths);
+
+      // Collect key rings for all routes
+      const allRings = [];
+      HISTORIC_TRADE_ROUTES.forEach(r => {
+        r.rings.forEach(ring => {
+          allRings.push({
+            lat: ring.lat,
+            lng: ring.lng,
+            color: [r.glowColor, 'rgba(0,0,0,0)'],
+            maxR: 0.9,
+            speed: 0.4,
+            repeat: 1000
+          });
+        });
+      });
+      world.ringsData(allRings);
+
+      closeRoutesModal();
+      // Overview perspective covering Eurasia and North Africa
+      world.pointOfView({ lat: 34.0, lng: 55.0, altitude: 2.25 }, 2000);
+    }
+
+    function focusTradeRoute(routeId) {
+      playTone('fly');
+      activeTradeRouteId = routeId;
+      const route = HISTORIC_TRADE_ROUTES.find(r => r.id === routeId);
+      if (!route) return;
+
+      const singlePath = [
+        {
+          coords: route.coords,
+          color: route.color,
+          stroke: 3.2,
+          dashLength: 0.14,
+          dashGap: 0.03,
+          animateTime: 4500,
+          name_tr: route.name_tr,
+          name_en: route.name_en
+        }
+      ];
+
+      world.pathsData(singlePath);
+
+      const rings = route.rings.map(ring => ({
+        lat: ring.lat,
+        lng: ring.lng,
+        color: [route.glowColor, 'rgba(0,0,0,0)'],
+        maxR: 1.25,
+        speed: 0.5,
+        repeat: 850
+      }));
+      world.ringsData(rings);
+
+      closeRoutesModal();
+      world.pointOfView({ lat: route.centerLat, lng: route.centerLng, altitude: route.altitude }, 1850);
+    }
+
+    function clearTradeRoutes() {
+      playTone('click');
+      activeTradeRouteId = null;
+      world.pathsData([]);
+      world.ringsData([]);
+      closeRoutesModal();
+    }
+
+        // ============================================================================
     // 8. ARAYÜZ ETKİLEŞİMLERİ
     // ============================================================================
     function setupUIEvents() {
@@ -13639,7 +14043,9 @@ Web: https://bayramakpamukcu.site
       window.addEventListener('keydown', e => {
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
         if (e.key === 'Escape') {
-          if (document.getElementById('compareModalOverlay')?.classList.contains('opacity-100')) {
+          if (document.getElementById('routesModalOverlay')?.classList.contains('opacity-100')) {
+            closeRoutesModal();
+          } else if (document.getElementById('compareModalOverlay')?.classList.contains('opacity-100')) {
             closeCompareModal();
           } else if (document.getElementById('quizModalOverlay')?.classList.contains('opacity-100')) {
             closeQuizModal();
@@ -13698,6 +14104,16 @@ Web: https://bayramakpamukcu.site
         if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey) {
           e.preventDefault();
           document.getElementById('toggleAtmosphereBtn')?.click();
+          return;
+        }
+        if ((e.key === 'y' || e.key === 'Y') && !e.ctrlKey) {
+          e.preventDefault();
+          const overlay = document.getElementById('routesModalOverlay');
+          if (overlay && overlay.classList.contains('opacity-100')) {
+            closeRoutesModal();
+          } else {
+            openRoutesModal();
+          }
           return;
         }
         if ((e.key === 'k' || e.key === 'K') && !e.ctrlKey) {
@@ -13855,6 +14271,10 @@ Web: https://bayramakpamukcu.site
       });
       document.getElementById('openQuizBtn')?.addEventListener('click', openQuizModal);
       document.getElementById('closeQuizBtn')?.addEventListener('click', closeQuizModal);
+      document.getElementById('openRoutesBtn')?.addEventListener('click', openRoutesModal);
+      document.getElementById('closeRoutesBtn')?.addEventListener('click', closeRoutesModal);
+      document.getElementById('routesShowAllBtn')?.addEventListener('click', showAllTradeRoutes);
+      document.getElementById('routesClearBtn')?.addEventListener('click', clearTradeRoutes);
       document.getElementById('openCompareBtn')?.addEventListener('click', openCompareModal);
       document.getElementById('closeCompareBtn')?.addEventListener('click', closeCompareModal);
       document.getElementById('swapCompareBtn')?.addEventListener('click', swapCompareCities);
@@ -14265,5 +14685,75 @@ Web: https://bayramakpamukcu.site
       </div>
     </div>
   </div>
+  <!-- ============================================================================ -->
+  <!-- KADİM TİCARET VE MEDENİYET YOLLARI MODALI (HISTORIC ROUTES MODAL) -->
+  <!-- ============================================================================ -->
+  <div
+    id="routesModalOverlay"
+    class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-slate-900/60 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500/30 to-teal-500/30 border border-emerald-400/40 flex items-center justify-center text-xl shrink-0 shadow-lg shadow-emerald-500/20">
+            🛣️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                6 Küresel Medeniyet Ekseni
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 hidden sm:inline">Kısayol: Y</span>
+            </div>
+            <h3 id="routesModalTitle" class="font-display text-sm sm:text-base font-bold text-white mt-0.5">
+              Kadim Ticaret ve Kültür Yolları
+            </h3>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="routesShowAllBtn"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <span>✨</span>
+            <span id="routesShowAllBtnText">Tümünü Göster</span>
+          </button>
+          <button
+            id="routesClearBtn"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <span>🧹</span>
+            <span id="routesClearBtnText">Temizle</span>
+          </button>
+          <button
+            id="closeRoutesBtn"
+            type="button"
+            class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtitle Description -->
+      <div class="px-5 py-2.5 bg-white/[0.02] border-b border-white/5 text-xs text-slate-300">
+        <p id="routesModalSubtitle">
+          Fikirlerin, destanların, bilimin ve dillerin kıtalar arasında aktığı 6 büyük tarihsel koridor
+        </p>
+      </div>
+
+      <!-- Routes Grid -->
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1">
+        <div id="routesListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated via renderRoutesList() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
