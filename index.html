@@ -980,6 +980,16 @@
 
         <button
           type="button"
+          id="openAudioSettingsBtn"
+          class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-gradient-to-r from-violet-500/25 to-purple-600/35 text-violet-200 border border-violet-400/50 hover:bg-violet-500/40 shadow-[0_0_10px_rgba(139,92,246,0.25)] cursor-pointer whitespace-nowrap"
+          title="Atmosferik Akustik Tınılar & Ses Ayarları (Kısayol: Shift+M)"
+        >
+          <span>🎵</span>
+          <span id="audioBtnLabel">Akustik Ortam</span>
+        </button>
+
+        <button
+          type="button"
           id="filterFavoritesBtn"
           class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-slate-950/70 text-slate-300 hover:text-amber-300 border border-white/10 hover:border-amber-400/40 cursor-pointer whitespace-nowrap"
           title="Favori Duraklarımı Filtrele"
@@ -1156,6 +1166,16 @@
       title="Ses Efektlerini Aç / Kapat"
     >
       <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4 text-amber-300"></i>
+    </button>
+
+    <!-- Atmosferik Akustik Tınılar & Ayarlar Fab -->
+    <button
+      id="openAudioModalFabBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-xl flex items-center justify-center text-slate-300 shadow-xl hover:text-violet-300 hover:border-violet-400/50"
+      title="Atmosferik Akustik Tınılar & Ses Ayarları (Kısayol: Shift+M)"
+    >
+      <i data-lucide="music" id="audioFabIcon" class="w-4 h-4 text-violet-300"></i>
     </button>
 
     <!-- Canlı 3B Geodezik Mesafe Cetveli (3D Measuring Ruler) -->
@@ -6721,6 +6741,11 @@
         toursBtnLabel: "Rotalar",
         routesBtnLabel: "Kadim Yollar",
         empiresBtnLabel: "İmparatorluklar",
+        audioBtnLabel: "Akustik Ortam",
+        tipAudioSettings: "Atmosferik Akustik Tınılar & Ses Ayarları (Kısayol: Shift+M)",
+        audioModalTitle: "Atmosferik Akustik & Ses Tercihleri",
+        audioModalSubtitle: "Sıfır harici dosya yüküyle Web Audio API üzerinden üretilen hafif ortam sesleri",
+        testToneBtnText: "Tınıyı Test Et",
         tipRuler: "Canlı 3B Geodezik Mesafe Cetveli (Kısayol: X)",
         rulerPrompt1: "Küre üzerinde veya şehirlerden 1. noktayı seçin",
         rulerReset: "Sıfırla",
@@ -6840,6 +6865,11 @@
         toursBtnLabel: "Tours",
         routesBtnLabel: "Ancient Routes",
         empiresBtnLabel: "Empires",
+        audioBtnLabel: "Acoustic Ambience",
+        tipAudioSettings: "Atmospheric Ambience & Sound Settings (Shortcut: Shift+M)",
+        audioModalTitle: "Atmospheric Ambience & Sound Preferences",
+        audioModalSubtitle: "Real-time procedurally synthesized ambient historical soundscapes",
+        testToneBtnText: "Test Harmonic Tone",
         tipRuler: "Live 3D Geodesic Measuring Ruler (Key: X)",
         rulerPrompt1: "Click 1st point or city on 3D globe",
         rulerReset: "Reset",
@@ -7529,6 +7559,9 @@
     function dismissIntroScreen() {
       if (introDismissed) return;
       introDismissed = true;
+      if (isSoundEnabled && typeof startAmbientSoundscape === 'function') {
+        startAmbientSoundscape();
+      }
 
       // Pinlerin görünürlüğünü CSS ile serbest bırak
       document.body.classList.add('intro-finished');
@@ -12939,6 +12972,12 @@
       setElText('routesBtnLabel', t.routesBtnLabel);
       setElText('empiresBtnLabel', t.empiresBtnLabel);
       setElTitle('openEmpiresBtn', t.tipEmpires);
+      setElText('audioBtnLabel', t.audioBtnLabel);
+      setElTitle('openAudioSettingsBtn', t.tipAudioSettings);
+      setElTitle('openAudioModalFabBtn', t.tipAudioSettings);
+      setElText('audioModalTitle', t.audioModalTitle);
+      setElText('audioModalSubtitle', t.audioModalSubtitle);
+      setElText('testToneBtnText', t.testToneBtnText);
       setElText('empiresModalTitle', t.empiresModalTitle);
       setElText('empiresModalSubtitle', t.empiresModalSubtitle);
       setElText('empiresShowAllBtnText', t.empiresShowAll);
@@ -13024,10 +13063,51 @@
 
 
     // ============================================================================
-    // 7A. SES EFEKTLERİ SENTEZLEYİCİSİ (WEB AUDIO API - ZERO EXTERNAL ASSETS)
+    // 7A. SES EFEKTLERİ SENTEZLEYİCİSİ & PROCEDURAL AMBIENT SOUNDSCAPE ENGINE
     // ============================================================================
     let audioCtx = null;
     let isSoundEnabled = localStorage.getItem('atlas_sound_enabled') !== 'false';
+    let ambientMasterGain = null;
+    let ambientActiveSources = [];
+    let ambientChimeTimer = null;
+    let activeAmbientMode = localStorage.getItem('atlas_ambient_mode') || 'rasathane'; // 'rasathane', 'ipekyolu', 'meditasyon', 'off'
+    let ambientVolume = parseFloat(localStorage.getItem('atlas_ambient_volume') || '0.35');
+    let isAmbientRunning = false;
+
+    const AMBIENT_PRESETS = [
+      {
+        id: 'rasathane',
+        icon: '🔭',
+        name_tr: 'Kadim Rasathane & Gökkubbe',
+        name_en: 'Ancient Celestial Observatory',
+        desc_tr: '110 Hz derin kadim A2 akordu, soluk alan alçak geçiren filtre ve 8 saniyede bir göksel armonik tınılar.',
+        desc_en: 'Warm 110 Hz A2 fundamental drone with slow breathing filter modulation and celestial overtone bells.'
+      },
+      {
+        id: 'ipekyolu',
+        icon: '🐪',
+        name_tr: 'İpek Yolu & Çöl Tınıları',
+        name_en: 'Silk Road & Oasis Resonances',
+        desc_tr: 'Vaha esintisi tınısı ve kervan yollarını yankılayan yumuşak pentatonik akustik çanlar.',
+        desc_en: 'Soft desert oasis resonance with gentle pentatonic acoustic bells evoking ancient caravans.'
+      },
+      {
+        id: 'meditasyon',
+        icon: '📜',
+        name_tr: 'Alim Kütüphanesi & Sükunet',
+        name_en: 'Scholars\' Sanctuary & Stillness',
+        desc_tr: '73.4 Hz sıcak sub-bas uğultusu ile derin odaklanma ve tefekkür sağlayan dingin akustik havza.',
+        desc_en: 'Deep 73.4 Hz sub-harmonic drone fostering serene contemplation and scholastic focus.'
+      },
+      {
+        id: 'off',
+        icon: '🔇',
+        name_tr: 'Sessiz Ortam (Yalnızca Efektler)',
+        name_en: 'Silent Ambience (FX Only)',
+        desc_tr: 'Sürekli arka plan sesini kapatır; yalnızca arayüz tıklamaları ve uçuş efektleri çalınır.',
+        desc_en: 'Mutes continuous ambient drone while preserving interactive UI clicks and flight tones.'
+      }
+    ];
 
     function initAudioContext() {
       if (!audioCtx) {
@@ -13125,6 +13205,306 @@
         }
       } catch (e) {}
     }
+
+    // ----------------------------------------------------------------------------
+    // WAVE 10: PROCEDURAL PROCEDURAL AMBIENT SOUNDSCAPE SYNTHESIS
+    // ----------------------------------------------------------------------------
+    function startAmbientSoundscape() {
+      if (!isSoundEnabled || activeAmbientMode === 'off') {
+        stopAmbientSoundscape();
+        return;
+      }
+      try {
+        initAudioContext();
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        stopAmbientSoundscape();
+
+        const now = audioCtx.currentTime;
+        ambientMasterGain = audioCtx.createGain();
+        const targetGain = Math.max(0.0001, Math.min(1, ambientVolume) * 0.05);
+        ambientMasterGain.gain.setValueAtTime(0.0001, now);
+        ambientMasterGain.gain.exponentialRampToValueAtTime(targetGain, now + 1.8);
+        ambientMasterGain.connect(audioCtx.destination);
+
+        ambientActiveSources = [];
+
+        if (activeAmbientMode === 'rasathane') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const filter = audioCtx.createBiquadFilter();
+          const lfo = audioCtx.createOscillator();
+          const lfoGain = audioCtx.createGain();
+
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(110.0, now);
+
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(164.81, now);
+          osc2.detune.setValueAtTime(4, now);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(260, now);
+          filter.Q.setValueAtTime(2.0, now);
+
+          lfo.type = 'sine';
+          lfo.frequency.setValueAtTime(0.07, now);
+          lfoGain.gain.setValueAtTime(90, now);
+
+          lfo.connect(filter.frequency);
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(ambientMasterGain);
+
+          osc1.start(now);
+          osc2.start(now);
+          lfo.start(now);
+          ambientActiveSources.push(osc1, osc2, lfo);
+
+          triggerCelestialChime();
+          ambientChimeTimer = setInterval(triggerCelestialChime, 8000);
+
+        } else if (activeAmbientMode === 'ipekyolu') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const filter = audioCtx.createBiquadFilter();
+
+          osc1.type = 'triangle';
+          osc1.frequency.setValueAtTime(146.83, now);
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(220.0, now);
+
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(380, now);
+          filter.Q.setValueAtTime(1.8, now);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(ambientMasterGain);
+
+          osc1.start(now);
+          osc2.start(now);
+          ambientActiveSources.push(osc1, osc2);
+
+          triggerOasisChime();
+          ambientChimeTimer = setInterval(triggerOasisChime, 9500);
+
+        } else if (activeAmbientMode === 'meditasyon') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const filter = audioCtx.createBiquadFilter();
+
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(73.42, now);
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(110.0, now);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(180, now);
+          filter.Q.setValueAtTime(1.2, now);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(ambientMasterGain);
+
+          osc1.start(now);
+          osc2.start(now);
+          ambientActiveSources.push(osc1, osc2);
+        }
+
+        isAmbientRunning = true;
+      } catch (e) {
+        console.warn('Ambient soundscape start failed:', e);
+      }
+    }
+
+    function stopAmbientSoundscape() {
+      if (ambientChimeTimer) {
+        clearInterval(ambientChimeTimer);
+        ambientChimeTimer = null;
+      }
+      if (ambientMasterGain && audioCtx) {
+        try {
+          const now = audioCtx.currentTime;
+          ambientMasterGain.gain.setValueAtTime(ambientMasterGain.gain.value, now);
+          ambientMasterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        } catch (e) {}
+      }
+      setTimeout(() => {
+        ambientActiveSources.forEach(src => {
+          try { src.stop(); src.disconnect(); } catch (e) {}
+        });
+        ambientActiveSources = [];
+        if (ambientMasterGain) {
+          try { ambientMasterGain.disconnect(); } catch (e) {}
+          ambientMasterGain = null;
+        }
+        isAmbientRunning = false;
+      }, 400);
+    }
+
+    function triggerCelestialChime() {
+      if (!audioCtx || !isSoundEnabled || activeAmbientMode !== 'rasathane' || !ambientMasterGain) return;
+      try {
+        const now = audioCtx.currentTime;
+        const chimeFrequencies = [587.33, 659.25, 880.0, 987.77, 1174.66, 1318.51];
+        const freq = chimeFrequencies[Math.floor(Math.random() * chimeFrequencies.length)];
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(Math.min(0.03, ambientVolume * 0.04), now + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+        osc.connect(gain);
+        gain.connect(ambientMasterGain);
+        osc.start(now);
+        osc.stop(now + 3.25);
+      } catch (e) {}
+    }
+
+    function triggerOasisChime() {
+      if (!audioCtx || !isSoundEnabled || activeAmbientMode !== 'ipekyolu' || !ambientMasterGain) return;
+      try {
+        const now = audioCtx.currentTime;
+        const bellFreqs = [440.0, 493.88, 554.37, 659.25, 739.99];
+        const freq = bellFreqs[Math.floor(Math.random() * bellFreqs.length)];
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(Math.min(0.025, ambientVolume * 0.035), now + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+
+        osc.connect(gain);
+        gain.connect(ambientMasterGain);
+        osc.start(now);
+        osc.stop(now + 2.85);
+      } catch (e) {}
+    }
+
+    function playHarmonicTestTone() {
+      initAudioContext();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        const t = now + idx * 0.12;
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.06, t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.9);
+      });
+    }
+
+    function setAmbientMode(mode) {
+      activeAmbientMode = mode;
+      localStorage.setItem('atlas_ambient_mode', mode);
+      renderAudioModalPresets();
+      if (isSoundEnabled) {
+        startAmbientSoundscape();
+      }
+    }
+
+    function setAmbientVolume(vol) {
+      ambientVolume = Math.max(0, Math.min(1, vol));
+      localStorage.setItem('atlas_ambient_volume', ambientVolume.toString());
+      const label = document.getElementById('ambientVolumeLabel');
+      if (label) label.textContent = `${Math.round(ambientVolume * 100)}%`;
+      if (ambientMasterGain && audioCtx) {
+        try {
+          const now = audioCtx.currentTime;
+          const targetGain = Math.max(0.0001, ambientVolume * 0.05);
+          ambientMasterGain.gain.setValueAtTime(ambientMasterGain.gain.value, now);
+          ambientMasterGain.gain.exponentialRampToValueAtTime(targetGain, now + 0.1);
+        } catch (e) {}
+      }
+    }
+
+    function openAudioModal() {
+      playTone('click');
+      renderAudioModalPresets();
+      const slider = document.getElementById('ambientVolumeSlider');
+      if (slider) slider.value = Math.round(ambientVolume * 100);
+      const label = document.getElementById('ambientVolumeLabel');
+      if (label) label.textContent = `${Math.round(ambientVolume * 100)}%`;
+      const fxToggle = document.getElementById('soundFxToggleInput');
+      if (fxToggle) fxToggle.checked = isSoundEnabled;
+
+      const overlay = document.getElementById('audioModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function closeAudioModal() {
+      playTone('click');
+      const overlay = document.getElementById('audioModalOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function renderAudioModalPresets() {
+      const isEn = currentLang === 'en';
+      const container = document.getElementById('ambientPresetsContainer');
+      if (!container) return;
+
+      container.innerHTML = AMBIENT_PRESETS.map(preset => {
+        const isActive = activeAmbientMode === preset.id;
+        const name = isEn ? preset.name_en : preset.name_tr;
+        const desc = isEn ? preset.desc_en : preset.desc_tr;
+        return `
+          <button
+            type="button"
+            onclick="setAmbientMode('${preset.id}')"
+            class="text-left p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+              isActive
+                ? 'bg-violet-500/20 border-violet-400 shadow-[0_0_15px_rgba(139,92,246,0.35)]'
+                : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.07] hover:border-violet-400/30'
+            }"
+          >
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-2xl">${preset.icon}</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full ${
+                isActive
+                  ? 'bg-violet-400 text-slate-950 font-bold'
+                  : 'bg-white/10 text-slate-400'
+              }">
+                ${isActive ? (isEn ? 'ACTIVE' : 'AKTİF') : (isEn ? 'SELECT' : 'SEÇ')}
+              </span>
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <h4 class="text-xs font-bold text-white">${name}</h4>
+              <p class="text-[11px] text-slate-400 leading-snug">${desc}</p>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.openAudioModal = openAudioModal;
+    window.closeAudioModal = closeAudioModal;
+    window.setAmbientMode = setAmbientMode;
+    window.setAmbientVolume = setAmbientVolume;
+    window.playHarmonicTestTone = playHarmonicTestTone;
+    window.startAmbientSoundscape = startAmbientSoundscape;
+    window.stopAmbientSoundscape = stopAmbientSoundscape;
 
     // ============================================================================
     // 7B. FAVORİLER / YER İMLERİ YÖNETİMİ (LOCALSTORAGE DESTEKLİ)
@@ -16002,6 +16382,10 @@ Web: https://bayramakpamukcu.site
             stopTimelineTour();
             return;
           }
+          if (document.getElementById('audioModalOverlay')?.classList.contains('opacity-100')) {
+            closeAudioModal();
+            return;
+          }
           if (document.getElementById('empiresModalOverlay')?.classList.contains('opacity-100')) {
             closeEmpiresModal();
           } else if (document.getElementById('routesModalOverlay')?.classList.contains('opacity-100')) {
@@ -16057,7 +16441,17 @@ Web: https://bayramakpamukcu.site
           document.getElementById('toggle3DViewBtn')?.click();
           return;
         }
-        if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey) {
+        if ((e.key === 'm' || e.key === 'M') && e.shiftKey) {
+          e.preventDefault();
+          const overlay = document.getElementById('audioModalOverlay');
+          if (overlay && overlay.classList.contains('opacity-100')) {
+            closeAudioModal();
+          } else {
+            openAudioModal();
+          }
+          return;
+        }
+        if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.shiftKey) {
           e.preventDefault();
           document.getElementById('toggleSoundBtn')?.click();
           return;
@@ -16234,7 +16628,14 @@ Web: https://bayramakpamukcu.site
           isSoundEnabled = !isSoundEnabled;
           localStorage.setItem('atlas_sound_enabled', isSoundEnabled);
           updateSoundBtnUI();
-          if (isSoundEnabled) playTone('click');
+          const fxToggle = document.getElementById('soundFxToggleInput');
+          if (fxToggle) fxToggle.checked = isSoundEnabled;
+          if (isSoundEnabled) {
+            playTone('click');
+            startAmbientSoundscape();
+          } else {
+            stopAmbientSoundscape();
+          }
         });
       }
 
@@ -16253,6 +16654,24 @@ Web: https://bayramakpamukcu.site
       document.getElementById('closeEmpiresBtn')?.addEventListener('click', closeEmpiresModal);
       document.getElementById('empiresShowAllBtn')?.addEventListener('click', showAllEmpires);
       document.getElementById('empiresClearBtn')?.addEventListener('click', clearEmpires);
+      document.getElementById('openAudioSettingsBtn')?.addEventListener('click', openAudioModal);
+      document.getElementById('openAudioModalFabBtn')?.addEventListener('click', openAudioModal);
+      document.getElementById('closeAudioModalBtn')?.addEventListener('click', closeAudioModal);
+      document.getElementById('testToneBtn')?.addEventListener('click', playHarmonicTestTone);
+      document.getElementById('ambientVolumeSlider')?.addEventListener('input', (e) => {
+        setAmbientVolume(parseFloat(e.target.value) / 100);
+      });
+      document.getElementById('soundFxToggleInput')?.addEventListener('change', (e) => {
+        isSoundEnabled = e.target.checked;
+        localStorage.setItem('atlas_sound_enabled', isSoundEnabled);
+        if (typeof updateSoundBtnUI === 'function') updateSoundBtnUI();
+        if (isSoundEnabled) {
+          playTone('click');
+          startAmbientSoundscape();
+        } else {
+          stopAmbientSoundscape();
+        }
+      });
       document.getElementById('routesShowAllBtn')?.addEventListener('click', showAllTradeRoutes);
       document.getElementById('routesClearBtn')?.addEventListener('click', clearTradeRoutes);
       document.getElementById('openCompareBtn')?.addEventListener('click', openCompareModal);
@@ -16809,6 +17228,112 @@ Web: https://bayramakpamukcu.site
       <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1">
         <div id="empiresListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Dynamically populated via renderEmpiresList() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================================ -->
+  <!-- WAVE 10: ATMOSFERİK AKUSTİK & SES TERCİHLERİ MODAL OVERLAY -->
+  <!-- ============================================================================ -->
+  <div
+    id="audioModalOverlay"
+    class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden border border-violet-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-slate-900/60 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-500/30 to-purple-500/30 border border-violet-400/40 flex items-center justify-center text-xl shrink-0 shadow-lg shadow-violet-500/20">
+            🎵
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-400/30">
+                Web Audio Akustik Motoru
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 hidden sm:inline">Kısayol: Shift+M</span>
+            </div>
+            <h3 id="audioModalTitle" class="font-display text-sm sm:text-base font-bold text-white mt-0.5">
+              Atmosferik Akustik & Ses Tercihleri
+            </h3>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="testToneBtn"
+            type="button"
+            class="px-2.5 py-1.5 rounded-xl bg-violet-500/20 hover:bg-violet-500/30 text-violet-200 border border-violet-400/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <span>🔔</span>
+            <span id="testToneBtnText">Tınıyı Test Et</span>
+          </button>
+          <button
+            id="closeAudioModalBtn"
+            type="button"
+            class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1"
+          >
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtitle Description -->
+      <div class="px-5 py-2.5 bg-white/[0.02] border-b border-white/5 text-xs text-slate-300">
+        <p id="audioModalSubtitle">
+          Sıfır harici dosya yüküyle Web Audio API üzerinden gerçek zamanlı üretilen mistik tarihsel ortam sesleri
+        </p>
+      </div>
+
+      <!-- Body / Controls -->
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scroll space-y-5">
+        <!-- Preset Cards Grid -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Ortam Tınısı Teması (Atmospheric Soundscape)
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="ambientPresetsContainer">
+            <!-- Dynamically populated via renderAudioModalPresets() -->
+          </div>
+        </div>
+
+        <!-- Volume Slider -->
+        <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-white flex items-center gap-2">
+              <span>🔊</span>
+              <span>Ortam Sesi Şiddeti (Ambient Volume)</span>
+            </span>
+            <span id="ambientVolumeLabel" class="text-xs font-mono font-bold text-violet-300 bg-violet-500/20 px-2 py-0.5 rounded border border-violet-400/30">
+              35%
+            </span>
+          </div>
+          <input
+            id="ambientVolumeSlider"
+            type="range"
+            min="0"
+            max="100"
+            value="35"
+            class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-violet-400"
+          />
+        </div>
+
+        <!-- Sound FX Toggle -->
+        <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between">
+          <div class="space-y-0.5">
+            <div class="text-xs font-bold text-white flex items-center gap-2">
+              <span>⚡</span>
+              <span>Arayüz ve Uçuş Ses Efektleri</span>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              Buton tıklamaları, şehirler arası kamera uçuşu ve bilgi yarışması ses sinyalleri
+            </p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="soundFxToggleInput" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
+          </label>
         </div>
       </div>
     </div>
