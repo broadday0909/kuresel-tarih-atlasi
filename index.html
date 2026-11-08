@@ -339,10 +339,17 @@
       opacity: 1;
     }
 
-    /* Arama sonuçları açılır paneli */
+    /* Arama sonuçları açılır paneli (Wave 11: Spotlight Dropdown & Glow) */
+    #searchResultsPanel {
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.22);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(8, 14, 28, 0.96);
+      backdrop-filter: blur(24px);
+    }
     #searchResultsPanel .search-result-item.is-highlighted {
-      background: rgba(56, 189, 248, 0.18);
-      border-color: rgba(56, 189, 248, 0.55);
+      background: rgba(56, 189, 248, 0.22);
+      border-color: rgba(56, 189, 248, 0.65);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.28);
     }
 
     .atlas-pin-wrapper {
@@ -822,7 +829,8 @@
           id="searchInput"
           type="text"
           autocomplete="off"
-          placeholder="Şehir / Eser..."
+          placeholder="Şehir / Eser... (Ctrl+K)"
+          title="Tüm küresel duraklarda ara (Kısayol: / veya Ctrl+K)"
           class="w-full pl-6 pr-5 py-0.5 rounded-lg bg-slate-950/90 border border-white/15 text-[10.5px] text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 transition"
         />
         <button id="clearSearchBtn" type="button" class="hidden absolute right-1 text-slate-400 hover:text-white cursor-pointer">
@@ -16140,30 +16148,71 @@ Web: https://bayramakpamukcu.site
       let searchResults = [];
       let searchHighlightIdx = 0;
 
-      // Tüm duraklarda (filtrelerden bağımsız) puanlı arama: şehir adı başı > şehir adı içi > başlık > diğer alanlar
+      // Substring Vurgulama Yardımcısı (Regex Kaçışlı)
+      function highlightTextMatch(text, query) {
+        if (!query || !text) return text || '';
+        const q = query.trim().toLocaleLowerCase('tr-TR');
+        if (!q) return text;
+        const str = String(text);
+        const low = str.toLocaleLowerCase('tr-TR');
+        const idx = low.indexOf(q);
+        if (idx === -1) return str;
+        const matched = str.slice(idx, idx + q.length);
+        return `${str.slice(0, idx)}<span class="text-sky-300 font-extrabold bg-sky-500/25 px-0.5 rounded">${matched}</span>${str.slice(idx + q.length)}`;
+      }
+
+      // Öne Çıkan Küresel Duraklar (Arama kutusu boşken ilk odakta gösterilir)
+      const SPOTLIGHT_SUGGESTED_IDS = ['istanbul', 'troya', 'kars', 'semerkant', 'siraz', 'kyoto', 'paris', 'roma'];
+
+      // Tüm duraklarda (filtrelerden bağımsız) puanlı akıllı arama: şehir adı başı > şehir adı içi > başlık > edebi şahsiyetler > diğer alanlar
       function computeSearchResults(rawQuery) {
         const q = rawQuery.trim().toLocaleLowerCase('tr-TR');
-        if (!q) return [];
+        if (!q) {
+          // Boşken öne çıkanları döndür
+          return MASTER_LOCATIONS.filter(loc => SPOTLIGHT_SUGGESTED_IDS.includes(loc.id));
+        }
         const low = s => String(s || '').toLocaleLowerCase('tr-TR');
         const scored = [];
         MASTER_LOCATIONS.forEach((item, idx) => {
-          const city = low(item.city) + ' ' + low(item.city_en);
-          const title = low(item.title) + ' ' + low(item.title_en);
-          const rest = [item.country, item.country_en, item.year, ...(item.figuresAndWorks || [])].map(low).join(' ');
+          const cityTr = low(item.city);
+          const cityEn = low(item.city_en);
+          const titleTr = low(item.title);
+          const titleEn = low(item.title_en);
+          const figures = (item.figuresAndWorks || []).map(low).join(' ');
+          const country = low(item.country) + ' ' + low(item.country_en);
+          const desc = low(item.description) + ' ' + low(item.description_en);
+
           let score = -1;
-          if (low(item.city).startsWith(q) || low(item.city_en).startsWith(q)) score = 0;
-          else if (city.includes(q)) score = 1;
-          else if (title.includes(q)) score = 2;
-          else if (rest.includes(q)) score = 3;
-          if (score >= 0) scored.push({ item, score, idx });
+          let matchedSnippet = '';
+
+          if (cityTr.startsWith(q) || cityEn.startsWith(q)) {
+            score = 0;
+          } else if (cityTr.includes(q) || cityEn.includes(q)) {
+            score = 1;
+          } else if (titleTr.includes(q) || titleEn.includes(q)) {
+            score = 2;
+          } else if (figures.includes(q)) {
+            score = 3;
+            // Eşleşen şahsiyeti bul
+            const matchFig = (item.figuresAndWorks || []).find(f => low(f).includes(q));
+            if (matchFig) matchedSnippet = matchFig;
+          } else if (country.includes(q)) {
+            score = 4;
+          } else if (desc.includes(q)) {
+            score = 5;
+          }
+
+          if (score >= 0) {
+            scored.push({ item, score, idx, matchedSnippet });
+          }
         });
         scored.sort((a, b) => a.score - b.score || a.idx - b.idx);
-        return scored.slice(0, 8).map(s => s.item);
+        return scored.slice(0, 8).map(s => ({ ...s.item, _matchedSnippet: s.matchedSnippet }));
       }
 
       function positionSearchPanel() {
         const r = searchInput.getBoundingClientRect();
-        const width = Math.min(window.innerWidth - 16, Math.max(280, r.width + 120));
+        const width = Math.min(window.innerWidth - 16, Math.max(340, r.width + 180));
         const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
         searchResultsPanel.style.left = `${left}px`;
         searchResultsPanel.style.top = `${r.bottom + 6}px`;
@@ -16179,44 +16228,120 @@ Web: https://bayramakpamukcu.site
       function renderSearchResults() {
         searchResults = computeSearchResults(searchQuery);
         searchHighlightIdx = 0;
-        if (!searchQuery.trim()) {
-          hideSearchResults();
-          return;
-        }
         const isEn = currentLang === 'en';
         searchResultsPanel.innerHTML = '';
+
+        const hasQuery = searchQuery.trim().length > 0;
+
+        // Header etiketi
+        const headerBar = document.createElement('div');
+        headerBar.className = 'px-3 py-1.5 border-b border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400 uppercase tracking-wider bg-white/[0.02]';
+        if (hasQuery) {
+          headerBar.innerHTML = `
+            <span class="flex items-center gap-1.5 text-sky-300 font-bold">
+              <span>🔍</span>
+              <span>"${searchQuery.trim()}"</span>
+            </span>
+            <span class="text-slate-400 font-bold">${searchResults.length} / ${MASTER_LOCATIONS.length} ${isEn ? 'Stops' : 'Durak'}</span>
+          `;
+        } else {
+          headerBar.innerHTML = `
+            <span class="flex items-center gap-1.5 text-amber-300 font-bold">
+              <span>✨</span>
+              <span>${isEn ? 'SPOTLIGHT STOPS' : 'ÖNE ÇIKAN KÜRESEL DURAKLAR'}</span>
+            </span>
+            <span class="text-slate-400">${isEn ? 'Press ↑↓ to navigate' : '↑↓ Gezin'}</span>
+          `;
+        }
+        searchResultsPanel.appendChild(headerBar);
+
         if (!searchResults.length) {
           const empty = document.createElement('div');
-          empty.className = 'px-3 py-2 text-[11px] text-slate-400';
-          empty.textContent = isEn ? 'No matching stop found' : 'Eşleşen durak bulunamadı';
+          empty.className = 'px-4 py-4 text-center text-xs text-slate-400 space-y-1';
+          empty.innerHTML = `
+            <div class="text-lg">🌍</div>
+            <div class="font-bold text-white">${isEn ? 'No Matching Stop Found' : 'Eşleşen Durak Bulunamadı'}</div>
+            <div class="text-[11px] text-slate-400">${isEn ? 'Try searching by city, author, or event name' : 'Şehir, yazar, eser veya tarihi olay adıyla aramayı deneyin'}</div>
+          `;
           searchResultsPanel.appendChild(empty);
+          positionSearchPanel();
+          searchResultsPanel.classList.remove('hidden');
+          return;
         }
+
+        const itemsContainer = document.createElement('div');
+        itemsContainer.className = 'py-1 space-y-0.5';
+
         searchResults.forEach((item, idx) => {
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.setAttribute('role', 'option');
           btn.dataset.resultIdx = String(idx);
-          btn.className = `search-result-item w-full text-left px-2.5 py-1.5 rounded-lg border border-transparent hover:bg-white/10 flex items-center gap-2 cursor-pointer transition ${idx === 0 ? 'is-highlighted' : ''}`;
+          btn.className = `search-result-item w-full text-left px-3 py-2 rounded-xl border border-transparent hover:bg-white/10 flex items-center gap-2.5 cursor-pointer transition ${idx === 0 ? 'is-highlighted' : ''}`;
 
-          const dot = document.createElement('span');
+          // Sol Kategori & İkon Rozeti
           const isLit = item.category === 'edebiyat';
-          dot.className = `w-2 h-2 rounded-full shrink-0 ${isLit ? 'bg-teal-400' : 'bg-amber-400'}`;
+          const isHist = item.category === 'tarih';
+          const badgeColor = isLit ? 'bg-teal-500/20 text-teal-300 border-teal-400/30' : (isHist ? 'bg-amber-500/20 text-amber-300 border-amber-400/30' : 'bg-sky-500/20 text-sky-300 border-sky-400/30');
 
-          const textWrap = document.createElement('span');
-          textWrap.className = 'min-w-0 flex-1';
-          const cityLine = document.createElement('span');
-          cityLine.className = 'block text-[12px] font-bold text-white truncate';
-          cityLine.textContent = `${item.flag || '🌍'} ${(isEn && item.city_en) ? item.city_en : item.city} · ${(isEn && item.country_en) ? item.country_en : item.country}`;
-          const titleLine = document.createElement('span');
-          titleLine.className = 'block text-[10.5px] text-slate-400 truncate';
-          titleLine.textContent = (isEn && item.title_en) ? item.title_en : item.title;
-          textWrap.append(cityLine, titleLine);
+          const iconBadge = document.createElement('div');
+          iconBadge.className = `w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${badgeColor} text-sm shadow-sm`;
+          iconBadge.textContent = item.icon || (isLit ? '📜' : '⚔️');
 
-          btn.append(dot, textWrap);
-          btn.addEventListener('mousedown', e => e.preventDefault()); // input blur olmadan tıklama yakalansın
+          // Metin Alanı
+          const textWrap = document.createElement('div');
+          textWrap.className = 'min-w-0 flex-1 space-y-0.5';
+
+          const cityLine = document.createElement('div');
+          cityLine.className = 'flex items-center justify-between gap-2';
+
+          const cityName = (isEn && item.city_en) ? item.city_en : item.city;
+          const countryName = (isEn && item.country_en) ? item.country_en : item.country;
+          const highlightedCity = hasQuery ? highlightTextMatch(cityName, searchQuery) : cityName;
+
+          const titleText = document.createElement('span');
+          titleText.className = 'text-xs font-bold text-white truncate flex items-center gap-1.5';
+          titleText.innerHTML = `<span>${item.flag || '🌍'}</span> <span>${highlightedCity}</span> <span class="text-[10px] font-normal text-slate-400">(${countryName})</span>`;
+
+          // Çağ Rozeti (Era Pill)
+          const eraPill = document.createElement('span');
+          eraPill.className = 'text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-slate-300 shrink-0 border border-white/10';
+          eraPill.textContent = item.numericYear ? (item.numericYear < 0 ? `M.Ö. ${Math.abs(item.numericYear)}` : String(item.numericYear)) : (item.year || '');
+
+          cityLine.append(titleText, eraPill);
+
+          const subLine = document.createElement('div');
+          subLine.className = 'text-[11px] text-slate-400 truncate flex items-center gap-2';
+
+          const titleFull = (isEn && item.title_en) ? item.title_en : item.title;
+          const highlightedTitle = hasQuery ? highlightTextMatch(titleFull, searchQuery) : titleFull;
+
+          if (item._matchedSnippet) {
+            subLine.innerHTML = `<span class="text-amber-300 font-semibold truncate">👤 ${highlightTextMatch(item._matchedSnippet, searchQuery)}</span>`;
+          } else {
+            subLine.innerHTML = `<span class="truncate">${highlightedTitle}</span>`;
+          }
+
+          textWrap.append(cityLine, subLine);
+          btn.append(iconBadge, textWrap);
+
+          btn.addEventListener('mousedown', e => e.preventDefault());
           btn.addEventListener('click', () => pickSearchResult(idx));
-          searchResultsPanel.appendChild(btn);
+          itemsContainer.appendChild(btn);
         });
+
+        searchResultsPanel.appendChild(itemsContainer);
+
+        // Footer Kısayol İpuçları
+        const footerBar = document.createElement('div');
+        footerBar.className = 'px-3 py-1.5 border-t border-white/10 flex items-center justify-between text-[9.5px] font-mono text-slate-400 bg-white/[0.02]';
+        footerBar.innerHTML = `
+          <span>↑↓ ${isEn ? 'Navigate' : 'Gezin'}</span>
+          <span>↵ ${isEn ? 'Fly to Stop' : 'Uç & İncele'}</span>
+          <span>Esc ${isEn ? 'Close' : 'Kapat'}</span>
+        `;
+        searchResultsPanel.appendChild(footerBar);
+
         positionSearchPanel();
         searchResultsPanel.classList.remove('hidden');
       }
@@ -16259,7 +16384,7 @@ Web: https://bayramakpamukcu.site
       });
 
       searchInput.addEventListener('focus', () => {
-        if (searchQuery.trim()) renderSearchResults();
+        renderSearchResults();
       });
 
       searchInput.addEventListener('blur', () => {
@@ -16410,10 +16535,22 @@ Web: https://bayramakpamukcu.site
           return;
         }
         // Hızlı Kısayol Tuşları (100x Power User Keyboard Controls)
+        if ((e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          const searchInput = document.getElementById('searchInput');
+          if (searchInput) {
+            searchInput.focus();
+            renderSearchResults();
+          }
+          return;
+        }
         if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
           const searchInput = document.getElementById('searchInput');
-          if (searchInput) searchInput.focus();
+          if (searchInput) {
+            searchInput.focus();
+            renderSearchResults();
+          }
           return;
         }
         if (e.key === '+' || e.key === '=') {
