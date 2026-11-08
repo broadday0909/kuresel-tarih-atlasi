@@ -1,6 +1,7 @@
 # Küresel Tarih ve Edebiyat Atlası - Ajan / Proje Hafızası (Agent Rules & Memory)
 
 ## 📌 Proje Kimliği ve Geliştiriciler
+
 - **Proje Adı:** Küresel Tarih ve Edebiyat Atlası (TÜBİTAK 3B Projesi)
 - **Akademik Danışman:** Öğr. Gör. Dr. Ayşegül Elçi
 - **Proje Yürütücüsü & Geliştirici:** Bayram Akpamukçu (`Bayram Akpamukcu`)
@@ -12,7 +13,9 @@
 ---
 
 ## ⚡ Otomatik CI/CD & Canlı Dağıtım İş Akışı (ÇOK ÖNEMLİ)
+
 Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik istediğinde şu adımlar **otomatik ve eksiksiz** uygulanmalıdır:
+
 1. Kod değişiklikleri `index.html` üzerinde yapılır ve JS sözdizimi doğrulanır.
 2. Git'e commit atılır ve GitHub'a push edilir:
    ```powershell
@@ -26,6 +29,7 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
 ---
 
 ## 🛠️ Mimari & Kod Standartları
+
 - **Tek Dosya Mimarisi:** Proje `index.html` içinde vanilla JS, Tailwind CSS, Three.js ve Globe.gl ile çalışır.
 - **Kritik Mobil / Düşük GPU Optimizasyonları (Korumaya Devam Et):**
   - `renderer.setPixelRatio(targetDPR)`: Mobilde kesinlikle 1.5'i geçmemelidir (3x retina ekranlarda GPU çökmesini/ısınmasını önler).
@@ -38,4 +42,3 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik isted
   - Üst filtre menüsü tek satır, kompakt ve yatay kaydırılabilir kalmalıdır.
   - Zaman Tüneli alt merkezde konumlanır.
   - Giriş ekranı (Intro) otomatik geçiş YAPMAZ; YALNIZCA kullanıcı "Haritayı Keşfet" butonuna tıkladığında haritaya geçilir.
-
