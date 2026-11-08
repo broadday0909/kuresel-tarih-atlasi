@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Küresel Tarih ve Edebiyat Atlası | World History & Literature 3D Atlas (TÜBİTAK)</title>
+  <meta name="description" content="TÜBİTAK 3B Küresel Tarih ve Edebiyat Atlası: 90 küresel kültür durağı, 3 boyutlu Google Earth hibrit uydu haritası, taktik savaş simülasyonları ve interaktif edebiyat rotaları.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
 
 
@@ -783,8 +784,10 @@
     </div>
   </div>
 
-  <!-- 1. 3B ULTRA HD FOTOGERÇEKÇİ KÜRE KONTEYNERİ -->
-  <div id="globeViz" class="relative z-[1] isolate w-full h-full cursor-grab active:cursor-grabbing"></div>
+  <!-- 1. 3B ULTRA HD FOTOGERÇEKÇİ KÜRE KONTEYNERİ (ANA LANDMARK) -->
+  <main id="mainAppContent" class="w-full h-full">
+    <div id="globeViz" class="relative z-[1] isolate w-full h-full cursor-grab active:cursor-grabbing"></div>
+  </main>
 
   <!-- SİNEMATİK UZAY VİNYET KATMANI -->
   <div class="vignette-overlay fixed inset-0 z-10"></div>
@@ -882,7 +885,7 @@
           title="Tüm küresel duraklarda ara (Kısayol: / veya Ctrl+K)"
           class="w-full pl-6 pr-5 py-0.5 rounded-lg bg-slate-950/90 border border-white/15 text-[10.5px] text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 transition"
         />
-        <button id="clearSearchBtn" type="button" class="hidden absolute right-1 text-slate-400 hover:text-white cursor-pointer">
+        <button id="clearSearchBtn" type="button" class="hidden absolute right-1 text-slate-400 hover:text-white cursor-pointer" aria-label="Aramayı Temizle">
           <i data-lucide="x" class="w-2.5 h-2.5"></i>
         </button>
       </div>
@@ -1195,6 +1198,8 @@
   <!-- SAĞ DETAY PANELİ (SLIDE-OVER GLASSMORPHISM DRAWER) -->
   <aside
     id="detailDrawer"
+    style="visibility: hidden;"
+    aria-hidden="true"
     class="fixed top-20 bottom-6 right-3 md:right-16 z-[70] w-[calc(100vw-1.5rem)] sm:w-[430px] md:w-[465px] glass-panel rounded-3xl overflow-hidden flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] translate-x-[130%] opacity-0 pointer-events-none"
   >
     <!-- Drawer Üst Başlık: Etiketler, Başlık, Şehir/Ülke, Yıl -->
@@ -12737,6 +12742,8 @@
 
     function openDrawer() {
       const drawer = document.getElementById('detailDrawer');
+      drawer.style.visibility = 'visible';
+      drawer.setAttribute('aria-hidden', 'false');
       drawer.classList.remove('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
       drawer.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
     }
@@ -12745,8 +12752,14 @@
       stopSpeech();
       stopBattleSimulation();
       const drawer = document.getElementById('detailDrawer');
+      drawer.setAttribute('aria-hidden', 'true');
       drawer.classList.add('translate-x-[130%]', 'opacity-0', 'pointer-events-none');
       drawer.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
+      setTimeout(() => {
+        if (drawer.classList.contains('opacity-0')) {
+          drawer.style.visibility = 'hidden';
+        }
+      }, 520);
       activeCityId = null;
       activeCountryWarIndex = -1;
 
@@ -12893,7 +12906,10 @@
       for (const q of queriesToTry) {
         try {
           const apiUrl = `https://${wikiLang}.wikipedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=1&prop=extracts|pageimages&exchars=2800&explaintext=1&pithumbsize=600&origin=*`;
-          const res = await fetch(apiUrl);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 6000);
+          const res = await fetch(apiUrl, { signal: controller.signal });
+          clearTimeout(timeoutId);
           if (!res.ok) continue;
           const data = await res.json();
           const pages = data && data.query && data.query.pages ? Object.values(data.query.pages) : [];
@@ -14432,6 +14448,7 @@
                 type="text"
                 placeholder="${isEn ? 'e.g. Marie Curie / Student Name' : 'Örn: Ahmet Yılmaz / Araştırmacı'}"
                 class="flex-1 bg-slate-950/90 border border-amber-400/40 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                aria-label="Sertifika Sahibi İsim ve Soyisim"
               />
               <button
                 id="downloadCertificateBtn"
@@ -17108,7 +17125,7 @@ Web: https://bayramakpamukcu.site
           id="closeCompareBtn"
           type="button"
           class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
-        >
+         aria-label="Karşılaştırma Panelini Kapat">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -17118,14 +17135,14 @@ Web: https://bayramakpamukcu.site
         <div class="flex flex-1 items-center gap-2 min-w-[280px]">
           <div class="flex-1">
             <label class="block text-[10px] font-mono text-purple-300 uppercase mb-1">1. Şehir / Medeniyet:</label>
-            <select id="compareSelectA" class="w-full bg-slate-900 border border-purple-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-purple-400 custom-scroll cursor-pointer"></select>
+            <select id="compareSelectA" class="w-full bg-slate-900 border border-purple-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-purple-400 custom-scroll cursor-pointer" aria-label="1. Karşılaştırılacak Şehir"></select>
           </div>
           <button id="swapCompareBtn" type="button" class="mt-4 p-2 rounded-xl bg-white/10 hover:bg-purple-500/20 text-slate-200 hover:text-purple-300 border border-white/10 transition cursor-pointer" title="Şehirleri Değiştir">
             ⇄
           </button>
           <div class="flex-1">
             <label class="block text-[10px] font-mono text-pink-300 uppercase mb-1">2. Şehir / Medeniyet:</label>
-            <select id="compareSelectB" class="w-full bg-slate-900 border border-pink-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-pink-400 custom-scroll cursor-pointer"></select>
+            <select id="compareSelectB" class="w-full bg-slate-900 border border-pink-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-pink-400 custom-scroll cursor-pointer" aria-label="2. Karşılaştırılacak Şehir"></select>
           </div>
         </div>
         <button
@@ -17177,7 +17194,7 @@ Web: https://bayramakpamukcu.site
           id="closeQuizBtn"
           type="button"
           class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
-        >
+         aria-label="Yarışma Panelini Kapat">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -17292,7 +17309,7 @@ Web: https://bayramakpamukcu.site
           id="closeToursBtn"
           type="button"
           class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
-        >
+         aria-label="Rotalar Panelini Kapat">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -17379,7 +17396,7 @@ Web: https://bayramakpamukcu.site
           id="closeResearchNotesBtn"
           type="button"
           class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
-        >
+         aria-label="Araştırma Notlarını Kapat">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -17477,7 +17494,7 @@ Web: https://bayramakpamukcu.site
             id="closeRoutesBtn"
             type="button"
             class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1"
-          >
+           aria-label="Medeniyet Yolları Panelini Kapat">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
@@ -17547,7 +17564,7 @@ Web: https://bayramakpamukcu.site
             id="closeEmpiresBtn"
             type="button"
             class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1"
-          >
+           aria-label="İmparatorluklar Panelini Kapat">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
@@ -17609,7 +17626,7 @@ Web: https://bayramakpamukcu.site
             id="closeAudioModalBtn"
             type="button"
             class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1"
-          >
+           aria-label="Ses Ayarları Panelini Kapat">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
@@ -17648,6 +17665,7 @@ Web: https://bayramakpamukcu.site
           <input
             id="ambientVolumeSlider"
             type="range"
+            aria-label="Ortam Sesi Şiddeti"
             min="0"
             max="100"
             value="35"
@@ -17667,7 +17685,7 @@ Web: https://bayramakpamukcu.site
             </p>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="soundFxToggleInput" class="sr-only peer" checked>
+            <input type="checkbox" id="soundFxToggleInput" aria-label="Arayüz Ses Efektleri Açık/Kapalı" class="sr-only peer" checked>
             <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-600"></div>
           </label>
         </div>
