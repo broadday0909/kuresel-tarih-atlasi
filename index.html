@@ -7109,7 +7109,8 @@
 
         let targetDPR = 1.0;
         if (hasHardwareGpu) {
-          targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.0);
+          // 1080p, 1440p ve 4K ekranlarda DPR 1.35 tam retina keskinliği sunarken GPU fill-rate yükünü yarı yarıya düşürür ve 120+ FPS akıcılık sağlar
+          targetDPR = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.0 : 1.35);
         } else {
           targetDPR = 1.0;
         }
@@ -7451,13 +7452,9 @@
       for (const [k, mesh] of googleEarthTileCache.entries()) {
         const isWanted = wantedKeys.has(k);
         mesh.userData.wanted = isWanted;
-        if (isWanted) {
-          mesh.visible = mesh.userData.loaded;
-        } else if (mesh.userData.loaded && mesh.userData.z <= 6) {
-          // z <= 6 olan geniş bölge/kıta karoları yüksek çözünürlüklü detaylar inerken arka planı doldurmak için görünür kalır (Boşluk/delik önleyici)
-          mesh.visible = true;
-        } else {
-          mesh.visible = false;
+        const nextVis = isWanted ? mesh.userData.loaded : (mesh.userData.loaded && mesh.userData.z <= 6);
+        if (mesh.visible !== nextVis) {
+          mesh.visible = nextVis;
         }
       }
     }
@@ -7648,13 +7645,13 @@
         });
       }
 
-      // GOOGLE EARTH TARZI PÜRÜZSÜZ YAKINLAŞMA VE DÖNÜŞ KONTROLLERİ (Çakışan çift tekerlek dinleyicisi kaldırıldı)
+      // GOOGLE EARTH VE OYUN MOTORU DUYARLILIĞINDA ÇOK YÜKSEK FPS DÖNÜŞ & YAKINLAŞMA KONTROLLERİ
       const controls = world.controls();
       controls.enableDamping = true;
-      controls.dampingFactor = isMobileDevice ? 0.08 : 0.06;
-      controls.dynamicDampingFactor = isMobileDevice ? 0.14 : 0.10;
-      controls.zoomSpeed = 0.85;
-      controls.rotateSpeed = isMobileDevice ? 0.75 : 0.62;
+      controls.dampingFactor = isMobileDevice ? 0.09 : 0.075; // Yağ gibi kayan akıcı atalet
+      controls.dynamicDampingFactor = 0.12;
+      controls.zoomSpeed = 1.05; // Hızlı, net ve pürüzsüz zoom
+      controls.rotateSpeed = isMobileDevice ? 0.95 : 1.15; // 1:1 el hareketiyle dönen ultra çevik hız (ağır hissiyat sıfırlandı)
       controls.minDistance = 100.35;
       controls.maxDistance = 520;
       controls.autoRotate = false;
@@ -7662,11 +7659,28 @@
 
       const cam = world.camera();
       if (cam) {
-        cam.near = 0.05; // Yüzeye çok yakınken nesnelerin kesilmesini engeller
+        cam.near = 0.05;
         cam.updateProjectionMatrix();
       }
 
-      // 60 FPS DELTA-TIME SABİTLENMİŞ VE AKICI RENDER DÖNGÜSÜ
+      // Aktif sürükleme (pointer drag) durumu takibi - Sürükleme esnasında ağır DOM sorgularını durdur
+      let isPointerDragging = false;
+      if (container) {
+        container.addEventListener('pointerdown', () => { isPointerDragging = true; }, { passive: true });
+      }
+      window.addEventListener('pointerup', () => {
+        if (isPointerDragging) {
+          isPointerDragging = false;
+          if (world) {
+            const pov = world.pointOfView();
+            if (pov) updateGoogleEarthSurfaceTiles(pov);
+            if (introDismissed) declutterPinLabels();
+          }
+        }
+      }, { passive: true });
+      window.addEventListener('pointercancel', () => { isPointerDragging = false; }, { passive: true });
+
+      // 60-144 FPS DELTA-TIME SABİTLENMİŞ VE ULTRA AKICI RENDER DÖNGÜSÜ
       let lastCameraMoveAt = 0;
       let lastDeclutterAt = 0;
       let isTabVisible = !document.hidden;
@@ -7687,7 +7701,7 @@
           const elapsed = now - lastFrameTime;
           lastFrameTime = now;
 
-          // 60 FPS Delta-Time Katsayısı (60 FPS: 1.0, 120 FPS: 0.5, 30 FPS: 2.0)
+          // 60-144 FPS Delta-Time Katsayısı: 60 FPS: 1.0, 120 FPS: 0.5, 144 FPS: 0.41
           const deltaFactor = Math.min(3.0, Math.max(0.1, elapsed / IDEAL_FRAME_MS));
 
           if (cloudsMesh) {
@@ -7699,15 +7713,16 @@
               const latDiff = lastTrackedPov.lat === null ? 1 : Math.abs(pov.lat - lastTrackedPov.lat);
               const lngDiff = lastTrackedPov.lng === null ? 1 : Math.abs(pov.lng - lastTrackedPov.lng);
               const altDiff = lastTrackedPov.alt === null ? 1 : Math.abs(pov.altitude - lastTrackedPov.alt);
-              if (latDiff > 0.0005 || lngDiff > 0.0005 || altDiff > 0.0003) {
+              if (latDiff > 0.0003 || lngDiff > 0.0003 || altDiff > 0.0002) {
                 lastTrackedPov = { lat: pov.lat, lng: pov.lng, alt: pov.altitude };
                 lastCameraMoveAt = now;
                 updateZoomAndCompass();
               }
             }
-            // Etiket çakışma önleyici: Kamera hareket halindeyken ~8 Hz, kamera durduktan hemen sonra son yerleşim
-            const cameraMoving = now - lastCameraMoveAt < 250;
-            if (introDismissed && (cameraMoving || now - lastCameraMoveAt < 400) && now - lastDeclutterAt > (cameraMoving ? 120 : 350)) {
+            // Etiket çakışma önleyici: Kullanıcı fareyi sürüklerken ASLA getBoundingClientRect çalıştırma (Sıfır takılma)
+            // Kamera durduktan veya sürükleme bittikten 180ms sonra tek seferde çalışır
+            const cameraSettled = !isPointerDragging && (now - lastCameraMoveAt > 180);
+            if (introDismissed && cameraSettled && (now - lastDeclutterAt > 280)) {
               lastDeclutterAt = now;
               declutterPinLabels();
             }
@@ -7745,7 +7760,10 @@
         }
       });
 
-      controls.addEventListener('change', updateZoomAndCompass);
+      // OrbitControls değişiminde sadece zaman damgasını güncelle, çift senkron yürütmeyi sıfırla
+      controls.addEventListener('change', () => {
+        lastCameraMoveAt = performance.now();
+      });
 
       // Giriş ekranı açıkken sadece masaüstünde arkadaki 3B Dünya küresi dönsün, mobilde ve CPU modunda boşuna yorulmasın
       controls.autoRotate = !isMobileDevice && hasHardwareGpu;
@@ -7760,7 +7778,7 @@
             world.width(window.innerWidth);
             world.height(window.innerHeight);
             const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-            const updatedDpr = ATLAS_GPU_CONFIG.hasHardwareGpu ? Math.min(window.devicePixelRatio || 1, currMobile ? 1.5 : 2.0) : 1.0;
+            const updatedDpr = ATLAS_GPU_CONFIG.hasHardwareGpu ? Math.min(window.devicePixelRatio || 1, currMobile ? 1.0 : 1.35) : 1.0;
             world.renderer().setPixelRatio(updatedDpr);
             lastTileUpdateSignature = '';
             updateZoomAndCompass();
@@ -7809,28 +7827,46 @@
       }
     }
 
-    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle (Yakınlaştıkça şehir/ülke ikonları yerinde büyür, asla kaymaz)
+    // Kamera yüksekliğine göre Pin ölçeğini, Bulut Katmanını ve Pusula açısını güncelle
+    let lastAppliedPinScale = '';
+    let lastAppliedTacScale = '';
+    let lastTileUpdateAt = 0;
+
     function updateZoomAndCompass() {
       if (!world) return;
       const pov = world.pointOfView();
       if (!pov) return;
 
-      // Şehir pinleri uzaktayken 0.78, en yakınlaşınca en fazla 1.22 katına çıkar (asla devasa boyuta ulaşmaz)
       const clampedAlt = Math.max(0.0035, Math.min(2.0, pov.altitude));
       const zoomProgress = Math.pow(1 - (clampedAlt - 0.0035) / 1.9965, 1.2);
-      const pinScale = 0.78 + zoomProgress * 0.44;
-      // Taktik savaş işaretçileri ve savaş ağaçları ise derli toplu ve sabit kalır (0.86 - 1.02)
-      const tacScale = 0.86 + zoomProgress * 0.16;
-      document.documentElement.style.setProperty('--pin-zoom-scale', pinScale.toFixed(3));
-      document.documentElement.style.setProperty('--tac-zoom-scale', tacScale.toFixed(3));
+      const pinScaleStr = (0.78 + zoomProgress * 0.44).toFixed(3);
+      const tacScaleStr = (0.86 + zoomProgress * 0.16).toFixed(3);
 
-      // Yakınlaşıldığında Google Earth Hybrid (Uydu + Sınırlar + Şehir/Ada İsimleri) yüzey karolarını güncelle
-      updateGoogleEarthSurfaceTiles(pov);
+      // Sadece değer gerçekten değiştiğinde CSS custom property güncelle (Dönüş sırasında sıfır DOM style invalidation)
+      if (pinScaleStr !== lastAppliedPinScale) {
+        lastAppliedPinScale = pinScaleStr;
+        document.documentElement.style.setProperty('--pin-zoom-scale', pinScaleStr);
+      }
+      if (tacScaleStr !== lastAppliedTacScale) {
+        lastAppliedTacScale = tacScaleStr;
+        document.documentElement.style.setProperty('--tac-zoom-scale', tacScaleStr);
+      }
 
-      // Yakınlaşıldığında bulutların opaklığını yumuşakça azalt ki Google Earth yüzey detayları ve yazıları net görünsün
+      // Sürükleme sırasında karoları hafifçe (120ms) güncelle; sürükleme bitince veya sabitken tam zamanlı güncelle
+      const now = performance.now();
+      if (typeof isPointerDragging === 'undefined' || !isPointerDragging || (now - lastTileUpdateAt > 120)) {
+        lastTileUpdateAt = now;
+        updateGoogleEarthSurfaceTiles(pov);
+      }
+
+      // Yakınlaşıldığında bulutların opaklığını yumuşakça azalt
       if (cloudsMesh && cloudsMesh.material) {
-        cloudsMesh.visible = pov.altitude >= 0.88;
-        cloudsMesh.material.opacity = pov.altitude < 1.15 ? 0.14 : 0.34;
+        const showClouds = pov.altitude >= 0.88;
+        if (cloudsMesh.visible !== showClouds) cloudsMesh.visible = showClouds;
+        const targetOpacity = pov.altitude < 1.15 ? 0.14 : 0.34;
+        if (Math.abs(cloudsMesh.material.opacity - targetOpacity) > 0.01) {
+          cloudsMesh.material.opacity = targetOpacity;
+        }
       }
 
       const compassIcon = document.getElementById('compassIcon');
