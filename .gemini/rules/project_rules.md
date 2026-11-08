@@ -13,17 +13,14 @@
 
 ## ⚡ Otomatik CI/CD & Canlı Dağıtım İş Akışı (ÇOK ÖNEMLİ)
 Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya özellik istediğinde şu adımlar **otomatik ve eksiksiz** uygulanmalıdır:
-1. Kod değişiklikleri `index.html` üzerinde yapılır.
+1. Kod değişiklikleri `index.html` üzerinde yapılır ve JS sözdizimi doğrulanır.
 2. Git'e commit atılır ve GitHub'a push edilir:
    ```powershell
-   git add index.html
+   git add -A
    git commit -m "<anlamlı_mesaj>"
    git push origin main
    ```
-3. Netlify CLI ile doğrudan canlıya tek adımda deploy edilir:
-   ```powershell
-   npx.cmd netlify deploy --prod --dir .
-   ```
+3. GitHub Pages otomatik olarak 20-30 saniye içinde derleyip yayına alır (`https://bayramakpamukcu.site`). Netlify artık kullanılmaz (kredi sınırı nedeniyle iptal edilmiştir).
 4. Kullanıcıya değişikliklerin canlıda olduğu bildirilir.
 
 ---
