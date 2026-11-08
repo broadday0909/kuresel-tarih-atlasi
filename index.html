@@ -228,23 +228,7 @@
       animation: luxuryShimmer 6s linear infinite;
     }
 
-    /* Şampanya Altını (Champagne Gold #d4af37) İsim Stili */
-    .champagne-gold-signature {
-      background: linear-gradient(
-        110deg,
-        #d4af37 0%,
-        #f5e6b3 35%,
-        #ffffff 50%,
-        #e5c158 70%,
-        #d4af37 100%
-      );
-      background-size: 220% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 28px rgba(212, 175, 55, 0.32);
-      animation: luxuryShimmer 5s linear infinite reverse;
-    }
+
 
     @keyframes luxuryShimmer {
       0% { background-position: 0% center; }
@@ -584,8 +568,7 @@
         animation: none !important;
       }
       .ivory-gold-signature,
-      .advisor-gold-signature,
-      .champagne-gold-signature {
+      .advisor-gold-signature {
         animation: none !important;
         text-shadow: none !important;
       }
@@ -635,7 +618,6 @@
        60 FPS GPU DONANIM HIZLANDIRMA & COMPOSITOR ISOLATION (OPTİMİZASYON)
        ========================================================================== */
     #detailDrawer,
-    #searchSpotlightPanel,
     #searchResultsPanel,
     #rulerHudBanner,
     #tourConsoleBar,
@@ -6696,7 +6678,6 @@
     let isAutoRotating = false;
     let world = null;
     let cloudsMesh = null;
-    let isSpeaking = false;
     let introDismissed = false;
 
     const TRANSLATIONS = Object.freeze({
@@ -9908,129 +9889,6 @@
     };
     window.CURATED_BATTLE_SIMULATIONS = CURATED_BATTLE_SIMULATIONS;
 
-    // Herhangi bir şehir/durak için 3 aşamalı 3B Taktik Savaş veya Tarihsel/Kültürel Harekat Simülasyonu döndürür
-    function getCityBattleSimulation(item) {
-      if (CURATED_BATTLE_SIMULATIONS[item.id]) {
-        return CURATED_BATTLE_SIMULATIONS[item.id];
-      }
-
-      const isEn = currentLang === 'en';
-      const isHist = item.category === 'tarih';
-      const baseLat = item.lat;
-      const baseLng = item.lng;
-      const figs = item.figuresAndWorks || [];
-      const fig1 = figs[0] || item.title || (isHist ? 'Merkez Kuvvetleri' : 'Kurucu Fikirler');
-      const fig2 = figs[1] || item.city || (isHist ? 'Bölgesel Güçler' : 'Edebi Çevre');
-      const fig3 = figs[2] || item.year || item.title || (isHist ? 'Tarihsel Miras' : 'Kültürel Kanon');
-
-      // En yakın 2 komşu durağı bulup gerçekçi bölgesel harekat/etkileşim vektörleri oluştur
-      const neighbors = MASTER_LOCATIONS
-        .filter(d => d.id !== item.id)
-        .map(d => ({
-          loc: d,
-          dist: Math.hypot(d.lat - baseLat, d.lng - baseLng)
-        }))
-        .sort((a, b) => a.dist - b.dist)
-        .slice(0, 2)
-        .map(x => x.loc);
-
-      const n1 = neighbors[0] || { lat: baseLat + 3.2, lng: baseLng - 4.1, city: "Kuzey Cephesi" };
-      const n2 = neighbors[1] || { lat: baseLat - 2.8, lng: baseLng + 3.8, city: "Güney Hattı" };
-
-      return {
-        isBattle: isHist,
-        phases: [
-          {
-            btn_tr: isHist ? "1. Kuşatma & Cephe" : "1. Doğuş & Kıvılcım",
-            btn_en: isHist ? "1. Front & Deployment" : "1. Genesis & Spark",
-            title_tr: isHist
-              ? `1. Aşama: ${item.city} Stratejik Konuşlanma ve İlk Harekat (${item.year})`
-              : `1. Aşama: ${item.city} Entelektüel ve Edebi Ocağının Doğuşu (${item.year})`,
-            title_en: isHist
-              ? `Phase 1: Strategic Deployment & Opening Maneuver in ${item.city_en || item.city} (${item.year_en || item.year})`
-              : `Phase 1: Genesis of the Literary & Cultural Movement in ${item.city_en || item.city} (${item.year_en || item.year})`,
-            desc_tr: isHist
-              ? `${item.city} (${item.year}) merkezli "${item.title}" sürecinde stratejik hatlar kuruldu. ${fig1} öncülüğündeki kuvvetler ve tarihsel dinamikler bölge coğrafyasında ilk büyük kırılmayı başlattı.`
-              : `${item.city} (${item.year}) coğrafyasında "${item.title}" akımının ilk düşünsel temelleri atıldı. ${fig1} etrafında şekillenen edebi ve felsefi birikim şehir merkezinde güçlü bir çekim alanı yarattı.`,
-            desc_en: isHist
-              ? `Strategic lines formed around ${item.city_en || item.city} (${item.year_en || item.year}) during "${item.title_en || item.title}". Forces and historical dynamics led by ${fig1} initiated the pivotal regional breakthrough.`
-              : `Foundational ideas of "${item.title_en || item.title}" emerged in ${item.city_en || item.city} (${item.year_en || item.year}), centered around ${fig1}.`,
-            forces_tr: `${fig1} & ${item.city} Merkez Kuvvetleri`,
-            forces_en: `${fig1} & ${item.city_en || item.city} Central Actors`,
-            outcome_tr: isHist ? "Stratejik Üstünlük ve Cephe Tahkimatı Sağlandı" : "Dönemin İlk Kurucu Eserleri ve Fikirleri Ortaya Çıktı",
-            outcome_en: isHist ? "Strategic Initiative & Perimeter Secured" : "Foundational Masterpieces & Ideas Established",
-            focusLat: baseLat,
-            focusLng: baseLng,
-            vectors: [
-              { startLat: n1.lat, startLng: n1.lng, endLat: baseLat, endLng: baseLng, type: 'attack', label: `${n1.city} ➔ ${item.city} Stratejik Harekat Hattı` },
-              { startLat: baseLat + 1.1, startLng: baseLng - 1.4, endLat: baseLat, endLng: baseLng, type: 'defense', label: `${item.city} Merkez Tahkimatı` }
-            ],
-            rings: [
-              { lat: baseLat, lng: baseLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.65, speed: 0.6, repeat: 640 }
-            ],
-            markers: [
-              { lat: baseLat + 0.35, lng: baseLng - 0.45, icon: isHist ? "⚔️" : "📜", label: String(fig1).split('(')[0].trim(), label_en: String(fig1).split('(')[0].trim(), tacColor: "#ef4444" },
-              { lat: baseLat - 0.32, lng: baseLng + 0.42, icon: isHist ? "🛡️" : "🏛️", label: `${item.city} Merkez Hattı`, label_en: `${item.city_en || item.city} Core Line`, tacColor: "#fbbf24" }
-            ]
-          },
-          {
-            btn_tr: isHist ? "2. Kırılma & Çarpışma" : "2. Zirve & Başyapıt",
-            btn_en: isHist ? "2. Decisive Clash" : "2. Peak & Masterpiece",
-            title_tr: isHist
-              ? `2. Aşama: ${item.title} – Merkez Çarpışma ve Kırılma Anı`
-              : `2. Aşama: ${item.title} – Başyapıtların Yükselişi ve Dönem Ruhu`,
-            title_en: isHist
-              ? `Phase 2: ${item.title_en || item.title} – Decisive Clash & Turning Point`
-              : `Phase 2: ${item.title_en || item.title} – Zenith of Masterpieces`,
-            desc_tr: item.description,
-            desc_en: item.description_en || item.description,
-            forces_tr: `${fig1} • ${fig2}`,
-            forces_en: `${fig1} • ${fig2}`,
-            outcome_tr: isHist ? "Tarihsel Kırılma Noktası ve Hakimiyet Tesisi" : "Kültürel ve Edebi Kanonun Zirve Noktası",
-            outcome_en: isHist ? "Decisive Historical Turning Point" : "Culmination of the Literary & Cultural Canon",
-            focusLat: baseLat,
-            focusLng: baseLng,
-            vectors: [
-              { startLat: n1.lat, startLng: n1.lng, endLat: baseLat, endLng: baseLng, type: 'attack', label: `${item.title} Ana Taarruz / Etki Vektörü` },
-              { startLat: baseLat, startLng: baseLng, endLat: n2.lat, endLng: n2.lng, type: 'defense', label: `${item.city} ➔ ${n2.city} Karşı Harekat & Yayılım` }
-            ],
-            rings: [
-              { lat: baseLat, lng: baseLng, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 0.85, speed: 0.72, repeat: 560 },
-              { lat: baseLat + 0.25, lng: baseLng + 0.25, color: ['rgba(251,191,36,0.9)', 'rgba(251,191,36,0)'], maxR: 0.55, speed: 0.55, repeat: 740 }
-            ],
-            markers: [
-              { lat: baseLat + 0.38, lng: baseLng + 0.35, icon: isHist ? "💥" : "✒️", label: String(fig2).split('(')[0].trim(), label_en: String(fig2).split('(')[0].trim(), tacColor: "#ef4444" },
-              { lat: baseLat - 0.35, lng: baseLng - 0.38, icon: isHist ? "🚩" : "🎭", label: String(fig1).split('(')[0].trim(), label_en: String(fig1).split('(')[0].trim(), tacColor: "#fbbf24" }
-            ]
-          },
-          {
-            btn_tr: isHist ? "3. Zafer & Miras" : "3. Küresel Etki",
-            btn_en: isHist ? "3. Victory & Legacy" : "3. Global Impact",
-            title_tr: `3. Aşama: ${item.city} Mirasının Kıtasal ve Küresel Yayılımı`,
-            title_en: `Phase 3: Continental & Global Legacy of ${item.city_en || item.city}`,
-            desc_tr: `${item.city} durağında yaşanan "${item.title}" (${item.year}), ${fig3} ile birlikte bölgesel sınırları aşarak komşu coğrafyalara ve dünya tarihine kalıcı bir miras bıraktı.`,
-            desc_en: `"${item.title_en || item.title}" (${item.year_en || item.year}) in ${item.city_en || item.city} transcended regional borders alongside ${fig3}, leaving an enduring global legacy.`,
-            forces_tr: `${item.city} Mirası & ${fig3}`,
-            forces_en: `${item.city_en || item.city} Legacy & ${fig3}`,
-            outcome_tr: `${item.year} Sonrası Dünya Tarihinde ve Edebiyatında Kalıcı İz`,
-            outcome_en: `Enduring Impact on World History & Literature Post-${item.year_en || item.year}`,
-            focusLat: baseLat,
-            focusLng: baseLng,
-            vectors: [
-              { startLat: baseLat, startLng: baseLng, endLat: n1.lat, endLng: n1.lng, type: 'defense', label: `${item.city} ➔ ${n1.city} Tarihsel & Kültürel Yayılım` },
-              { startLat: baseLat, startLng: baseLng, endLat: n2.lat, endLng: n2.lng, type: 'defense', label: `${item.city} ➔ ${n2.city} Stratejik Etki Hattı` }
-            ],
-            rings: [
-              { lat: baseLat, lng: baseLng, color: ['rgba(251,191,36,0.95)', 'rgba(251,191,36,0)'], maxR: 0.9, speed: 0.65, repeat: 620 }
-            ],
-            markers: [
-              { lat: baseLat + 0.3, lng: baseLng - 0.3, icon: "🏆", label: String(fig3).split('(')[0].trim(), label_en: String(fig3).split('(')[0].trim(), tacColor: "#fbbf24" }
-            ]
-          }
-        ]
-      };
-    }
-
     // ============================================================================
     // 5C. DÜNYA ÜLKELERİ SAVAŞLAR AĞACI VERİTABANI (ÜLKEYE TIKLANINCA AĞAÇ DALLARI GİBİ BELİREN SAVAŞLAR)
     // ============================================================================
@@ -11084,15 +10942,24 @@
       'aksum': ['Adowa (Adwa) Zaferi – Etiyopya (1896)']
     };
 
+    // Pre-flattened wars array and O(1) city wars cache for zero-overhead lookups
+    const ALL_COUNTRY_WARS = Object.freeze(Object.values(COUNTRY_WARS_DATABASE).flat());
+    const CITY_WARS_CACHE = new Map();
+
     function getWarsForCity(item) {
       if (!item || !item.id) return [];
       const cityId = String(item.id).toLowerCase();
+      if (CITY_WARS_CACHE.has(cityId)) {
+        return CITY_WARS_CACHE.get(cityId);
+      }
       const matchedShortTitles = WAR_CITY_MAP[cityId] || [];
-      if (matchedShortTitles.length === 0) return [];
+      if (matchedShortTitles.length === 0) {
+        CITY_WARS_CACHE.set(cityId, []);
+        return [];
+      }
 
-      const allWars = Object.values(COUNTRY_WARS_DATABASE).flat();
-      return matchedShortTitles.map((st, idx) => {
-        const found = allWars.find(w => w.short_tr === st || w.short_tr.includes(st) || st.includes(w.short_tr));
+      const res = matchedShortTitles.map((st, idx) => {
+        const found = ALL_COUNTRY_WARS.find(w => w.short_tr === st || w.short_tr.includes(st) || st.includes(w.short_tr));
         if (found) {
           return {
             ...found,
@@ -11104,6 +10971,9 @@
         }
         return null;
       }).filter(Boolean);
+
+      CITY_WARS_CACHE.set(cityId, res);
+      return res;
     }
     const getCountryWarsForItem = getWarsForCity;
 
@@ -12744,7 +12614,6 @@
       const displayCountry = (isEn && item.country_en) ? item.country_en : item.country;
       const displayDesc = (isEn && item.description_en) ? item.description_en : item.description;
       const displayQuote = (isEn && item.quote_en) ? item.quote_en : item.quote;
-      const displayCaption = (isEn && item.imageCaption_en) ? item.imageCaption_en : item.imageCaption;
 
       const regionBadge = `
         <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/35">
@@ -13825,10 +13694,6 @@
       try {
         localStorage.setItem('atlas_favorites', JSON.stringify(favs));
       } catch (e) {}
-    }
-
-    function isCityFavorite(cityId) {
-      return getStoredFavorites().includes(cityId);
     }
 
     function toggleCityFavorite(cityId) {
@@ -15199,7 +15064,6 @@ Web: https://bayramakpamukcu.site
         const titleName = isEn ? (loc.title_en || loc.title) : loc.title;
         const eraText = isEn ? (loc.year_en || loc.year) : loc.year;
         const litMov = isEn ? (loc.literaryMovement_en || loc.literaryMovement || 'N/A') : (loc.literaryMovement || 'Belirtilmedi');
-        const descText = isEn ? (loc.description_en || loc.description) : loc.description;
         const figures = loc.figuresAndWorks || [];
         const wars = loc.warsAndEvents || [];
 
