@@ -96,7 +96,21 @@
       pointer-events: none !important;
     }
 
-    /* 3B Küre ve Pin Katmanı İzolasyonu: Pinler asla Drawer, Üst Menü veya Butonların üstüne çıkamaz */
+        /* Harita Görsel Temaları (Canvas Atmosfer Filtreleri) */
+    #globeViz.theme-parchment canvas {
+      filter: sepia(0.55) contrast(1.18) brightness(0.92) hue-rotate(-12deg) saturate(1.15) !important;
+      transition: filter 0.6s ease;
+    }
+    #globeViz.theme-night canvas {
+      filter: contrast(1.35) brightness(0.78) saturate(1.38) hue-rotate(10deg) !important;
+      transition: filter 0.6s ease;
+    }
+    #globeViz.theme-blueprint canvas {
+      filter: invert(0.92) hue-rotate(180deg) saturate(1.25) contrast(1.18) !important;
+      transition: filter 0.6s ease;
+    }
+
+/* 3B Küre ve Pin Katmanı İzolasyonu: Pinler asla Drawer, Üst Menü veya Butonların üstüne çıkamaz */
     #globeViz,
     #globeViz .scene-container {
       position: relative !important;
@@ -733,7 +747,7 @@
             <span id="headerTubitakBadge" class="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
               TÜBİTAK Projesi
             </span>
-            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 71 Küresel Durak</span>
+            <span id="stopCounterBadge" class="text-[10px] text-sky-300/80 font-medium hidden sm:inline">• 72 Küresel Durak</span>
           </div>
           <h2 id="headerAtlasTitle" class="font-display text-xs sm:text-sm font-bold tracking-wide bg-gradient-to-r from-white via-sky-100 to-amber-200 bg-clip-text text-transparent leading-none mt-0.5">
             Küresel Tarih ve Edebiyat Atlası
@@ -926,6 +940,16 @@
 
         <button
           type="button"
+          id="openCompareBtn"
+          class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-gradient-to-r from-purple-500/25 to-pink-600/35 text-purple-200 border border-purple-400/50 hover:bg-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.25)] cursor-pointer whitespace-nowrap"
+          title="İki Şehri Karşılaştır (Akademik Karşılaştırma Matrisi)"
+        >
+          <span>⚖️</span>
+          <span id="compareBtnLabel">Karşılaştır</span>
+        </button>
+
+        <button
+          type="button"
           id="openToursBtn"
           class="px-2 py-0.5 rounded-lg text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-gradient-to-r from-sky-500/25 to-indigo-600/35 text-sky-200 border border-sky-400/50 hover:bg-sky-500/40 shadow-[0_0_10px_rgba(56,189,248,0.25)] cursor-pointer whitespace-nowrap"
           title="Rehberli Tematik Tarih ve Edebiyat Rotaları"
@@ -1051,6 +1075,16 @@
     >
       <i data-lucide="rotate-3d" class="w-4 h-4 text-emerald-400"></i>
     </button>
+    <!-- Harita Görsel Teması / Atmosfer (Uydu, Antik Parşömen, Gece Işıkları, Mavi Baskı) -->
+    <button
+      id="toggleAtmosphereBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-xl flex items-center justify-center text-slate-300 shadow-xl"
+      title="Harita Atmosfer Filtresi (Antik Parşömen / Gece / Standart)"
+    >
+      <i data-lucide="palette" id="atmosphereIcon" class="w-4 h-4 text-purple-300"></i>
+    </button>
+
     <!-- Ses Efektleri Aç/Kapat (Web Audio Synthesizer) -->
     <button
       id="toggleSoundBtn"
@@ -5568,6 +5602,11 @@
         catWars: "⚔️ Savaşlar",
         quizBtnLabel: "Yarışma",
         toursBtnLabel: "Rotalar",
+      compareBtnLabel: "Karşılaştır",
+      compareModalTitle: "Akademik Şehir ve Medeniyet Karşılaştırma Matrisi",
+      compareDrawArcLabel: "3B Kürede Yay Çiz & Göster",
+      tipAtmosphere: "Harita Atmosfer Filtresi (Antik Parşömen / Gece / Standart)",
+      tipCompare: "İki Şehri Karşılaştır (Akademik Matris)",
         tipSound: "Ses Efektlerini Aç / Kapat",
         tipFavorite: "Favorilere Ekle / Çıkar",
         tipResearchNotes: "Akademik Araştırma Notu & Kaynakça",
@@ -5663,6 +5702,11 @@
         catWars: "⚔️ Battles",
         quizBtnLabel: "Quiz",
         toursBtnLabel: "Tours",
+      compareBtnLabel: "Compare",
+      compareModalTitle: "Comparative City & Civilization Matrix",
+      compareDrawArcLabel: "Draw Geodesic Arc on 3D Globe",
+      tipAtmosphere: "Map Atmosphere Filter (Vintage / Night / Satellite)",
+      tipCompare: "Compare Two Cities (Academic Matrix)",
         tipSound: "Toggle Sound Effects",
         tipFavorite: "Add/Remove Favorite",
         tipResearchNotes: "Academic Research Notes & Citation",
@@ -8049,9 +8093,160 @@
             ]
           }
         ]
+      },
+      kades: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Şasu Pusu Tuzağı",
+            btn_en: "1. Shasu Ambush",
+            title_tr: "M.Ö. 1274: Şasu Casusları ve Amun Tümeninin İleri Çıkışı",
+            title_en: "1274 BC: Shasu Nomads Deception and Amun Division Advance",
+            desc_tr: "Hitit Kralı II. Muvattalli, yerel Şasu göçebelerini sahte bilgiyle Mısır hatlarına gönderdi. Firavun II. Ramses, Hitit ordusunun uzakta olduğuna inanarak Amun tümeniyle Kadeş surları önüne hızla ilerledi ve diğer üç tümeninden koptu.",
+            desc_en: "Hittite King Muwatalli II planted deceptive Shasu nomads who falsely told Pharaoh Ramesses II that the Hittite army was far north. Ramesses advanced rapidly with the Amun division, separating from his remaining forces.",
+            forces_tr: "II. Ramses (Amun Tümeni) vs. II. Muvattalli (Gizli Hitit Karargahı)",
+            forces_en: "Ramesses II (Amun Division) vs. Muwatalli II (Concealed Hittite Host)",
+            outcome_tr: "Mısır Öncü Birlikleri Tuzağa Düştü • Ra Tümeni Yolda Pusuya Uğradı",
+            outcome_en: "Egyptian Vanguard Isolated • Ra Division Ambushed in March",
+            focusLat: 34.557,
+            focusLng: 36.519,
+            vectors: [
+              { startLat: 34.520, startLng: 36.500, endLat: 34.555, endLng: 36.515, type: 'attack', label: "II. Ramses Amun Tümeni İleri Yürüyüşü" }
+            ],
+            rings: [
+              { lat: 34.557, lng: 36.519, color: ['rgba(245,158,11,0.95)', 'rgba(245,158,11,0)'], maxR: 0.8, speed: 0.5, repeat: 800 }
+            ],
+            markers: [
+              { lat: 34.550, lng: 36.512, icon: "👑", label: "II. Ramses & Amun Otağı", label_en: "Ramesses II Royal Tent", tacColor: "#f59e0b" },
+              { lat: 34.568, lng: 36.528, icon: "🛡️", label: "II. Muvattalli Gizli Hitit Ordusu", label_en: "Muwatalli Concealed Host", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "2. Hitit Ağır Arabaları",
+            btn_en: "2. Chariot Charge",
+            title_tr: "2.500 Hitit Ağır Savaş Arabası Yarması & Ne'arin Takviyesi",
+            title_en: "2,500 Hittite Heavy Chariots Charge & Ne'arin Rescue",
+            desc_tr: "Üçer savaşçı taşıyan 2.500 Hitit ağır savaş arabası Asi Nehri'ni geçerek Ra tümenini ikiye biçti. Ramses bizzat altın zırhıyla savaş arabasına binerek karşı hücumlar düzenledi; kıyıdan yetişen müttefik Ne'arin süvarileri Mısır ordugahını mutlak imhadan kurtardı.",
+            desc_en: "2,500 three-man Hittite heavy chariots crossed the Orontes, routing the Ra division. Ramesses mounted his royal chariot, countercharging desperately until the allied Ne'arin elite corps arrived to stabilize the perimeter.",
+            forces_tr: "2.500 Hitit Ağır Arabası vs. Mısır Kraliyet Muhafızları & Ne'arin",
+            forces_en: "2,500 Hittite Heavy Chariots vs. Egyptian Royal Guards & Ne'arin",
+            outcome_tr: "İki Taraf Ağır Zayiat Verdi • Taktik Kilitlenme Meydana Geldi",
+            outcome_en: "Staggering Casualties on Both Sides • Tactical Stalemate",
+            focusLat: 34.557,
+            focusLng: 36.519,
+            vectors: [
+              { startLat: 34.568, startLng: 36.528, endLat: 34.555, endLng: 36.515, type: 'attack', label: "Hitit Ağır Savaş Arabaları Yarması" },
+              { startLat: 34.530, startLng: 36.490, endLat: 34.550, endLng: 36.512, type: 'defense', label: "Ne'arin Müttefik Destek Kolu" }
+            ],
+            rings: [
+              { lat: 34.557, lng: 36.519, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 1.1, speed: 0.65, repeat: 600 }
+            ],
+            markers: [
+              { lat: 34.555, lng: 36.518, icon: "⚔️", label: "Asi Nehri Savaş Arabaları Çarpışması", label_en: "Orontes Chariot Clash", tacColor: "#dc2626" },
+              { lat: 34.542, lng: 36.505, icon: "🐎", label: "Ne'arin Kurtarma Hattı", label_en: "Ne'arin Relief Force", tacColor: "#38bdf8" }
+            ]
+          },
+          {
+            btn_tr: "3. Kadeş Barış Antlaşması",
+            btn_en: "3. Historic Treaty",
+            title_tr: "M.Ö. 1259 Kadeş Barış Antlaşması: Tarihin İlk Diplomatik Metni",
+            title_en: "1259 BC Treaty of Kadesh: History's First Recorded Peace Treaty",
+            desc_tr: "Savaşın ardından iki imparatorluk barış masasına oturdu. Hitit Kralı III. Hattuşili ile Firavun II. Ramses arasında imzalanan gümüş tablet antlaşması, karşılıklı saldırmazlık ve ittifak maddeleriyle dünya diplomasi tarihinin başlangıcı oldu (Orijinal kil tablet İstanbul Arkeoloji Müzeleri'ndedir).",
+            desc_en: "Following the tactical stalemate, both empires ratified the silver tablet treaty between Hattusili III and Ramesses II, founding international diplomacy with mutual non-aggression and extradition pacts. The clay replica is preserved at the Istanbul Archaeology Museums.",
+            forces_tr: "Hitit İmparatorluğu & Antik Mısır Edebi/Hukuki İttifakı",
+            forces_en: "Hittite Empire & Ancient Egypt Legal/Literary Accord",
+            outcome_tr: "Tarihin İlk Yazılı Uluslararası Barış Antlaşması Mühürlendi",
+            outcome_en: "First International Written Peace Treaty in Human History Sealed",
+            focusLat: 34.557,
+            focusLng: 36.519,
+            vectors: [
+              { startLat: 34.557, startLng: 36.519, endLat: 40.020, endLng: 34.615, type: 'defense', label: "Kadeş ➔ Hattuşa Diplomatik Barış Hattı" }
+            ],
+            rings: [
+              { lat: 34.557, lng: 36.519, color: ['rgba(56,189,248,0.95)', 'rgba(56,189,248,0)'], maxR: 1.2, speed: 0.4, repeat: 1000 }
+            ],
+            markers: [
+              { lat: 34.557, lng: 36.519, icon: "📜", label: "Kadeş Barış Tableti Mirası (İstanbul Ark. Müzesi)", label_en: "Treaty of Kadesh Tablet Heritage", tacColor: "#38bdf8" }
+            ]
+          }
+        ]
+      },
+      preveze: {
+        isBattle: true,
+        phases: [
+          {
+            btn_tr: "1. Körfez Hilal Dizilişi",
+            btn_en: "1. Crescent Formation",
+            title_tr: "27 Eylül 1538: Preveze Körfezi Ağzında Hilal Dizilişi ve Rüzgarsızlık",
+            title_en: "September 27, 1538: Crescent Formation at Preveza Gulf & Calm Winds",
+            desc_tr: "Kaptan-ı Derya Barbaros Hayreddin Paşa, 122 kadırgadan oluşan Osmanlı donanmasını körfez ağzında hilal nizamında konuşlandırdı. Rüzgarın aniden kesilmesi, rüzgar gücüne bağımlı 300'den fazla ağır Haçlı kalyonunu açık denizde hareketsiz bıraktı.",
+            desc_en: "Grand Admiral Hayreddin Barbarossa deployed 122 Ottoman galleys in a disciplined crescent at the entrance of the Gulf of Arta. When the wind dropped, over 300 heavy Holy League sailing galleons became motionless targets.",
+            forces_tr: "Barbaros Hayreddin Paşa (122 Kadırga) vs. Andrea Doria Kutsal İttifakı (300+ Gemi)",
+            forces_en: "Barbarossa (122 Galleys) vs. Andrea Doria Holy League Fleet (300+ Vessels)",
+            outcome_tr: "Haçlı Donanması Rüzgarsızlık Nedeniyle Dağıldı • Kadırgalar Manevra Üstünlüğü Kazandı",
+            outcome_en: "Holy League Paralyzed by Calm • Ottoman Galleys Gained Complete Maneuverability",
+            focusLat: 38.950,
+            focusLng: 20.750,
+            vectors: [
+              { startLat: 38.930, startLng: 20.720, endLat: 38.960, endLng: 20.740, type: 'attack', label: "Barbaros Hilal Taarruzu" }
+            ],
+            rings: [
+              { lat: 38.950, lng: 20.750, color: ['rgba(245,158,11,0.95)', 'rgba(245,158,11,0)'], maxR: 0.9, speed: 0.5, repeat: 800 }
+            ],
+            markers: [
+              { lat: 38.940, lng: 20.735, icon: "⚓", label: "Barbaros Hayreddin Paşa Sancak Gemisi", label_en: "Barbarossa Flagship", tacColor: "#10b981" },
+              { lat: 38.970, lng: 20.700, icon: "🛡️", label: "Andrea Doria Haçlı Kalyonları", label_en: "Andrea Doria Holy League Host", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "2. Turgut Reis Kuşatması",
+            btn_en: "2. Pincer Encirclement",
+            title_tr: "Hilal Açılımı, Turgut Reis Manevrası ve Kadırga Ateşi",
+            title_en: "Crescent Expansion, Turgut Reis Encirclement & Galley Firepower",
+            desc_tr: "Turgut Reis ve Salih Reis kanatları açarak Haçlı donanmasının arka hatlarını sardı. Kürekle hızla hareket eden Osmanlı kadırgaları, hantal kalyonların etrafında dönerek gemi pruva toplarıyla düşman gemilerini batırdı veya ele geçirdi.",
+            desc_en: "Dragut (Turgut Reis) and Salih Reis swept around the wings to envelop the Christian rear. Nimble oared galleys outflanked the hulking flagships, disabling sails and boarding immobilized carracks.",
+            forces_tr: "Turgut Reis & Seydi Ali Reis Kanatları vs. Venedik & İspanyol Kalyonları",
+            forces_en: "Dragut & Salih Reis Pincer Wings vs. Venetian & Spanish Galleons",
+            outcome_tr: "128 Haçlı Gemisi Batırıldı veya Ele Geçirildi • 3.000 Esir Alındı",
+            outcome_en: "128 League Ships Sunk or Captured • 3,000 Allied Prisoners Taken",
+            focusLat: 38.950,
+            focusLng: 20.750,
+            vectors: [
+              { startLat: 38.980, startLng: 20.730, endLat: 38.960, endLng: 20.710, type: 'attack', label: "Turgut Reis Arkadan Kuşatma Kolu" }
+            ],
+            rings: [
+              { lat: 38.950, lng: 20.750, color: ['rgba(239,68,68,0.95)', 'rgba(239,68,68,0)'], maxR: 1.15, speed: 0.6, repeat: 600 }
+            ],
+            markers: [
+              { lat: 38.960, lng: 20.760, icon: "⚔️", label: "Turgut Reis & Salih Reis Hücum Hattı", label_en: "Turgut Reis Flank Wing", tacColor: "#38bdf8" },
+              { lat: 38.950, lng: 20.710, icon: "💥", label: "Alev Alan Haçlı Kadırgaları", label_en: "Burning League Galleons", tacColor: "#ef4444" }
+            ]
+          },
+          {
+            btn_tr: "3. Akdeniz Hakimiyeti",
+            btn_en: "3. Ottoman Mare Nostrum",
+            title_tr: "Doria'nın Gece Çekilmesi ve Akdeniz'in Türk Gölü Oluşu",
+            title_en: "Doria's Night Retreat and Ottoman Supremacy in the Mediterranean",
+            desc_tr: "Amiral Andrea Doria, gece karanlığından faydalanarak fenerlerini söndürüp savaş alanından çekildi. Tek bir gemi dahi kaybetmeyen Barbaros, Akdeniz'deki mutlak Osmanlı hakimiyetini mühürledi ve bu zafer Türk Deniz Kuvvetleri Günü ilan edildi.",
+            desc_en: "Admiral Andrea Doria ordered his fleet to douse lights and retreat under cover of night. Without losing a single galley, Barbarossa sealed undisputed Ottoman dominance over the Mediterranean, commemorated annually as Turkish Navy Day.",
+            forces_tr: "Muzaffer Osmanlı Donanması vs. Geri Çekilen Kutsal İttifak",
+            forces_en: "Triumphant Ottoman Fleet vs. Retreated Holy League",
+            outcome_tr: "Akdeniz'de Mutlak Türk Hakimiyeti Mühürlendi • 0 Osmanlı Gemisi Kaybı",
+            outcome_en: "Absolute Mediterranean Supremacy Established • 0 Ottoman Galleys Lost",
+            focusLat: 38.950,
+            focusLng: 20.750,
+            vectors: [
+              { startLat: 38.950, startLng: 20.750, endLat: 41.008, endLng: 28.978, type: 'defense', label: "Preveze ➔ Payitaht İstanbul Zafer Müjdesi" }
+            ],
+            rings: [
+              { lat: 38.950, lng: 20.750, color: ['rgba(16,185,129,0.95)', 'rgba(16,185,129,0)'], maxR: 1.25, speed: 0.45, repeat: 900 }
+            ],
+            markers: [
+              { lat: 38.950, lng: 20.750, icon: "🏆", label: "Preveze Zafer Anıtı & Deniz Şehitliği", label_en: "Preveza Victory Monument", tacColor: "#10b981" }
+            ]
+          }
+        ]
       }
-
-
     };
 
     // Herhangi bir şehir/durak için 3 aşamalı 3B Taktik Savaş veya Tarihsel/Kültürel Harekat Simülasyonu döndürür
@@ -9328,7 +9523,7 @@
       if (title.includes('mohaç') || title.includes('mohacs')) return 'mohac';
       if (title.includes('waterloo')) return 'waterloo';
       if (title.includes('cannae') || title.includes('pön') || title.includes('zama')) return 'cannae';
-      if (title.includes('kudüs') || title.includes('hıttin') || title.includes('hattin') || title.includes('jerusalem')) return 'kudus';
+      if (title.includes('kudüs') || title.includes('jerusalem')) return 'kudus';
       if (title.includes('trafalgar')) return 'trafalgar';
       if (title.includes('borodino') || title.includes('moskova')) return 'moskova';
       if (title.includes('austerlitz') || title.includes('üç imparator')) return 'austerlitz';
@@ -9339,6 +9534,8 @@
       if (title.includes('kızıl kayalar') || title.includes('chibi') || title.includes('red cliffs')) return 'kizilkayalar';
       if (title.includes('hastings') || title.includes('senlac') || title.includes('stamford')) return 'hastings';
       if (title.includes('stalingrad') || title.includes('volgograd') || title.includes('uranüs')) return 'stalingrad';
+      if (title.includes('kadeş') || title.includes('kadesh')) return 'kades';
+      if (title.includes('preveze') || title.includes('preveza')) return 'preveze';
       if (item && item.id && CURATED_BATTLE_SIMULATIONS[item.id]) return item.id;
       return null;
     }
@@ -9653,6 +9850,7 @@
       activeCountryWarIndex = -1;
       activeBattlePhaseIndex = 0;
       updateFavoriteUI();
+      initAtmosphereTheme();
       playTone('fly');
       if (!activeCityId || !world) return;
       const item = MASTER_LOCATIONS.find(d => d.id === activeCityId);
@@ -10921,6 +11119,11 @@
       setElText('catLabelWars', t.catWars);
       setElText('quizBtnLabel', t.quizBtnLabel);
       setElText('toursBtnLabel', t.toursBtnLabel);
+      setElText('compareBtnLabel', t.compareBtnLabel);
+      setElTitle('openCompareBtn', t.tipCompare);
+      setElTitle('toggleAtmosphereBtn', t.tipAtmosphere);
+      setElText('compareModalTitle', t.compareModalTitle);
+      setElText('compareDrawArcLabel', t.compareDrawArcLabel);
       setElTitle('toggleSoundBtn', t.tipSound);
       setElTitle('toggleFavoriteBtn', t.tipFavorite);
       setElTitle('openResearchNoteBtn', t.tipResearchNotes);
@@ -11343,6 +11546,116 @@
         correct: 0,
         explanation_tr: "Ulus meydanındaki Birinci Meclis, 'Egemenlik kayıtsız şartsız milletindir' ilkesiyle Milli Mücadele'yi yöneten ve bağımsızlığı mühürleyen gazi meclistir.",
         explanation_en: "The historic First Grand National Assembly in Ulus directed the War of Independence under the tenet 'Sovereignty unconditionally belongs to the nation'."
+      },
+      {
+        cityId: "bursa",
+        category: "turk_tarihi",
+        q_tr: "Osmanlı'nın ilk ulu camisi ve başkentinde Süleyman Çelebi tarafından kaleme alınan, Peygamber Efendimiz'in doğumunu anlatan başyapıt 'Vesiletü'n-Necat' hangi edebi türün öncüsüdür?",
+        q_en: "Composed by Süleyman Çelebi in the early Ottoman capital of Bursa, which genre was founded by the masterpiece 'Vesiletü'n-Necat' celebrating the Prophet's birth?",
+        options_tr: ["Mevlid", "Mesnevi", "Münazara", "Seyahatname"],
+        options_en: ["Mawlid (Mevlid)", "Masnavi", "Debate (Munazara)", "Travelogue (Seyahatname)"],
+        correct: 0,
+        explanation_tr: "Süleyman Çelebi 1409'da Bursa Ulu Camii imamlığı sırasında yazdığı Vesiletü'n-Necat ile Türk edebiyatında derin bir Mevlid çığırı açmıştır.",
+        explanation_en: "Süleyman Çelebi composed the Vesiletü'n-Necat in Bursa in 1409, establishing the venerable Turkish Mawlid recitation tradition."
+      },
+      {
+        cityId: "edirne",
+        category: "turk_tarihi",
+        q_tr: "Mimar Sinan'ın 'Çıraklığımı Şehzade'de, kalfalığımı Süleymaniye'de, ustalığımı ise bu eserde tamamladım' dediği ve sekiz fil ayağı üzerine oturan anıtsal kubbesiyle UNESCO mirası olan şaheser hangisidir?",
+        q_en: "Which architectural marvel did Mimar Sinan declare his 'Masterpiece', featuring a monumental dome rested on eight octagonal pillars and recognized by UNESCO?",
+        options_tr: ["Selimiye Camii", "Üç Şerefeli Cami", "Eski Cami", "Rüstem Paşa Kervansarayı"],
+        options_en: ["Selimiye Mosque", "Uc Serefeli Mosque", "Old Mosque (Eski Cami)", "Rustem Pasha Caravanserai"],
+        correct: 0,
+        explanation_tr: "Mimar Sinan 80'li yaşlarında Edirne'de inşa ettiği Selimiye Camii ile Ayasofya'dan daha geniş bir kubbe açıklığına ulaşarak dünya mimarlık tarihine geçmiştir.",
+        explanation_en: "At over eighty years of age, Mimar Sinan engineered Selimiye Mosque in Edirne, surpassing Hagia Sophia's dome span and defining classical Ottoman architecture."
+      },
+      {
+        cityId: "mardin",
+        category: "turk_tarihi",
+        q_tr: "İpek Yolu üzerinde bulunan, devasa yeraltı su sarnıçları, kaya mezarları ve Doğu Roma'nın Sasani sınırındaki garnizon şehri olarak bilinen antik yerleşim neresidir?",
+        q_en: "Which ancient garrison fortress near Mardin features colossal underground cisterns, rock-cut necropolises, and defended the Byzantine border against the Sasanians?",
+        options_tr: ["Dara Antik Kenti", "Hasankeyf", "Midyat Konakları", "Zerzevan Kalesi"],
+        options_en: ["Dara Ancient City", "Hasankeyf", "Midyat Mansions", "Zerzevan Castle"],
+        correct: 0,
+        explanation_tr: "Mardin Dara Antik Kenti, Roma İmparatoru I. Anastasius tarafından 505 yılında kurulmuş, dev su sarnıçları ile 'Mezopotamya'nın Efes'i' olarak anılmıştır.",
+        explanation_en: "Dara was founded in 505 AD by Emperor Anastasius I as a border citadel against the Persian Sasanians, celebrated for its cathedral-scale cisterns."
+      },
+      {
+        cityId: "sanliurfa",
+        category: "dunya_tarihi",
+        q_tr: "Tarihin sıfır noktası kabul edilen, M.Ö. 10.000 civarına tarihlenen T biçimli stilize sütunları ve hayvan kabartmalarıyla yerleşik tarımdan önce inancın doğduğunu kanıtlayan arkeolojik alan hangisidir?",
+        q_en: "Dated to circa 10,000 BC, which archaeological discovery revolutionized anthropology by proving monumental sacred architecture preceded sedentary agriculture?",
+        options_tr: ["Göbeklitepe", "Çatalhöyük", "Alacahöyük", "Karain Mağarası"],
+        options_en: ["Gobekli Tepe", "Catalhoyuk", "Alacahoyuk", "Karain Cave"],
+        correct: 0,
+        explanation_tr: "Şanlıurfa Göbeklitepe, Prof. Dr. Klaus Schmidt'in kazılarıyla keşfedilmiş, insanlık tarihinin bilinen en eski anıtsal kült yapısıdır.",
+        explanation_en: "Gobekli Tepe near Sanliurfa predates Stonehenge by 6,000 years, revealing that hunter-gatherer communities organized monumental temples."
+      },
+      {
+        cityId: "granada",
+        category: "edebiyat",
+        q_tr: "Endülüs Emevi ve Nasri mirasının incisi sayılan, 'La Galibe İllallah' (Allah'tan başka galip yoktur) hat yazıları ve Arslanlı Avlusu ile ünlü masalsı saray kompleksi hangisidir?",
+        q_en: "Celebrated for its Court of the Lions and calligraphy proclaiming 'There is no victor but God', which palace stands as the pinnacle of Moorish architectural poetry in Andalusia?",
+        options_tr: ["Elhamra Sarayı", "Kurtuba Camii", "Alkazar Sarayı", "Medinetü'z-Zehra"],
+        options_en: ["Alhambra Palace", "Mosque-Cathedral of Cordoba", "Alcazar of Seville", "Madinat al-Zahra"],
+        correct: 0,
+        explanation_tr: "Granada'daki Elhamra (Kızıl Saray), İslam mimarisinin şiir, su ve mukarnas süslemeleriyle zirveye ulaştığı en zarif saray kompleksidir.",
+        explanation_en: "The Alhambra in Granada represents Islamic architecture's highest artistic harmony between water fountains, poetic stucco epigraphy, and muqarnas vaults."
+      },
+      {
+        cityId: "venedik",
+        category: "edebiyat",
+        q_tr: "13. yüzyılda Venedik'ten yola çıkarak Kubilay Han'ın sarayına ulaşan ve 24 yıl süren Doğu yolculuğunu 'Dünyanın Tasviri' (Seyahatname) kitabında toplayan kaşif kimdir?",
+        q_en: "Which 13th-century Venetian merchant embarked on a 24-year journey across the Silk Road to the court of Kublai Khan, authoring 'The Travels of Marco Polo'?",
+        options_tr: ["Marco Polo", "Kristof Kolomb", "Amerigo Vespucci", "İbn Battuta"],
+        options_en: ["Marco Polo", "Christopher Columbus", "Amerigo Vespucci", "Ibn Battuta"],
+        correct: 0,
+        explanation_tr: "Marco Polo, Ceneviz zindanlarındayken Rustichello da Pisa'ya yazdırdığı seyahatnamesiyle Avrupa'ya Doğu Asya'nın zenginliklerini tanıtmıştır.",
+        explanation_en: "Marco Polo dictated his memoirs while imprisoned in Genoa, sparking European fascination with Silk Road trade routes and the Far East."
+      },
+      {
+        cityId: "trabzon",
+        category: "turk_tarihi",
+        q_tr: "M.S. 4. yüzyılda Karadağ'ın sarp kayalıklarına inşa edilen, freskleri ve kutsal ayazmasıyla Doğu Roma ve Osmanlı döneminde korunmuş anıtsal manastır hangisidir?",
+        q_en: "Clinging to the sheer cliffs of the Black Sea mountains since the 4th century, which rock-carved monastery is famed for its Byzantine frescoes and sacred spring?",
+        options_tr: ["Sümela Manastırı", "Vazelon Manastırı", "Aya Sofya (Trabzon)", "Kızlar Manastırı"],
+        options_en: ["Sumela Monastery", "Vazelon Monastery", "Hagia Sophia (Trabzon)", "Panagia Theoskepastos"],
+        correct: 0,
+        explanation_tr: "Trabzon Maçka Altındere Vadisi'ndeki Sümela Manastırı, sarp uçuruma oyulmuş Meryem Ana kaya kilisesi ve zengin İncil freskleriyle eşsizdir.",
+        explanation_en: "Sumela Monastery clings precipitously to the cliffside in Macka, preserved through Byzantine and Ottoman imperial edicts granting monastic immunity."
+      },
+      {
+        cityId: "austerlitz",
+        category: "dunya_tarihi",
+        q_tr: "2 Aralık 1805'te Napoléon Bonaparte'ın Pratzen Tepeleri sahte ricat taktiğiyle Rus Çarı I. Aleksandr ve Avusturya İmparatoru II. Franz'ı mağlup ettiği taktik başyapıt savaşı hangisidir?",
+        q_en: "Known as the 'Battle of the Three Emperors' in 1805, which tactical masterpiece saw Napoleon feign weakness on his right before Marshal Soult split the Austro-Russian center?",
+        options_tr: ["Austerlitz Muharebesi", "Waterloo Muharebesi", "Borodino Muharebesi", "Leipzig Muharebesi"],
+        options_en: ["Battle of Austerlitz", "Battle of Waterloo", "Battle of Borodino", "Battle of Leipzig"],
+        correct: 0,
+        explanation_tr: "Austerlitz (Üç İmparatorlar Muharebesi), Napoléon'un Pratzen tepelerini kasıtlı boşaltarak müttefik orduları buzlu Satschan göllerine sürdüğü taktik zirvesidir.",
+        explanation_en: "Austerlitz remains Napoleon's greatest operational triumph, dismantling the Third Coalition and redrawing the political map of Central Europe."
+      },
+      {
+        cityId: "kahire",
+        category: "dunya_tarihi",
+        q_tr: "M.Ö. 1274'te Asi Nehri kıyısında Hitit Kralı II. Muvattalli ile Firavun II. Ramses orduları arasında yaşanan ve tarihin ilk yazılı barış antlaşmasıyla taçlanan savaş hangisidir?",
+        q_en: "Fought along the Orontes River in 1274 BC, which monumental confrontation of 5,000 chariots culminated in history's first bilateral peace treaty?",
+        options_tr: ["Kadeş Muharebesi", "Megiddo Muharebesi", "Yarmuk Muharebesi", "Kurna Muharebesi"],
+        options_en: ["Battle of Kadesh", "Battle of Megiddo", "Battle of Yarmouk", "Battle of Qurna"],
+        correct: 0,
+        explanation_tr: "Kadeş Meydan Muharebesi, tarihin en büyük savaş arabası çarpışması olmuş; ardından imzalanan Kadeş Barış Antlaşması dünya diplomasi tarihinin temeltaşı sayılmıştır.",
+        explanation_en: "The Battle of Kadesh between Hittites and Egyptians concluded with the Treaty of Kadesh, establishing the foundational precedent for international diplomacy."
+      },
+      {
+        cityId: "stalingrad",
+        category: "dunya_tarihi",
+        q_tr: "1942–1943 kışında Volga Nehri kıyısında General Çuykov ve Mareşal Jukov'un 'Uranüs Harekatı' çift kıskacıyla Mareşal Paulus'un 6. Ordusunu imha ettiği II. Dünya Savaşı dönüm noktası neresidir?",
+        q_en: "Along the Volga in 1942–1943, which urban meatgrinder culminated in Operation Uranus encircling the German 6th Army, shifting the entire course of World War II?",
+        options_tr: ["Stalingrad Muharebesi", "Kursk Muharebesi", "Moskova Muharebesi", "Leningrad Kuşatması"],
+        options_en: ["Battle of Stalingrad", "Battle of Kursk", "Battle of Moscow", "Siege of Leningrad"],
+        correct: 0,
+        explanation_tr: "Stalingrad Muharebesi, 2 milyona yakın kayıpla insanlık tarihinin en kanlı çarpışması olmuş; Nazi ordularının Doğu Cephesi'ndeki ilerleyişini kalıcı olarak kırmıştır.",
+        explanation_en: "Stalingrad marked the decisive turning point on the Eastern Front, breaking the strategic initiative of the Wehrmacht and commencing the march to Berlin."
       }
     ];
 
@@ -11570,6 +11883,36 @@
         desc_en: "Sacred Ganges of Varanasi, Beijing's Forbidden City, Heian Kyoto, and the azure domes of Samarkand.",
         color: "teal",
         stops: ["varanasi", "pekin", "kyoto", "semerkant"]
+      },
+      {
+        id: "ottoman_capitals",
+        icon: "🕌",
+        title_tr: "Osmanlı'nın Başkentleri ve Mimari İhtişam",
+        title_en: "Ottoman Capitals & Imperial Architecture",
+        desc_tr: "İlk payitaht Bursa Ulu Cami'den serhad şehri Edirne Selimiye'ye, Fatih'in fethettiği Trabzon'dan Konstantiniyye'nin fethine ve payitaht İstanbul'a uzanan cihan imparatorluğu mimarisi.",
+        desc_en: "From early capital Bursa to frontier gem Edirne, Trebizond Empire's conquest, and imperial Istanbul's domed horizon.",
+        color: "amber",
+        stops: ["bursa", "edirne", "istanbul", "trabzon"]
+      },
+      {
+        id: "cradle_of_civilization",
+        icon: "🏺",
+        title_tr: "Mezopotamya ve Uygarlığın Şafağı",
+        title_en: "Cradle of Civilization & Fertile Crescent",
+        desc_tr: "12.000 yıllık Göbeklitepe'den Mardin Dara sarnıçlarına, Babil kütüphanelerinden Bağdat Beytülhikme'sine ve Nil kıyısındaki Kahire piramitlerine insanlığın ilk adımları.",
+        desc_en: "12,000-year-old Göbekli Tepe to Dara cisterns, Babylon, Baghdad's House of Wisdom, and Cairo's Nile monuments.",
+        color: "emerald",
+        stops: ["sanliurfa", "mardin", "bagdat", "kahire"]
+      },
+      {
+        id: "mediterranean_bridge",
+        icon: "⛵",
+        title_tr: "Endülüs'ten Venedik'e Akdeniz Köprüsü",
+        title_en: "Mediterranean Bridge: From Andalusia to Venice",
+        desc_tr: "İbn Rüşd'ün Kurtuba'sından Elhamra'nın Granada'sına, Roma Kolezyumu'ndan Marco Polo'nun Venedik kanallarına Doğu-Batı düşünce sentezi.",
+        desc_en: "Ibn Rushd's Cordoba, Granada's Alhambra, Rome's Forum, Marco Polo's Venice, and Athens' philosophy.",
+        color: "violet",
+        stops: ["granada", "roma", "venedik", "atina", "istanbul"]
       }
     ];
 
@@ -11783,6 +12126,282 @@ Web: https://bayramakpamukcu.site
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       playTone('correct');
+    }
+
+    // ============================================================================
+    // 7F. HARİTA ATMOSFER FİLTRELERİ (VINTAGE PARCHMENT, NIGHT, BLUEPRINT)
+    // ============================================================================
+    const ATMOSPHERE_THEMES = ['default', 'parchment', 'night', 'blueprint'];
+    let currentAtmosphereTheme = 'default';
+
+    function initAtmosphereTheme() {
+      try {
+        const saved = localStorage.getItem('atlas_map_theme');
+        if (saved && ATMOSPHERE_THEMES.includes(saved)) {
+          setAtmosphereTheme(saved);
+        }
+      } catch (e) {}
+    }
+
+    function setAtmosphereTheme(theme) {
+      currentAtmosphereTheme = theme;
+      const viz = document.getElementById('globeViz');
+      if (viz) {
+        viz.classList.remove('theme-parchment', 'theme-night', 'theme-blueprint');
+        if (theme !== 'default') {
+          viz.classList.add(`theme-${theme}`);
+        }
+      }
+      const icon = document.getElementById('atmosphereIcon');
+      if (icon) {
+        if (theme === 'parchment') icon.className = 'w-4 h-4 text-amber-400';
+        else if (theme === 'night') icon.className = 'w-4 h-4 text-sky-400';
+        else if (theme === 'blueprint') icon.className = 'w-4 h-4 text-indigo-400';
+        else icon.className = 'w-4 h-4 text-purple-300';
+      }
+      try {
+        localStorage.setItem('atlas_map_theme', theme);
+      } catch (e) {}
+    }
+
+    function cycleAtmosphereTheme() {
+      playTone('click');
+      const curIdx = ATMOSPHERE_THEMES.indexOf(currentAtmosphereTheme);
+      const nextTheme = ATMOSPHERE_THEMES[(curIdx + 1) % ATMOSPHERE_THEMES.length];
+      setAtmosphereTheme(nextTheme);
+    }
+
+    // ============================================================================
+    // 7G. AKADEMİK ŞEHİR & MEDENİYET KARŞILAŞTIRMA MATRİSİ (COMPARE ENGINE)
+    // ============================================================================
+    let compareCityAId = "istanbul";
+    let compareCityBId = "floransa";
+
+    function calculateHaversineDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Dünya yarıçapı km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return Math.round(R * c);
+    }
+
+    function openCompareModal() {
+      playTone('click');
+      populateCompareSelects();
+      renderCompareMatrix();
+      const overlay = document.getElementById('compareModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function closeCompareModal() {
+      playTone('click');
+      const overlay = document.getElementById('compareModalOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+    }
+
+    function populateCompareSelects() {
+      const isEn = currentLang === 'en';
+      const selectA = document.getElementById('compareSelectA');
+      const selectB = document.getElementById('compareSelectB');
+      if (!selectA || !selectB) return;
+
+      const sortedLocs = [...MASTER_LOCATIONS].sort((a, b) => {
+        const nameA = isEn ? (a.city_en || a.city) : a.city;
+        const nameB = isEn ? (b.city_en || b.city) : b.city;
+        return nameA.localeCompare(nameB, isEn ? 'en' : 'tr');
+      });
+
+      const optionsHtml = sortedLocs.map(loc => {
+        const cityName = isEn ? (loc.city_en || loc.city) : loc.city;
+        const countryName = isEn ? (loc.country_en || loc.country) : loc.country;
+        return `<option value="${loc.id}">${loc.flag || '📍'} ${cityName} (${countryName})</option>`;
+      }).join('');
+
+      selectA.innerHTML = optionsHtml;
+      selectB.innerHTML = optionsHtml;
+
+      selectA.value = compareCityAId;
+      selectB.value = compareCityBId;
+
+      selectA.onchange = () => {
+        compareCityAId = selectA.value;
+        renderCompareMatrix();
+      };
+      selectB.onchange = () => {
+        compareCityBId = selectB.value;
+        renderCompareMatrix();
+      };
+    }
+
+    function swapCompareCities() {
+      playTone('click');
+      const temp = compareCityAId;
+      compareCityAId = compareCityBId;
+      compareCityBId = temp;
+      const selectA = document.getElementById('compareSelectA');
+      const selectB = document.getElementById('compareSelectB');
+      if (selectA) selectA.value = compareCityAId;
+      if (selectB) selectB.value = compareCityBId;
+      renderCompareMatrix();
+    }
+
+    function renderCompareMatrix() {
+      const isEn = currentLang === 'en';
+      const locA = MASTER_LOCATIONS.find(l => l.id === compareCityAId) || MASTER_LOCATIONS[0];
+      const locB = MASTER_LOCATIONS.find(l => l.id === compareCityBId) || MASTER_LOCATIONS[1];
+
+      const distKm = calculateHaversineDistanceKm(locA.lat, locA.lng, locB.lat, locB.lng);
+      const distMiles = Math.round(distKm * 0.621371);
+
+      const distBadge = document.getElementById('compareDistanceBadge');
+      if (distBadge) {
+        distBadge.textContent = isEn
+          ? `Great-Circle Distance: ${distKm.toLocaleString()} km (${distMiles.toLocaleString()} mi)`
+          : `Kuş Uçuşu Jeodezik Mesafe: ${distKm.toLocaleString()} km (${distMiles.toLocaleString()} mil)`;
+      }
+
+      const grid = document.getElementById('compareCardsGrid');
+      if (!grid) return;
+
+      const renderCityCard = (loc, colorTheme, colTitle) => {
+        const cityName = isEn ? (loc.city_en || loc.city) : loc.city;
+        const countryName = isEn ? (loc.country_en || loc.country) : loc.country;
+        const titleName = isEn ? (loc.title_en || loc.title) : loc.title;
+        const eraText = isEn ? (loc.year_en || loc.year) : loc.year;
+        const litMov = isEn ? (loc.literaryMovement_en || loc.literaryMovement || 'N/A') : (loc.literaryMovement || 'Belirtilmedi');
+        const descText = isEn ? (loc.description_en || loc.description) : loc.description;
+        const figures = loc.figuresAndWorks || [];
+        const wars = loc.warsAndEvents || [];
+
+        return `
+          <div class="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-${colorTheme}-500/30 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <!-- Top Header -->
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-${colorTheme}-500/20 text-${colorTheme}-300 border border-${colorTheme}-400/30">
+                  ${colTitle}
+                </span>
+                <span class="text-xs font-mono font-bold text-amber-300">${eraText}</span>
+              </div>
+
+              <!-- City & Country -->
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">${loc.flag || '📍'}</span>
+                <div>
+                  <h4 class="font-display text-base sm:text-lg font-bold text-white">${cityName}</h4>
+                  <p class="text-xs text-slate-300">${countryName} • <span class="font-mono text-[11px] text-slate-400">${loc.lat.toFixed(2)}°N, ${loc.lng.toFixed(2)}°E</span></p>
+                </div>
+              </div>
+
+              <!-- Historical Role Title -->
+              <div class="p-2.5 rounded-xl bg-white/[0.04] border border-white/10">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-${colorTheme}-400 mb-0.5">${isEn ? 'Historical Importance' : 'Tarihsel Önemi & Rolü'}</div>
+                <div class="text-xs font-semibold text-slate-200">${titleName}</div>
+              </div>
+
+              <!-- Literary Movement -->
+              <div class="p-2.5 rounded-xl bg-white/[0.04] border border-white/10">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">${isEn ? 'Literary Movement & Culture' : 'Edebi Ekol & Kültür'}</div>
+                <div class="text-xs text-slate-200">${litMov}</div>
+              </div>
+
+              <!-- Figures & Works -->
+              <div class="space-y-1.5">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${isEn ? 'Key Figures & Works' : 'Öncü Şahsiyetler & Eserler'}</div>
+                <div class="flex flex-wrap gap-1">
+                  ${figures.slice(0, 3).map(f => {
+                    const figName = isEn ? (f.name_en || f.name) : f.name;
+                    return `<span class="px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-200 border border-sky-400/25 text-[11px] font-medium">${figName}</span>`;
+                  }).join('') || `<span class="text-xs text-slate-300">-</span>`}
+                </div>
+              </div>
+
+              <!-- Wars & Strategic Events -->
+              <div class="space-y-1.5">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${isEn ? 'Turning Point Events / Wars' : 'Dönüm Noktası Savaşlar / Olaylar'}</div>
+                <div class="space-y-1">
+                  ${wars.slice(0, 2).map(w => {
+                    const wTitle = isEn ? (w.title_en || w.title_tr) : w.title_tr;
+                    return `<div class="text-[11px] text-slate-300 flex items-center gap-1.5"><span class="text-rose-400">⚔️</span> ${wTitle}</div>`;
+                  }).join('') || `<span class="text-xs text-slate-300">${isEn ? 'No major field battles registered' : 'Kayıtlı büyük meydan muharebesi yok'}</span>`}
+                </div>
+              </div>
+            </div>
+
+            <!-- Fly to City Action Button -->
+            <button
+              type="button"
+              onclick="closeCompareModal(); selectCity('${loc.id}');"
+              class="w-full py-2 rounded-xl bg-${colorTheme}-500/20 hover:bg-${colorTheme}-500/35 border border-${colorTheme}-400/40 text-${colorTheme}-200 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+            >
+              <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+              <span>${isEn ? `Fly to ${cityName}` : `${cityName} Detayına Git`}</span>
+            </button>
+          </div>
+        `;
+      };
+
+      grid.innerHTML = `
+        ${renderCityCard(locA, 'purple', isEn ? '1. City' : '1. Şehir')}
+        ${renderCityCard(locB, 'pink', isEn ? '2. City' : '2. Şehir')}
+      `;
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function drawCompareArcOnGlobe() {
+      playTone('fly');
+      const locA = MASTER_LOCATIONS.find(l => l.id === compareCityAId) || MASTER_LOCATIONS[0];
+      const locB = MASTER_LOCATIONS.find(l => l.id === compareCityBId) || MASTER_LOCATIONS[1];
+      const isEn = currentLang === 'en';
+
+      const distKm = calculateHaversineDistanceKm(locA.lat, locA.lng, locB.lat, locB.lng);
+      const nameA = isEn ? (locA.city_en || locA.city) : locA.city;
+      const nameB = isEn ? (locB.city_en || locB.city) : locB.city;
+
+      const compareArc = [
+        {
+          startLat: locA.lat,
+          startLng: locA.lng,
+          endLat: locB.lat,
+          endLng: locB.lng,
+          color: ['#a855f7', '#fbbf24'],
+          label: `${nameA} ➔ ${nameB} (${distKm.toLocaleString()} km)`,
+          stroke: 0.42,
+          altScale: 0.28,
+          dashLength: 0.35,
+          dashGap: 0.1,
+          animateTime: 3200
+        }
+      ];
+
+      world.arcsData(compareArc);
+
+      world.ringsData([
+        { lat: locA.lat, lng: locA.lng, color: ['rgba(168,85,247,0.95)', 'rgba(168,85,247,0)'], maxR: 1.1, speed: 0.5, repeat: 800 },
+        { lat: locB.lat, lng: locB.lng, color: ['rgba(245,158,11,0.95)', 'rgba(245,158,11,0)'], maxR: 1.1, speed: 0.5, repeat: 800 }
+      ]);
+
+      closeCompareModal();
+
+      // İki şehri aynı anda kapsayacak küre yörünge irtifasını ve orta noktasını hesapla
+      const midLat = (locA.lat + locB.lat) / 2;
+      const midLng = (locA.lng + locB.lng) / 2;
+      const calculatedAlt = Math.max(1.15, Math.min(2.4, (distKm / 3200) + 0.65));
+
+      world.pointOfView({ lat: midLat, lng: midLng, altitude: calculatedAlt }, 1750);
     }
 
     // ============================================================================
@@ -12339,6 +12958,11 @@ Web: https://bayramakpamukcu.site
       // Quiz Modalı Butonları
       document.getElementById('openQuizBtn')?.addEventListener('click', openQuizModal);
       document.getElementById('closeQuizBtn')?.addEventListener('click', closeQuizModal);
+      document.getElementById('openCompareBtn')?.addEventListener('click', openCompareModal);
+      document.getElementById('closeCompareBtn')?.addEventListener('click', closeCompareModal);
+      document.getElementById('swapCompareBtn')?.addEventListener('click', swapCompareCities);
+      document.getElementById('compareDrawArcBtn')?.addEventListener('click', drawCompareArcOnGlobe);
+      document.getElementById('toggleAtmosphereBtn')?.addEventListener('click', cycleAtmosphereTheme);
       document.getElementById('quizNextBtn')?.addEventListener('click', nextQuizQuestion);
       document.getElementById('quizRestartBtn')?.addEventListener('click', openQuizModal);
 
@@ -12392,6 +13016,75 @@ Web: https://bayramakpamukcu.site
       updateFavoriteUI();
     });
   </script>
+
+  <!-- ============================================================================ -->
+  <!-- AKADEMİK ŞEHİR & MEDENİYET KARŞILAŞTIRMA MATRİSİ (COMPARE MODAL) -->
+  <!-- ============================================================================ -->
+  <div
+    id="compareModalOverlay"
+    class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-purple-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between gap-3 bg-gradient-to-r from-purple-500/15 via-slate-900/40 to-transparent">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-lg shadow-md shrink-0">
+            ⚖️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30">
+                TÜBİTAK Karşılaştırmalı Analiz
+              </span>
+              <span id="compareDistanceBadge" class="text-xs font-mono font-bold text-amber-300">Mesafe: Hesaplanıyor...</span>
+            </div>
+            <h3 id="compareModalTitle" class="font-display text-sm sm:text-base font-bold text-white mt-0.5">
+              Akademik Şehir ve Medeniyet Karşılaştırma Matrisi
+            </h3>
+          </div>
+        </div>
+        <button
+          id="closeCompareBtn"
+          type="button"
+          class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Selectors Bar -->
+      <div class="p-3 sm:p-4 border-b border-white/10 bg-white/[0.02] flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-1 items-center gap-2 min-w-[280px]">
+          <div class="flex-1">
+            <label class="block text-[10px] font-mono text-purple-300 uppercase mb-1">1. Şehir / Medeniyet:</label>
+            <select id="compareSelectA" class="w-full bg-slate-900 border border-purple-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-purple-400 custom-scroll cursor-pointer"></select>
+          </div>
+          <button id="swapCompareBtn" type="button" class="mt-4 p-2 rounded-xl bg-white/10 hover:bg-purple-500/20 text-slate-200 hover:text-purple-300 border border-white/10 transition cursor-pointer" title="Şehirleri Değiştir">
+            ⇄
+          </button>
+          <div class="flex-1">
+            <label class="block text-[10px] font-mono text-pink-300 uppercase mb-1">2. Şehir / Medeniyet:</label>
+            <select id="compareSelectB" class="w-full bg-slate-900 border border-pink-400/30 rounded-xl px-2.5 py-1.5 text-xs text-slate-100 font-semibold focus:outline-none focus:border-pink-400 custom-scroll cursor-pointer"></select>
+          </div>
+        </div>
+        <button
+          id="compareDrawArcBtn"
+          type="button"
+          class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-500/30 to-pink-500/30 hover:from-purple-500/45 hover:to-pink-500/45 text-purple-200 border border-purple-400/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-lg whitespace-nowrap"
+        >
+          <span>🌐</span>
+          <span id="compareDrawArcLabel">3B Kürede Yay Çiz & Göster</span>
+        </button>
+      </div>
+
+      <!-- Comparative Side-by-Side Content -->
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1">
+        <div id="compareCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated card A and card B -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============================================================================ -->
   <!-- TÜBİTAK TARİH & EDEBİYAT BİLGİ YARIŞMASI MODALI (QUIZ MODAL) -->
