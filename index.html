@@ -7749,7 +7749,7 @@
         const categoryMatch =
           activeCategory === 'all' ||
           (activeCategory === 'savaslar'
-            ? (item.category === 'tarih' || item.secondaryCategory === 'tarih')
+            ? (getWarsForCity(item).length > 0)
             : (item.category === activeCategory || item.secondaryCategory === activeCategory));
 
         const eraMatch =
@@ -10681,62 +10681,86 @@
       ]
     };
 
-    // Seçilen durağın ülkesine göre ilgili ülke savaşları listesini döndürür ve her savaşı durağın etrafında ağaç dalları gibi konumlandırır
-    function getCountryWarsForItem(item) {
-      let groupKey = 'avrupa';
-      const c = (item.country || '').toLocaleLowerCase('tr-TR');
-      if (item.region === 'turkiye' || c.includes('türkiye')) {
-        groupKey = 'turkiye';
-      } else if (c.includes('ingiltere') || c.includes('iskoçya') || c.includes('birleşik krallık')) {
-        groupKey = 'ingiltere';
-      } else if (c.includes('fransa')) {
-        groupKey = 'fransa';
-      } else if (c.includes('italya')) {
-        groupKey = 'italya';
-      } else if (c.includes('yunanistan')) {
-        groupKey = 'yunanistan';
-      } else if (c.includes('almanya') || c.includes('avusturya') || c.includes('çekya') || c.includes('hollanda')) {
-        groupKey = 'almanya';
-      } else if (c.includes('ispanya')) {
-        groupKey = 'ispanya';
-      } else if (c.includes('rusya')) {
-        groupKey = 'rusya';
-      } else if (c.includes('irak') || c.includes('iran') || c.includes('mısır') || c.includes('filistin')) {
-        groupKey = 'ortadogu';
-      } else if (c.includes('özbekistan') || c.includes('kazakistan') || c.includes('moğolistan')) {
-        groupKey = 'ortaasya';
-      } else if (c.includes('çin') || c.includes('japonya') || c.includes('kore') || c.includes('hindistan') || c.includes('kamboçya')) {
-        groupKey = 'doguasya';
-      } else if (item.region === 'amerika') {
-        groupKey = 'amerika';
-      } else if (c.includes('norveç') || c.includes('isveç') || c.includes('irlanda')) {
-        groupKey = 'iskandinavya';
-      } else if (item.region === 'afrika') {
-        groupKey = 'afrika';
-      }
+    // Her savaş sadece ait olduğu gerçek şehirde/durağında görüntülenir.
+    // Mardin, Şanlıurfa, Trabzon, Bursa vb. kültür/mimari duraklarında alakasız savaşlar ASLA görünmez.
+    const WAR_CITY_MAP = {
+      // Türkiye
+      'canakkale': ['Çanakkale Destanı (1915)'],
+      'troya': ['Çanakkale Destanı (1915)'],
+      'ankara': ['Sakarya Meydan Muharebesi (1921)'],
+      'kutahya': ['Büyük Taarruz & Dumlupınar (1922)'],
+      'istanbul': ["İstanbul'un Fethi (1453)"],
+      'edirne': ['Kosova & Niğbolu (1389–1396)'],
+      'konya': ['Miryokefalon (1176)'],
+      'kars': ['Malazgirt Zaferi (1071)'],
+      'erzurum': ['Malazgirt Zaferi (1071)'],
+      
+      // Avrupa
+      'londra': ['Waterloo & Britanya Savaşı (1815 / 1940)', 'İspanyol Armadası Deniz Savaşı (1588)'],
+      'york': ['Lindisfarne & Viking İstilası (793–866)'],
+      'canterbury': ['Stamford Bridge & Hastings (1066)'],
+      'edinburgh': ['Bannockburn Savaşı (1314)'],
+      'paris': ['Normandiya (D-Day) & Paris (1944)', 'Bastille & Valmy – İhtilal Savaşları (1789–1792)', 'Marne & Verdun (1914–1916)'],
+      'roma': ['Cannae Muharebesi – Pön Savaşları (M.Ö. 216)', 'Rubicon & Sezar İç Savaşı (M.Ö. 49–48)', 'Actium Deniz Savaşı (M.Ö. 31)'],
+      'floransa': ['İtalyan Rönesans Savaşları (1494–1559)'],
+      'atina': ['Maraton Meydan Muharebesi (M.Ö. 490)', 'Termopil Geçidi Savunması (M.Ö. 480)', 'Salamis Deniz Zaferi (M.Ö. 480)', 'Peloponez Savaşı (M.Ö. 431–404)', 'Büyük İskender Seferleri (M.Ö. 334–323)'],
+      'viyana': ['I. ve II. Viyana Kuşatmaları (1529 & 1683)'],
+      'madrid': ['Trafalgar & Madrid Direnişi (1805–1808)'],
+      'kurtuba': ['Guadalete Savaşı – Târık bin Ziyâd (711)'],
+      'granada': ['Las Navas de Tolosa & Reconquista (1212–1492)'],
+      'moskova': ['Borodino & 1812 Moskova Seferi (1812)', 'Leningrad & Stalingrad Savunmaları (1941–1944)'],
+      'stpetersburg': ['Peipus Gölü (Buz Üzerinde) Savaşı (1242)'],
+      
+      // Ortadoğu & Asya
+      'bagdat': ['Gaugamela (Erbil) Muharebesi (M.Ö. 331)', 'Bağdat Kuşatması & Ayn Câlût (1258–1260)'],
+      'kudus': ['Bağdat Kuşatması & Ayn Câlût (1258–1260)'],
+      'kahire': ['Kadeş Meydan Muharebesi (M.Ö. 1274)'],
+      'iskenderiye': ['Kadeş Meydan Muharebesi (M.Ö. 1274)'],
+      'turkistan': ['Talas Meydan Muharebesi (751)'],
+      'buhara': ['Buhara & Semerkant Seferi – Cengiz Han (1220)'],
+      'semerkant': ['Buhara & Semerkant Seferi – Cengiz Han (1220)', 'Terek Irmağı & Timur Rönesansı (1391–1395)'],
+      'pekin': ['Kızıl Kayalar (Chibi) Deniz Savaşı (208)'],
+      'kyoto': ['Sekigahara & Panipat Muharebeleri (1526 / 1600)'],
+      'tokyo': ['Sekigahara & Panipat Muharebeleri (1526 / 1600)'],
+      'seul': ['Myeongnyang Deniz Zaferi – Kore (1597)'],
+      
+      // Amerika
+      'meksiko': ['Tenochtitlan Kuşatması – Meksika (1521)'],
+      'cusco': ['Cusco & Ollantaytambo – İnka Direnişi (1536–1537)'],
+      'concord': ['Lexington, Concord & Saratoga – ABD (1775–1777)'],
+      'newyork': ['Lexington, Concord & Saratoga – ABD (1775–1777)', 'Gettysburg Meydan Muharebesi (1863)'],
+      'bogota': ['Boyacá & Ayacucho – Güney Amerika (1819–1824)'],
+      
+      // Afrika
+      'kartaca': ['Zama Meydan Muharebesi – Tunus (M.Ö. 202)'],
+      'fes': ['Vadisseyl (Üç Kral) Savaşı – Fas (1578)'],
+      'capetown': ['Isandlwana Muharebesi – Güney Afrika (1879)'],
+      'aksum': ['Adowa (Adwa) Zaferi – Etiyopya (1896)']
+    };
 
-      const rawWars = COUNTRY_WARS_DATABASE[groupKey] || COUNTRY_WARS_DATABASE.turkiye;
-      const total = rawWars.length;
+    function getWarsForCity(item) {
+      if (!item || !item.id) return [];
+      const cityId = String(item.id).toLowerCase();
+      const matchedShortTitles = WAR_CITY_MAP[cityId] || [];
+      if (matchedShortTitles.length === 0) return [];
 
-      // Seçilen şehirden dışarıya doğru ağaç dalları (tree branches) gibi açılan koordinatları hesapla
-      return rawWars.map((w, idx) => {
-        const angle = ((idx / total) * Math.PI * 1.65) - (Math.PI * 0.82) + 0.35;
-        const radiusLat = 0.62 + (idx % 2) * 0.28;
-        const radiusLng = 0.85 + (idx % 2) * 0.36;
-        const branchLat = item.lat + Math.sin(angle) * radiusLat;
-        const branchLng = item.lng + Math.cos(angle) * radiusLng;
-
-        return {
-          ...w,
-          warIndex: idx,
-          branchLat,
-          branchLng,
-          isLastBranch: idx === total - 1
-        };
-      });
+      const allWars = Object.values(COUNTRY_WARS_DATABASE).flat();
+      return matchedShortTitles.map((st, idx) => {
+        const found = allWars.find(w => w.short_tr === st || w.short_tr.includes(st) || st.includes(w.short_tr));
+        if (found) {
+          return {
+            ...found,
+            warIndex: idx,
+            branchLat: found.lat,
+            branchLng: found.lng,
+            isLastBranch: idx === matchedShortTitles.length - 1
+          };
+        }
+        return null;
+      }).filter(Boolean);
     }
+    const getCountryWarsForItem = getWarsForCity;
 
-    // Bir savaşın taraflarını ("kiminle olmuş") forces_tr / forces_en alanından ayrıştırır
     function parseWarBelligerents(war) {
       const rawTr = String(war.forces_tr || '').trim();
       const rawEn = String(war.forces_en || rawTr).trim();
@@ -10759,26 +10783,32 @@
     }
 
     function renderCountryWarsTreeInDrawer(item, activeWarIdx = -1) {
-      const wars = getCountryWarsForItem(item);
+      const wars = getWarsForCity(item);
+      const simBox = document.getElementById('drawerBattleSimBox');
+      if (!wars || wars.length === 0) {
+        if (simBox) simBox.classList.add('hidden');
+        return;
+      }
+      if (simBox) simBox.classList.remove('hidden');
+
       const isEn = currentLang === 'en';
-      const t = TRANSLATIONS[currentLang];
-      const displayCountry = (isEn && item.country_en) ? item.country_en : item.country;
+      const cityName = (isEn && item.city_en) ? item.city_en : item.city;
 
       const headingEl = document.getElementById('countryWarsTreeHeading');
       const countEl = document.getElementById('countryWarsCountBadge');
       const hintEl = document.getElementById('countryWarsTreeHint');
       const listEl = document.getElementById('countryWarsTreeList');
 
-      if (headingEl && typeof t.countryWarsTreeHeading === 'function') {
-        headingEl.textContent = t.countryWarsTreeHeading(displayCountry);
+      if (headingEl) {
+        headingEl.textContent = isEn ? `Battles of ${cityName}` : `${cityName} ile İlgili Tarihi Muharebeler`;
       }
-      if (countEl && typeof t.countryWarsCount === 'function') {
-        countEl.textContent = t.countryWarsCount(wars.length);
+      if (countEl) {
+        countEl.textContent = `${wars.length} ${isEn ? 'Battles' : 'Savaş'}`;
       }
       if (hintEl) {
         hintEl.textContent = isEn
-          ? 'Click on any war below or on a 3D war branch on the globe to open its battle details and 3D simulation:'
-          : 'Detayları ve 3B savaş simülasyonunu açmak için aşağıdaki savaşlardan birine veya 3B küredeki savaş dalına tıklayın:';
+          ? 'Select a battle below to inspect its tactical moves and 3D simulation:'
+          : 'Taktik aşamaları ve 3B muharebe simülasyonunu incelemek için aşağıdan seçin:';
       }
 
       if (!listEl) return;
@@ -10968,17 +10998,25 @@
       if (!item || !world) return;
       const simBox = document.getElementById('drawerBattleSimBox');
       const detailPanel = document.getElementById('warSelectedDetailPanel');
+      const wars = getWarsForCity(item);
 
-      // Tüm Kategoriler dahil her kategoride ülkeye/şehre tıklanınca Ülke Savaşları Ağacı kutusu görünür
-      if (simBox) simBox.classList.remove('hidden');
+      // Şehir savaş alanı DEĞİLSE (örneğin Mardin, Şanlıurfa, Bursa, Trabzon): Savaş kutusunu tamamen GİZLE!
+      if (!wars || wars.length === 0) {
+        if (simBox) simBox.classList.add('hidden');
+        if (detailPanel) detailPanel.classList.add('hidden');
+        activeCountryWarIndex = -1;
+        const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
+        world.htmlElementsData(filteredList);
+        world.ringsData([]);
+        return;
+      }
 
-      // Henüz spesifik bir savaşa tıklanmadıysa (activeCountryWarIndex < 0):
-      // Savaş trailleri (çizgileri) KESİNLİKLE gözükmez; sadece savaş başlıkları listesi ve rozetleri görünür!
+      // Şehir bir savaşa ev sahipliği yapıyorsa (örneğin Çanakkale, Ankara/Sakarya, Kütahya/Dumlupınar)
       if (activeCountryWarIndex < 0) {
+        if (simBox) simBox.classList.remove('hidden');
         if (detailPanel) detailPanel.classList.add('hidden');
         renderCountryWarsTreeInDrawer(item, -1);
 
-        const wars = getCountryWarsForItem(item);
         const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
         if (activeCategory === 'edebiyat') {
           world.arcsData(buildLiteratureArcs(filteredList));
@@ -10989,20 +11027,10 @@
         }
         world.ringsData([]);
 
-        const branchNodes = wars.map((w, idx) => ({
-          id: `war_branch_${item.id}_${idx}`,
-          lat: w.branchLat,
-          lng: w.branchLng,
-          shortTitle_tr: w.short_tr,
-          shortTitle_en: w.short_en,
-          warIndex: idx,
-          isLastBranch: w.isLastBranch,
-          isActiveBranch: false,
-          isWarBranchNode: true
-        }));
-        world.htmlElementsData([...filteredList, ...branchNodes]);
+        // KESİNLİKLE şehre yapay savaş dalları/rozetleri eklenmez; sadece gerçek şehir pini kalır!
+        world.htmlElementsData(filteredList);
       } else {
-        // Kullanıcı bir savaşa tıkladıysa detay panelini göster ve SADECE o savaşın izlerini yükle
+        if (simBox) simBox.classList.remove('hidden');
         if (detailPanel) detailPanel.classList.remove('hidden');
         selectBattlePhase(activeBattlePhaseIndex, false);
       }
@@ -11120,26 +11148,14 @@
         world.arcsData(battleArcs);
       }
 
-      // 3) Ülke Savaşları Ağaç Dalı Alt Başlık Rozetlerini (.war-branch-wrapper) ve Savaş Alanı Taraflarını 3B Kürede Göster
-      const branchNodes = wars.map((w, idx) => ({
-        id: `war_branch_${item.id}_${idx}`,
-        lat: w.branchLat,
-        lng: w.branchLng,
-        shortTitle_tr: w.short_tr,
-        shortTitle_en: w.short_en,
-        warIndex: idx,
-        isLastBranch: w.isLastBranch,
-        isActiveBranch: idx === wIdx,
-        isWarBranchNode: true
-      }));
-
+      // 3) Savaş Alanı Gerçek Taktik Taraflarını (Karargah, Mayın Hattı vb.) 3B Kürede Göster
       const tacticalMarkers = (phase.markers || []).map((m, idx) => ({
         ...m,
         id: `tac_${item.id}_${pIdx}_${idx}`,
         isTacticalMarker: true,
         phaseIndex: pIdx
       }));
-      world.htmlElementsData([...filteredList, ...branchNodes, ...tacticalMarkers]);
+      world.htmlElementsData([...filteredList, ...tacticalMarkers]);
 
       // Savaşa tıklandığında savaşın yapıldığı gerçek koordinata (selectedWar.lat, selectedWar.lng) enlem açısına duyarlı kusursuz ortalama ile derin scope'la (altitude: 0.055)
       if (flyCamera) {
