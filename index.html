@@ -619,6 +619,39 @@
       background: radial-gradient(circle at center, transparent 62%, rgba(2, 6, 23, 0.68) 100%);
       pointer-events: none;
     }
+
+    /* ==========================================================================
+       60 FPS GPU DONANIM HIZLANDIRMA & COMPOSITOR ISOLATION (OPTİMİZASYON)
+       ========================================================================== */
+    #detailDrawer {
+      contain: layout paint;
+      will-change: transform, opacity;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    #searchSpotlightPanel {
+      contain: layout paint;
+      will-change: transform, opacity;
+      transform: translate3d(0, 0, 0);
+    }
+
+    #rulerHudBanner {
+      contain: layout paint;
+      will-change: transform, opacity;
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    #globeViz,
+    #globeViz canvas {
+      touch-action: none !important;
+      contain: strict;
+    }
+
+    .overflow-y-auto {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
   </style>
 </head>
 <body class="relative w-screen h-screen overflow-hidden select-none">
@@ -7445,32 +7478,71 @@
       // Hem masaüstü hem mobilde kamera uçuşları (fly-to) ve yakınlaşma sırasında karoları + ikon ölçeğini 60 FPS gerçek zamanlı güncelle
       let lastCameraMoveAt = 0;
       let lastDeclutterAt = 0;
-      (function animateGlobeScene(now) {
-        now = now || performance.now();
-        if (cloudsMesh) {
-          cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
-        }
-        if (world) {
-          const pov = world.pointOfView();
-          if (pov) {
-            const latDiff = lastTrackedPov.lat === null ? 1 : Math.abs(pov.lat - lastTrackedPov.lat);
-            const lngDiff = lastTrackedPov.lng === null ? 1 : Math.abs(pov.lng - lastTrackedPov.lng);
-            const altDiff = lastTrackedPov.alt === null ? 1 : Math.abs(pov.altitude - lastTrackedPov.alt);
-            if (latDiff > 0.0005 || lngDiff > 0.0005 || altDiff > 0.0003) {
-              lastTrackedPov = { lat: pov.lat, lng: pov.lng, alt: pov.altitude };
-              lastCameraMoveAt = now;
-              updateZoomAndCompass();
+      let isTabVisible = !document.hidden;
+      let globeSceneRafId = null;
+
+      function startGlobeSceneAnimation() {
+        if (globeSceneRafId) return;
+        function loop(now) {
+          if (!isTabVisible) {
+            globeSceneRafId = null;
+            return;
+          }
+          now = now || performance.now();
+          if (cloudsMesh) {
+            cloudsMesh.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
+          }
+          if (world) {
+            const pov = world.pointOfView();
+            if (pov) {
+              const latDiff = lastTrackedPov.lat === null ? 1 : Math.abs(pov.lat - lastTrackedPov.lat);
+              const lngDiff = lastTrackedPov.lng === null ? 1 : Math.abs(pov.lng - lastTrackedPov.lng);
+              const altDiff = lastTrackedPov.alt === null ? 1 : Math.abs(pov.altitude - lastTrackedPov.alt);
+              if (latDiff > 0.0005 || lngDiff > 0.0005 || altDiff > 0.0003) {
+                lastTrackedPov = { lat: pov.lat, lng: pov.lng, alt: pov.altitude };
+                lastCameraMoveAt = now;
+                updateZoomAndCompass();
+              }
+            }
+            // Etiket çakışma önleyici: Kamera hareket halindeyken ~8 Hz, kamera durduktan hemen sonra son yerleşim
+            const cameraMoving = now - lastCameraMoveAt < 250;
+            if (introDismissed && (cameraMoving || now - lastCameraMoveAt < 400) && now - lastDeclutterAt > (cameraMoving ? 120 : 350)) {
+              lastDeclutterAt = now;
+              declutterPinLabels();
             }
           }
-          // Etiket çakışma önleyici: kamera hareket ederken ~8 Hz, dururken ~2.5 Hz (yeni pin/filtre değişikliklerini de yakalar)
-          const cameraMoving = now - lastCameraMoveAt < 250;
-          if (introDismissed && now - lastDeclutterAt > (cameraMoving ? 120 : 400)) {
-            lastDeclutterAt = now;
-            declutterPinLabels();
-          }
+          globeSceneRafId = requestAnimationFrame(loop);
         }
-        requestAnimationFrame(animateGlobeScene);
-      })();
+        globeSceneRafId = requestAnimationFrame(loop);
+      }
+
+      startGlobeSceneAnimation();
+
+      // Sekme arka plana alındığında veya ekran kapandığında 3B render döngüsünü durdur (0% GPU/Pil koruması)
+      document.addEventListener('visibilitychange', () => {
+        isTabVisible = !document.hidden;
+        if (document.hidden) {
+          if (globeSceneRafId) {
+            cancelAnimationFrame(globeSceneRafId);
+            globeSceneRafId = null;
+          }
+          if (audioCtx && audioCtx.state === 'running') {
+            audioCtx.suspend().catch(() => {});
+          }
+          if (controls) {
+            controls.autoRotate = false;
+          }
+        } else {
+          startGlobeSceneAnimation();
+          if (audioCtx && audioCtx.state === 'suspended' && isSoundEnabled) {
+            audioCtx.resume().catch(() => {});
+          }
+          if (controls && !introDismissed && !isMobileDevice) {
+            controls.autoRotate = true;
+          }
+          updateZoomAndCompass();
+        }
+      });
 
       controls.addEventListener('change', updateZoomAndCompass);
 
@@ -7479,14 +7551,24 @@
       controls.autoRotateSpeed = 0.55;
       world.pointOfView({ lat: 34.0, lng: 24.0, altitude: 2.85 }, 0);
 
+      let windowResizeRafId = null;
       window.addEventListener('resize', () => {
-        world.width(window.innerWidth);
-        world.height(window.innerHeight);
-        const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-        world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.0 : 2.0));
-        lastTileUpdateSignature = '';
-        updateZoomAndCompass();
-      });
+        if (windowResizeRafId) cancelAnimationFrame(windowResizeRafId);
+        windowResizeRafId = requestAnimationFrame(() => {
+          if (world) {
+            world.width(window.innerWidth);
+            world.height(window.innerHeight);
+            const currMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+            world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, currMobile ? 1.0 : 2.0));
+            lastTileUpdateSignature = '';
+            updateZoomAndCompass();
+          }
+          if (typeof positionSearchPanel === 'function' && typeof searchResultsPanel !== 'undefined' && searchResultsPanel && !searchResultsPanel.classList.contains('hidden')) {
+            positionSearchPanel();
+          }
+          windowResizeRafId = null;
+        });
+      }, { passive: true });
     }
 
     // Sinematik Giriş Ekranını Kapat ve Uzaydan Dünya'ya Kamera Dalışı Yap
@@ -7577,13 +7659,21 @@
       const anchors = document.querySelectorAll('.pin-anchor-root[data-city-id]');
       if (!anchors.length) return;
       const items = [];
-      for (const a of anchors) {
+      const vWidth = window.innerWidth;
+      const vHeight = window.innerHeight;
+
+      // 1. FAZ: TOPLU OKUMA (Batch Measurement - Sıfır write, forced reflow önlendi)
+      for (let i = 0; i < anchors.length; i++) {
+        const a = anchors[i];
         if (a.style.display === 'none') continue;
         const label = a.querySelector('.pin-label');
         const head = a.querySelector('.pin-head');
         if (!label || !head) continue;
         const r = label.getBoundingClientRect();
         if (r.width === 0 && r.height === 0) continue;
+        // Viewport Culling: Ekran dışındaki pinleri atla
+        if (r.bottom < -60 || r.top > vHeight + 60 || r.right < -60 || r.left > vWidth + 60) continue;
+
         items.push({
           a,
           r,
@@ -7592,22 +7682,34 @@
           p: Number(a.dataset.priority) || 0
         });
       }
+
+      // 2. FAZ: HAFIZADA ÇARPIŞMA HESAPLAMA (Sıfır DOM etkileşimi)
       items.sort((x, y) => (y.active - x.active) || (x.p - y.p));
       const placed = [];
       const PAD = 2;
       const overlaps = r => {
-        for (const q of placed) {
+        for (let i = 0; i < placed.length; i++) {
+          const q = placed[i];
           if (r.left < q.right + PAD && r.right > q.left - PAD && r.top < q.bottom + PAD && r.bottom > q.top - PAD) return true;
         }
         return false;
       };
-      for (const it of items) {
+
+      const changes = [];
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
         const show = it.active === 1 || !overlaps(it.r);
-        if (it.a.classList.contains('label-collapsed') === show) {
-          it.a.classList.toggle('label-collapsed', !show);
+        const isCollapsed = it.a.classList.contains('label-collapsed');
+        if (isCollapsed === show) {
+          changes.push({ anchor: it.a, collapse: !show });
         }
         if (show) placed.push(it.r);
         placed.push(it.h);
+      }
+
+      // 3. FAZ: TOPLU YAZMA (Layout thrashing olmadan tek toplu geçiş)
+      for (let i = 0; i < changes.length; i++) {
+        changes[i].anchor.classList.toggle('label-collapsed', changes[i].collapse);
       }
     }
 
@@ -7758,25 +7860,27 @@
         if (!regionMatch || !categoryMatch || !eraMatch) return false;
         if (!q) return true;
 
-        const searchableText = [
-          item.city,
-          item.city_en || '',
-          item.country,
-          item.country_en || '',
-          item.regionLabel,
-          item.title,
-          item.title_en || '',
-          item.year,
-          item.description,
-          item.description_en || '',
-          item.quote,
-          item.quote_en || '',
-          ...(item.figuresAndWorks || [])
-        ]
-          .join(' ')
-          .toLocaleLowerCase('tr-TR');
+        if (!item._searchIndex) {
+          item._searchIndex = [
+            item.city || '',
+            item.city_en || '',
+            item.country || '',
+            item.country_en || '',
+            item.regionLabel || '',
+            item.title || '',
+            item.title_en || '',
+            item.year || '',
+            item.description || '',
+            item.description_en || '',
+            item.quote || '',
+            item.quote_en || '',
+            ...(item.figuresAndWorks || [])
+          ]
+            .join(' ')
+            .toLocaleLowerCase('tr-TR');
+        }
 
-        return searchableText.includes(q);
+        return item._searchIndex.includes(q);
       });
     }
 
@@ -16318,11 +16422,16 @@ Web: https://bayramakpamukcu.site
         selectCity(item.id);
       }
 
+      let searchInputRafId = null;
       searchInput.addEventListener('input', e => {
         searchQuery = e.target.value;
         clearSearchBtn.classList.toggle('hidden', !searchQuery);
-        renderFilteredMarkers();
-        renderSearchResults();
+        if (searchInputRafId) cancelAnimationFrame(searchInputRafId);
+        searchInputRafId = requestAnimationFrame(() => {
+          renderFilteredMarkers();
+          renderSearchResults();
+          searchInputRafId = null;
+        });
       });
 
       searchInput.addEventListener('focus', () => {
