@@ -7178,6 +7178,50 @@
     let lastTileUpdateSignature = '';
     let lastTrackedPov = { lat: null, lng: null, alt: null };
 
+    // ============================================================================
+    // SIFIR-TAKILMA (ZERO-STUTTER) KADEMELİ DOKU VE DİNAMİK VRAM YÖNETİCİSİ
+    // Ağdan aynı anda inen onlarca dokunun tek bir karede PCIe yolunu kilitlemesini
+    // ve toplu WebGL silme (dispose) işlemlerinin saliselik takılma yapmasını önler.
+    // ============================================================================
+    const TEXTURE_UPLOAD_QUEUE = [];
+
+    function processPacedTextureUploads() {
+      if (TEXTURE_UPLOAD_QUEUE.length === 0) return;
+      // Kare başına en fazla 2 dokuyu GPU VRAM'ine yükle (144 FPS kesintisiz akıcılık)
+      const count = Math.min(2, TEXTURE_UPLOAD_QUEUE.length);
+      for (let i = 0; i < count; i++) {
+        const item = TEXTURE_UPLOAD_QUEUE.shift();
+        if (!item || !item.mesh || !item.mat) continue;
+        item.mat.map = item.tex;
+        item.mat.opacity = 1.0;
+        item.mat.needsUpdate = true;
+        item.mesh.userData.loaded = true;
+        if (item.mesh.userData.wanted) {
+          item.mesh.visible = true;
+        }
+      }
+    }
+
+    function incrementalEvictOldTiles() {
+      const maxTileCache = ATLAS_GPU_CONFIG && ATLAS_GPU_CONFIG.hasHardwareGpu ? 320 : 120;
+      if (googleEarthTileCache.size <= maxTileCache) return;
+      // Toplu WebGL dispose kilitlenmesini önlemek için kare başına en fazla 2 eski karoyu temizle
+      let evicted = 0;
+      for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
+        if (!oldMesh.userData.wanted) {
+          if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
+          if (oldMesh.geometry) oldMesh.geometry.dispose();
+          if (oldMesh.material) {
+            if (oldMesh.material.map) oldMesh.material.map.dispose();
+            oldMesh.material.dispose();
+          }
+          googleEarthTileCache.delete(oldKey);
+          evicted++;
+          if (evicted >= 2) break; // Frame başına MAX 2 silme (Sıfır mikro-donma)
+        }
+      }
+    }
+
     function latLngToSlippyTile(lat, lng, z) {
       const n = Math.pow(2, z);
       const clampedLat = Math.max(-85.05, Math.min(85.05, lat));
@@ -7284,27 +7328,13 @@
           }
           const renderer = world && world.renderer ? world.renderer() : null;
           if (renderer && renderer.capabilities) {
-            tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+            tex.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
           }
           tex.minFilter = THREE.LinearFilter;
           tex.magFilter = THREE.LinearFilter;
           tex.generateMipmaps = false;
-          tex.needsUpdate = true;
-
-          mat.map = tex;
-          mesh.userData.loaded = true;
-          mesh.visible = Boolean(mesh.userData.wanted);
-          // Sinematik pürüzsüz mikro-fade (needsUpdate tetiklemeden sadece uniform güncellenir)
-          let fadeStart = performance.now();
-          const fadeDuration = 180;
-          function runFade(now) {
-            const p = Math.min(1, (now - fadeStart) / fadeDuration);
-            mat.opacity = p;
-            if (p < 1 && mesh.userData.wanted) {
-              requestAnimationFrame(runFade);
-            }
-          }
-          requestAnimationFrame(runFade);
+          // Kademeli GPU yükleme kuyruğuna aktar (ani PCIe ve GL tıkanmasını sıfırla)
+          TEXTURE_UPLOAD_QUEUE.push({ mesh, mat, tex });
         },
         undefined,
         () => {
@@ -7315,18 +7345,7 @@
             tex2.minFilter = THREE.LinearFilter;
             tex2.magFilter = THREE.LinearFilter;
             tex2.generateMipmaps = false;
-            mat.map = tex2;
-            mesh.userData.loaded = true;
-            mesh.visible = Boolean(mesh.userData.wanted);
-            let fadeStart2 = performance.now();
-            function runFade2(now) {
-              const p = Math.min(1, (now - fadeStart2) / 180);
-              mat.opacity = p;
-              if (p < 1 && mesh.userData.wanted) {
-                requestAnimationFrame(runFade2);
-              }
-            }
-            requestAnimationFrame(runFade2);
+            TEXTURE_UPLOAD_QUEUE.push({ mesh, mat, tex: tex2 });
           });
         }
       );
@@ -7335,24 +7354,6 @@
         googleEarthTileGroup.add(mesh);
       }
       googleEarthTileCache.set(key, mesh);
-
-      // Önbellek boyutunu dengede tut (GPU modunda 650/480, CPU Fallback modunda 200/120)
-      const maxTileCache = ATLAS_GPU_CONFIG && ATLAS_GPU_CONFIG.hasHardwareGpu ? 650 : 200;
-      const pruneTileTarget = ATLAS_GPU_CONFIG && ATLAS_GPU_CONFIG.hasHardwareGpu ? 480 : 120;
-      if (googleEarthTileCache.size > maxTileCache) {
-        for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
-          if (!oldMesh.userData.wanted) {
-            if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
-            if (oldMesh.geometry) oldMesh.geometry.dispose();
-            if (oldMesh.material) {
-              if (oldMesh.material.map) oldMesh.material.map.dispose();
-              oldMesh.material.dispose();
-            }
-            googleEarthTileCache.delete(oldKey);
-            if (googleEarthTileCache.size <= pruneTileTarget) break;
-          }
-        }
-      }
 
       return mesh;
     }
@@ -7429,24 +7430,24 @@
 
       const wantedKeys = new Set();
 
-      // 1) En Üst Tam Çözünürlüklü Google Earth Hybrid Katmanı (targetZ): Ekranın merkezi ve odaklanılan şehir en önce netleşir
+      // 1) En Üst Tam Çözünürlüklü Google Earth Hybrid Katmanı (targetZ): Ekranın merkezi ve odaklanılan bölge
       const radScale = ATLAS_GPU_CONFIG.hasHardwareGpu ? 1.0 : ATLAS_GPU_CONFIG.maxTileRadiusFactor;
-      const mainRadY = isMobile ? 2 : Math.max(2, Math.round(3 * radScale));
-      const mainRadX = isMobile ? 3 : Math.min(7, Math.max(4, Math.ceil(mainRadY * wideFactor * radScale)));
+      const mainRadY = isMobile ? 1 : 2;
+      const mainRadX = isMobile ? 2 : Math.min(4, Math.max(2, Math.ceil(mainRadY * wideFactor * radScale)));
       addTileGridAroundCenter(pov.lat, pov.lng, targetZ, mainRadX, mainRadY, wantedKeys);
 
-      // 2) Alt Geçiş Katmanı (targetZ - 1 veya targetZ - 2): Yakınlaşırken yumuşak geçiş sağlar
+      // 2) Alt Geçiş Katmanı (targetZ - 2): Yakınlaşırken boşlukları önleyen yumuşak geçiş
       const subZ = Math.max(5, targetZ - 2);
       if (subZ < targetZ) {
-        const sRadY = isMobile ? 2 : 3;
-        const sRadX = Math.min(8, Math.ceil(sRadY * wideFactor) + 1);
+        const sRadY = 1;
+        const sRadX = Math.min(3, Math.ceil(sRadY * wideFactor));
         addTileGridAroundCenter(pov.lat, pov.lng, subZ, sRadX, sRadY, wantedKeys);
       }
 
-      // 3) Kesintisiz Küresel Ufuk Katmanı (z=5 veya z=4): Ekranın solundan sağına tüm görünen Dünya yüzeyini kesintisiz Google Earth uydusuyla kaplar; asla kare sınır veya sağ-sol bulanıklık bırakmaz!
+      // 3) Küresel Ufuk Katmanı (z=5 veya z=4): Sadece görünür ufuk konisi kadar karo iste
       const horizonZ = pov.altitude < 0.35 ? 5 : 4;
-      const hRadY = isMobile ? 3 : 5;
-      const hRadX = isMobile ? 5 : Math.min(14, Math.ceil(hRadY * wideFactor) + 3);
+      const hRadY = isMobile ? 1 : 2;
+      const hRadX = isMobile ? 2 : Math.min(4, Math.ceil(hRadY * wideFactor));
       addTileGridAroundCenter(pov.lat, pov.lng, horizonZ, hRadX, hRadY, wantedKeys);
 
       for (const [k, mesh] of googleEarthTileCache.entries()) {
@@ -7700,6 +7701,12 @@
           now = now || performance.now();
           const elapsed = now - lastFrameTime;
           lastFrameTime = now;
+
+          // 1. Kademeli Dokuyu GPU'ya Aktar (PCIe bant genişliği kilitlenmelerini ve saliselik dropları sıfırla)
+          processPacedTextureUploads();
+
+          // 2. Kademeli Eski Karoları Temizle (Toplu WebGL dispose donmasını sıfırla)
+          incrementalEvictOldTiles();
 
           // 60-144 FPS Delta-Time Katsayısı: 60 FPS: 1.0, 120 FPS: 0.5, 144 FPS: 0.41
           const deltaFactor = Math.min(3.0, Math.max(0.1, elapsed / IDEAL_FRAME_MS));
