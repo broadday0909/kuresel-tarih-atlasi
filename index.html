@@ -10,6 +10,16 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Preconnect & DNS-Prefetch for Fast Satellite Tile Streaming & Assets -->
+  <link rel="dns-prefetch" href="https://mt0.google.com">
+  <link rel="dns-prefetch" href="https://mt1.google.com">
+  <link rel="dns-prefetch" href="https://mt2.google.com">
+  <link rel="dns-prefetch" href="https://mt3.google.com">
+  <link rel="preconnect" href="https://mt0.google.com" crossorigin>
+  <link rel="preconnect" href="https://mt1.google.com" crossorigin>
+  <link rel="preconnect" href="https://mt2.google.com" crossorigin>
+  <link rel="preconnect" href="https://mt3.google.com" crossorigin>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -396,7 +406,6 @@
       opacity: 0.85;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
       pointer-events: none;
-      will-change: transform, opacity;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
     }
@@ -409,7 +418,6 @@
       opacity: 0.65;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) 1.1s infinite;
       pointer-events: none;
-      will-change: transform, opacity;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
     }
@@ -7173,6 +7181,11 @@
       for (let i = 0; i < count; i++) {
         const item = TEXTURE_UPLOAD_QUEUE.shift();
         if (!item || !item.mesh || !item.mat) continue;
+        // Kamera başka bölgeye kaydıysa veya karo artık istenmiyorsa boşa GPU VRAM yüklemesi yapma, doğrudan imha et
+        if (!item.mesh.userData.wanted) {
+          if (item.tex) item.tex.dispose();
+          continue;
+        }
         item.mat.map = item.tex;
         item.mat.opacity = 1.0;
         item.mat.needsUpdate = true;
@@ -7203,10 +7216,13 @@
       }
     }
 
+    const RAD2DEG = 180 / Math.PI;
+    const DEG2RAD = Math.PI / 180;
+
     function latLngToSlippyTile(lat, lng, z) {
-      const n = Math.pow(2, z);
+      const n = 1 << z;
       const clampedLat = Math.max(-85.05, Math.min(85.05, lat));
-      const latRad = (clampedLat * Math.PI) / 180;
+      const latRad = clampedLat * DEG2RAD;
       const x = Math.floor(((lng + 180) / 360) * n);
       const y = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n);
       return {
@@ -7218,10 +7234,10 @@
 
     function slippyTileYToLat(yFrac, n) {
       const m = Math.PI * (1 - (2 * yFrac) / n);
-      return (180 / Math.PI) * Math.atan(Math.sinh(m));
+      return RAD2DEG * Math.atan(Math.sinh(m));
     }
 
-    // 60 FPS Sabit Akıcılık İçin Statik Karo Izgarası Şablon Önbelleği (GC Sıfırlama)
+    // 60-144 FPS Sabit Akıcılık İçin Statik Karo Izgarası Şablon Önbelleği (GC Sıfırlama)
     const TILE_GRID_CACHE = new Map();
     function getTileGridTemplate(GRID) {
       if (TILE_GRID_CACHE.has(GRID)) {
@@ -7247,7 +7263,7 @@
       }
       const tpl = {
         uvArray: new Float32Array(uvs),
-        indices: indices
+        indices: new Uint16Array(indices)
       };
       TILE_GRID_CACHE.set(GRID, tpl);
       return tpl;
@@ -7260,10 +7276,12 @@
         return googleEarthTileCache.get(key);
       }
 
-      const n = Math.pow(2, z);
+      const n = 1 << z;
       const GRID = z <= 6 ? 12 : 8;
-      const positions = [];
       const tpl = getTileGridTemplate(GRID);
+      const numVerts = (GRID + 1) * (GRID + 1);
+      const positions = new Float32Array(numVerts * 3);
+      let pIdx = 0;
 
       for (let j = 0; j <= GRID; j++) {
         const v = j / GRID;
@@ -7272,14 +7290,16 @@
           const u = i / GRID;
           const lng = ((x + u) / n) * 360 - 180;
           const c = world.getCoords(lat, lng, SURFACE_OVERLAY_ALT);
-          positions.push(c.x, c.y, c.z);
+          positions[pIdx++] = c.x;
+          positions[pIdx++] = c.y;
+          positions[pIdx++] = c.z;
         }
       }
 
       const geom = new THREE.BufferGeometry();
-      geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geom.setAttribute('uv', new THREE.BufferAttribute(tpl.uvArray, 2));
-      geom.setIndex(tpl.indices);
+      geom.setIndex(new THREE.BufferAttribute(tpl.indices, 1));
 
       const mat = new THREE.MeshBasicMaterial({
         color: 0xffffff,
@@ -7819,6 +7839,10 @@
     let lastAppliedPinScale = '';
     let lastAppliedTacScale = '';
     let lastTileUpdateAt = 0;
+    let _cachedCompassEl = null;
+    let _compassV0 = null;
+    let _compassVN = null;
+    let _lastCompassDegStr = '';
 
     function updateZoomAndCompass() {
       if (!world) return;
@@ -7857,20 +7881,31 @@
         }
       }
 
-      const compassIcon = document.getElementById('compassIcon');
-      if (compassIcon && world) {
+      if (!_cachedCompassEl) _cachedCompassEl = document.getElementById('compassIcon');
+      if (_cachedCompassEl && world) {
         const cam = world.camera();
         if (cam && typeof THREE !== 'undefined' && THREE.Vector3) {
-          const v0 = new THREE.Vector3(0, 0, 0).applyMatrix4(cam.matrixWorldInverse);
-          const vN = new THREE.Vector3(0, 100, 0).applyMatrix4(cam.matrixWorldInverse);
-          const dx = vN.x - v0.x;
-          const dy = vN.y - v0.y;
-          if (Math.hypot(dx, dy) > 0.001) {
-            const deg = Math.atan2(dx, dy) * (180 / Math.PI);
-            compassIcon.style.transform = `rotate(${(-deg).toFixed(1)}deg)`;
+          if (!_compassV0) {
+            _compassV0 = new THREE.Vector3();
+            _compassVN = new THREE.Vector3();
+          }
+          _compassV0.set(0, 0, 0).applyMatrix4(cam.matrixWorldInverse);
+          _compassVN.set(0, 100, 0).applyMatrix4(cam.matrixWorldInverse);
+          const dx = _compassVN.x - _compassV0.x;
+          const dy = _compassVN.y - _compassV0.y;
+          if (dx * dx + dy * dy > 0.000001) {
+            const degStr = (-Math.atan2(dx, dy) * RAD2DEG).toFixed(1);
+            if (degStr !== _lastCompassDegStr) {
+              _lastCompassDegStr = degStr;
+              _cachedCompassEl.style.transform = `rotate(${degStr}deg)`;
+            }
           }
         } else {
-          compassIcon.style.transform = `rotate(${(-pov.lng * 0.35).toFixed(1)}deg)`;
+          const degStr = (-pov.lng * 0.35).toFixed(1);
+          if (degStr !== _lastCompassDegStr) {
+            _lastCompassDegStr = degStr;
+            _cachedCompassEl.style.transform = `rotate(${degStr}deg)`;
+          }
         }
       }
     }
@@ -16919,7 +16954,7 @@ Web: https://bayramakpamukcu.site
         function updateSoundBtnUI() {
           if (soundIcon) {
             soundIcon.setAttribute('data-lucide', isSoundEnabled ? 'volume-2' : 'volume-x');
-            lucide.createIcons();
+            lucide.createIcons({ root: toggleSoundBtn });
           }
           toggleSoundBtn.classList.toggle('border-amber-400', isSoundEnabled);
           toggleSoundBtn.classList.toggle('bg-amber-500/20', isSoundEnabled);
