@@ -7839,12 +7839,10 @@
     // ============================================================================
     function getFilteredLocations() {
       const q = searchQuery.trim().toLocaleLowerCase('tr-TR');
+      const favsSet = isFavoritesFilterActive ? new Set(getStoredFavorites()) : null;
 
       return MASTER_LOCATIONS.filter(item => {
-        if (isFavoritesFilterActive) {
-          const favs = getStoredFavorites();
-          if (!favs.includes(item.id)) return false;
-        }
+        if (favsSet && !favsSet.has(item.id)) return false;
         const regionMatch =
           activeRegion === 'all' || item.region === activeRegion;
 
@@ -13180,6 +13178,19 @@
         if (!audioCtx) return;
         const now = audioCtx.currentTime;
 
+        const autoCleanNode = (osc, gain, stopTime) => {
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(stopTime);
+          osc.onended = () => {
+            try {
+              osc.disconnect();
+              gain.disconnect();
+            } catch (e) {}
+          };
+        };
+
         if (type === 'click') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -13188,10 +13199,7 @@
           osc.frequency.exponentialRampToValueAtTime(440, now + 0.04);
           gain.gain.setValueAtTime(0.06, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.04);
+          autoCleanNode(osc, gain, now + 0.04);
         } else if (type === 'fly') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -13200,10 +13208,7 @@
           osc.frequency.exponentialRampToValueAtTime(587.33, now + 0.25);
           gain.gain.setValueAtTime(0.05, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.3);
+          autoCleanNode(osc, gain, now + 0.3);
         } else if (type === 'phase') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -13212,10 +13217,7 @@
           osc.frequency.exponentialRampToValueAtTime(45, now + 0.32);
           gain.gain.setValueAtTime(0.16, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.32);
+          autoCleanNode(osc, gain, now + 0.32);
         } else if (type === 'correct') {
           [523.25, 659.25, 783.99].forEach((freq, i) => {
             const osc = audioCtx.createOscillator();
@@ -13229,6 +13231,9 @@
             gain.connect(audioCtx.destination);
             osc.start(t);
             osc.stop(t + 0.22);
+            osc.onended = () => {
+              try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+            };
           });
         } else if (type === 'wrong') {
           const osc = audioCtx.createOscillator();
@@ -13238,10 +13243,7 @@
           osc.frequency.linearRampToValueAtTime(150, now + 0.2);
           gain.gain.setValueAtTime(0.05, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + 0.2);
+          autoCleanNode(osc, gain, now + 0.2);
         } else if (type === 'fanfare') {
           [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
             const osc = audioCtx.createOscillator();
@@ -13255,6 +13257,9 @@
             gain.connect(audioCtx.destination);
             osc.start(t);
             osc.stop(t + 0.35);
+            osc.onended = () => {
+              try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+            };
           });
         }
       } catch (e) {}
