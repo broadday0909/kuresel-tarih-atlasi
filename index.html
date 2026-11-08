@@ -8,10 +8,19 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
 
 
+  <meta name="theme-color" content="#030712">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Preconnect & DNS-Prefetch for Fast Satellite Tile Streaming & Assets -->
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="dns-prefetch" href="https://mt0.google.com">
   <link rel="dns-prefetch" href="https://mt1.google.com">
   <link rel="dns-prefetch" href="https://mt2.google.com">
@@ -1277,6 +1286,8 @@
             id="drawerCoverImage"
             src=""
             alt="AI Kapak Görseli"
+            loading="lazy"
+            decoding="async"
             onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){ this.src = this.dataset.fallback; }"
             class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
           />
@@ -1515,7 +1526,7 @@
 
   <!-- 4. ŞAHSİYET & ESER DETAYLI ANSİKLOPEDİK OKUMA PENCERESİ (MODAL WINDOW) -->
   <div
-    id="figureModalOverlay"
+    id="figureModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[120] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div
@@ -1562,6 +1573,8 @@
               id="figureModalImage"
               src=""
               alt="Şahsiyet veya Eser Görseli"
+              loading="lazy"
+              decoding="async"
               class="w-full h-full object-cover object-top transition-opacity duration-500"
             />
             <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-2">
@@ -1634,7 +1647,7 @@
 
   <!-- 5. AI HIGH-RES ART BÜYÜTÜLMÜŞ GÖRSEL & ÖNEMLİ YAPILAR / SAVAŞ ALANI GALERİ PENCERESİ (LIGHTBOX MODAL) -->
   <div
-    id="imageLightboxOverlay"
+    id="imageLightboxOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[135] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div
@@ -1670,6 +1683,8 @@
           id="lightboxMainImage"
           src=""
           alt="Büyütülmüş Tarihsel Yapı / Savaş Alanı Görseli"
+          loading="lazy"
+          decoding="async"
           onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){ this.src = this.dataset.fallback; }"
           class="w-full h-full object-cover transition-all duration-500"
         />
@@ -12623,6 +12638,8 @@
       const overlay = document.getElementById('imageLightboxOverlay');
       const dialog = document.getElementById('imageLightboxDialog');
       if (overlay && dialog) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
         dialog.classList.remove('scale-95');
@@ -12635,6 +12652,8 @@
       const overlay = document.getElementById('imageLightboxOverlay');
       const dialog = document.getElementById('imageLightboxDialog');
       if (overlay && dialog) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
         dialog.classList.add('scale-95');
@@ -13098,6 +13117,7 @@
     function openFigureModal(cityItem, figIndex = 0) {
       stopSpeech();
       const overlay = document.getElementById('figureModalOverlay');
+      if (overlay) { overlay.style.visibility = 'visible'; overlay.setAttribute('aria-hidden', 'false'); }
       const dialog = document.getElementById('figureModalDialog');
       overlay.classList.remove('opacity-0', 'pointer-events-none');
       overlay.classList.add('opacity-100', 'pointer-events-auto');
@@ -13112,6 +13132,8 @@
       const overlay = document.getElementById('figureModalOverlay');
       const dialog = document.getElementById('figureModalDialog');
       if (overlay && dialog) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
         dialog.classList.add('scale-95');
@@ -13588,6 +13610,9 @@
         gain.connect(ambientMasterGain);
         osc.start(now);
         osc.stop(now + 3.25);
+        osc.onended = () => {
+          try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+        };
       } catch (e) {}
     }
 
@@ -13611,6 +13636,9 @@
         gain.connect(ambientMasterGain);
         osc.start(now);
         osc.stop(now + 2.85);
+        osc.onended = () => {
+          try { osc.disconnect(); gain.disconnect(); } catch (e) {}
+        };
       } catch (e) {}
     }
 
@@ -13678,6 +13706,8 @@
       playTone('click');
       const overlay = document.getElementById('audioModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -14262,6 +14292,8 @@
       renderQuizQuestion();
       const overlay = document.getElementById('quizModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
       }
@@ -14282,6 +14314,8 @@
       playTone('click');
       const overlay = document.getElementById('quizModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -14760,6 +14794,8 @@
       renderToursList();
       const overlay = document.getElementById('toursModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
       }
@@ -14769,6 +14805,8 @@
       playTone('click');
       const overlay = document.getElementById('toursModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -14896,6 +14934,8 @@
       playTone('click');
       const overlay = document.getElementById('researchNotesModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -15032,6 +15072,8 @@ Web: https://bayramakpamukcu.site
       renderCompareMatrix();
       const overlay = document.getElementById('compareModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
       }
@@ -15041,6 +15083,8 @@ Web: https://bayramakpamukcu.site
       playTone('click');
       const overlay = document.getElementById('compareModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -15440,6 +15484,8 @@ Web: https://bayramakpamukcu.site
       renderRoutesList();
       const overlay = document.getElementById('routesModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
       }
@@ -15449,6 +15495,8 @@ Web: https://bayramakpamukcu.site
       playTone('click');
       const overlay = document.getElementById('routesModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -15933,6 +15981,8 @@ Web: https://bayramakpamukcu.site
       renderEmpiresList();
       const overlay = document.getElementById('empiresModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
       }
@@ -15942,6 +15992,8 @@ Web: https://bayramakpamukcu.site
       playTone('click');
       const overlay = document.getElementById('empiresModalOverlay');
       if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
         overlay.classList.add('opacity-0', 'pointer-events-none');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
       }
@@ -17099,7 +17151,7 @@ Web: https://bayramakpamukcu.site
   <!-- AKADEMİK ŞEHİR & MEDENİYET KARŞILAŞTIRMA MATRİSİ (COMPARE MODAL) -->
   <!-- ============================================================================ -->
   <div
-    id="compareModalOverlay"
+    id="compareModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-purple-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17168,7 +17220,7 @@ Web: https://bayramakpamukcu.site
   <!-- TÜBİTAK TARİH & EDEBİYAT BİLGİ YARIŞMASI MODALI (QUIZ MODAL) -->
   <!-- ============================================================================ -->
   <div
-    id="quizModalOverlay"
+    id="quizModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17286,7 +17338,7 @@ Web: https://bayramakpamukcu.site
   <!-- REHBERLİ TEMATİK ROTALAR MODALI (TOURS MODAL) -->
   <!-- ============================================================================ -->
   <div
-    id="toursModalOverlay"
+    id="toursModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden border border-sky-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17373,7 +17425,7 @@ Web: https://bayramakpamukcu.site
   <!-- AKADEMİK ARAŞTIRMA NOTU & APA KAYNAKÇA MODALI -->
   <!-- ============================================================================ -->
   <div
-    id="researchNotesModalOverlay"
+    id="researchNotesModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-xl rounded-3xl overflow-hidden border border-sky-400/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17450,7 +17502,7 @@ Web: https://bayramakpamukcu.site
   <!-- KADİM TİCARET VE MEDENİYET YOLLARI MODALI (HISTORIC ROUTES MODAL) -->
   <!-- ============================================================================ -->
   <div
-    id="routesModalOverlay"
+    id="routesModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17520,7 +17572,7 @@ Web: https://bayramakpamukcu.site
   <!-- TARİHSEL İMPARATORLUKLAR VE MEDENİYET HAVZALARI MODALI (HISTORIC EMPIRES MODAL) -->
   <!-- ============================================================================ -->
   <div
-    id="empiresModalOverlay"
+    id="empiresModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-cyan-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17590,7 +17642,7 @@ Web: https://bayramakpamukcu.site
   <!-- WAVE 10: ATMOSFERİK AKUSTİK & SES TERCİHLERİ MODAL OVERLAY -->
   <!-- ============================================================================ -->
   <div
-    id="audioModalOverlay"
+    id="audioModalOverlay" style="visibility: hidden;" aria-hidden="true"
     class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
   >
     <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden border border-violet-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
@@ -17693,5 +17745,16 @@ Web: https://bayramakpamukcu.site
     </div>
   </div>
 
+
+  <!-- PWA & High-Performance Cache Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.info('[Atlas PWA] Service Worker aktif:', reg.scope);
+        }).catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
