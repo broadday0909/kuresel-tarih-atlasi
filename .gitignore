@@ -6,6 +6,7 @@ package.json
 test_screenshots/
 temp/
 __pycache__/
+.dev_archive/
 dev_test_runner.js
 dev_test_*.js
 dev_*.js
