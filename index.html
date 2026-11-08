@@ -991,6 +991,38 @@
     </div>
   </header>
 
+  <!-- 3B GEODEZİK MESAFE CETVELİ FLOATING HUD BANNER -->
+  <div
+    id="rulerHudBanner"
+    class="fixed top-14 left-1/2 -translate-x-1/2 z-50 pointer-events-auto hidden transition-all duration-300 max-w-[94vw]"
+  >
+    <div class="glass-panel px-3.5 py-2 rounded-2xl flex items-center gap-3 border border-emerald-400/50 bg-slate-950/90 backdrop-blur-xl shadow-2xl">
+      <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 text-sm shrink-0">
+        📏
+      </div>
+      <div id="rulerHudContent" class="text-xs text-slate-200">
+        <span class="font-semibold text-emerald-300">3B Mesafe Cetveli:</span>
+        <span id="rulerPromptText" class="text-slate-300 ml-1">Küre üzerinde veya şehirlerden 1. noktayı seçin</span>
+      </div>
+      <div class="flex items-center gap-1.5 pl-2 border-l border-white/10">
+        <button
+          id="rulerResetBtn"
+          type="button"
+          class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-semibold text-slate-300 hover:text-white transition cursor-pointer"
+        >
+          Sıfırla
+        </button>
+        <button
+          id="rulerCloseBtn"
+          type="button"
+          class="w-6 h-6 rounded-lg bg-white/10 hover:bg-rose-500/20 hover:text-rose-300 text-slate-400 flex items-center justify-center transition cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ARAMA SONUÇLARI AÇILIR PANELİ (Üst bar overflow ile kesilmesin diye body seviyesinde, fixed konumlu) -->
   <div
     id="searchResultsPanel"
@@ -1124,6 +1156,16 @@
       title="Ses Efektlerini Aç / Kapat"
     >
       <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4 text-amber-300"></i>
+    </button>
+
+    <!-- Canlı 3B Geodezik Mesafe Cetveli (3D Measuring Ruler) -->
+    <button
+      id="toggleRulerBtn"
+      type="button"
+      class="earth-ctrl-btn w-10 h-10 rounded-xl flex items-center justify-center text-slate-300 shadow-xl"
+      title="Canlı 3B Geodezik Mesafe Cetveli (Kısayol: X)"
+    >
+      <i data-lucide="ruler" id="rulerIcon" class="w-4 h-4 text-emerald-400"></i>
     </button>
 
     <!-- Zoom (+) / (-) Kontrolleri -->
@@ -6099,6 +6141,10 @@
         toursBtnLabel: "Rotalar",
         routesBtnLabel: "Kadim Yollar",
         empiresBtnLabel: "İmparatorluklar",
+        tipRuler: "Canlı 3B Geodezik Mesafe Cetveli (Kısayol: X)",
+        rulerPrompt1: "Küre üzerinde veya şehirlerden 1. noktayı seçin",
+        rulerReset: "Sıfırla",
+        rulerClose: "Kapat",
         tipEmpires: "Tarihsel İmparatorluklar ve Medeniyet Havzaları (Kısayol: I)",
         empiresModalTitle: "Tarihsel İmparatorluklar ve Medeniyet Havzaları",
         empiresModalSubtitle: "Tarihin seyrini değiştiren cihan imparatorluklarının 3B küre üzerindeki hakimiyet sınırları",
@@ -6214,6 +6260,10 @@
         toursBtnLabel: "Tours",
         routesBtnLabel: "Ancient Routes",
         empiresBtnLabel: "Empires",
+        tipRuler: "Live 3D Geodesic Measuring Ruler (Key: X)",
+        rulerPrompt1: "Click 1st point or city on 3D globe",
+        rulerReset: "Reset",
+        rulerClose: "Close",
         tipEmpires: "Historic Empires & Spheres of Influence (Key: I)",
         empiresModalTitle: "Historic Empires & Spheres of Influence",
         empiresModalSubtitle: "Territorial boundaries of world empires visualized on the interactive 3D globe",
@@ -6738,7 +6788,12 @@
         .polygonCapColor(d => d.capColor || 'rgba(245,158,11,0.22)')
         .polygonSideColor(d => d.sideColor || 'rgba(0,0,0,0)')
         .polygonStrokeColor(d => d.strokeColor || '#fbbf24')
-        .polygonLabel(d => `<div class="bg-slate-900/90 text-amber-300 font-bold px-2 py-1 rounded shadow-lg text-xs border border-amber-500/40">${currentLang === 'en' ? d.name_en : d.name_tr}</div>`);
+        .polygonLabel(d => `<div class="bg-slate-900/90 text-amber-300 font-bold px-2 py-1 rounded shadow-lg text-xs border border-amber-500/40">${currentLang === 'en' ? d.name_en : d.name_tr}</div>`)
+        .onGlobeClick(({ lat, lng }) => {
+          if (isRulerActive) {
+            handleRulerPointSelection(lat, lng);
+          }
+        });
 
       window.world = world;
       window.MASTER_LOCATIONS = MASTER_LOCATIONS;
@@ -7118,6 +7173,11 @@
 
       wrapper.addEventListener('click', e => {
         e.stopPropagation();
+        if (isRulerActive) {
+          const cityName = currentLang === 'en' ? (item.city_en || item.city) : item.city;
+          handleRulerPointSelection(item.lat, item.lng, cityName);
+          return;
+        }
         selectCity(item.id);
       });
 
@@ -11970,6 +12030,7 @@
       setElText('routesShowAllBtnText', t.routesShowAll);
       setElText('routesClearBtnText', t.routesClear);
       setElTitle('toggleAtmosphereBtn', t.tipAtmosphere);
+      setElTitle('toggleRulerBtn', t.tipRuler);
       setElText('compareModalTitle', t.compareModalTitle);
       setElText('compareDrawArcLabel', t.compareDrawArcLabel);
       setElTitle('toggleSoundBtn', t.tipSound);
@@ -14439,7 +14500,166 @@ Web: https://bayramakpamukcu.site
       closeEmpiresModal();
     }
 
-                // ============================================================================
+
+    // ============================================================================
+    // 7H. CANLI 3B GEODEZİK MESAFE CETVELİ (LIVE 3D GEODESIC MEASURING RULER)
+    // ============================================================================
+    let isRulerActive = false;
+    let rulerPointA = null;
+    let rulerPointB = null;
+
+    function toggleRuler() {
+      if (isRulerActive) {
+        disableRuler();
+      } else {
+        enableRuler();
+      }
+    }
+
+    function enableRuler() {
+      isRulerActive = true;
+      rulerPointA = null;
+      rulerPointB = null;
+      playTone('select');
+
+      const btn = document.getElementById('toggleRulerBtn');
+      if (btn) {
+        btn.classList.add('border-emerald-400', 'bg-emerald-500/25', 'text-emerald-200');
+      }
+
+      const banner = document.getElementById('rulerHudBanner');
+      if (banner) {
+        banner.classList.remove('hidden');
+      }
+
+      updateRulerBannerText();
+      const container = document.getElementById('globeViz');
+      if (container) container.style.cursor = 'crosshair';
+    }
+
+    function disableRuler() {
+      isRulerActive = false;
+      rulerPointA = null;
+      rulerPointB = null;
+      playTone('click');
+
+      const btn = document.getElementById('toggleRulerBtn');
+      if (btn) {
+        btn.classList.remove('border-emerald-400', 'bg-emerald-500/25', 'text-emerald-200');
+      }
+
+      const banner = document.getElementById('rulerHudBanner');
+      if (banner) {
+        banner.classList.add('hidden');
+      }
+
+      // Clear ruler arcs & rings from globe
+      world.arcsData([]);
+      world.ringsData([]);
+
+      const container = document.getElementById('globeViz');
+      if (container) container.style.cursor = '';
+    }
+
+    function updateRulerBannerText() {
+      const isEn = currentLang === 'en';
+      const promptText = document.getElementById('rulerPromptText');
+      if (!promptText) return;
+
+      if (!rulerPointA) {
+        promptText.textContent = isEn
+          ? 'Click 1st point or city on 3D globe'
+          : 'Küre üzerinde veya şehirlerden 1. noktayı seçin';
+      } else if (rulerPointA && !rulerPointB) {
+        promptText.innerHTML = `
+          <span class="text-emerald-300 font-bold">1. Nokta (${rulerPointA.name})</span> ${isEn ? 'selected. Now choose destination.' : 'seçildi. Şimdi 2. noktayı veya varış şehrini seçin.'}
+        `;
+      }
+    }
+
+    function handleRulerPointSelection(lat, lng, name) {
+      const isEn = currentLang === 'en';
+
+      if (!rulerPointA) {
+        // Point A chosen
+        playTone('click');
+        rulerPointA = {
+          lat,
+          lng,
+          name: name || `${lat.toFixed(1)}°, ${lng.toFixed(1)}°`
+        };
+
+        world.ringsData([
+          { lat, lng, color: ['rgba(16,185,129,0.95)', 'rgba(0,0,0,0)'], maxR: 1.25, speed: 0.5, repeat: 800 }
+        ]);
+
+        updateRulerBannerText();
+      } else if (rulerPointA && !rulerPointB) {
+        // Point B chosen -> Calculate & Display
+        playTone('success');
+        rulerPointB = {
+          lat,
+          lng,
+          name: name || `${lat.toFixed(1)}°, ${lng.toFixed(1)}°`
+        };
+
+        const distKm = calculateHaversineDistanceKm(rulerPointA.lat, rulerPointA.lng, rulerPointB.lat, rulerPointB.lng);
+        const distMiles = Math.round(distKm * 0.621371);
+        const distNm = Math.round(distKm * 0.539957);
+        const caravanDays = Math.max(1, Math.round(distKm / 32));
+        const jetHours = (distKm / 900).toFixed(1);
+
+        // Draw 3D geodesic arc
+        world.arcsData([
+          {
+            startLat: rulerPointA.lat,
+            startLng: rulerPointA.lng,
+            endLat: rulerPointB.lat,
+            endLng: rulerPointB.lng,
+            color: ['#10b981', '#38bdf8'],
+            stroke: 0.45,
+            altScale: 0.3,
+            dashLength: 0.3,
+            dashGap: 0.08,
+            animateTime: 2500,
+            label: `${rulerPointA.name} ➔ ${rulerPointB.name} (${distKm.toLocaleString()} km)`
+          }
+        ]);
+
+        // Place pulsing rings on both endpoints
+        world.ringsData([
+          { lat: rulerPointA.lat, lng: rulerPointA.lng, color: ['rgba(16,185,129,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 },
+          { lat: rulerPointB.lat, lng: rulerPointB.lng, color: ['rgba(56,189,248,0.95)', 'rgba(0,0,0,0)'], maxR: 1.2, speed: 0.5, repeat: 800 }
+        ]);
+
+        // Fly camera to frame both points
+        const midLat = (rulerPointA.lat + rulerPointB.lat) / 2;
+        const midLng = (rulerPointA.lng + rulerPointB.lng) / 2;
+        const calculatedAlt = Math.max(1.15, Math.min(2.4, (distKm / 3200) + 0.65));
+        world.pointOfView({ lat: midLat, lng: midLng, altitude: calculatedAlt }, 1750);
+
+        // Display results in HUD Banner
+        const promptText = document.getElementById('rulerPromptText');
+        if (promptText) {
+          promptText.innerHTML = `
+            <span class="text-white font-bold">${rulerPointA.name}</span> ➔ <span class="text-white font-bold">${rulerPointB.name}</span>:
+            <span class="text-amber-300 font-mono font-bold">${distKm.toLocaleString()} km</span>
+            <span class="text-slate-400">(${distMiles.toLocaleString()} mi / ${distNm.toLocaleString()} nm)</span> •
+            <span class="text-emerald-300">🐪 ~${caravanDays} ${isEn ? 'days caravan' : 'gün kervan'}</span> •
+            <span class="text-sky-300">✈️ ~${jetHours} ${isEn ? 'hrs flight' : 'saat uçuş'}</span>
+          `;
+        }
+      } else {
+        // 3rd click: restart from new Point A
+        rulerPointA = null;
+        rulerPointB = null;
+        world.arcsData([]);
+        world.ringsData([]);
+        handleRulerPointSelection(lat, lng, name);
+      }
+    }
+
+                    // ============================================================================
     // 8. ARAYÜZ ETKİLEŞİMLERİ
     // ============================================================================
     function setupUIEvents() {
@@ -14819,6 +15039,10 @@ Web: https://bayramakpamukcu.site
       window.addEventListener('keydown', e => {
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
         if (e.key === 'Escape') {
+          if (isRulerActive) {
+            disableRuler();
+            return;
+          }
           if (isTimelineTourActive) {
             stopTimelineTour();
             return;
@@ -14886,6 +15110,11 @@ Web: https://bayramakpamukcu.site
         if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey) {
           e.preventDefault();
           document.getElementById('toggleAtmosphereBtn')?.click();
+          return;
+        }
+        if ((e.key === 'x' || e.key === 'X') && !e.ctrlKey) {
+          e.preventDefault();
+          toggleRuler();
           return;
         }
         if ((e.key === 'i' || e.key === 'I') && !e.ctrlKey) {
@@ -15076,6 +15305,15 @@ Web: https://bayramakpamukcu.site
       document.getElementById('swapCompareBtn')?.addEventListener('click', swapCompareCities);
       document.getElementById('compareDrawArcBtn')?.addEventListener('click', drawCompareArcOnGlobe);
       document.getElementById('toggleAtmosphereBtn')?.addEventListener('click', cycleAtmosphereTheme);
+      document.getElementById('toggleRulerBtn')?.addEventListener('click', toggleRuler);
+      document.getElementById('rulerResetBtn')?.addEventListener('click', () => {
+        rulerPointA = null;
+        rulerPointB = null;
+        world.arcsData([]);
+        world.ringsData([]);
+        updateRulerBannerText();
+      });
+      document.getElementById('rulerCloseBtn')?.addEventListener('click', disableRuler);
       document.getElementById('quizNextBtn')?.addEventListener('click', nextQuizQuestion);
       document.getElementById('quizRestartBtn')?.addEventListener('click', openQuizModal);
 
