@@ -7186,6 +7186,8 @@
     googleEarthTextureLoader.setCrossOrigin('anonymous');
     let lastTileUpdateSignature = '';
     let lastTrackedPov = { lat: null, lng: null, alt: null };
+    let targetFlyingPov = null;
+    let cameraFlightEndTime = 0;
 
     // ============================================================================
     // SIFIR-TAKILMA (ZERO-STUTTER) KADEMELİ DOKU VE DİNAMİK VRAM YÖNETİCİSİ
@@ -7196,13 +7198,13 @@
 
     function processPacedTextureUploads() {
       if (TEXTURE_UPLOAD_QUEUE.length === 0) return;
-      // Kare başına en fazla 2 dokuyu GPU VRAM'ine yükle (144 FPS kesintisiz akıcılık)
-      const count = Math.min(2, TEXTURE_UPLOAD_QUEUE.length);
+      // Donanım GPU'da kare başına 6-8 doku, mobil/CPU modunda 3 doku yükle (144 FPS kesintisiz akıcılık)
+      const batchLimit = (typeof ATLAS_GPU_CONFIG !== 'undefined' && ATLAS_GPU_CONFIG.hasHardwareGpu) ? 6 : 3;
+      const count = Math.min(batchLimit, TEXTURE_UPLOAD_QUEUE.length);
       for (let i = 0; i < count; i++) {
         const item = TEXTURE_UPLOAD_QUEUE.shift();
-        if (!item || !item.mesh || !item.mat) continue;
-        // Kamera başka bölgeye kaydıysa veya karo artık istenmiyorsa boşa GPU VRAM yüklemesi yapma, doğrudan imha et
-        if (!item.mesh.userData.wanted) {
+        if (!item || !item.mesh || !item.mat || !item.tex) continue;
+        if (!item.mesh.geometry || !item.mesh.material) {
           if (item.tex) item.tex.dispose();
           continue;
         }
@@ -7210,19 +7212,18 @@
         item.mat.opacity = 1.0;
         item.mat.needsUpdate = true;
         item.mesh.userData.loaded = true;
-        if (item.mesh.userData.wanted) {
-          item.mesh.visible = true;
-        }
+        item.mesh.visible = true;
       }
     }
 
     function incrementalEvictOldTiles() {
-      const maxTileCache = ATLAS_GPU_CONFIG && ATLAS_GPU_CONFIG.hasHardwareGpu ? 320 : 120;
+      const maxTileCache = (typeof ATLAS_GPU_CONFIG !== 'undefined' && ATLAS_GPU_CONFIG.hasHardwareGpu) ? 600 : 240;
       if (googleEarthTileCache.size <= maxTileCache) return;
-      // Toplu WebGL dispose kilitlenmesini önlemek için kare başına en fazla 2 eski karoyu temizle
+      // Toplu WebGL dispose kilitlenmesini önlemek için kare başına en fazla 3 eski karoyu temizle
       let evicted = 0;
       for (const [oldKey, oldMesh] of googleEarthTileCache.entries()) {
-        if (!oldMesh.userData.wanted) {
+        // z <= 6 olan temel bölgesel/ufuk karolarını ASLA silme, böylece çevre/yan alanlar asla bulanıklaşmaz
+        if (!oldMesh.userData.wanted && oldMesh.userData.z > 6) {
           if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
           if (oldMesh.geometry) oldMesh.geometry.dispose();
           if (oldMesh.material) {
@@ -7231,7 +7232,7 @@
           }
           googleEarthTileCache.delete(oldKey);
           evicted++;
-          if (evicted >= 2) break; // Frame başına MAX 2 silme (Sıfır mikro-donma)
+          if (evicted >= 3) break; // Frame başına MAX 3 silme (Sıfır mikro-donma)
         }
       }
     }
@@ -7399,10 +7400,12 @@
     }
 
     function updateGoogleEarthSurfaceTiles(pov) {
-      if (!world || !googleEarthTileGroup || !pov) return;
+      if (!world || !googleEarthTileGroup) return;
+      const activePov = (targetFlyingPov && performance.now() < cameraFlightEndTime) ? targetFlyingPov : (pov || (world ? world.pointOfView() : null));
+      if (!activePov) return;
 
       // Uzaydan çok uzak görünümde (altitude >= 1.55) 8K ana küre dokusunu göster
-      if (pov.altitude >= 1.55) {
+      if (activePov.altitude >= 1.55) {
         googleEarthTileGroup.visible = false;
         lastTileUpdateSignature = 'far';
         return;
@@ -7411,28 +7414,28 @@
       googleEarthTileGroup.visible = true;
       const isMobile = window.innerWidth < 768;
       const aspect = Math.max(1.0, (window.innerWidth || 1280) / Math.max(1, window.innerHeight || 720));
-      const cosLat = Math.max(0.42, Math.cos((Math.abs(pov.lat) * Math.PI) / 180));
+      const cosLat = Math.max(0.35, Math.cos((Math.abs(activePov.lat) * Math.PI) / 180));
       // Geniş ekranlarda (16:9 / 21:9) sağ ve sol kenarların asla bulanık kalmaması için yatay karo yarıçapını ekran oranına göre genişlet
-      const wideFactor = Math.min(2.8, aspect / cosLat);
+      const wideFactor = Math.min(3.8, Math.max(1.2, aspect / cosLat));
 
       let targetZ = 5;
-      if (pov.altitude < 0.008) {
+      if (activePov.altitude < 0.008) {
         targetZ = isMobile ? 12 : 14;
-      } else if (pov.altitude < 0.018) {
+      } else if (activePov.altitude < 0.018) {
         targetZ = isMobile ? 11 : 13;
-      } else if (pov.altitude < 0.038) {
+      } else if (activePov.altitude < 0.038) {
         targetZ = isMobile ? 10 : 12;
-      } else if (pov.altitude < 0.075) {
+      } else if (activePov.altitude < 0.075) {
         targetZ = isMobile ? 9 : 11;
-      } else if (pov.altitude < 0.14) {
+      } else if (activePov.altitude < 0.14) {
         targetZ = isMobile ? 8 : 10;
-      } else if (pov.altitude < 0.26) {
-        targetZ = isMobile ? 7 : 9;
-      } else if (pov.altitude < 0.48) {
+      } else if (activePov.altitude < 0.26) {
+        targetZ = isMobile ? 8 : 9;
+      } else if (activePov.altitude < 0.48) {
         targetZ = 8;
-      } else if (pov.altitude < 0.82) {
+      } else if (activePov.altitude < 0.82) {
         targetZ = 7;
-      } else if (pov.altitude < 1.25) {
+      } else if (activePov.altitude < 1.25) {
         targetZ = 6;
       } else {
         targetZ = 5;
@@ -7444,41 +7447,51 @@
       }
 
       const tileLang = (typeof currentLang === 'string' && currentLang === 'en') ? 'en' : 'tr';
-      const centerTile = latLngToSlippyTile(pov.lat, pov.lng, targetZ);
+      const centerTile = latLngToSlippyTile(activePov.lat, activePov.lng, targetZ);
       const sig = `${tileLang}:${targetZ}:${centerTile.x}:${centerTile.y}`;
       if (sig === lastTileUpdateSignature) return;
       lastTileUpdateSignature = sig;
 
       const wantedKeys = new Set();
 
-      // 1) En Üst Tam Çözünürlüklü Google Earth Hybrid Katmanı (targetZ): Ekranın merkezi ve odaklanılan bölge
-      const radScale = ATLAS_GPU_CONFIG.hasHardwareGpu ? 1.0 : ATLAS_GPU_CONFIG.maxTileRadiusFactor;
-      const mainRadY = isMobile ? 1 : 2;
-      const mainRadX = isMobile ? 2 : Math.min(4, Math.max(2, Math.ceil(mainRadY * wideFactor * radScale)));
-      addTileGridAroundCenter(pov.lat, pov.lng, targetZ, mainRadX, mainRadY, wantedKeys);
+      // 1) Temel Bölgesel Ufuk Katmanı (z=6):
+      // Tüm Türkiye, Akdeniz, Karadeniz ve komşu coğrafyayı kesintisiz kaplar; kenarlar ve çevre ASLA bulanık kalmaz.
+      const baseRadY = isMobile ? 2 : 3;
+      const baseRadX = isMobile ? 4 : Math.min(9, Math.ceil(baseRadY * wideFactor));
+      addTileGridAroundCenter(activePov.lat, activePov.lng, 6, baseRadX, baseRadY, wantedKeys);
 
-      // 2) Alt Geçiş Katmanı (targetZ - 2): Yakınlaşırken boşlukları önleyen yumuşak geçiş
-      const subZ = Math.max(5, targetZ - 2);
-      if (subZ < targetZ) {
-        const sRadY = 1;
-        const sRadX = Math.min(3, Math.ceil(sRadY * wideFactor));
-        addTileGridAroundCenter(pov.lat, pov.lng, subZ, sRadX, sRadY, wantedKeys);
+      // 2) Ara Geçiş Katmanı (subZ): Yakınlaşırken ufku ve çevreyi yüksek çözünürlükle destekler
+      const subZ = Math.max(6, targetZ - 2);
+      if (subZ < targetZ && subZ !== 6) {
+        const sRadY = isMobile ? 2 : 3;
+        const sRadX = isMobile ? 4 : Math.min(8, Math.ceil(sRadY * wideFactor));
+        addTileGridAroundCenter(activePov.lat, activePov.lng, subZ, sRadX, sRadY, wantedKeys);
       }
 
-      // 3) Küresel Ufuk Katmanı (z=5 veya z=4): Sadece görünür ufuk konisi kadar karo iste
-      const horizonZ = pov.altitude < 0.35 ? 5 : 4;
-      const hRadY = isMobile ? 1 : 2;
-      const hRadX = isMobile ? 2 : Math.min(4, Math.ceil(hRadY * wideFactor));
-      addTileGridAroundCenter(pov.lat, pov.lng, horizonZ, hRadX, hRadY, wantedKeys);
+      // 3) En Üst Ultra-Net Odak Katmanı (targetZ): Kamera merkezindeki şehri/bölgeyi tam çözünürlükle kaplar
+      const mainRadY = isMobile ? 2 : 4;
+      const mainRadX = isMobile ? 3 : Math.min(10, Math.max(3, Math.ceil(mainRadY * wideFactor)));
+      addTileGridAroundCenter(activePov.lat, activePov.lng, targetZ, mainRadX, mainRadY, wantedKeys);
 
       for (const [k, mesh] of googleEarthTileCache.entries()) {
         const isWanted = wantedKeys.has(k);
         mesh.userData.wanted = isWanted;
-        const nextVis = isWanted ? mesh.userData.loaded : (mesh.userData.loaded && mesh.userData.z <= 6);
-        if (mesh.visible !== nextVis) {
-          mesh.visible = nextVis;
+        // Yüklenmiş hiçbir karoyu aniden karartıp gizleme; sadece loaded durumuna göre görünür kalsın
+        if (mesh.userData.loaded && !mesh.visible) {
+          mesh.visible = true;
         }
       }
+    }
+
+    // Kamera Uçuşlarında (flyTo) Hedef Noktanın Karolarını 0ms Gecikmeyle Yükleyen Akıllı Yardımcı
+    function smoothFlyTo(targetPov, duration = 1450) {
+      if (!world || !targetPov) return;
+      targetFlyingPov = targetPov;
+      cameraFlightEndTime = performance.now() + duration;
+      updateGoogleEarthSurfaceTiles(targetPov);
+      world.pointOfView(targetPov, duration);
+      setTimeout(updateZoomAndCompass, Math.min(500, duration));
+      setTimeout(updateZoomAndCompass, duration + 50);
     }
 
     function initGlobe() {
@@ -7688,7 +7701,11 @@
       // Aktif sürükleme (pointer drag) durumu takibi - Sürükleme esnasında ağır DOM sorgularını durdur
       let isPointerDragging = false;
       if (container) {
-        container.addEventListener('pointerdown', () => { isPointerDragging = true; }, { passive: true });
+        container.addEventListener('pointerdown', () => {
+          isPointerDragging = true;
+          targetFlyingPov = null;
+          cameraFlightEndTime = 0;
+        }, { passive: true });
       }
       window.addEventListener('pointerup', () => {
         if (isPointerDragging) {
@@ -7700,7 +7717,11 @@
           }
         }
       }, { passive: true });
-      window.addEventListener('pointercancel', () => { isPointerDragging = false; }, { passive: true });
+      window.addEventListener('pointercancel', () => {
+        isPointerDragging = false;
+        targetFlyingPov = null;
+        cameraFlightEndTime = 0;
+      }, { passive: true });
 
       // 60-144 FPS DELTA-TIME SABİTLENMİŞ VE ULTRA AKICI RENDER DÖNGÜSÜ
       let lastCameraMoveAt = 0;
@@ -7840,6 +7861,7 @@
       if (world) {
         world.controls().autoRotate = isAutoRotating;
         world.pointOfView({ lat: 36.0, lng: 28.0, altitude: 1.85 }, 2200);
+        updateGoogleEarthSurfaceTiles({ lat: 39.0, lng: 35.0, altitude: 1.0 });
         setTimeout(updateZoomAndCompass, 2250);
 
         // Şehir pinlerini giriş ekranı kalktıktan hemen sonra kamera dalışıyla birlikte sahneye al
@@ -11435,7 +11457,7 @@
         const targetLng = phase.focusLng || selectedWar.lng;
         const cosLat = Math.max(0.5, Math.cos((Math.abs(targetLat) * Math.PI) / 180));
         const lngOffset = isMobile ? 0 : 0.15 / cosLat;
-        world.pointOfView(
+        smoothFlyTo(
           {
             lat: targetLat,
             lng: targetLng + lngOffset,
@@ -11443,7 +11465,6 @@
           },
           1350
         );
-        setTimeout(updateZoomAndCompass, 1400);
       }
     }
 
@@ -11464,7 +11485,7 @@
       const isMobile = window.innerWidth < 768;
       const cosLat = Math.max(0.5, Math.cos((Math.abs(item.lat) * Math.PI) / 180));
       const lngOffset = isMobile ? 0 : 0.85 / cosLat;
-      world.pointOfView(
+      smoothFlyTo(
         {
           lat: item.lat,
           lng: item.lng + lngOffset,
@@ -11540,7 +11561,7 @@
       const isMobile = window.innerWidth < 768;
       const cosLat = Math.max(0.5, Math.cos((Math.abs(item.lat) * Math.PI) / 180));
       const lngOffset = isMobile ? 0 : 0.85 / cosLat;
-      world.pointOfView(
+      smoothFlyTo(
         {
           lat: item.lat,
           lng: item.lng + lngOffset,
@@ -11549,8 +11570,6 @@
         1450
       );
 
-      setTimeout(updateZoomAndCompass, 500);
-      setTimeout(updateZoomAndCompass, 1500);
       populateDrawer(item);
       updateCityWarViewOnGlobeAndDrawer(item);
       openDrawer();
@@ -13296,6 +13315,13 @@
           activeFigureModalState.figIndex,
           activeFigureModalState.topicIndex
         );
+      }
+
+      // Google Earth yüzey karolarını yeni dile göre tazele
+      lastTileUpdateSignature = '';
+      if (world) {
+        const pov = world.pointOfView();
+        if (pov) updateGoogleEarthSurfaceTiles(pov);
       }
     }
 
@@ -16316,19 +16342,18 @@ Web: https://bayramakpamukcu.site
           renderFilteredMarkers();
 
           if (activeRegion === 'turkiye') {
-            world.pointOfView({ lat: 39.5, lng: 35.2, altitude: 1.25 }, 1500);
+            smoothFlyTo({ lat: 39.5, lng: 35.2, altitude: 1.25 }, 1500);
           } else if (activeRegion === 'avrupa') {
-            world.pointOfView({ lat: 48.5, lng: 12.0, altitude: 1.65 }, 1500);
+            smoothFlyTo({ lat: 48.5, lng: 12.0, altitude: 1.65 }, 1500);
           } else if (activeRegion === 'asya') {
-            world.pointOfView({ lat: 36.5, lng: 88.0, altitude: 1.95 }, 1500);
+            smoothFlyTo({ lat: 36.5, lng: 88.0, altitude: 1.95 }, 1500);
           } else if (activeRegion === 'amerika') {
-            world.pointOfView({ lat: 22.0, lng: -74.0, altitude: 2.05 }, 1500);
+            smoothFlyTo({ lat: 22.0, lng: -74.0, altitude: 2.05 }, 1500);
           } else if (activeRegion === 'afrika') {
-            world.pointOfView({ lat: 22.0, lng: 14.0, altitude: 1.9 }, 1500);
+            smoothFlyTo({ lat: 22.0, lng: 14.0, altitude: 1.9 }, 1500);
           } else {
-            world.pointOfView({ lat: 34.0, lng: 25.0, altitude: 2.15 }, 1500);
+            smoothFlyTo({ lat: 34.0, lng: 25.0, altitude: 2.15 }, 1500);
           }
-          setTimeout(updateZoomAndCompass, 1550);
         });
       });
 
@@ -16387,19 +16412,18 @@ Web: https://bayramakpamukcu.site
           // Seçilen çağa göre kamera odağı
           if (world) {
             if (activeEra === 'antik') {
-              world.pointOfView({ lat: 39.0, lng: 18.0, altitude: 1.6 }, 1400);
+              smoothFlyTo({ lat: 39.0, lng: 18.0, altitude: 1.6 }, 1400);
             } else if (activeEra === 'ortacag') {
-              world.pointOfView({ lat: 54.0, lng: 5.0, altitude: 1.7 }, 1400);
+              smoothFlyTo({ lat: 54.0, lng: 5.0, altitude: 1.7 }, 1400);
             } else if (activeEra === 'ronesans') {
-              world.pointOfView({ lat: 48.0, lng: 8.0, altitude: 1.65 }, 1400);
+              smoothFlyTo({ lat: 48.0, lng: 8.0, altitude: 1.65 }, 1400);
             } else if (activeEra === 'yuzvil19') {
-              world.pointOfView({ lat: 56.0, lng: 15.0, altitude: 1.75 }, 1400);
+              smoothFlyTo({ lat: 56.0, lng: 15.0, altitude: 1.75 }, 1400);
             } else if (activeEra === 'modern') {
-              world.pointOfView({ lat: 39.5, lng: 35.0, altitude: 1.45 }, 1400);
+              smoothFlyTo({ lat: 39.5, lng: 35.0, altitude: 1.45 }, 1400);
             } else if (activeEra === 'all') {
-              world.pointOfView({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
+              smoothFlyTo({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
             }
-            setTimeout(updateZoomAndCompass, 1450);
           }
         });
       });
@@ -16953,15 +16977,13 @@ Web: https://bayramakpamukcu.site
       document.getElementById('zoomInBtn').addEventListener('click', () => {
         const pov = world.pointOfView();
         const nextAlt = Math.max(0.0035, pov.altitude * 0.65);
-        world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
-        setTimeout(updateZoomAndCompass, 600);
+        smoothFlyTo({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
       });
 
       document.getElementById('zoomOutBtn').addEventListener('click', () => {
         const pov = world.pointOfView();
         const nextAlt = Math.min(3.0, pov.altitude * 1.42);
-        world.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
-        setTimeout(updateZoomAndCompass, 600);
+        smoothFlyTo({ lat: pov.lat, lng: pov.lng, altitude: nextAlt }, 550);
       });
 
       document.getElementById('compassResetBtn').addEventListener('click', () => {
@@ -16982,8 +17004,7 @@ Web: https://bayramakpamukcu.site
         if (btn3D) {
           btn3D.classList.remove('border-sky-400', 'bg-sky-500/20', 'text-sky-200');
         }
-        world.pointOfView({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
-        setTimeout(updateZoomAndCompass, 1450);
+        smoothFlyTo({ lat: 38.0, lng: 22.0, altitude: 2.0 }, 1400);
       });
 
       document.getElementById('toggle3DViewBtn').addEventListener('click', e => {
@@ -16995,18 +17016,17 @@ Web: https://bayramakpamukcu.site
         e.currentTarget.classList.toggle('text-sky-200', isTilted3D);
         if (isTilted3D) {
           badge.textContent = '2D';
-          world.pointOfView(
+          smoothFlyTo(
             { lat: pov.lat, lng: pov.lng, altitude: Math.min(0.12, Math.max(0.025, pov.altitude * 0.45)) },
             900
           );
         } else {
           badge.textContent = '3D';
-          world.pointOfView(
+          smoothFlyTo(
             { lat: pov.lat, lng: pov.lng, altitude: Math.max(1.15, pov.altitude * 2.2) },
             900
           );
         }
-        setTimeout(updateZoomAndCompass, 950);
       });
 
       document.getElementById('toggleRotateBtn').addEventListener('click', e => {
