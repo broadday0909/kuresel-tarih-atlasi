@@ -367,6 +367,11 @@
       pointer-events: auto;
       transform-origin: 50% 7.5px;
       transform: translate(-50%, -7.5px) scale(var(--pin-zoom-scale, 1));
+      contain: layout style;
+    }
+
+    .atlas-pin-wrapper:hover,
+    .atlas-pin-wrapper.active-pin {
       will-change: transform;
     }
 
@@ -408,28 +413,36 @@
       z-index: 2;
     }
 
-    .pin-pulse {
-      position: absolute;
-      inset: -2.5px;
-      border-radius: 50%;
-      border: 1px solid var(--pin-color);
-      opacity: 0.85;
-      animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-      pointer-events: none;
-      transform: translate3d(0, 0, 0);
-      backface-visibility: hidden;
-    }
-
+    .pin-pulse,
     .pin-pulse-delayed {
       position: absolute;
       inset: -2.5px;
       border-radius: 50%;
+      pointer-events: none;
+      display: none;
+      animation: none;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+    }
+
+    .atlas-pin-wrapper.active-pin .pin-pulse,
+    .atlas-pin-wrapper:hover .pin-pulse,
+    .pin-anchor-root.active-anchor .pin-pulse,
+    .pin-anchor-root:hover .pin-pulse {
+      display: block;
+      border: 1px solid var(--pin-color);
+      opacity: 0.85;
+      animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+
+    .atlas-pin-wrapper.active-pin .pin-pulse-delayed,
+    .atlas-pin-wrapper:hover .pin-pulse-delayed,
+    .pin-anchor-root.active-anchor .pin-pulse-delayed,
+    .pin-anchor-root:hover .pin-pulse-delayed {
+      display: block;
       border: 1px solid var(--pin-second-color, var(--pin-color));
       opacity: 0.65;
       animation: pulseRing 2.2s cubic-bezier(0.24, 0, 0.38, 1) 1.1s infinite;
-      pointer-events: none;
-      transform: translate3d(0, 0, 0);
-      backface-visibility: hidden;
     }
 
     body.cpu-fallback-mode .pin-pulse,
@@ -453,10 +466,9 @@
       letter-spacing: 0.015em;
       white-space: nowrap;
       color: #f8fafc;
-      background: rgba(8, 12, 24, 0.94);
+      background: rgba(10, 25, 47, 0.95);
       border: 1px solid var(--pin-color);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       gap: 2px;
@@ -665,6 +677,7 @@
       contain: layout style;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
+      will-change: transform;
     }
 
     #globeViz,
@@ -7186,6 +7199,26 @@
     const googleEarthTileCache = new Map();
     const googleEarthTextureLoader = new THREE.TextureLoader();
     googleEarthTextureLoader.setCrossOrigin('anonymous');
+
+    // 1x1 Boş Doku (Asenkron WebGL Shader Ön-Derlemesi ve USE_MAP Hazırlığı)
+    // Karolar baştan 1x1 boş doku ile başlatılarak USE_MAP varyantı önceden derlenir;
+    // gerçek uydu dokusu geldiğinde çalışma anında senkron shader derleme takılması (stutter) önlenir.
+    const BLANK_1X1_TEXTURE = (() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = 'rgba(0,0,0,0)';
+        ctx.fillRect(0, 0, 1, 1);
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.generateMipmaps = false;
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      return tex;
+    })();
+
     let lastTileUpdateSignature = '';
     let lastTrackedPov = { lat: null, lng: null, alt: null };
     let targetFlyingPov = null;
@@ -7214,7 +7247,7 @@
         item.mat.opacity = 1.0;
         item.mat.needsUpdate = true;
         item.mesh.userData.loaded = true;
-        item.mesh.visible = true;
+        item.mesh.visible = !!item.mesh.userData.wanted;
       }
     }
 
@@ -7229,7 +7262,7 @@
           if (googleEarthTileGroup) googleEarthTileGroup.remove(oldMesh);
           if (oldMesh.geometry) oldMesh.geometry.dispose();
           if (oldMesh.material) {
-            if (oldMesh.material.map) oldMesh.material.map.dispose();
+            if (oldMesh.material.map && oldMesh.material.map !== BLANK_1X1_TEXTURE) oldMesh.material.map.dispose();
             oldMesh.material.dispose();
           }
           googleEarthTileCache.delete(oldKey);
@@ -7326,9 +7359,10 @@
 
       const mat = new THREE.MeshBasicMaterial({
         color: 0xffffff,
+        map: BLANK_1X1_TEXTURE,
         transparent: true,
         opacity: 0,
-        side: THREE.DoubleSide,
+        side: THREE.FrontSide,
         depthTest: true,
         depthWrite: false,
         polygonOffset: true,
@@ -7478,10 +7512,7 @@
       for (const [k, mesh] of googleEarthTileCache.entries()) {
         const isWanted = wantedKeys.has(k);
         mesh.userData.wanted = isWanted;
-        // Yüklenmiş hiçbir karoyu aniden karartıp gizleme; sadece loaded durumuna göre görünür kalsın
-        if (mesh.userData.loaded && !mesh.visible) {
-          mesh.visible = true;
-        }
+        mesh.visible = isWanted && !!mesh.userData.loaded;
       }
     }
 
@@ -7671,6 +7702,25 @@
       googleEarthTileGroup.renderOrder = 5;
       world.scene().add(googleEarthTileGroup);
 
+      // Asenkron WebGL Shader Ön-Derlemesi (USE_MAP Program Pre-compilation)
+      const tileRenderer = world && world.renderer ? world.renderer() : null;
+      if (tileRenderer) {
+        if (tileRenderer.initTexture) tileRenderer.initTexture(BLANK_1X1_TEXTURE);
+        const precompileScene = new THREE.Scene();
+        const precompileMesh = new THREE.Mesh(
+          new THREE.BufferGeometry(),
+          new THREE.MeshBasicMaterial({
+            map: BLANK_1X1_TEXTURE,
+            side: THREE.FrontSide,
+            transparent: true,
+            depthTest: true,
+            depthWrite: false
+          })
+        );
+        precompileScene.add(precompileMesh);
+        if (tileRenderer.compile) tileRenderer.compile(precompileScene, world.camera());
+      }
+
       // Yarı Saydam Gerçekçi 3B Bulut Katmanı (Sadece Donanım GPU'lu Masaüstünde Aktif - Mobilde ve CPU Modunda Sıfır Yük)
       const CLOUDS_ALT = 0.012;
       const CLOUDS_ROTATION_SPEED = -0.006;
@@ -7678,8 +7728,8 @@
       if (ATLAS_GPU_CONFIG.enableClouds) {
         new THREE.TextureLoader().load(CLOUDS_TEXTURE_ULTRA, cloudsTexture => {
           cloudsMesh = new THREE.Mesh(
-            new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 96, 96),
-            new THREE.MeshPhongMaterial({
+            new THREE.SphereGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 32, 32),
+            new THREE.MeshBasicMaterial({
               map: cloudsTexture,
               transparent: true,
               opacity: 0.36,
@@ -7723,7 +7773,6 @@
           if (world) {
             const pov = world.pointOfView();
             if (pov) updateGoogleEarthSurfaceTiles(pov);
-            if (introDismissed) declutterPinLabels();
           }
         }
       }, { passive: true });
