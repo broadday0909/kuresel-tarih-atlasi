@@ -7170,8 +7170,10 @@
     const ATLAS_GPU_CONFIG = AtlasGpuEngine.detect();
     window.ATLAS_GPU_CONFIG = ATLAS_GPU_CONFIG;
 
+    const isFileProtocol = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
     const DAY_TEXTURE_MOBILE = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg';
-    const DAY_TEXTURE_8K_DESKTOP = './earth-8k.jpg';
+    // file:// protokolünde (çift tıklayarak doğrudan tarayıcıda açıldığında) tarayıcının yerel dosya CORS engeline takılmamak için CDN dokusu kullanılır; HTTP/HTTPS canlı/yerel sunucularda ise 8K ultra doku kullanılır.
+    const DAY_TEXTURE_8K_DESKTOP = isFileProtocol ? DAY_TEXTURE_MOBILE : './earth-8k.jpg';
     const BUMP_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png';
     const WATER_SPECULAR_TEX = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png';
     const SKY_TEXTURE_ULTRA = 'https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png';
@@ -7505,7 +7507,15 @@
         powerPreference: ATLAS_GPU_CONFIG.powerPreference,
         precision: ATLAS_GPU_CONFIG.precision
       })(container)
-        .globeImageUrl(isMobileDevice || !hasHardwareGpu ? DAY_TEXTURE_MOBILE : DAY_TEXTURE_8K_DESKTOP);
+        .globeImageUrl(isMobileDevice || !hasHardwareGpu || isFileProtocol ? DAY_TEXTURE_MOBILE : DAY_TEXTURE_8K_DESKTOP);
+
+      if (hasHardwareGpu && !isMobileDevice && !isFileProtocol) {
+        const test8k = new Image();
+        test8k.onerror = () => {
+          if (world) world.globeImageUrl(DAY_TEXTURE_MOBILE);
+        };
+        test8k.src = DAY_TEXTURE_8K_DESKTOP;
+      }
 
       if (hasHardwareGpu && !isMobileDevice) {
         world.bumpImageUrl(BUMP_TEXTURE_ULTRA).backgroundImageUrl(SKY_TEXTURE_ULTRA);
