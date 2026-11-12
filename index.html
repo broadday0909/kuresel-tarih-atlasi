@@ -12886,7 +12886,7 @@
       if (!selectedWar) return null;
       const title = ((selectedWar.title_tr || '') + ' ' + (selectedWar.short_tr || '') + ' ' + (selectedWar.title_en || '')).toLocaleLowerCase('tr-TR');
       if (title.includes('çanakkale') || title.includes('gallipoli')) return 'canakkale';
-      if (title.includes('istanbul') || title.includes('constantinople') || (title.includes('feth') && !title.includes('ani') && !title.includes('kars'))) return 'istanbul';
+      if (title.includes('istanbul') || title.includes('constantinople') || title.includes('kostantiniyye') || ((title.includes('feth') || title.includes('kuşatma')) && (title.includes('1453') || title.includes('haliç') || title.includes('bizans')))) return 'istanbul';
       if (title.includes('sakarya') || title.includes('taarruz') || title.includes('dumlupınar') || title.includes('kocatepe')) return 'ankara';
       if (title.includes('malazgirt') || title.includes('manzikert')) return 'malazgirt';
       if (title.includes('mohaç') || title.includes('mohacs')) return 'mohac';
