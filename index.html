@@ -695,7 +695,8 @@
     #researchNotesModalOverlay,
     #routesModalOverlay,
     #toursModalOverlay,
-    #audioModalOverlay {
+    #audioModalOverlay,
+    #todayInHistoryModalOverlay {
       contain: layout paint;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
@@ -1131,6 +1132,18 @@
         >
           <span id="timelineTourIcon">▶️</span>
           <span id="timelineTourBtnText">Zaman Yolculuğu</span>
+        </button>
+
+        <!-- "Tarihte Bugün Ne Oldu?" Modülü Butonu -->
+        <button
+          type="button"
+          id="todayInHistoryBtn"
+          class="px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-gradient-to-r from-amber-500/25 via-rose-500/25 to-purple-500/25 text-amber-200 border border-amber-400/50 hover:border-amber-300 hover:from-amber-500/40 hover:to-purple-500/40 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shadow-md ml-1"
+          title="Tarihte Bugün Ne Oldu? (Günün Önemli Olayları ve Edebi Gelişmeleri)"
+        >
+          <span>📅</span>
+          <span id="todayInHistoryBtnLabel">Tarihte Bugün</span>
+          <span id="todayInHistoryDateBadge" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-mono">--</span>
         </button>
       </div>
 
@@ -9236,7 +9249,7 @@
         .ringPropagationSpeed(d => d.speed || 0.32)
         .ringRepeatPeriod(d => d.repeat || 1200)
         // 3B Kadim Ticaret & Kültür Yolları Katmanı
-        .pathsData([])
+        .pathsData(typeof getTradeRoutesPathsData === 'function' ? getTradeRoutesPathsData() : [])
         .pathPoints(d => d.coords)
         .pathPointLat(p => p[0])
         .pathPointLng(p => p[1])
@@ -9396,6 +9409,16 @@
         });
       }
 
+      // 3B Tel Kafes Anıt Hologramları Motoru Başlatma (Ayasofya, Kolezyum, Piramitler vb.)
+      if (typeof LandmarkHologramEngine !== 'undefined') {
+        LandmarkHologramEngine.init(world);
+      }
+
+      // 3B Kadim Ticaret Yolları Akan Işık Parçacıkları Motoru Başlatma (Three.js Points)
+      if (typeof TradeRouteParticleEngine !== 'undefined') {
+        TradeRouteParticleEngine.init(world);
+      }
+
       // GOOGLE EARTH VE OYUN MOTORU DUYARLILIĞINDA ÇOK YÜKSEK FPS DÖNÜŞ & YAKINLAŞMA KONTROLLERİ
       const controls = world.controls();
       controls.enableDamping = true;
@@ -9471,6 +9494,17 @@
           if (cloudsMesh) {
             cloudsMesh.rotation.y += ((CLOUDS_ROTATION_SPEED * Math.PI) / 180) * deltaFactor;
           }
+
+          // 3B Döner Tel Kafes Anıt Hologramları Güncelleme (Altitude <= 0.60 iken kendi etrafında döner)
+          if (typeof LandmarkHologramEngine !== 'undefined') {
+            LandmarkHologramEngine.update(deltaFactor);
+          }
+
+          // 3B Kadim Ticaret Yolları Akan Işık Parçacıkları Güncelleme (Three.js Points)
+          if (typeof TradeRouteParticleEngine !== 'undefined') {
+            TradeRouteParticleEngine.update(deltaFactor);
+          }
+
           if (world) {
             const pov = world.pointOfView();
             if (pov) {
@@ -9909,11 +9943,9 @@
         world.htmlElementsData(filteredList);
       }
 
-      // "Edebiyat & Akımlar" seçildiğinde edebi yayılım izlerini, "Savaşlar" seçildiğinde küresel harekat hatlarını çiz
+      // Savaşlar modundaki gereksiz küresel arc/trail çizgileri kaldırıldı; sadece edebiyat modunda yaylar gösterilir
       if (activeCategory === 'edebiyat') {
         world.arcsData(buildLiteratureArcs(filteredList));
-      } else if (activeCategory === 'savaslar') {
-        world.arcsData(buildGlobalWarArcs(filteredList));
       } else {
         world.arcsData([]);
       }
@@ -13073,8 +13105,6 @@
         world.htmlElementsData(filteredList);
         if (activeCategory === 'edebiyat') {
           world.arcsData(buildLiteratureArcs(filteredList));
-        } else if (activeCategory === 'savaslar') {
-          world.arcsData(buildGlobalWarArcs(filteredList));
         } else {
           world.arcsData([]);
         }
@@ -13105,7 +13135,8 @@
           animateTime: 2400
         }));
 
-        world.arcsData([...buildGlobalWarArcs(filteredList), ...branchArcs]);
+        // Savaş dalları arasındaki gereksiz arc çizgileri kaldırıldı; temiz 3B küre görünümü sağlandı
+        world.arcsData(activeCategory === 'edebiyat' ? buildLiteratureArcs(filteredList) : []);
         world.ringsData([
           {
             lat: item.lat,
@@ -13217,26 +13248,12 @@
       // 1) Şok Dalgaları (ringsData)
       world.ringsData(phase.rings || []);
 
-      // 2) SADECE TIKLANAN SAVAŞA AİT TRAİL (ÇİZGİ) GÖSTERİLİR (Diğer savaşlarda çizgi/trail olmaz)
-      const battleArcs = (phase.vectors || []).map(v => ({
-        startLat: v.startLat,
-        startLng: v.startLng,
-        endLat: v.endLat,
-        endLng: v.endLng,
-        label: v.label,
-        color: v.type === 'attack' ? ['#ef4444', '#f97316'] : ['#fbbf24', '#38bdf8'],
-        altScale: 0.08,
-        stroke: 0.22,
-        dashLength: 0.22,
-        dashGap: 0.12,
-        animateTime: 4800 // Taktik askeri harekat akışının sakin ve net izlenebilmesi için optimize edilmiş hız
-      }));
-
+      // 2) Savaş simülasyonundaki gereksiz arc/trail çizgileri temizlendi; taktik şok dalgaları ve birlik pini odaklı temiz görünüm
       const filteredList = getFilteredLocations().map(loc => ({ ...loc }));
       if (activeCategory === 'edebiyat') {
-        world.arcsData([...buildLiteratureArcs(filteredList), ...battleArcs]);
+        world.arcsData(buildLiteratureArcs(filteredList));
       } else {
-        world.arcsData(battleArcs);
+        world.arcsData([]);
       }
 
       // 3) Savaş Alanı Gerçek Taktik Taraflarını (Karargah, Mayın Hattı vb.) 3B Kürede Göster
@@ -15031,6 +15048,12 @@
       setElText('catLabelWars', t.catWars);
       setElText('quizBtnLabel', t.quizBtnLabel);
       setElText('toursBtnLabel', t.toursBtnLabel);
+
+      if (typeof updateTodayInHistoryBadge === 'function') updateTodayInHistoryBadge();
+      const todayBtnLabel = document.getElementById('todayInHistoryBtnLabel');
+      if (todayBtnLabel) todayBtnLabel.textContent = lang === 'en' ? 'Today in History' : 'Tarihte Bugün';
+      const todayModalTitle = document.getElementById('todayModalTitle');
+      if (todayModalTitle) todayModalTitle.textContent = lang === 'en' ? 'What Happened Today in History?' : 'Tarihte Bugün Ne Oldu?';
       setElText('routesBtnLabel', t.routesBtnLabel);
       setElText('empiresBtnLabel', t.empiresBtnLabel);
       setElTitle('openEmpiresBtn', t.tipEmpires);
@@ -17304,9 +17327,1157 @@ Web: https://bayramakpamukcu.site
           { lat: 38.75, lng: 42.49, label: "Ahlat" },
           { lat: 40.19, lng: 29.06, label: "Bursa" }
         ]
+      },
+      // 7. SAHRA-AŞIRI ALTIN VE TUZ YOLU (TRANS-SAHARAN GOLD & SALT ROAD)
+      {
+        id: "trans_sahara",
+        icon: "🏜️",
+        color: "#eab308",
+        glowColor: "rgba(234, 179, 8, 0.95)",
+        centerLat: 22.0,
+        centerLng: 8.0,
+        altitude: 1.85,
+        name_tr: "Sahra-Aşırı Altın ve Tuz Yolu (Batı Afrika - Akdeniz)",
+        name_en: "Trans-Saharan Gold & Salt Caravan Route",
+        era_tr: "8. Yüzyıl – 16. Yüzyıl (Mali & Songhay İmparatorlukları)",
+        era_en: "8th – 16th Century (Mali & Songhai Empires)",
+        length_km: "4.200 km",
+        desc_tr: "Nijer Nehri kıyısındaki efsanevi Timbuktu, Gao ve Cenné'den çıkarılan altın ve fildişini Sahra Çölü'nün Taghaza tuz madenleri ve Agadez vahasından geçirerek Trablus, Tunus ve Kahire'ye taşıyan kadim ticaret koridoru.",
+        desc_en: "Traversing the Sahara Desert carrying West African gold, salt, and manuscripts from Timbuktu, Djenne, and Gao through Taghaza and Agadez to Tripoli, Tunis, and Cairo.",
+        stops_tr: ["Cenné (Djenne)", "Timbuktu", "Gao", "Taghaza (Tuz Madenleri)", "Agadez", "Ghat", "Gadames", "Trablus", "İskenderiye", "Kahire"],
+        stops_en: ["Djenne", "Timbuktu", "Gao", "Taghaza (Salt Mines)", "Agadez", "Ghat", "Ghadames", "Tripoli", "Alexandria", "Cairo"],
+        coords: [
+          [13.90, -4.55],
+          [16.76, -3.00],
+          [16.27, -0.04],
+          [23.50, -5.00],
+          [16.97, 7.99],
+          [24.96, 10.17],
+          [30.13, 9.50],
+          [32.88, 13.18],
+          [31.20, 29.91],
+          [30.04, 31.23]
+        ],
+        rings: [
+          { lat: 16.76, lng: -3.00, label: "Timbuktu" },
+          { lat: 16.97, lng: 7.99, label: "Agadez" },
+          { lat: 32.88, lng: 13.18, label: "Trablus" },
+          { lat: 30.04, lng: 31.23, label: "Kahire" }
+        ]
       }
     ];
+
+    // R1 Trade Routes Global Alias & Waypoints Compatibility
+    HISTORIC_TRADE_ROUTES.forEach(r => { r.waypoints = r.coords; });
     window.HISTORIC_TRADE_ROUTES = HISTORIC_TRADE_ROUTES;
+    window.ANCIENT_TRADE_ROUTES = HISTORIC_TRADE_ROUTES;
+
+    function getTradeRoutesPathsData() {
+      if (typeof HISTORIC_TRADE_ROUTES === 'undefined') return [];
+      return HISTORIC_TRADE_ROUTES.map(r => ({
+        coords: r.coords,
+        color: r.color,
+        stroke: 2.2,
+        dashLength: 0.16,
+        dashGap: 0.04,
+        animateTime: 6000,
+        name_tr: r.name_tr,
+        name_en: r.name_en
+      }));
+    }
+
+    // ============================================================================
+    // 7E-PARTICLES: KADİM TİCARET YOLLARI AKAN IŞIK PARÇACIKLARI MOTORU
+    // (HIGH-PERFORMANCE THREE.JS FLOW PARTICLES ENGINE - THREE.POINTS)
+    // ============================================================================
+    const TradeRouteParticleEngine = (function() {
+      let pointsMesh = null;
+      let particlePositions = null;
+      let particleColors = null;
+      let particleStates = [];
+      let routeSplineData = [];
+      let isInitialized = false;
+      let isVisible = true;
+      let activeFilterRouteId = 'all';
+
+      function createParticleTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+        grad.addColorStop(0.2, 'rgba(255, 240, 180, 0.95)');
+        grad.addColorStop(0.5, 'rgba(245, 158, 11, 0.45)');
+        grad.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 64, 64);
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.needsUpdate = true;
+        return tex;
+      }
+
+      function init(globeInstance) {
+        if (isInitialized || !globeInstance) return;
+        const scene = globeInstance.scene();
+        if (!scene) return;
+
+        const globeRadius = globeInstance.getGlobeRadius();
+        const particleElevation = 0.007;
+        const targetRadius = globeRadius * (1 + particleElevation);
+
+        routeSplineData = HISTORIC_TRADE_ROUTES.map(route => {
+          const v3Points = route.coords.map(c => {
+            const coords = globeInstance.getCoords(c[0], c[1], particleElevation);
+            return new THREE.Vector3(coords.x, coords.y, coords.z);
+          });
+
+          const curve = new THREE.CatmullRomCurve3(v3Points, false, 'centripetal');
+          const SAMPLES = 800;
+          const sampled = new Array(SAMPLES + 1);
+          for (let i = 0; i <= SAMPLES; i++) {
+            const pt = curve.getPointAt(i / SAMPLES);
+            pt.normalize().multiplyScalar(targetRadius);
+            sampled[i] = pt;
+          }
+
+          return {
+            id: route.id,
+            color: new THREE.Color(route.color || '#f59e0b'),
+            samples: sampled,
+            sampleCount: SAMPLES
+          };
+        });
+
+        const PARTICLES_PER_ROUTE = 50;
+        const totalParticles = routeSplineData.length * PARTICLES_PER_ROUTE;
+        particlePositions = new Float32Array(totalParticles * 3);
+        particleColors = new Float32Array(totalParticles * 3);
+        particleStates = [];
+
+        let pIdx = 0;
+        routeSplineData.forEach((rData, rIdx) => {
+          for (let i = 0; i < PARTICLES_PER_ROUTE; i++) {
+            const progress = i / PARTICLES_PER_ROUTE;
+            const speed = 0.0006 + (Math.random() * 0.00035);
+            particleStates.push({
+              routeIndex: rIdx,
+              routeId: rData.id,
+              progress,
+              speed
+            });
+
+            particleColors[pIdx * 3] = rData.color.r;
+            particleColors[pIdx * 3 + 1] = rData.color.g;
+            particleColors[pIdx * 3 + 2] = rData.color.b;
+
+            const sIdx = Math.floor(progress * rData.sampleCount);
+            const pt = rData.samples[sIdx];
+            particlePositions[pIdx * 3] = pt.x;
+            particlePositions[pIdx * 3 + 1] = pt.y;
+            particlePositions[pIdx * 3 + 2] = pt.z;
+
+            pIdx++;
+          }
+        });
+
+        const geom = new THREE.BufferGeometry();
+        geom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        geom.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+        const isMobile = (typeof ATLAS_GPU_CONFIG !== 'undefined' && ATLAS_GPU_CONFIG.isMobileDevice) || window.innerWidth < 768;
+        const mat = new THREE.PointsMaterial({
+          size: isMobile ? 4.2 : 6.0,
+          map: createParticleTexture(),
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          vertexColors: true,
+          opacity: 0.95
+        });
+
+        pointsMesh = new THREE.Points(geom, mat);
+        pointsMesh.renderOrder = 999;
+        scene.add(pointsMesh);
+
+        isInitialized = true;
+      }
+
+      function update(deltaFactor) {
+        if (!isInitialized || !pointsMesh || !isVisible) return;
+        const len = particleStates.length;
+        const geom = pointsMesh.geometry;
+        const pos = particlePositions;
+
+        for (let i = 0; i < len; i++) {
+          const p = particleStates[i];
+          if (activeFilterRouteId !== 'all' && p.routeId !== activeFilterRouteId) {
+            pos[i * 3] = 0;
+            pos[i * 3 + 1] = 0;
+            pos[i * 3 + 2] = 0;
+            continue;
+          }
+
+          p.progress += p.speed * deltaFactor;
+          if (p.progress >= 1.0) p.progress -= 1.0;
+
+          const rData = routeSplineData[p.routeIndex];
+          const sIdx = (p.progress * rData.sampleCount) | 0;
+          const pt = rData.samples[sIdx];
+
+          const idx3 = i * 3;
+          pos[idx3] = pt.x;
+          pos[idx3 + 1] = pt.y;
+          pos[idx3 + 2] = pt.z;
+        }
+
+        geom.attributes.position.needsUpdate = true;
+      }
+
+      function setVisible(visible) {
+        isVisible = visible;
+        if (pointsMesh) pointsMesh.visible = visible;
+      }
+
+      function setActiveRoute(routeId) {
+        activeFilterRouteId = routeId || 'all';
+        if (!routeId) {
+          setVisible(false);
+        } else {
+          setVisible(true);
+        }
+      }
+
+      return {
+        init,
+        update,
+        setVisible,
+        setActiveRoute
+      };
+    })();
+    window.TradeRouteParticleEngine = TradeRouteParticleEngine;
+
+    // ============================================================================
+    // 7F-HOLOGRAMS: 3B DÖNER MİNİK ANIT TEL KAFES VE SİLÜET HOLOGRAMLARI MOTORU
+    // (PROCEDURAL 3D WIREFRAME LANDMARK HOLOGRAMS ENGINE - THREE.JS)
+    // ============================================================================
+    const LandmarkHologramEngine = (function() {
+      let masterGroup = null;
+      let isInitialized = false;
+      const _tempCamDir = new THREE.Vector3();
+
+      function createHoloComponent(geom, colorHex, meshOpacity = 0.16, wireOpacity = 0.88, useWireframe = false) {
+        const comp = new THREE.Group();
+        const lineMat = new THREE.LineBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: wireOpacity,
+          linewidth: 1
+        });
+        const meshMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: meshOpacity,
+          depthWrite: false,
+          side: THREE.DoubleSide
+        });
+
+        const mesh = new THREE.Mesh(geom, meshMat);
+        const edges = useWireframe
+          ? new THREE.LineSegments(new THREE.WireframeGeometry(geom), lineMat)
+          : new THREE.LineSegments(new THREE.EdgesGeometry(geom, 25), lineMat);
+
+        comp.add(mesh);
+        comp.add(edges);
+        return comp;
+      }
+
+      function createHoloBaseRing(radius, colorHex) {
+        const ringGeo = new THREE.RingGeometry(radius * 0.94, radius, 32);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: 0.55,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        return ring;
+      }
+
+      // Model 1: Ayasofya (Istanbul)
+      function buildAyasofya(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'ayasofya_model';
+
+        const podium = createHoloComponent(new THREE.BoxGeometry(2.0, 0.12, 2.0), colorHex, 0.22, 0.85);
+        podium.position.y = 0.06;
+        root.add(podium);
+
+        const mainBlock = createHoloComponent(new THREE.BoxGeometry(1.4, 0.52, 1.4), colorHex, 0.16, 0.85);
+        mainBlock.position.y = 0.38;
+        root.add(mainBlock);
+
+        const drum = createHoloComponent(new THREE.CylinderGeometry(0.55, 0.55, 0.18, 16), colorHex, 0.2, 0.85);
+        drum.position.y = 0.73;
+        root.add(drum);
+
+        const domeGeo = new THREE.SphereGeometry(0.54, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2);
+        const dome = createHoloComponent(domeGeo, colorHex, 0.22, 0.9, true);
+        dome.position.y = 0.82;
+        root.add(dome);
+
+        for (let side of [-1, 1]) {
+          const semiGeo = new THREE.SphereGeometry(0.35, 12, 6, 0, Math.PI, 0, Math.PI / 2);
+          const semi = createHoloComponent(semiGeo, colorHex, 0.18, 0.8, true);
+          semi.rotation.y = side === 1 ? 0 : Math.PI;
+          semi.position.set(0, 0.62, side * 0.55);
+          root.add(semi);
+        }
+
+        const corner = 0.92;
+        for (let mx of [-corner, corner]) {
+          for (let mz of [-corner, corner]) {
+            const minGroup = new THREE.Group();
+            const shaft = createHoloComponent(new THREE.CylinderGeometry(0.045, 0.065, 1.6, 8), colorHex, 0.2, 0.85);
+            shaft.position.y = 0.8;
+            minGroup.add(shaft);
+
+            const balc = createHoloComponent(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 8), colorHex, 0.35, 0.9);
+            balc.position.y = 1.25;
+            minGroup.add(balc);
+
+            const spire = createHoloComponent(new THREE.ConeGeometry(0.05, 0.32, 8), colorHex, 0.3, 0.95);
+            spire.position.y = 1.76;
+            minGroup.add(spire);
+
+            minGroup.position.set(mx, 0, mz);
+            root.add(minGroup);
+          }
+        }
+
+        root.add(createHoloBaseRing(1.4, colorHex));
+        return root;
+      }
+
+      // Model 2: Kolezyum (Rome)
+      function buildKolezyum(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'kolezyum_model';
+
+        const tier1 = createHoloComponent(new THREE.CylinderGeometry(1.2, 1.25, 0.35, 24, 1, true), colorHex, 0.16, 0.9);
+        tier1.position.y = 0.175;
+        root.add(tier1);
+
+        const tier2 = createHoloComponent(new THREE.CylinderGeometry(1.15, 1.18, 0.32, 24, 1, true), colorHex, 0.18, 0.9);
+        tier2.position.y = 0.51;
+        root.add(tier2);
+
+        const tier3Geo = new THREE.CylinderGeometry(1.1, 1.13, 0.35, 24, 1, true, -Math.PI * 0.25, Math.PI * 1.35);
+        const tier3 = createHoloComponent(tier3Geo, colorHex, 0.22, 0.95);
+        tier3.position.y = 0.845;
+        root.add(tier3);
+
+        for (let i = 0; i < 3; i++) {
+          const rIn = 0.55 + i * 0.18;
+          const rOut = 0.68 + i * 0.18;
+          const seat = createHoloComponent(new THREE.CylinderGeometry(rOut, rIn, 0.12, 18, 1, true), colorHex, 0.12, 0.7);
+          seat.position.y = 0.12 + i * 0.14;
+          root.add(seat);
+        }
+
+        const arena = createHoloComponent(new THREE.CylinderGeometry(0.5, 0.5, 0.02, 16), colorHex, 0.25, 0.8);
+        arena.position.y = 0.05;
+        root.add(arena);
+
+        for (let a = 0; a < 12; a++) {
+          const angle = (a / 12) * Math.PI * 2;
+          const rib = createHoloComponent(new THREE.BoxGeometry(0.04, 0.65, 0.45), colorHex, 0.15, 0.8);
+          rib.position.set(Math.cos(angle) * 0.95, 0.35, Math.sin(angle) * 0.95);
+          rib.rotation.y = -angle;
+          root.add(rib);
+        }
+
+        root.add(createHoloBaseRing(1.45, colorHex));
+        return root;
+      }
+
+      // Model 3: Piramitler (Cairo/Giza)
+      function buildPiramitler(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'piramitler_model';
+
+        function createPyramid(baseSize, height, px, pz, color) {
+          const pyrGroup = new THREE.Group();
+          const radius = baseSize * 0.7071;
+          const geom = new THREE.ConeGeometry(radius, height, 4, 4);
+          geom.rotateY(Math.PI / 4);
+
+          const mesh = createHoloComponent(geom, color, 0.2, 0.95, true);
+          mesh.position.y = height / 2;
+          pyrGroup.add(mesh);
+
+          const capHeight = height * 0.14;
+          const capRadius = radius * 0.14;
+          const capGeo = new THREE.ConeGeometry(capRadius, capHeight, 4);
+          capGeo.rotateY(Math.PI / 4);
+          const capMesh = createHoloComponent(capGeo, 0xfffbeb, 0.6, 1.0, true);
+          capMesh.position.y = height - capHeight / 2;
+          pyrGroup.add(capMesh);
+
+          pyrGroup.position.set(px, 0, pz);
+          return pyrGroup;
+        }
+
+        root.add(createPyramid(1.3, 1.05, -0.25, -0.2, colorHex));
+        root.add(createPyramid(1.15, 0.96, 0.65, 0.5, colorHex));
+        root.add(createPyramid(0.68, 0.52, 1.35, 1.15, colorHex));
+
+        root.add(createHoloBaseRing(1.8, colorHex));
+        return root;
+      }
+
+      // Model 4: Parthenon (Athens)
+      function buildParthenon(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'parthenon_model';
+
+        const step1 = createHoloComponent(new THREE.BoxGeometry(2.1, 0.07, 1.3), colorHex, 0.2, 0.85);
+        step1.position.y = 0.035;
+        root.add(step1);
+        const step2 = createHoloComponent(new THREE.BoxGeometry(1.95, 0.07, 1.15), colorHex, 0.22, 0.85);
+        step2.position.y = 0.105;
+        root.add(step2);
+
+        const cella = createHoloComponent(new THREE.BoxGeometry(1.25, 0.55, 0.55), colorHex, 0.15, 0.85);
+        cella.position.y = 0.415;
+        root.add(cella);
+
+        const colGeo = new THREE.CylinderGeometry(0.035, 0.042, 0.58, 8);
+        const colY = 0.43;
+        for (let c = 0; c < 8; c++) {
+          const cx = -0.82 + c * (1.64 / 7);
+          for (let cz of [-0.46, 0.46]) {
+            const col = createHoloComponent(colGeo, colorHex, 0.18, 0.85);
+            col.position.set(cx, colY, cz);
+            root.add(col);
+          }
+        }
+        for (let r = 1; r < 5; r++) {
+          const cz = -0.46 + r * (0.92 / 5);
+          for (let cx of [-0.82, 0.82]) {
+            const col = createHoloComponent(colGeo, colorHex, 0.18, 0.85);
+            col.position.set(cx, colY, cz);
+            root.add(col);
+          }
+        }
+
+        const entablature = createHoloComponent(new THREE.BoxGeometry(1.88, 0.10, 1.08), colorHex, 0.22, 0.9);
+        entablature.position.y = 0.77;
+        root.add(entablature);
+
+        for (let side of [-1, 1]) {
+          const pedGeom = new THREE.ConeGeometry(0.60, 0.22, 3);
+          pedGeom.rotateY(Math.PI / 6);
+          const ped = createHoloComponent(pedGeom, colorHex, 0.25, 0.95, true);
+          ped.position.set(0, 0.93, side * 0.49);
+          root.add(ped);
+        }
+
+        const roofRidge = createHoloComponent(new THREE.BoxGeometry(1.82, 0.05, 0.15), colorHex, 0.28, 0.9);
+        roofRidge.position.y = 1.03;
+        root.add(roofRidge);
+
+        root.add(createHoloBaseRing(1.5, colorHex));
+        return root;
+      }
+
+      // Model 5: Anıtkabir (Ankara)
+      function buildAnitkabir(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'anitkabir_model';
+
+        const plaza = createHoloComponent(new THREE.BoxGeometry(2.3, 0.08, 1.6), colorHex, 0.2, 0.85);
+        plaza.position.y = 0.04;
+        root.add(plaza);
+
+        const podium = createHoloComponent(new THREE.BoxGeometry(1.85, 0.12, 1.15), colorHex, 0.24, 0.85);
+        podium.position.y = 0.14;
+        root.add(podium);
+
+        const hallCore = createHoloComponent(new THREE.BoxGeometry(1.45, 0.76, 0.78), colorHex, 0.15, 0.85);
+        hallCore.position.y = 0.58;
+        root.add(hallCore);
+
+        const pillarGeo = new THREE.BoxGeometry(0.045, 0.74, 0.045);
+        const pillarY = 0.57;
+        for (let i = 0; i < 8; i++) {
+          const px = -0.78 + i * (1.56 / 7);
+          for (let pz of [-0.48, 0.48]) {
+            const p = createHoloComponent(pillarGeo, colorHex, 0.2, 0.9);
+            p.position.set(px, pillarY, pz);
+            root.add(p);
+          }
+        }
+        for (let j = 1; j < 4; j++) {
+          const pz = -0.48 + j * (0.96 / 4);
+          for (let px of [-0.78, 0.78]) {
+            const p = createHoloComponent(pillarGeo, colorHex, 0.2, 0.9);
+            p.position.set(px, pillarY, pz);
+            root.add(p);
+          }
+        }
+
+        const roofCornice = createHoloComponent(new THREE.BoxGeometry(1.72, 0.12, 1.06), colorHex, 0.28, 0.95);
+        roofCornice.position.y = 1.00;
+        root.add(roofCornice);
+
+        const pole = createHoloComponent(new THREE.CylinderGeometry(0.015, 0.015, 1.25, 6), 0xfffbeb, 0.3, 0.95);
+        pole.position.set(0, 0.7, 0.65);
+        root.add(pole);
+
+        root.add(createHoloBaseRing(1.6, colorHex));
+        return root;
+      }
+
+      // Model 6: Tac Mahal (Delhi/Agra)
+      function buildTacMahal(colorHex) {
+        const root = new THREE.Group();
+        root.name = 'tac_mahal_model';
+
+        const plinth = createHoloComponent(new THREE.BoxGeometry(1.85, 0.12, 1.85), colorHex, 0.22, 0.85);
+        plinth.position.y = 0.06;
+        root.add(plinth);
+
+        const tomb = createHoloComponent(new THREE.BoxGeometry(1.12, 0.68, 1.12), colorHex, 0.16, 0.85);
+        tomb.position.y = 0.46;
+        root.add(tomb);
+
+        const drum = createHoloComponent(new THREE.CylinderGeometry(0.38, 0.38, 0.22, 16), colorHex, 0.2, 0.85);
+        drum.position.y = 0.91;
+        root.add(drum);
+
+        const domeGeo = new THREE.SphereGeometry(0.40, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.78);
+        const dome = createHoloComponent(domeGeo, colorHex, 0.25, 0.92, true);
+        dome.position.y = 1.18;
+        root.add(dome);
+        const finial = createHoloComponent(new THREE.ConeGeometry(0.04, 0.26, 8), colorHex, 0.35, 1.0);
+        finial.position.y = 1.58;
+        root.add(finial);
+
+        const cOffset = 0.38;
+        for (let cx of [-cOffset, cOffset]) {
+          for (let cz of [-cOffset, cOffset]) {
+            const chattri = new THREE.Group();
+            const cDrum = createHoloComponent(new THREE.CylinderGeometry(0.10, 0.10, 0.18, 8), colorHex, 0.2, 0.85);
+            cDrum.position.y = 0.89;
+            chattri.add(cDrum);
+            const cDome = createHoloComponent(new THREE.SphereGeometry(0.11, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2), colorHex, 0.25, 0.9, true);
+            cDome.position.y = 0.98;
+            chattri.add(cDome);
+            chattri.position.set(cx, 0, cz);
+            root.add(chattri);
+          }
+        }
+
+        const mCorner = 0.78;
+        for (let mx of [-mCorner, mCorner]) {
+          for (let mz of [-mCorner, mCorner]) {
+            const minGroup = new THREE.Group();
+            const shaft = createHoloComponent(new THREE.CylinderGeometry(0.04, 0.058, 1.4, 8), colorHex, 0.18, 0.85);
+            shaft.position.y = 0.76;
+            minGroup.add(shaft);
+
+            const balc1 = createHoloComponent(new THREE.CylinderGeometry(0.075, 0.075, 0.03, 8), colorHex, 0.35, 0.9);
+            balc1.position.y = 0.95;
+            minGroup.add(balc1);
+
+            const balc2 = createHoloComponent(new THREE.CylinderGeometry(0.07, 0.07, 0.03, 8), colorHex, 0.35, 0.9);
+            balc2.position.y = 1.30;
+            minGroup.add(balc2);
+
+            const cap = createHoloComponent(new THREE.SphereGeometry(0.06, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2), colorHex, 0.3, 0.95, true);
+            cap.position.y = 1.49;
+            minGroup.add(cap);
+
+            minGroup.position.set(mx, 0, mz);
+            root.add(minGroup);
+          }
+        }
+
+        root.add(createHoloBaseRing(1.5, colorHex));
+        return root;
+      }
+
+      const LANDMARK_CONFIGS = [
+        { id: 'ayasofya', cityId: 'istanbul', name_tr: 'Ayasofya-i Kebir', name_en: 'Hagia Sophia', lat: 41.008, lng: 28.980, color: 0xfbbf24, altitude: 0.015, scale: 1.12, builder: buildAyasofya },
+        { id: 'kolezyum', cityId: 'roma', name_tr: 'Flavius Amfitiyatrosu (Kolezyum)', name_en: 'Colosseum', lat: 41.890, lng: 12.492, color: 0x38bdf8, altitude: 0.015, scale: 1.15, builder: buildKolezyum },
+        { id: 'piramitler', cityId: 'kahire', name_tr: 'Büyük Giza Piramitleri', name_en: 'Great Pyramids of Giza', lat: 31.200, lng: 29.910, color: 0xf59e0b, altitude: 0.015, scale: 1.15, builder: buildPiramitler },
+        { id: 'parthenon', cityId: 'atina', name_tr: 'Parthenon Tapınağı (Akropolis)', name_en: 'Parthenon (Acropolis)', lat: 37.980, lng: 23.720, color: 0xa7f3d0, altitude: 0.015, scale: 1.10, builder: buildParthenon },
+        { id: 'anitkabir', cityId: 'ankara', name_tr: 'Anıtkabir', name_en: 'Anıtkabir', lat: 39.930, lng: 32.850, color: 0xf87171, altitude: 0.015, scale: 1.10, builder: buildAnitkabir },
+        { id: 'tac_mahal', cityId: 'delhi', name_tr: 'Tac Mahal', name_en: 'Taj Mahal', lat: 28.610, lng: 77.200, color: 0xe0e7ff, altitude: 0.015, scale: 1.12, builder: buildTacMahal }
+      ];
+
+      function init(globeInstance) {
+        if (isInitialized || !globeInstance) return;
+        const scene = globeInstance.scene();
+        if (!scene) return;
+
+        masterGroup = new THREE.Group();
+        masterGroup.name = 'landmarkHologramMasterGroup';
+        masterGroup.visible = false;
+
+        LANDMARK_CONFIGS.forEach(cfg => {
+          const coords = globeInstance.getCoords(cfg.lat, cfg.lng, cfg.altitude || 0.015);
+          if (!coords) return;
+
+          const anchor = new THREE.Group();
+          anchor.name = `holo_anchor_${cfg.id}`;
+          anchor.position.set(coords.x, coords.y, coords.z);
+
+          const normal = new THREE.Vector3(coords.x, coords.y, coords.z).normalize();
+          anchor.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), normal);
+          anchor.userData = { normal, landmarkId: cfg.id };
+
+          const spinGroup = new THREE.Group();
+          spinGroup.name = 'spinGroup';
+
+          const model = cfg.builder(cfg.color);
+          const sc = cfg.scale || 1.0;
+          model.scale.set(sc, sc, sc);
+          spinGroup.add(model);
+
+          anchor.add(spinGroup);
+          masterGroup.add(anchor);
+        });
+
+        scene.add(masterGroup);
+        isInitialized = true;
+      }
+
+      function update(deltaFactor) {
+        if (!isInitialized || !masterGroup || !window.world) return;
+        const pov = window.world.pointOfView();
+        if (!pov) return;
+
+        const isCloseZoom = pov.altitude <= 0.60;
+        masterGroup.visible = isCloseZoom;
+        if (!isCloseZoom) return;
+
+        const rotSpeed = 0.012 * deltaFactor;
+        const cam = window.world.camera();
+        const camPos = cam ? cam.position : null;
+
+        const count = masterGroup.children.length;
+        for (let i = 0; i < count; i++) {
+          const anchor = masterGroup.children[i];
+          const spin = anchor.children[0];
+          if (spin) spin.rotation.y += rotSpeed;
+
+          if (camPos && anchor.userData && anchor.userData.normal) {
+            _tempCamDir.subVectors(camPos, anchor.position).normalize();
+            anchor.visible = anchor.userData.normal.dot(_tempCamDir) > 0.10;
+          }
+        }
+      }
+
+      return {
+        init,
+        update,
+        getConfigs: () => LANDMARK_CONFIGS,
+        getMasterGroup: () => masterGroup
+      };
+    })();
+    window.LandmarkHologramEngine = LandmarkHologramEngine;
+
+    // ============================================================================
+    // 7G. "TARİHTE BUGÜN NE OLDU?" VERİTABANI VE MODÜL MOTORU (TODAY IN HISTORY)
+    // ============================================================================
+    const TODAY_IN_HISTORY_EVENTS = Object.freeze([
+      {
+        id: "ev_11_12_istanbul",
+        month: 11,
+        day: 12,
+        year: "1918",
+        category: "tarih",
+        cityId: "istanbul",
+        city: "İstanbul",
+        city_en: "Istanbul",
+        country: "Türkiye",
+        lat: 41.0082,
+        lng: 28.9784,
+        title: "Mustafa Kemal Paşa'nın İstanbul'a Gelişi ve Tarihi İrade",
+        title_en: "Mustafa Kemal Pasha's Arrival in Istanbul & Historic Resolve",
+        summary: "I. Dünya Savaşı'nın ardından müttefik donanmasının İstanbul Boğazı'na demirlemesi üzerine Mustafa Kemal Paşa, Kartal istimbotunda yaveri Cevat Abbas'a 'Geldikleri gibi giderler!' sözüyle Milli Mücadele'nin sarsılmaz iradesini ilan etmiştir.",
+        summary_en: "Following the armistice, Allied warships entered the Bosphorus; Mustafa Kemal Pasha declared his iconic vow: 'They shall go as they have come!'",
+        significance: "Türk Kurtuluş Savaşı'nın fikri ve psikolojik başlangıç kıvılcımı.",
+        significance_en: "The intellectual and strategic catalyst of the Turkish War of Independence."
+      },
+      {
+        id: "ev_11_12_paris",
+        month: 11,
+        day: 12,
+        year: "1840",
+        category: "edebiyat",
+        cityId: "paris",
+        city: "Paris",
+        city_en: "Paris",
+        country: "Fransa",
+        lat: 48.8566,
+        lng: 2.3522,
+        title: "Auguste Rodin'in Doğumu ve Edebi Plastik Sanat",
+        title_en: "Birth of Auguste Rodin & Modern Sculptural Narrative",
+        summary: "Dante'nin İlahi Komedya'sından ilham alan 'Cehennem Kapısı' ve 'Düşünen Adam' başyapıtlarının yaratıcısı heykeltıraş Auguste Rodin Paris'te dünyaya geldi.",
+        summary_en: "Auguste Rodin, creator of masterpieces inspired by Dante's Divine Comedy such as 'The Gates of Hell' and 'The Thinker', was born in Paris.",
+        significance: "Edebiyat ve plastik sanatların 19. yüzyıldaki en derin felsefi sentezi.",
+        significance_en: "The profoundest 19th-century synthesis of literature and plastic arts."
+      },
+      {
+        id: "ev_11_10_ankara",
+        month: 11,
+        day: 10,
+        year: "1938",
+        category: "tarih",
+        cityId: "ankara",
+        city: "Ankara",
+        city_en: "Ankara",
+        country: "Türkiye",
+        lat: 39.9250,
+        lng: 32.8369,
+        title: "Gazi Mustafa Kemal Atatürk'ün Ebediyete İntikali",
+        title_en: "Passing of Gazi Mustafa Kemal Atatürk",
+        summary: "Türkiye Cumhuriyeti'nin kurucusu, büyük önder Gazi Mustafa Kemal Atatürk saat 09:05'te Dolmabahçe Sarayı'nda hayata gözlerini yumdu; naaşı ebedi istirahatgahı Anıtkabir'e nakledildi.",
+        summary_en: "The founder of the Republic of Turkey, Gazi Mustafa Kemal Atatürk, passed away, leaving an immortal legacy of modernization and freedom.",
+        significance: "Çağdaş Türkiye'nin kurucusunun dünya tarihine mal olan ölümsüz mirası.",
+        significance_en: "The immortal civilizational legacy of the founder of modern Turkey."
+      },
+      {
+        id: "ev_10_29_ankara",
+        month: 10,
+        day: 29,
+        year: "1923",
+        category: "tarih",
+        cityId: "ankara",
+        city: "Ankara",
+        city_en: "Ankara",
+        country: "Türkiye",
+        lat: 39.93,
+        lng: 32.85,
+        title: "Türkiye Cumhuriyeti'nin İlanı",
+        title_en: "Proclamation of the Republic of Turkey",
+        summary: "TBMM'de Teşkilat-ı Esasiye Kanunu'nda yapılan değişiklikle Türkiye Devleti'nin yönetim şekli Cumhuriyet olarak oy birliğiyle kabul edildi.",
+        summary_en: "The Turkish Grand National Assembly unanimously proclaimed the Republic of Turkey with Mustafa Kemal Atatürk as its first President.",
+        significance: "Egemenliğin kayıtsız şartsız millete devredildiği büyük devrim.",
+        significance_en: "The constitutional cornerstone declaring sovereignty unconditionally belongs to the nation."
+      },
+      {
+        id: "ev_05_29_istanbul",
+        month: 5,
+        day: 29,
+        year: "1453",
+        category: "tarih",
+        cityId: "istanbul",
+        city: "İstanbul",
+        city_en: "Istanbul",
+        country: "Türkiye",
+        lat: 41.01,
+        lng: 28.98,
+        title: "İstanbul'un Fethi ve Yeni Çağ'ın Başlangıcı",
+        title_en: "Conquest of Constantinople",
+        summary: "Fatih Sultan Mehmet komutasındaki Osmanlı ordusu 53 günlük kuşatmanın ardından Kostantiniyye'yi fethetti; Orta Çağ kapandı, Yeni Çağ başladı.",
+        summary_en: "Sultan Mehmed II conquered Constantinople after a 53-day siege, concluding the Middle Ages and opening the Early Modern Era.",
+        significance: "Doğu Roma İmparatorluğu'nun sonu, Rönesans'ı tetikleyen küresel dönüm noktası.",
+        significance_en: "End of the Byzantine Empire and key catalyst for the European Renaissance."
+      },
+      {
+        id: "ev_04_23_ankara",
+        month: 4,
+        day: 23,
+        year: "1920",
+        category: "tarih",
+        cityId: "ankara",
+        city: "Ankara",
+        city_en: "Ankara",
+        country: "Türkiye",
+        lat: 39.93,
+        lng: 32.85,
+        title: "Türkiye Büyük Millet Meclisi'nin Açılışı",
+        title_en: "Opening of the Grand National Assembly of Turkey",
+        summary: "Milli Mücadele'nin kalbinde Ankara'da TBMM açılarak milletin bağımsızlık ve hürriyet iradesi kurumsallaştı.",
+        summary_en: "The Grand National Assembly opened in Ankara, uniting national resistance under democratic representation.",
+        significance: "Milli iradenin ve halk egemenliğinin tecelligahı.",
+        significance_en: "The institutional beacon of Turkish popular sovereignty."
+      },
+      {
+        id: "ev_04_23_londra",
+        month: 4,
+        day: 23,
+        year: "1616",
+        category: "edebiyat",
+        cityId: "londra",
+        city: "Londra",
+        city_en: "London",
+        country: "İngiltere",
+        lat: 51.5074,
+        lng: -0.1278,
+        title: "Dünya Edebiyat Günü: Shakespeare ve Cervantes'in Vefatı",
+        title_en: "World Book Day: Shakespeare & Cervantes",
+        summary: "Dünya tiyatrosunun zirvesi William Shakespeare ile modern romanın öncüsü Miguel de Cervantes aynı gün vefat etti; UNESCO bu günü Dünya Kitap Günü ilan etti.",
+        summary_en: "The literary titans William Shakespeare and Miguel de Cervantes passed away on this date, commemorated globally as World Book Day.",
+        significance: "Evrensel beşeri edebiyatın en büyük iki dehasının anma günü.",
+        significance_en: "A historic convergence honoring the foundations of drama and the novel."
+      },
+      {
+        id: "ev_03_18_canakkale",
+        month: 3,
+        day: 18,
+        year: "1915",
+        category: "tarih",
+        cityId: "canakkale",
+        city: "Çanakkale",
+        city_en: "Canakkale",
+        country: "Türkiye",
+        lat: 40.15,
+        lng: 26.41,
+        title: "18 Mart Çanakkale Deniz Zaferi",
+        title_en: "Canakkale Naval Victory",
+        summary: "Nusret Mayın Gemisi'nin döşediği mayınlar ve kıyı tabyalarının kahramanca direnişiyle İtilaf donanması Boğaz'da bozguna uğratıldı; 'Çanakkale Geçilmez!' destanı yazıldı.",
+        summary_en: "Ottoman coastal artillery and naval mines defeated the Allied naval armada, cementing the immortal decree 'Canakkale is Impassable!'.",
+        significance: "I. Dünya Savaşı'nın seyrini ve Rus Çarlığı'nın kaderini değiştiren büyük zafer.",
+        significance_en: "A strategic watershed altering the trajectory of World War I."
+      },
+      {
+        id: "ev_08_26_mus",
+        month: 8,
+        day: 26,
+        year: "1071",
+        category: "tarih",
+        cityId: "ahlat",
+        city: "Malazgirt / Ahlat",
+        city_en: "Malazgirt / Ahlat",
+        country: "Türkiye",
+        lat: 39.14,
+        lng: 42.54,
+        title: "Malazgirt Meydan Muharebesi ve Anadolu'nun Kapıları",
+        title_en: "Battle of Manzikert",
+        summary: "Büyük Selçuklu Sultanı Alparslan, Bizans İmparatoru Romen Diyojen'i mağlup ederek Anadolu'nun kapılarını Türk milletine ve İslam medeniyetine ebediyen açtı.",
+        summary_en: "Sultan Alp Arslan defeated Byzantine Emperor Romanos IV, opening Anatolia to Seljuk settlement and culture.",
+        significance: "Anadolu'da bin yıllık Türk medeniyet ve sanat çağının başlangıcı.",
+        significance_en: "The historic foundation of Turkic civilization in Anatolia."
+      },
+      {
+        id: "ev_08_30_kutahya",
+        month: 8,
+        day: 30,
+        year: "1922",
+        category: "tarih",
+        cityId: "afyon",
+        city: "Dumlupınar / Afyon",
+        city_en: "Dumlupinar / Afyon",
+        country: "Türkiye",
+        lat: 38.75,
+        lng: 30.54,
+        title: "30 Ağustos Zafer Bayramı: Başkomutanlık Meydan Muharebesi",
+        title_en: "Great Victory Day (Battle of Dumlupinar)",
+        summary: "Mustafa Kemal Paşa'nın bizzat yönettiği Başkomutanlık Meydan Muharebesi kesin zaferle sonuçlandı; 'Ordular, ilk hedefiniz Akdeniz'dir, ileri!' emri verildi.",
+        summary_en: "Decisive victory in the Turkish War of Independence under the supreme command of Mustafa Kemal Pasha.",
+        significance: "Milli egemenlik ve bağımsızlığın sahada mühürlendiği zafer.",
+        significance_en: "The decisive triumph securing Turkish sovereignty and modern borders."
+      },
+      {
+        id: "ev_07_14_paris",
+        month: 7,
+        day: 14,
+        year: "1789",
+        category: "tarih",
+        cityId: "paris",
+        city: "Paris",
+        city_en: "Paris",
+        country: "Fransa",
+        lat: 48.85,
+        lng: 2.35,
+        title: "Bastille Baskını ve Fransız İhtilali",
+        title_en: "Storming of the Bastille",
+        summary: "Paris halkı monarşinin sembolü Bastille Kalesi'ni ele geçirdi; Hürriyet, Eşitlik ve Kardeşlik ilkeleriyle modern dünya siyasi felsefesi doğdu.",
+        summary_en: "The people of Paris stormed the Bastille fortress, sparking the French Revolution and proclaiming Liberty, Equality, Fraternity.",
+        significance: "Modern insan hakları ve ulus devlet çağının evrensel başlangıcı.",
+        significance_en: "Birth of universal human rights declarations and the modern republican model."
+      },
+      {
+        id: "ev_03_15_roma",
+        month: 3,
+        day: 15,
+        year: "M.Ö. 44",
+        category: "tarih",
+        cityId: "roma",
+        city: "Roma",
+        city_en: "Rome",
+        country: "İtalya",
+        lat: 41.89,
+        lng: 12.49,
+        title: "Julius Caesar ve Roma İdes'i",
+        title_en: "Ides of March & Julius Caesar",
+        summary: "Roma Cumhuriyeti diktatörü Julius Caesar, Senato'da suikaste uğradı; Shakespeare'in ölümsüz trajedisine konu olan olay Roma İmparatorluğu'nun yolunu açtı.",
+        summary_en: "Julius Caesar was assassinated in the Roman Senate, an event that heralded the end of the Republic and inspired Shakespeare's great tragedy.",
+        significance: "Klasik cumhuriyetten imparatorluğa geçişin en dramatik dönüm noktası.",
+        significance_en: "The dramatic pivot from the Roman Republic to the Roman Empire."
+      },
+      {
+        id: "ev_12_17_konya",
+        month: 12,
+        day: 17,
+        year: "1273",
+        category: "edebiyat",
+        cityId: "konya",
+        city: "Konya",
+        city_en: "Konya",
+        country: "Türkiye",
+        lat: 37.87,
+        lng: 32.49,
+        title: "Mevlânâ Celâleddîn-i Rûmî'nin Şeb-i Arûs'u",
+        title_en: "Seb-i Arus: Passing of Rumi",
+        summary: "Büyük mutasavvıf, şair ve Mesnevî'nin yazarı Mevlânâ Celâleddîn-i Rûmî Hakk'a yürüdü; vefat gecesi 'Düğün Gecesi' (Şeb-i Arûs) olarak kutlanageldi.",
+        summary_en: "Mawlana Jalaluddin Rumi, immortal mystic poet of the Masnavi, completed his earthly journey, remembered as his 'Night of Union' with the Divine.",
+        significance: "Evrensel hoşgörü, aşk ve tasavvuf edebiyatının dünya çapındaki zirvesi.",
+        significance_en: "The pinnacle of universal love, tolerance, and Sufi philosophical poetry."
+      },
+      {
+        id: "ev_09_09_izmir",
+        month: 9,
+        day: 9,
+        year: "1922",
+        category: "tarih",
+        cityId: "izmir",
+        city: "İzmir",
+        city_en: "Izmir",
+        country: "Türkiye",
+        lat: 38.42,
+        lng: 27.14,
+        title: "İzmir'in Kurtuluşu ve İstiklal Zaferi",
+        title_en: "Liberation of Izmir",
+        summary: "Türk süvarilerinin İzmir Hükümet Konağı'na bayrağı çekmesiyle üç yıllık işgal sona erdi, Anadolu'nun bağımsızlığı perçinlendi.",
+        summary_en: "Turkish cavalry liberated Izmir, concluding the major military phase of the Turkish War of Independence.",
+        significance: "Milli Mücadele'nin askeri safhasının zafer tacı.",
+        significance_en: "The crowning military triumph of the Turkish National Struggle."
+      },
+      {
+        id: "ev_01_01_atina",
+        month: 1,
+        day: 1,
+        year: "M.Ö. 399",
+        category: "edebiyat",
+        cityId: "atina",
+        city: "Atina",
+        city_en: "Athens",
+        country: "Yunanistan",
+        lat: 37.98,
+        lng: 23.72,
+        title: "Sokrates'in Savunması ve Felsefi Diyalog Geleneği",
+        title_en: "Apology of Socrates & Philosophical Dialogue",
+        summary: "Platon'un ölümsüzleştirdiği Sokrates'in Savunması, sorgulanan bir yaşamın değerini ve Batı edebiyatının temel felsefi metinlerini miras bıraktı.",
+        summary_en: "Plato's Apology recorded Socrates' immortal defense of philosophy, virtue, and critical inquiry in democratic Athens.",
+        significance: "Etik, sorgulama ve eleştirel düşüncenin evrensel manifestosu.",
+        significance_en: "The foundational text of Western ethics and dialectical dialogue."
+      }
+    ]);
+    window.TODAY_IN_HISTORY_EVENTS = TODAY_IN_HISTORY_EVENTS;
+
+    let activeTodayDate = new Date();
+    let activeTodayCategory = 'all';
+
+    function getEventsForDate(month, day) {
+      const exact = TODAY_IN_HISTORY_EVENTS.filter(e => e.month === month && e.day === day);
+      if (exact.length >= 2) return { events: exact, isFallback: false };
+
+      const fallbackList = [...exact];
+      const dayOfYear = (month - 1) * 31 + day;
+      const sampleIndices = [
+        dayOfYear % MASTER_LOCATIONS.length,
+        (dayOfYear * 7 + 13) % MASTER_LOCATIONS.length,
+        (dayOfYear * 11 + 29) % MASTER_LOCATIONS.length
+      ];
+
+      sampleIndices.forEach((idx, i) => {
+        const loc = MASTER_LOCATIONS[idx];
+        if (loc && !fallbackList.some(e => e.cityId === loc.id)) {
+          fallbackList.push({
+            id: `fb_${month}_${day}_${loc.id}`,
+            month,
+            day,
+            year: loc.year || "Tarihsel Dönüm Noktası",
+            category: (i % 2 === 0) ? "tarih" : "edebiyat",
+            cityId: loc.id,
+            city: loc.city,
+            city_en: loc.city_en || loc.city,
+            country: loc.country,
+            lat: loc.lat,
+            lng: loc.lng,
+            title: loc.title,
+            title_en: loc.title_en || loc.title,
+            summary: loc.description.slice(0, 180) + '...',
+            summary_en: (loc.description_en || loc.description).slice(0, 180) + '...',
+            significance: loc.quote || `${loc.city} medeniyet havzasının tarihe ve edebiyata kattığı ölümsüz miras.`,
+            significance_en: loc.quote || `Enduring legacy contributed by ${loc.city} to world civilization.`
+          });
+        }
+      });
+
+      return { events: fallbackList.slice(0, 4), isFallback: exact.length === 0 };
+    }
+    window.getEventsForDate = getEventsForDate;
+
+    function formatTurkishDate(dateObj) {
+      const monthsTr = [
+        'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+        'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+      ];
+      const monthsEn = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      const m = dateObj.getMonth();
+      const d = dateObj.getDate();
+      return {
+        badgeTr: `${d} ${monthsTr[m].slice(0, 3)}`,
+        badgeEn: `${monthsEn[m]} ${d}`,
+        fullTr: `${d} ${monthsTr[m]}`,
+        fullEn: `${monthsEn[m]} ${d}`
+      };
+    }
+
+    function openTodayInHistoryModal() {
+      playTone('click');
+      renderTodayInHistoryView();
+      const overlay = document.getElementById('todayInHistoryModalOverlay');
+      if (overlay) {
+        overlay.style.visibility = 'visible';
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+    }
+    window.openTodayInHistoryModal = openTodayInHistoryModal;
+
+    function closeTodayInHistoryModal() {
+      playTone('click');
+      const overlay = document.getElementById('todayInHistoryModalOverlay');
+      if (overlay) {
+        overlay.style.visibility = 'hidden';
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+    }
+    window.closeTodayInHistoryModal = closeTodayInHistoryModal;
+
+    function updateTodayInHistoryBadge() {
+      const dateInfo = formatTurkishDate(new Date());
+      const badge = document.getElementById('todayInHistoryDateBadge');
+      if (badge) {
+        badge.textContent = currentLang === 'en' ? dateInfo.badgeEn : dateInfo.badgeTr;
+      }
+    }
+
+    function renderTodayInHistoryView() {
+      const isEn = currentLang === 'en';
+      const m = activeTodayDate.getMonth() + 1;
+      const d = activeTodayDate.getDate();
+      const dateInfo = formatTurkishDate(activeTodayDate);
+
+      const dateDisplay = document.getElementById('todayModalDateDisplay');
+      if (dateDisplay) {
+        dateDisplay.textContent = isEn ? dateInfo.fullEn : dateInfo.fullTr;
+      }
+
+      const { events } = getEventsForDate(m, d);
+      const container = document.getElementById('todayEventsListContainer');
+      if (!container) return;
+
+      const filtered = activeTodayCategory === 'all'
+        ? events
+        : events.filter(e => e.category === activeTodayCategory);
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400">
+            <span class="text-3xl block mb-2">📜</span>
+            <p>${isEn ? 'No events found in this category for this date.' : 'Bu kategoride bu tarihe ait kayıt bulunamadı.'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(ev => {
+        const catLabel = ev.category === 'tarih'
+          ? (isEn ? 'Tarihsel Dönüm Noktası' : 'Tarihsel Dönüm Noktası')
+          : (isEn ? 'Edebi & Düşünsel Miras' : 'Edebi & Düşünsel Miras');
+        const catBadgeColor = ev.category === 'tarih'
+          ? 'bg-rose-500/20 text-rose-300 border-rose-400/30'
+          : 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30';
+        const title = isEn ? (ev.title_en || ev.title) : ev.title;
+        const summary = isEn ? (ev.summary_en || ev.summary) : ev.summary;
+        const significance = isEn ? (ev.significance_en || ev.significance) : ev.significance;
+        const cityName = isEn ? (ev.city_en || ev.city) : ev.city;
+
+        return `
+          <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-400/40 transition-all duration-300 space-y-2.5 shadow-lg">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${catBadgeColor}">
+                  ${catLabel}
+                </span>
+                <span class="text-xs font-mono font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                  ${ev.year}
+                </span>
+              </div>
+              <div class="flex items-center gap-1 text-xs text-sky-300 font-medium">
+                <span>📍</span>
+                <span>${cityName}, ${ev.country}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-display font-bold text-sm sm:text-base text-white">
+                ${title}
+              </h4>
+              <p class="text-xs text-slate-300 leading-relaxed mt-1">
+                ${summary}
+              </p>
+            </div>
+
+            ${significance ? `
+              <div class="p-2.5 rounded-xl bg-amber-500/[0.07] border border-amber-400/20 text-[11px] text-amber-200/90 italic flex items-start gap-1.5">
+                <span class="text-amber-400 shrink-0">💡</span>
+                <span>${significance}</span>
+              </div>
+            ` : ''}
+
+            <div class="pt-1 flex items-center justify-end">
+              <button
+                type="button"
+                onclick="flyToTodayEventStop('${ev.cityId}', ${ev.lat}, ${ev.lng})"
+                class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-purple-500/20 hover:from-amber-500/35 hover:to-purple-500/35 text-amber-200 border border-amber-400/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-md"
+              >
+                <span>🌍</span>
+                <span>${isEn ? 'Fly to Stop & Explore' : 'Durağa Uç & Keşfet'}</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function flyToTodayEventStop(cityId, lat, lng) {
+      playTone('fly');
+      closeTodayInHistoryModal();
+      if (cityId && MASTER_LOCATIONS.some(m => m.id === cityId)) {
+        selectCity(cityId);
+      } else if (typeof lat === 'number' && typeof lng === 'number') {
+        smoothFlyTo({ lat, lng, altitude: 0.30 }, 1450);
+      }
+    }
+    window.flyToTodayEventStop = flyToTodayEventStop;
 
     let activeTradeRouteId = null;
 
@@ -17418,6 +18589,9 @@ Web: https://bayramakpamukcu.site
       }));
 
       world.pathsData(allPaths);
+      if (typeof TradeRouteParticleEngine !== 'undefined') {
+        TradeRouteParticleEngine.setActiveRoute('all');
+      }
 
       // Collect key rings for all routes
       const allRings = [];
@@ -17460,6 +18634,9 @@ Web: https://bayramakpamukcu.site
       ];
 
       world.pathsData(singlePath);
+      if (typeof TradeRouteParticleEngine !== 'undefined') {
+        TradeRouteParticleEngine.setActiveRoute(routeId);
+      }
 
       const rings = route.rings.map(ring => ({
         lat: ring.lat,
@@ -17480,6 +18657,9 @@ Web: https://bayramakpamukcu.site
       activeTradeRouteId = null;
       world.pathsData([]);
       world.ringsData([]);
+      if (typeof TradeRouteParticleEngine !== 'undefined') {
+        TradeRouteParticleEngine.setActiveRoute(null);
+      }
       closeRoutesModal();
     }
 
@@ -18603,6 +19783,10 @@ Web: https://bayramakpamukcu.site
             stopTimelineTour();
             return;
           }
+          if (document.getElementById('todayInHistoryModalOverlay')?.classList.contains('opacity-100')) {
+            closeTodayInHistoryModal();
+            return;
+          }
           if (document.getElementById('audioModalOverlay')?.classList.contains('opacity-100')) {
             closeAudioModal();
             return;
@@ -18716,6 +19900,16 @@ Web: https://bayramakpamukcu.site
             closeRoutesModal();
           } else {
             openRoutesModal();
+          }
+          return;
+        }
+        if ((e.key === 'b' || e.key === 'B') && !e.ctrlKey) {
+          e.preventDefault();
+          const overlay = document.getElementById('todayInHistoryModalOverlay');
+          if (overlay && overlay.classList.contains('opacity-100')) {
+            closeTodayInHistoryModal();
+          } else {
+            openTodayInHistoryModal();
           }
           return;
         }
@@ -18903,6 +20097,35 @@ Web: https://bayramakpamukcu.site
       });
       document.getElementById('routesShowAllBtn')?.addEventListener('click', showAllTradeRoutes);
       document.getElementById('routesClearBtn')?.addEventListener('click', clearTradeRoutes);
+
+      // "Tarihte Bugün Ne Oldu?" Modülü Dinleyicileri
+      document.getElementById('todayInHistoryBtn')?.addEventListener('click', openTodayInHistoryModal);
+      document.getElementById('closeTodayInHistoryBtn')?.addEventListener('click', closeTodayInHistoryModal);
+      document.getElementById('todayResetBtn')?.addEventListener('click', () => {
+        activeTodayDate = new Date();
+        renderTodayInHistoryView();
+      });
+      document.getElementById('todayPrevDayBtn')?.addEventListener('click', () => {
+        activeTodayDate.setDate(activeTodayDate.getDate() - 1);
+        renderTodayInHistoryView();
+      });
+      document.getElementById('todayNextDayBtn')?.addEventListener('click', () => {
+        activeTodayDate.setDate(activeTodayDate.getDate() + 1);
+        renderTodayInHistoryView();
+      });
+      document.querySelectorAll('.today-cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.today-cat-btn').forEach(b => {
+            b.classList.remove('active', 'bg-amber-500/30', 'text-amber-200', 'border-amber-400/40');
+            b.classList.add('text-slate-400', 'border-transparent');
+          });
+          btn.classList.add('active', 'bg-amber-500/30', 'text-amber-200', 'border-amber-400/40');
+          btn.classList.remove('text-slate-400', 'border-transparent');
+          activeTodayCategory = btn.dataset.todayCat;
+          renderTodayInHistoryView();
+        });
+      });
+      updateTodayInHistoryBadge();
       document.getElementById('openCompareBtn')?.addEventListener('click', openCompareModal);
       document.getElementById('closeCompareBtn')?.addEventListener('click', closeCompareModal);
       document.getElementById('swapCompareBtn')?.addEventListener('click', swapCompareCities);
@@ -19566,6 +20789,60 @@ Web: https://bayramakpamukcu.site
           </label>
         </div>
       </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================================ -->
+  <!-- "TARİHTE BUGÜN NE OLDU?" MODÜLÜ (TODAY IN HISTORY MODAL) -->
+  <!-- ============================================================================ -->
+  <div
+    id="todayInHistoryModalOverlay" style="visibility: hidden;" aria-hidden="true"
+    class="fixed inset-0 z-[130] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div class="glass-panel w-full max-w-3xl rounded-3xl overflow-hidden border border-amber-500/30 shadow-2xl flex flex-col max-h-[92vh] bg-slate-950/95">
+      <!-- Header with date navigator, title, and close button -->
+      <div class="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between gap-3 bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-transparent shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500/30 to-rose-500/30 border border-amber-400/40 flex items-center justify-center text-xl shrink-0 shadow-lg shadow-amber-500/20">
+            📅
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                Tarihte &amp; Edebiyatta Bugün
+              </span>
+              <span id="todayModalDateDisplay" class="text-xs font-mono font-bold text-sky-300"></span>
+            </div>
+            <h3 id="todayModalTitle" class="font-display text-sm sm:text-base font-bold text-white mt-0.5">
+              Tarihte Bugün Ne Oldu?
+            </h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="todayPrevDayBtn" type="button" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center transition text-xs cursor-pointer" title="Önceki Gün">◀</button>
+          <button id="todayResetBtn" type="button" class="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] font-bold border border-amber-400/30 transition cursor-pointer">Bugün</button>
+          <button id="todayNextDayBtn" type="button" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center transition text-xs cursor-pointer" title="Sonraki Gün">▶</button>
+          <button id="closeTodayInHistoryBtn" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer ml-1" aria-label="Kapat">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category filter buttons & Subtitle -->
+      <div class="px-4 py-2 bg-white/[0.02] border-b border-white/5 flex items-center justify-between text-xs text-slate-300 shrink-0">
+        <p id="todayModalSubtitle" class="text-[11px] sm:text-xs text-slate-300 truncate mr-2">
+          Günün tarihinde gerçekleşen dönüm noktaları ve edebi şaheserlerin doğuşu
+        </p>
+        <div class="flex items-center gap-1 shrink-0" id="todayCatFilterGroup">
+          <button type="button" data-today-cat="all" class="today-cat-btn active px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-200 border border-amber-400/40 cursor-pointer">Tümü</button>
+          <button type="button" data-today-cat="tarih" class="today-cat-btn px-2.5 py-0.5 rounded text-[10px] font-medium text-slate-400 hover:text-white border border-transparent cursor-pointer">Tarih</button>
+          <button type="button" data-today-cat="edebiyat" class="today-cat-btn px-2.5 py-0.5 rounded text-[10px] font-medium text-slate-400 hover:text-white border border-transparent cursor-pointer">Edebiyat</button>
+        </div>
+      </div>
+
+      <!-- Event cards container -->
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scroll flex-1 space-y-3.5" id="todayEventsListContainer"></div>
     </div>
   </div>
 
