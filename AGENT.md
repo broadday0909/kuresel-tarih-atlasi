@@ -18,15 +18,6 @@ Bu dosya, bu projede çalışacak olan yapay zeka ajanlarının (Antigravity vb.
 
 ---
 
-## ⚡ TAM OTONOM ÇALIŞMA KURALI (KULLANICIYA ASLA SORU SORMA)
-- **Sıfır Kesinti Prensibi:** Kullanıcı yeni bir görev, optimizasyon, hata düzeltmesi veya geliştirme istediğinde **kullanıcıya ara soru sorma, anket/mülakat yapma (`ask_question` çağırma)**.
-- **Her Zaman Önerilen (Recommended) Kararları Al:** Çoklu seçenekli bir durum varsa her zaman en mantıklı, en yüksek performanslı ve `(Recommended)` olan kararı seçerek doğrudan inisiyatif al.
-- **Tek Başına veya Alt Ajanlarla Görevi Tamamla:** Gerekli tüm alt ajanları veya kodlamayı kendin yönet, duraksamadan sonuca ulaş.
-- **Testleri Koştur ve Doğrudan Canlıya Al:** İşlem bittiğinde testleri (`node .dev_archive/validate.js`, `test_drag_smoothness.js` vb.) çalıştır, 0 hatayı doğrula, doğrudan Git'e commit & push yaparak [https://bayramakpamukcu.site](https://bayramakpamukcu.site) üzerinde canlıya al.
-- **Teamwork ve Slash Komutları:** Kullanıcı `/teamwork`, `/boost` veya `/goal` başlattığında mülakatçı ara sorular sorduğunda veya taslak onayı istediğinde kullanıcıyı bekletme; projedeki bağlama göre en iyi seçenekleri kendin onayla ve ekibi hemen tam otonom çalıştırmaya geçir.
-
----
-
 ## 🚀 OTOMATİK İŞ AKIŞI (HER DEĞİŞİKLİKTE UYGULANACAK)
 Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya stil güncellemesi istediğinde:
 1. `index.html` dosyası güncellenir ve JS sözdizimi doğrulanır.
@@ -54,4 +45,3 @@ Kullanıcı herhangi bir değişiklik, yeni durak, düzeltme veya stil güncelle
 - **Üst Menü:** Ekranı kapatmaması için tek satır, ultra kompakt ve yatay kaydırılabilir kalmalıdır.
 - **Zaman Tüneli:** Alt merkezde konumlanır.
 - **İntro Ekranı:** Otomatik geçiş YOKTUR; sayfa YALNIZCA kullanıcı "Haritayı Keşfet" butonuna tıkladığında açılır.
-
