@@ -9343,8 +9343,8 @@
         .ringMaxRadius(d => d.maxR || 0.85)
         .ringPropagationSpeed(d => d.speed || 0.32)
         .ringRepeatPeriod(d => d.repeat || 1200)
-        // 3B Kadim Ticaret & Kültür Yolları Katmanı
-        .pathsData(typeof getTradeRoutesPathsData === 'function' ? getTradeRoutesPathsData() : [])
+        // 3B Kadim Ticaret & Kültür Yolları Katmanı (Başlangıçta kapalı, yalnızca kullanıcı butondan seçtiğinde açılır)
+        .pathsData([])
         .pathPoints(d => d.coords)
         .pathPointLat(p => p[0])
         .pathPointLng(p => p[1])
@@ -17495,8 +17495,8 @@ Web: https://bayramakpamukcu.site
       let particleStates = [];
       let routeSplineData = [];
       let isInitialized = false;
-      let isVisible = true;
-      let activeFilterRouteId = 'all';
+      let isVisible = false;
+      let activeFilterRouteId = null;
 
       function createParticleTexture() {
         const canvas = document.createElement('canvas');
@@ -17596,6 +17596,7 @@ Web: https://bayramakpamukcu.site
 
         pointsMesh = new THREE.Points(geom, mat);
         pointsMesh.renderOrder = 999;
+        pointsMesh.visible = false;
         scene.add(pointsMesh);
 
         isInitialized = true;
