@@ -9180,7 +9180,13 @@
         antialias: hasHardwareGpu && !isMobileDevice,
         alpha: false,
         powerPreference: ATLAS_GPU_CONFIG.powerPreference,
-        precision: (!isMobileDevice && hasHardwareGpu) ? 'highp' : 'mediump'
+        precision: (!isMobileDevice && hasHardwareGpu) ? 'highp' : 'mediump',
+        rendererConfig: {
+          antialias: hasHardwareGpu && !isMobileDevice,
+          alpha: false,
+          powerPreference: ATLAS_GPU_CONFIG.powerPreference,
+          precision: (!isMobileDevice && hasHardwareGpu) ? 'highp' : 'mediump'
+        }
       })(container)
         .globeImageUrl(isMobileDevice || !hasHardwareGpu || isFileProtocol ? DAY_TEXTURE_MOBILE : DAY_TEXTURE_8K_DESKTOP);
 
@@ -12880,7 +12886,7 @@
       if (!selectedWar) return null;
       const title = ((selectedWar.title_tr || '') + ' ' + (selectedWar.short_tr || '') + ' ' + (selectedWar.title_en || '')).toLocaleLowerCase('tr-TR');
       if (title.includes('çanakkale') || title.includes('gallipoli')) return 'canakkale';
-      if (title.includes('istanbul') || title.includes('constantinople') || title.includes('feth')) return 'istanbul';
+      if (title.includes('istanbul') || title.includes('constantinople') || (title.includes('feth') && !title.includes('ani') && !title.includes('kars'))) return 'istanbul';
       if (title.includes('sakarya') || title.includes('taarruz') || title.includes('dumlupınar') || title.includes('kocatepe')) return 'ankara';
       if (title.includes('malazgirt') || title.includes('manzikert')) return 'malazgirt';
       if (title.includes('mohaç') || title.includes('mohacs')) return 'mohac';
@@ -12900,7 +12906,7 @@
       if (title.includes('kadeş') || title.includes('kadesh')) return 'kades';
       if (title.includes('preveze') || title.includes('preveza')) return 'preveze';
       if (title.includes('troya') || title.includes('truva') || title.includes('troy')) return 'troya';
-      if (title.includes('ani') || title.includes('kars') || title.includes('alp arslan')) return 'ani';
+      if (/\bani\b/i.test(title) || title.includes('ani kalesi') || title.includes('ani fethi') || title.includes('ani harabeleri') || title.includes('kars') || title.includes('alp arslan')) return 'ani';
       if (item && item.id && CURATED_BATTLE_SIMULATIONS[item.id]) return item.id;
       return null;
     }
