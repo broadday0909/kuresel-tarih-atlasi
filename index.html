@@ -1020,6 +1020,19 @@
           <span class="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
           <span id="catLabelWars">⚔️ Savaşlar</span>
         </button>
+
+        <div class="h-3.5 w-[1px] bg-white/10 shrink-0 mx-0.5"></div>
+
+        <!-- Kadim Ticaret Yolları Butonu (Üst Bar) -->
+        <button
+          type="button"
+          id="openRoutesBtnTop"
+          class="px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-bold transition-all duration-200 flex items-center gap-1 bg-gradient-to-r from-emerald-500/25 to-teal-500/35 text-emerald-200 border border-emerald-400/50 hover:border-emerald-300 hover:from-emerald-500/40 hover:to-teal-500/50 cursor-pointer whitespace-nowrap shadow-sm"
+          title="Kadim Ticaret ve Kültür Yolları (İpek Yolu, Baharat Yolu vb.) (Kısayol: Y)"
+        >
+          <span>🐪</span>
+          <span id="routesBtnLabelTop">Ticaret Yolları</span>
+        </button>
       </div>
     </div>
   </header>
@@ -1144,6 +1157,17 @@
           <span>📅</span>
           <span id="todayInHistoryBtnLabel">Tarihte Bugün</span>
           <span id="todayInHistoryDateBadge" class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-mono">--</span>
+        </button>
+
+        <!-- Kadim Ticaret Yolları Butonu (Alt Bar) -->
+        <button
+          type="button"
+          id="openRoutesBtn"
+          class="px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-gradient-to-r from-emerald-500/25 via-teal-500/25 to-sky-500/25 text-emerald-200 border border-emerald-400/50 hover:border-emerald-300 hover:from-emerald-500/40 hover:to-sky-500/40 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shadow-md ml-1"
+          title="Kadim Ticaret ve Kültür Yolları (İpek Yolu, Baharat Yolu vb.) (Kısayol: Y)"
+        >
+          <span>🐪</span>
+          <span id="routesBtnLabel">Ticaret Yolları</span>
         </button>
       </div>
 
@@ -8480,7 +8504,7 @@
         catWars: "⚔️ Savaşlar",
         quizBtnLabel: "Yarışma",
         toursBtnLabel: "Rotalar",
-        routesBtnLabel: "Kadim Yollar",
+        routesBtnLabel: "Ticaret Yolları",
         empiresBtnLabel: "İmparatorluklar",
         audioBtnLabel: "Akustik Ortam",
         tipAudioSettings: "Atmosferik Akustik Tınılar & Ses Ayarları (Kısayol: Shift+M)",
@@ -8604,7 +8628,7 @@
         catWars: "⚔️ Battles",
         quizBtnLabel: "Quiz",
         toursBtnLabel: "Tours",
-        routesBtnLabel: "Ancient Routes",
+        routesBtnLabel: "Trade Routes",
         empiresBtnLabel: "Empires",
         audioBtnLabel: "Acoustic Ambience",
         tipAudioSettings: "Atmospheric Ambience & Sound Settings (Shortcut: Shift+M)",
@@ -15126,6 +15150,9 @@
       const todayModalTitle = document.getElementById('todayModalTitle');
       if (todayModalTitle) todayModalTitle.textContent = lang === 'en' ? 'What Happened Today in History?' : 'Tarihte Bugün Ne Oldu?';
       setElText('routesBtnLabel', t.routesBtnLabel);
+      setElText('routesBtnLabelTop', t.routesBtnLabel);
+      setElTitle('openRoutesBtn', t.tipRoutes);
+      setElTitle('openRoutesBtnTop', t.tipRoutes);
       setElText('empiresBtnLabel', t.empiresBtnLabel);
       setElTitle('openEmpiresBtn', t.tipEmpires);
       setElText('audioBtnLabel', t.audioBtnLabel);
@@ -20158,6 +20185,7 @@ Web: https://bayramakpamukcu.site
       document.getElementById('openQuizBtn')?.addEventListener('click', openQuizModal);
       document.getElementById('closeQuizBtn')?.addEventListener('click', closeQuizModal);
       document.getElementById('openRoutesBtn')?.addEventListener('click', openRoutesModal);
+      document.getElementById('openRoutesBtnTop')?.addEventListener('click', openRoutesModal);
       document.getElementById('closeRoutesBtn')?.addEventListener('click', closeRoutesModal);
       document.getElementById('openEmpiresBtn')?.addEventListener('click', openEmpiresModal);
       document.getElementById('closeEmpiresBtn')?.addEventListener('click', closeEmpiresModal);
