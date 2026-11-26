@@ -9333,7 +9333,9 @@ window.lucide={createIcons:function(opts){var r=(opts&&opts.root)||document;var 
       mesh.userData = { key, z, x, y, loaded: false, wanted: true };
 
       const serverIdx = (x + y) & 3;
-      const tileUrl = `https://mt${serverIdx}.google.com/vt/lyrs=y&hl=${tileLang}&x=${x}&y=${y}&z=${z}`;
+      // z <= 4: ülke sınırları ve ülke adları (lyrs=y); z >= 5: yakınlaştırmada net saf uydu görüntüsü (lyrs=s, alt ilçe/yol yazıları yok)
+      const tileLyrs = z <= 4 ? 'y' : 's';
+      const tileUrl = `https://mt${serverIdx}.google.com/vt/lyrs=${tileLyrs}&hl=${tileLang}&x=${x}&y=${y}&z=${z}`;
 
       googleEarthTextureLoader.load(
         tileUrl,
@@ -9440,9 +9442,13 @@ window.lucide={createIcons:function(opts){var r=(opts&&opts.root)||document;var 
         targetZ = 5;
       }
 
-      // Yalnızca ülke sınırları ve ülke adları görünsün (alt ilçe, kasaba ve yol etiketlerini kapatıp FPS'i artır)
-      const COUNTRY_ONLY_MAX_Z = 4;
-      targetZ = Math.min(targetZ, ATLAS_GPU_CONFIG.maxTileZ, COUNTRY_ONLY_MAX_Z);
+      // Uzak görünümde z=4 (ülke adları), yakınlaştırınca z=5..8 saf uydu (lyrs=s) ile net görüntü (düşük donanımda max z=6)
+      const maxZoomCap = tier === 'potato' ? 6 : 8;
+      if (activePov.altitude >= 0.85) {
+        targetZ = 4;
+      } else {
+        targetZ = Math.min(targetZ, ATLAS_GPU_CONFIG.maxTileZ, maxZoomCap);
+      }
 
       const tileLang = (typeof currentLang === 'string' && currentLang === 'en') ? 'en' : 'tr';
       const centerTile = latLngToSlippyTile(activePov.lat, activePov.lng, targetZ);
