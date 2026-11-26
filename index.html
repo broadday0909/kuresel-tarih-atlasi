@@ -653,9 +653,10 @@ window.lucide={createIcons:function(opts){var r=(opts&&opts.root)||document;var 
       transition: none !important;
     }
 
+    /* Dokunma/sürükleme sırasında pin katmanı gizlenmez; pointer-events zaten kapalı tutulur */
     body.cpu-fallback-mode.is-pointer-dragging #globeViz .scene-container > div:not(:first-child),
     body.low-gfx-mode.is-pointer-dragging #globeViz .scene-container > div:not(:first-child) {
-      display: none !important;
+      pointer-events: none !important;
     }
 
     body.cpu-fallback-mode .pin-anchor-root,
