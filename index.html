@@ -9012,7 +9012,7 @@ window.lucide={createIcons:function(opts){var r=(opts&&opts.root)||document;var 
           useBasicMaterial: tier === 'potato',
           useLambertMaterial: tier === 'balanced',
           globeSegments: tier === 'potato' ? [36, 24] : (tier === 'balanced' ? [48, 32] : [64, 48]),
-          enableHolograms: tier !== 'potato',
+          enableHolograms: false,
           enableTradeParticles: tier !== 'potato',
           enableSubZTiles: tier === 'ultra',
           maxTileZ: tier === 'potato' ? 7 : (tier === 'balanced' ? (isMobileDevice ? 10 : 11) : 14),
@@ -9440,7 +9440,9 @@ window.lucide={createIcons:function(opts){var r=(opts&&opts.root)||document;var 
         targetZ = 5;
       }
 
-      targetZ = Math.min(targetZ, ATLAS_GPU_CONFIG.maxTileZ);
+      // Yalnızca ülke sınırları ve ülke adları görünsün (alt ilçe, kasaba ve yol etiketlerini kapatıp FPS'i artır)
+      const COUNTRY_ONLY_MAX_Z = 4;
+      targetZ = Math.min(targetZ, ATLAS_GPU_CONFIG.maxTileZ, COUNTRY_ONLY_MAX_Z);
 
       const tileLang = (typeof currentLang === 'string' && currentLang === 'en') ? 'en' : 'tr';
       const centerTile = latLngToSlippyTile(activePov.lat, activePov.lng, targetZ);
